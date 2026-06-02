@@ -1,0 +1,80 @@
+---
+// Blog/Conteúdos — filtros + grid de artigos (estilo G4). Conteúdo placeholder.
+import { artigos, categorias } from "../data/artigos.js";
+---
+
+<section class="bg-sec section--navy">
+  <div class="container xl">
+    <div class="section-header">
+      <span class="tag-pill tag-pill--glow">Conteúdos</span>
+      <h2>Conteúdos para você <em class="accent">não perder</em></h2>
+      <p>Materiais práticos para quem quer organizar a gestão, certificar e crescer.</p>
+    </div>
+
+    <div class="bg-filters" data-filters>
+      {categorias.map((c, i) => (
+        <button class={`bg-filter ${i === 0 ? "active" : ""}`} data-cat={c}>{c}</button>
+      ))}
+    </div>
+
+    <div class="bg-grid" data-grid>
+      {artigos.map((a) => (
+        <a class="bg-card" href={`/blog/${a.slug}`} data-cat={a.categoria}>
+          <div class="bg-thumb">
+            <span class="bg-thumb-fallback">Templum<em>!</em></span>
+            <img src={`/assets/img/blog/${a.slug}.webp`} alt={a.titulo} loading="lazy" onerror="this.style.display='none'" />
+          </div>
+          <div class="bg-body">
+            <span class="bg-cat">{a.categoria}</span>
+            <h3>{a.titulo}</h3>
+            <span class="bg-date">{a.data}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="bg-cta"><a href="/blog" class="btn btn--dark btn--lg">Ver todos os artigos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+  </div>
+</section>
+
+<style>
+  .bg-sec { padding: 88px 0; }
+  .bg-filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 44px; }
+  .bg-filter { padding: 9px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,244,221,0.22); background: rgba(255,255,255,0.04); color: rgba(255,244,221,0.78); cursor: pointer; transition: all .25s var(--ease-soft); }
+  .bg-filter:hover { border-color: var(--orange); color: var(--orange); }
+  .bg-filter.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+  .bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .bg-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); overflow: hidden; display: flex; flex-direction: column; transition: transform .35s var(--ease-soft), box-shadow .35s; }
+  .bg-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .bg-card[hidden] { display: none; }
+  .bg-thumb { position: relative; aspect-ratio: 16/10; overflow: hidden; background: linear-gradient(135deg, var(--navy-2), var(--surface-deep)); display: grid; place-items: center; }
+  .bg-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s var(--ease-soft); }
+  .bg-card:hover .bg-thumb img { transform: scale(1.05); }
+  .bg-thumb-fallback { font-size: 24px; font-weight: 800; color: rgba(255,244,221,0.5); letter-spacing: -0.02em; }
+  .bg-thumb-fallback em { color: var(--orange); font-style: normal; }
+  .bg-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .bg-cat { align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange); border: 1px solid color-mix(in srgb, var(--orange) 40%, transparent); padding: 4px 10px; border-radius: 999px; }
+  .bg-body h3 { font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+  .bg-date { font-size: 12px; color: var(--text-soft); margin-top: auto; }
+  .bg-cta { text-align: center; margin-top: 44px; }
+
+  @media (max-width: 1024px) { .bg-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .bg-grid { grid-template-columns: 1fr; } .bg-sec { padding: 60px 0; } }
+</style>
+
+<script is:inline>
+  (function () {
+    const sec = document.querySelector(".bg-sec");
+    if (!sec) return;
+    const filters = sec.querySelectorAll("[data-filters] .bg-filter");
+    const cards = sec.querySelectorAll("[data-grid] .bg-card");
+    filters.forEach((f) => f.addEventListener("click", () => {
+      filters.forEach((x) => x.classList.remove("active"));
+      f.classList.add("active");
+      const cat = f.dataset.cat;
+      const all = cat === "Em alta";
+      cards.forEach((c) => { c.hidden = !(all || c.dataset.cat === cat); });
+    }));
+  })();
+</script>

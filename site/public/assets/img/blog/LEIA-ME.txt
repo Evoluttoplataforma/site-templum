@@ -1,0 +1,1 @@
+Capas dos artigos do blog. Nome = slug do artigo + .webp. Proporção 16:9. Sem imagem, mostra um fundo gradiente com a categoria.

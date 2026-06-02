@@ -1,0 +1,56 @@
+---
+// Seção dedicada ao selo "Estamos Implementando" — benefício entregue ao
+// iniciar a consultoria (autoridade desde o primeiro dia).
+const { dark = true } = Astro.props;
+---
+
+<section class={`selo ${dark ? "section--navy" : "section--cream"}`}>
+  <div class="container xl selo-grid">
+    <div class="selo-text">
+      <span class="tag-pill tag-pill--glow">Selo Templum</span>
+      <h2>Autoridade desde o <em class="accent">primeiro dia</em></h2>
+      <p class="paragraph">
+        Você não precisa esperar a certificação para mostrar resultado. Ao
+        iniciar a consultoria, sua empresa já recebe o selo
+        <strong>“Estamos Implementando”</strong> para exibir no site, nas redes e
+        na recepção — provando ao mercado que você está no caminho da certificação
+        com a Templum.
+      </p>
+      <ul class="check-list">
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Mais credibilidade já durante a jornada</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diferencial em propostas, vendas e licitações</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Mostra ao cliente o seu compromisso com a qualidade</li>
+      </ul>
+      <a href="/form" class="btn btn--primary btn--lg">Começar minha certificação <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+
+    <div class="selo-media">
+      <div class="selo-glow" aria-hidden="true"></div>
+      <img src="/assets/img/estamos-implementando.webp" alt="Selo Estamos Implementando da Templum" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .selo { padding: 96px 0; }
+  .selo-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .selo-text { display: flex; flex-direction: column; gap: 20px; }
+  .selo-text .check-list { margin: 2px 0; }
+  .selo-text .btn { align-self: flex-start; }
+  .selo-text h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+  .section--navy .selo-text h2 { color: var(--cream); }
+  .section--navy .selo-text .paragraph { color: rgba(255,244,221,0.82); }
+  .section--navy .selo-text .check-item { color: var(--cream); }
+
+  .selo-media { position: relative; display: grid; place-items: center; }
+  .selo-glow { position: absolute; width: 70%; aspect-ratio: 1; border-radius: 999px; background: radial-gradient(circle, rgba(255,89,37,0.42), transparent 65%); filter: blur(8px); }
+  .selo-media img { position: relative; width: auto; max-width: 84%; max-height: 460px; object-fit: contain; filter: drop-shadow(0 30px 50px rgba(175,64,34,0.35)); animation: seloFloat 5s ease-in-out infinite; }
+  @keyframes seloFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @media (prefers-reduced-motion: reduce) { .selo-media img { animation: none; } }
+
+  @media (max-width: 900px) {
+    .selo-grid { grid-template-columns: 1fr; gap: 32px; }
+    .selo-media { order: -1; }
+    .selo-media img { max-height: 320px; }
+  }
+</style>

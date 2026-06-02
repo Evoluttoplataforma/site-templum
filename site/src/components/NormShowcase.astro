@@ -1,0 +1,156 @@
+---
+// Carrossel de normas estilo "mentores G4": cards grandes com FOTO, nome sobreposto,
+// linha colorida e tagline. Foto vem de /assets/img/normas/<slug>.webp (fallback: cor + ícone).
+import { normas } from "../data/normas.js";
+---
+
+<section class="ns" data-carousel>
+  <div class="ns-bg" aria-hidden="true"></div>
+  <span class="ns-watermark" aria-hidden="true">normas</span>
+
+  <div class="container xl ns-head">
+    <span class="tag-pill tag-pill--glow">Todas as normas</span>
+    <h2>Para cada norma, um <em class="accent">especialista</em></h2>
+    <p>Cada certificação tem cor, time e método próprios. Deslize e conheça a sua.</p>
+  </div>
+
+  <div class="ns-stage">
+    <button class="ns-arrow prev" data-dir="prev" aria-label="Anterior"><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
+    <div class="ns-track" data-track>
+      {normas.map((n) => (
+        <a class="ns-card" href={n.href} style={`--c:${n.color}`}>
+          <div class="ns-media">
+            <span class="ns-icon-bg"><iconify-icon icon={n.icon}></iconify-icon></span>
+            <img src={`/assets/img/consultoria/${n.slug}.webp`} alt={n.nome} loading="lazy" onerror="this.style.display='none'" />
+            <span class="ns-grad"></span>
+          </div>
+          <div class="ns-content">
+            <h3>{n.nome}</h3>
+            <span class="ns-line"></span>
+            <span class="ns-cat">{n.categoria}</span>
+            <p class="ns-tag">{n.tagline}</p>
+            <span class="ns-cta-link">Conhecer a consultoria <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+          </div>
+          <span class="ns-go"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span>
+        </a>
+      ))}
+    </div>
+    <button class="ns-arrow next" data-dir="next" aria-label="Próximo"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
+  </div>
+
+  <div class="ns-dots" data-dots></div>
+
+  <div class="ns-cta">
+    <a href="/consultoria" class="btn btn--primary btn--lg">Ver todas as normas <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+  </div>
+</section>
+
+<style>
+  .ns { position: relative; background: var(--navy); color: var(--cream); padding: 88px 0 80px; overflow: hidden; }
+  .ns-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(760px 460px at 84% -8%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(620px 420px at 4% 108%, rgba(20,167,175,0.10), transparent 60%); }
+  .ns-watermark { position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); font-size: clamp(120px, 22vw, 300px); font-weight: 800; letter-spacing: -0.04em; color: rgba(255,244,221,0.035); line-height: 1; pointer-events: none; user-select: none; white-space: nowrap; }
+  .ns > .container, .ns-stage, .ns-dots, .ns-cta { position: relative; z-index: 1; }
+
+  .ns-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .ns-head .tag-pill { margin-bottom: 18px; }
+  .ns-head h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; letter-spacing: -0.025em; color: var(--cream); line-height: 1.08; }
+  .ns-head p { font-size: 16.5px; color: rgba(255,244,221,0.7); margin-top: 14px; }
+
+  .ns-stage { position: relative; display: flex; align-items: center; }
+  .ns-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 8px clamp(24px, 5vw, 64px) 16px; width: 100%; scrollbar-width: none; cursor: grab; }
+  .ns-track::-webkit-scrollbar { display: none; }
+  .ns-track.dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
+
+  .ns-card { position: relative; scroll-snap-align: start; flex: 0 0 clamp(260px, 23vw, 320px); aspect-ratio: 3/4.1; border-radius: var(--r-24); overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--c) 32%, rgba(255,244,221,0.08)); background: var(--surface-deep);
+    transition: transform .4s var(--ease-soft), box-shadow .4s, border-color .4s; }
+  .ns-card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--c) 70%, transparent);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.65), 0 0 40px -12px color-mix(in srgb, var(--c) 75%, transparent); }
+
+  .ns-media { position: absolute; inset: 0; }
+  /* fallback: gradiente na cor + ícone grande */
+  .ns-icon-bg { position: absolute; inset: 0; display: grid; place-items: center; padding-bottom: 32%; font-size: 96px;
+    color: rgba(255,255,255,0.22);
+    background: radial-gradient(120% 85% at 50% 8%, color-mix(in srgb, var(--c) 62%, #1a1f26), #14181e 78%); }
+  .ns-icon-bg iconify-icon { filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4)); }
+  .ns-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ns-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,10,13,0.97) 0%, rgba(8,10,13,0.92) 26%, rgba(8,10,13,0.6) 50%, rgba(8,10,13,0.2) 70%, transparent 88%); }
+
+  .ns-content { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 22px; }
+  .ns-content h3 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.02em; line-height: 1; }
+  .ns-line { display: block; width: 42px; height: 3px; border-radius: 2px; background: var(--c); margin: 12px 0; box-shadow: 0 0 12px color-mix(in srgb, var(--c) 80%, transparent); }
+  /* categoria em versão clareada da cor da norma → sempre legível no escuro */
+  .ns-cat { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: color-mix(in srgb, var(--c) 60%, #ffffff); }
+  .ns-tag { font-size: 13.5px; color: rgba(255,244,221,0.82); line-height: 1.45; margin-top: 8px; }
+  .ns-cta-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 13px; font-weight: 800; color: #fff; padding: 8px 14px; border-radius: 999px; background: color-mix(in srgb, var(--c) 90%, #000 5%); width: fit-content; box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--c) 70%, transparent); transition: transform .3s var(--ease-soft); }
+  .ns-card:hover .ns-cta-link { transform: translateX(3px); }
+  .ns-cta-link iconify-icon { font-size: 15px; }
+
+  .ns-go { position: absolute; top: 16px; right: 16px; width: 38px; height: 38px; border-radius: 999px; display: grid; place-items: center; font-size: 18px; color: #fff;
+    background: color-mix(in srgb, var(--c) 60%, transparent); backdrop-filter: blur(4px); opacity: 0; transform: translateY(-6px); transition: opacity .35s, transform .35s; }
+  .ns-card:hover .ns-go { opacity: 1; transform: none; }
+
+  .ns-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 48px; height: 48px; border-radius: 999px; background: var(--orange); border: none; color: #fff; display: grid; place-items: center; font-size: 22px; cursor: pointer; box-shadow: 0 10px 26px -8px rgba(255,89,37,0.7); transition: transform .25s var(--ease-soft), background .25s; }
+  .ns-arrow:hover { background: var(--orange-dark); }
+  .ns-arrow.prev { left: 14px; } .ns-arrow.next { right: 14px; }
+  .ns-arrow:disabled { opacity: .3; pointer-events: none; }
+
+  .ns-dots { display: flex; gap: 8px; justify-content: center; margin-top: 26px; }
+  .ns-dots button { width: 8px; height: 8px; border-radius: 999px; background: rgba(255,244,221,0.28); transition: all .3s var(--ease-soft); }
+  .ns-dots button.active { background: var(--orange); width: 26px; border-radius: 5px; }
+
+  .ns-cta { text-align: center; margin-top: 36px; }
+
+  @media (max-width: 860px) {
+    .ns { padding: 60px 0; }
+    .ns-arrow { display: none; }
+    .ns-card { flex-basis: 74%; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll(".ns[data-carousel]").forEach((root) => {
+      const track = root.querySelector("[data-track]");
+      const dotsBox = root.querySelector("[data-dots]");
+      if (!track) return;
+      const cards = track.querySelectorAll(".ns-card");
+      const cardW = () => (cards[0] ? cards[0].getBoundingClientRect().width + 20 : 320);
+
+      // dots = páginas visíveis
+      const pages = () => Math.max(1, Math.ceil(track.scrollWidth / track.clientWidth));
+      function buildDots() {
+        dotsBox.innerHTML = "";
+        for (let i = 0; i < pages(); i++) {
+          const b = document.createElement("button");
+          b.addEventListener("click", () => track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" }));
+          dotsBox.appendChild(b);
+        }
+        sync();
+      }
+      function sync() {
+        const prev = root.querySelector('[data-dir="prev"]');
+        const next = root.querySelector('[data-dir="next"]');
+        const max = track.scrollWidth - track.clientWidth - 4;
+        if (prev) prev.disabled = track.scrollLeft <= 4;
+        if (next) next.disabled = track.scrollLeft >= max;
+        const idx = Math.round(track.scrollLeft / track.clientWidth);
+        dotsBox.querySelectorAll("button").forEach((d, i) => d.classList.toggle("active", i === idx));
+      }
+      root.querySelectorAll(".ns-arrow").forEach((btn) =>
+        btn.addEventListener("click", () => track.scrollBy({ left: (btn.dataset.dir === "next" ? 1 : -1) * cardW() * 2, behavior: "smooth" })));
+      track.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", buildDots);
+      buildDots();
+
+      // arraste
+      let down = false, sx = 0, ssl = 0, moved = false;
+      track.addEventListener("mousedown", (e) => { down = true; moved = false; sx = e.pageX; ssl = track.scrollLeft; track.classList.add("dragging"); });
+      window.addEventListener("mouseup", () => { down = false; track.classList.remove("dragging"); });
+      window.addEventListener("mousemove", (e) => { if (!down) return; const dx = e.pageX - sx; if (Math.abs(dx) > 5) moved = true; track.scrollLeft = ssl - dx; });
+      track.addEventListener("click", (e) => { if (moved) e.preventDefault(); }, true);
+    });
+  })();
+</script>

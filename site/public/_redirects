@@ -1,0 +1,39 @@
+# =========================================================
+# TEMPLUM · Redirects (Cloudflare Pages)
+# Objetivo: nenhuma das URLs antigas (templum.com.br) pode dar 404.
+# Sintaxe: <origem>  <destino>  <status>
+# Ordem importa: regras mais específicas primeiro.
+#
+# ⚠️  Este arquivo será preenchido conforme migrarmos cada página.
+#     Enquanto a página nova não existe, apontamos a URL antiga para a
+#     página de consultoria correspondente (302 = temporário, trocar p/ 301
+#     quando a versão final estiver no ar).
+# =========================================================
+
+# ---- Famílias de LP antigas → página de consultoria da norma ----
+/lp/iso-27001            /consultoria/iso-27001     302
+/lp-antigas/iso-27001    /consultoria/iso-27001     302
+/iso-27001               /consultoria/iso-27001     302
+/lp/iso-9001             /consultoria/iso-9001      302
+/lp-antigas/iso-9001     /consultoria/iso-9001      302
+/iso-9001                /consultoria/iso-9001      302
+/lp/pbqp-h               /consultoria/pbqp-h        302
+/lp-antigas/pbqp-h       /consultoria/pbqp-h        302
+/pbqp-h                  /consultoria/pbqp-h        302
+/lp-antigas/iso-14001    /consultoria/iso-14001     302
+/lp-antigas/iso-45001    /consultoria/iso-45001     302
+/lp-antigas/esg          /consultoria/esg           302
+/lp-antigas/sassmaq      /consultoria/sassmaq       302
+/lp-antigas/fssc-22000   /consultoria/fssc-22000    302
+/lp-antigas/haccp        /consultoria/haccp         302
+/lp-antigas/sgi          /consultoria/sgi           302
+/lp-antigas/iso-37001    /consultoria/iso-37001     302
+/lp-antigas/lgpd         /consultoria/lgpd          302
+
+# ---- Catch-alls por família de prefixo (placeholder) ----
+# /ab/*        → definir destino por campanha quando migrar
+# /certificado/* → definir destino quando migrar
+# /consult/*   → /consultoria/:splat  (avaliar correspondência 1:1)
+
+# NOTA: gerar este arquivo automaticamente a partir de urls-templum.md
+# é o próximo passo recomendado (script em /scripts).

@@ -1,0 +1,111 @@
+---
+// Header estilo G4: top-banner de oferta + nav + 2 CTAs + mega-menu de normas.
+import { normas } from "../data/normas.js";
+
+const navLinks = [
+  { label: "Consultoria", href: "/consultoria" },
+  { label: "Auditoria", href: "/auditoria" },
+  { label: "Treinamentos", href: "/cursos" },
+  { label: "Soluções de IA", href: "/solucoes-de-ia" },
+  { label: "Quem somos", href: "/quem-somos/sobre" },
+  { label: "Cases", href: "/case-de-sucesso" },
+];
+---
+
+<!-- TOP BANNER -->
+<div class="top-banner">
+  <iconify-icon icon="solar:fire-bold"></iconify-icon>
+  <span><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
+  <a href="/form" class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+</div>
+
+<header class="hd">
+  <div class="hd-inner">
+    <a href="/" class="templum-logo" aria-label="Templum — página inicial">
+      <img src="/assets/logo/templum.png" alt="Templum" />
+    </a>
+
+    <nav class="hd-nav" aria-label="Navegação principal">
+      <div class="hd-item has-mega">
+        <a href="/consultoria" class="hd-link">Consultoria <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
+        <div class="mega">
+          <div class="mega-grid">
+            {normas.map((n) => (
+              <a class="mega-link" href={n.href}>
+                <span class="mega-ico" style={`color:${n.color};background:color-mix(in srgb, ${n.color} 12%, transparent)`}><iconify-icon icon={n.icon}></iconify-icon></span>
+                <span>
+                  <strong>{n.nome}</strong>
+                  <em>{n.categoria}</em>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+      {navLinks.slice(1).map((l) => <a class="hd-link" href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="hd-actions">
+      <a href="/contato" class="btn btn--outline btn--sm hd-ghost">Quero me inscrever</a>
+      <a href="/form" class="btn btn--dark btn--sm">Falar com especialista</a>
+    </div>
+
+    <button class="hd-burger" aria-label="Abrir menu" id="hdBurger">
+      <iconify-icon icon="solar:hamburger-menu-linear"></iconify-icon>
+    </button>
+  </div>
+
+  <div class="hd-mobile" id="hdMobile">
+    <nav>{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+    <a href="/form" class="btn btn--primary btn--block">Falar com especialista</a>
+  </div>
+</header>
+
+<style>
+  .top-banner { background: var(--surface-deep); color: var(--cream); display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 24px; font-size: 13px; font-weight: 600; text-align: center; flex-wrap: wrap; }
+  .top-banner iconify-icon { color: var(--orange); font-size: 15px; }
+  .top-banner .tb-link { display: inline-flex; align-items: center; gap: 5px; color: var(--orange); font-weight: 700; }
+  .top-banner .tb-link iconify-icon { color: var(--orange); transition: transform .3s var(--ease-soft); }
+  .top-banner .tb-link:hover iconify-icon { transform: translateX(3px); }
+
+  .hd { position: sticky; top: 0; z-index: 60; background: rgba(255,255,255,0.92); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .hd-inner { display: flex; align-items: center; gap: 24px; height: var(--nav-h); max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+  .hd .templum-logo img { height: 42px; }
+  .hd-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
+  .hd-link { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 600; color: var(--text); padding: 8px 13px; border-radius: 8px; transition: color .25s var(--ease-soft); cursor: pointer; }
+  .hd-link iconify-icon { font-size: 14px; transition: transform .25s var(--ease-soft); }
+  .hd-link:hover { color: var(--orange); }
+  .hd-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .hd-item { position: relative; }
+  .mega { position: absolute; top: calc(100% + 12px); left: 0; width: 640px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); box-shadow: var(--shadow-lift); padding: 18px; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .25s var(--ease-soft), transform .25s var(--ease-soft), visibility .25s; }
+  .hd-item:hover .mega { opacity: 1; visibility: visible; transform: none; }
+  .hd-item:hover .hd-link iconify-icon { transform: rotate(180deg); }
+  .mega-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .mega-link { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: var(--r-12); transition: background .2s var(--ease-soft); }
+  .mega-link:hover { background: var(--bg); }
+  .mega-link span:last-child { display: flex; flex-direction: column; gap: 2px; }
+  .mega-link strong { font-size: 13.5px; font-weight: 700; color: var(--text); }
+  .mega-link em { font-size: 11px; font-style: normal; color: var(--text-mid); line-height: 1.3; }
+  .mega-ico { width: 34px; height: 34px; min-width: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 19px; flex-shrink: 0; }
+
+  .hd-burger { display: none; margin-left: auto; font-size: 26px; color: var(--text); padding: 6px; }
+  .hd-mobile { display: none; flex-direction: column; gap: 14px; padding: 20px 24px 28px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .hd-mobile.open { display: flex; }
+  .hd-mobile nav { display: flex; flex-direction: column; }
+  .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); }
+
+  @media (max-width: 1080px) {
+    .hd-nav, .hd-ghost { display: none; }
+    .hd-burger { display: inline-flex; }
+  }
+  @media (max-width: 560px) { .hd-actions .btn { display: none; } .top-banner { font-size: 12px; } }
+</style>
+
+<script is:inline>
+  (function () {
+    const b = document.getElementById("hdBurger");
+    const m = document.getElementById("hdMobile");
+    if (b && m) b.addEventListener("click", () => m.classList.toggle("open"));
+  })();
+</script>

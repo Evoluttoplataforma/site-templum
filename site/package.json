@@ -1,0 +1,16 @@
+{
+  "name": "templum-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site institucional Templum — Astro estático (substitui o Framer).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  }
+}

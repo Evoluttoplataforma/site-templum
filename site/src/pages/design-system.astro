@@ -1,0 +1,342 @@
+---
+import Base from "../layouts/Base.astro";
+import NormShowcase from "../components/NormShowcase.astro";
+import NormGrid from "../components/NormGrid.astro";
+import Testimonials from "../components/Testimonials.astro";
+import BlogSection from "../components/BlogSection.astro";
+import SeloImplementando from "../components/SeloImplementando.astro";
+import OrbitPlatform from "../components/OrbitPlatform.astro";
+import Newsletter from "../components/Newsletter.astro";
+import ClientLogos from "../components/ClientLogos.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import HeroSlider from "../components/HeroSlider.astro";
+import { normas } from "../data/normas.js";
+
+const typeScale = [
+  { cls: "display-1", name: "Display 1", spec: "clamp(48→88)px · 800" },
+  { cls: "display-2", name: "Display 2", spec: "clamp(40→72)px · 800" },
+  { cls: "h1", name: "Heading 1", spec: "clamp(34→56)px · 800" },
+  { cls: "h2", name: "Heading 2", spec: "clamp(28→44)px · 800" },
+  { cls: "h3", name: "Heading 3", spec: "clamp(22→30)px · 700" },
+  { cls: "bold-l", name: "Bold L", spec: "18px · 700" },
+  { cls: "paragraph", name: "Paragraph", spec: "17px / 1.7 · 500" },
+  { cls: "reg-m", name: "Regular M", spec: "13px / 1.5 · 500" },
+  { cls: "label-caps", name: "Label Caps", spec: "11px · 0.14em" },
+];
+
+const brandColors = [
+  ["--orange", "#FF5925", "Acento / primária"],
+  ["--orange-dark", "#AF4022", "Hover"],
+  ["--navy", "#222831", "Seções escuras"],
+  ["--surface-deep", "#1A1F26", "Fundo escuro 2"],
+  ["--cream", "#FFF4DD", "Texto sobre escuro"],
+  ["--bg", "#FFFAEB", "Seção clara"],
+  ["--surface", "#FFFFFF", "Cards"],
+  ["--peach", "#FDA47D", "Apoio"],
+  ["--yellow", "#FDB73F", "Destaque"],
+  ["--text", "#18191B", "Texto"],
+];
+
+const normColors = [
+  ["ISO 9001", "#1167E4"], ["ISO 14001", "#00A844"], ["ISO 27001 / LGPD", "#14A7AF"],
+  ["ISO 37001 / 37301", "#BC0000"], ["ISO 45001 / PBQP-H", "#7F2611"],
+  ["FSSC 22000 / HACCP", "#FFB600"], ["ESG / SGI", "#9DBF0D"], ["SASSMAQ", "#2E3191"],
+];
+
+const nav = [
+  ["fundacao", "Início"], ["ritmo", "Ritmo"], ["tipografia", "Tipografia"], ["cores", "Cores"],
+  ["botoes", "Botões"], ["badges", "Badges"], ["formularios", "Formulários"], ["cards", "Cards"], ["clientes", "Clientes"],
+  ["navegacao", "Navegação"], ["herosec", "Hero"], ["normas", "Normas"], ["orbit", "Orbit"],
+  ["depoimentos", "Depoimentos"], ["blog", "Blog"], ["newsletter", "Newsletter"], ["selo", "Selo"],
+  ["faixas", "Faixas"], ["faq", "FAQ"], ["rodape", "Rodapé"], ["icones", "Ícones"],
+];
+---
+
+<Base title="Design System · Templum" noHeaderFooter={true}>
+  <nav class="ds-nav">
+    <span class="templum-logo"><img src="/assets/logo/templum.png" alt="Templum" /></span>
+    <span class="ds-nav-tag">Design System</span>
+    <div class="ds-nav-links">{nav.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}</div>
+  </nav>
+
+  <!-- HERO escuro -->
+  <section id="fundacao" class="ds-hero">
+    <div class="ds-hero-bg" aria-hidden="true"></div>
+    <div class="ds-hero-inner">
+      <span class="tag-pill tag-pill--glow">Design System</span>
+      <h1 class="ds-hero-title">Identidade <em class="accent">Templum</em> em código</h1>
+      <p class="ds-hero-sub">Navy <strong>#222831</strong> + laranja <strong>#FF5925</strong> + creme, em Montserrat (Extrabold nos títulos, Medium no corpo). Fonte única da verdade — todos os componentes do site vivem aqui.</p>
+      <div class="ds-hero-actions">
+        <a href="#tipografia" class="btn btn--primary btn--lg">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/" class="btn btn--onDark btn--lg">Ver a home</a>
+      </div>
+    </div>
+    <div class="ds-hero-img"><img src="/assets/img/hero/templum-consultoria-socios.webp" alt="" /></div>
+  </section>
+
+  <!-- 01 RITMO DE COR -->
+  <section id="ritmo" class="section">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">01 · Princípio</span><h2>Ritmo de cor: escura / clara</h2><p class="reg-l">As seções alternam sempre — uma escura (navy), uma clara (creme/branca). Acentos sempre em laranja; faixas de CTA em laranja sólido.</p></div>
+      <div class="ds-rhythm">
+        <div class="rh navy"><span>Escura · navy</span></div>
+        <div class="rh cream"><span>Clara · creme</span></div>
+        <div class="rh navy"><span>Escura · navy</span></div>
+        <div class="rh cream"><span>Clara · creme</span></div>
+        <div class="rh orange"><span>CTA · laranja</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TIPOGRAFIA -->
+  <section id="tipografia" class="section section--cream">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">02 · Tipografia</span><h2>Montserrat</h2><p class="reg-l">Extrabold (800) em títulos, Medium (500) no corpo — conforme o Manual de Marca.</p></div>
+      <div class="ds-type">
+        {typeScale.map((t) => (
+          <div class="ds-type-row"><span class={t.cls}>{t.name}</span><span class="ds-spec reg-m">{t.spec}</span></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 CORES -->
+  <section id="cores" class="section">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">03 · Cores</span><h2>Paleta da marca</h2></div>
+      <div class="ds-swatches">
+        {brandColors.map(([token, hex, use]) => (
+          <div class="ds-swatch"><span class="ds-chip" style={`background:${hex}`}></span><div><strong class="bold-m">{hex}</strong><span class="reg-m">{token}</span><span class="reg-s">{use}</span></div></div>
+        ))}
+      </div>
+      <h3 class="h3" style="margin:48px 0 20px">Cores das sub-marcas (uma por norma)</h3>
+      <div class="ds-swatches">
+        {normColors.map(([nome, hex]) => (
+          <div class="ds-swatch"><span class="ds-chip" style={`background:${hex}`}></span><div><strong class="bold-m">{nome}</strong><span class="reg-m">{hex}</span></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 BOTÕES -->
+  <section id="botoes" class="section section--cream">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">04 · Botões</span><h2>Ações</h2></div>
+      <div class="ds-row"><a class="btn btn--primary">Primary</a><a class="btn btn--outline">Outline</a><a class="btn btn--dark">Dark</a><a class="btn btn--ghost">Ghost</a><a class="btn btn--primary" disabled>Disabled</a></div>
+      <div class="ds-row" style="margin-top:18px"><a class="btn btn--primary btn--sm">Small</a><a class="btn btn--primary">Default</a><a class="btn btn--primary btn--lg">Large <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+      <div class="ds-onDark"><a class="btn btn--primary">Primary</a><a class="btn btn--onDark">On Dark</a></div>
+    </div>
+  </section>
+
+  <!-- 05 BADGES -->
+  <section id="badges" class="section">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">05 · Badges & Tags</span><h2>Etiquetas</h2></div>
+      <div class="ds-row"><span class="tag-pill">Tag pill</span><span class="tag-pill tag-pill--glow">Tag glow</span><span class="badge badge--orange">Orange</span><span class="badge badge--orange-solid">Solid</span><span class="badge badge--navy">Navy</span><span class="badge badge--cream">Cream</span></div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIOS -->
+  <section id="formularios" class="section">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">Formulários</span><h2>Inputs & captura de lead</h2><p class="reg-l">Campos, estados (foco, erro), checkbox e card de lead — base para /form, /contato e iscas.</p></div>
+      <div class="ds-forms">
+        <div class="lead-card">
+          <div class="lead-title">Falar com um especialista</div>
+          <p class="lead-sub">Receba um diagnóstico gratuito do caminho até a sua certificação.</p>
+          <form class="form" onsubmit="return false">
+            <div class="form-row">
+              <div class="field"><label>Nome</label><input class="input" placeholder="Seu nome" /></div>
+              <div class="field"><label>Telefone</label><input class="input" placeholder="(00) 00000-0000" /></div>
+            </div>
+            <div class="field"><label>E-mail</label><input class="input" type="email" placeholder="voce@empresa.com" /></div>
+            <div class="field"><label>Norma de interesse</label>
+              <select class="select"><option>Selecione…</option>{normas.map((n) => <option>{n.nome}</option>)}</select>
+            </div>
+            <div class="field"><label>Mensagem</label><textarea class="textarea" placeholder="Conte um pouco sobre a sua empresa"></textarea></div>
+            <label class="choice"><input type="checkbox" /> Aceito receber contato e comunicações da Templum.</label>
+            <button class="btn btn--primary btn--block">Enviar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+          </form>
+        </div>
+        <div class="ds-form-states">
+          <div class="field field--error"><label>Campo com erro</label><input class="input" value="email-invalido" /><span class="error-msg">Informe um e-mail válido.</span></div>
+          <div class="field"><label>Campo em foco (clique)</label><input class="input" placeholder="Borda laranja ao focar" /></div>
+          <div class="form-success"><iconify-icon icon="solar:check-circle-bold"></iconify-icon><div><h4>Recebido!</h4><p>Mensagem de sucesso após o envio do formulário.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 CARDS -->
+  <section id="cards" class="section section--cream">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill">06 · Cards</span><h2>Componentes</h2></div>
+
+      <h4 class="h4" style="margin-bottom:16px">Ecossistema</h4>
+      <div class="eco-grid" style="margin-bottom:40px">
+        <div class="eco-card"><span class="eco-icon"><iconify-icon icon="solar:settings-bold"></iconify-icon></span><h3>Consultoria</h3><p>Implantamos sua certificação com método próprio.</p><span class="eco-link">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span></div>
+        <div class="eco-card"><span class="eco-icon"><iconify-icon icon="solar:clipboard-check-bold"></iconify-icon></span><h3>Auditoria</h3><p>Preparação para a certificadora.</p><span class="eco-link">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span></div>
+        <div class="eco-card"><span class="eco-icon"><iconify-icon icon="solar:square-academic-cap-bold"></iconify-icon></span><h3>Treinamentos</h3><p>Capacitação do seu time.</p><span class="eco-link">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span></div>
+        <div class="eco-card"><span class="eco-icon"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon></span><h3>Soluções de IA</h3><p>IA aplicada à gestão.</p><span class="eco-link">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span></div>
+      </div>
+
+      <h4 class="h4" style="margin-bottom:16px">Números</h4>
+      <div class="numbers-grid" style="margin-bottom:40px">
+        <div class="number-card"><span class="number-ico"><iconify-icon icon="solar:buildings-3-bold"></iconify-icon></span><div class="value"><em>+1.900</em></div><div class="label">empresas atendidas</div></div>
+        <div class="number-card"><span class="number-ico"><iconify-icon icon="solar:clipboard-check-bold"></iconify-icon></span><div class="value"><em>+5.000</em></div><div class="label">auditorias acompanhadas</div></div>
+        <div class="number-card"><span class="number-ico"><iconify-icon icon="solar:medal-star-bold"></iconify-icon></span><div class="value">200%</div><div class="label">de garantia</div></div>
+      </div>
+
+      <h4 class="h4" style="margin-bottom:16px">Checklist</h4>
+      <ul class="check-list">
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Item de checklist com ícone laranja</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Outro item da lista</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Pessoas (em bloco escuro) -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill tag-pill--glow">Card de pessoa</span><h2 style="color:var(--cream)">Especialistas</h2></div>
+      <div class="people-grid" style="grid-template-columns:repeat(3,1fr);max-width:760px">
+        {[["Igor","Sócio-fundador","igor"],["Chris","Diretor de Produtos · sócio","chris"],["Daniela","Sócia","dani"]].map(([n,c,f]) => (
+          <div class="person-card"><img class="person-photo" src={`/assets/img/socios/${f}.jpg`} alt={n} /><div class="person-body"><h4>{n}</h4><div class="person-divider"></div><span class="person-role">{c}</span></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTES (mural de logos) -->
+  <div id="clientes"><ClientLogos /></div>
+
+  <!-- NAVEGAÇÃO (header real) -->
+  <section id="navegacao" class="section">
+    <div class="container lg"><div class="ds-h"><span class="tag-pill">Navegação</span><h2>Header & top-banner</h2><p class="reg-l">Top-banner de oferta, logo, menu com mega-menu de normas, 2 CTAs e menu mobile. Fixo no topo ao rolar.</p></div></div>
+    <div class="container xl"><div class="ds-frame"><Header /></div></div>
+  </section>
+
+  <!-- HERO (real) -->
+  <section class="section section--cream" style="padding-bottom:0">
+    <div class="container lg"><div class="ds-h" id="herosec"><span class="tag-pill">Hero</span><h2>Hero slider</h2><p class="reg-l">Escuro, fundo por setor que alterna, tag, título com acento, checklist, trust strip e setas laterais.</p></div></div>
+    <div class="ds-frame ds-frame--flush"><HeroSlider /></div>
+  </section>
+
+  <!-- 07 NORMAS (carrossel real) -->
+  <div id="normas"><NormShowcase /></div>
+
+  <!-- ORBIT (plataforma própria) -->
+  <div id="orbit"><OrbitPlatform /></div>
+
+  <!-- 08 NORMAS (grid de ícones real) -->
+  <NormGrid />
+
+  <!-- 09 DEPOIMENTOS (componente real) -->
+  <div id="depoimentos"><Testimonials /></div>
+
+  <!-- 10 BLOG (componente real) -->
+  <div id="blog"><BlogSection /></div>
+
+  <!-- NEWSLETTER -->
+  <div id="newsletter"><Newsletter /></div>
+
+  <!-- SELO ESTAMOS IMPLEMENTANDO (seção dedicada) -->
+  <div id="selo"><SeloImplementando /></div>
+
+  <!-- 11 FAIXAS -->
+  <section id="faixas" class="section">
+    <div class="container lg"><div class="ds-h"><span class="tag-pill">11 · Faixas</span><h2>Missão, CTA e marquee</h2></div></div>
+    <div class="mission" style="margin-bottom:0">
+      <div class="container md"><p class="lead-line">Faixa de missão / BHAG</p><div class="big-num">+8.000</div><div class="big-label">número de destaque</div></div>
+    </div>
+  </section>
+  <div class="cta-band"><div class="container md"><h2>Faixa de CTA <em>laranja</em></h2><p>Fechamento de página, sempre antes do rodapé.</p><a href="/form" class="btn btn--dark btn--lg">Botão de ação</a></div></div>
+  <div class="marquee"><div class="marquee-track">{[...normas,...normas].map((n)=>(<><span>{n.nome}</span><span class="dot"></span></>))}</div></div>
+
+  <!-- 12 FAQ -->
+  <section id="faq" class="section section--cream">
+    <div class="container md">
+      <div class="ds-h" style="text-align:center"><span class="tag-pill">12 · FAQ</span><h2>Acordeão</h2></div>
+      <div class="faq-list">
+        <details class="faq-item" open><summary class="faq-question">Pergunta aberta<span class="faq-arrow">+</span></summary><div class="faq-answer">Resposta no estilo do sistema. O "+" gira 45° ao abrir.</div></details>
+        <details class="faq-item"><summary class="faq-question">Pergunta fechada<span class="faq-arrow">+</span></summary><div class="faq-answer">Conteúdo.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPÉ (real) -->
+  <section id="rodape" class="section">
+    <div class="container lg"><div class="ds-h"><span class="tag-pill">Rodapé</span><h2>Footer</h2><p class="reg-l">Marca, contatos (WhatsApp/Portugal), CNPJ, links por coluna e redes sociais.</p></div></div>
+    <div class="container xl"><div class="ds-frame"><Footer /></div></div>
+  </section>
+
+  <!-- 13 ÍCONES -->
+  <section id="icones" class="section section--navy">
+    <div class="container lg">
+      <div class="ds-h"><span class="tag-pill tag-pill--glow">13 · Ícones</span><h2 style="color:var(--cream)">Iconify · Solar</h2><p class="reg-l" style="color:rgba(255,244,221,0.7)">Conjunto único, herdando cor e tamanho do contexto.</p></div>
+      <div class="ds-icons">
+        {["solar:medal-ribbon-star-bold","solar:shield-keyhole-bold","solar:leaf-bold","solar:buildings-2-bold","solar:health-bold","solar:scale-bold","solar:chef-hat-bold","solar:planet-bold","solar:layers-bold","solar:delivery-bold","solar:lock-keyhole-bold","solar:cpu-bolt-bold"].map((ic) => (
+          <span class="ds-ico"><iconify-icon icon={ic}></iconify-icon></span>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ds-nav { position: sticky; top: 0; z-index: 60; display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .ds-nav .templum-logo img { height: 24px; }
+  .ds-nav-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); }
+  .ds-nav-links { display: flex; gap: 2px; margin-left: auto; flex-wrap: wrap; }
+  .ds-nav-links a { font-size: 12px; font-weight: 600; color: var(--text); padding: 6px 9px; border-radius: 8px; transition: color .2s; }
+  .ds-nav-links a:hover { color: var(--orange); }
+
+  .ds-hero { position: relative; background: var(--navy); color: var(--cream); display: flex; align-items: center; min-height: 440px; overflow: hidden; gap: clamp(24px,4vw,56px); padding: 24px clamp(24px,4vw,56px); }
+  .ds-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(680px 420px at 80% 10%, rgba(255,89,37,0.28), transparent 60%), radial-gradient(520px 360px at 5% 100%, rgba(255,89,37,0.12), transparent 60%); }
+  .ds-hero-inner, .ds-hero-img { position: relative; z-index: 1; }
+  .ds-hero-inner { flex: 1 1 54%; padding: 48px 0; max-width: 680px; }
+  .ds-hero .tag-pill { margin-bottom: 20px; }
+  .ds-hero-title { font-size: clamp(34px,4.4vw,58px); font-weight: 800; line-height: 1.06; color: var(--cream); margin-bottom: 18px; }
+  .ds-hero-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-bottom: 28px; }
+  .ds-hero-sub strong { color: var(--cream); }
+  .ds-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ds-hero-img { flex: 1 1 40%; align-self: center; overflow: hidden; border-radius: var(--r-24); aspect-ratio: 16/10; box-shadow: 0 30px 80px -24px rgba(255,89,37,0.45), 0 0 0 1px rgba(255,244,221,0.10); }
+  .ds-hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: 70% center; opacity: 0.92; }
+
+  .ds-h { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+  .ds-h .tag-pill { margin-bottom: 16px; }
+  .ds-h h2 { font-size: clamp(28px,3.4vw,42px); font-weight: 800; letter-spacing: -0.025em; }
+  .ds-h p { margin-top: 12px; }
+
+  .ds-rhythm { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+  .rh { height: 120px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .rh.navy { background: var(--navy); color: var(--cream); }
+  .rh.cream { background: var(--bg); color: var(--text-mid); border: 1px solid var(--border); }
+  .rh.orange { background: var(--orange); color: #fff; }
+
+  .ds-type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .ds-spec { white-space: nowrap; color: var(--text-soft); }
+
+  .ds-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+  .ds-swatch { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 14px; }
+  .ds-swatch div { display: flex; flex-direction: column; gap: 1px; }
+  .ds-chip { width: 44px; height: 44px; border-radius: var(--r-12); flex-shrink: 0; border: 1px solid var(--border); }
+
+  .ds-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .ds-onDark { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 18px; padding: 24px; background: var(--navy); border-radius: var(--r-16); }
+
+  .ds-icons { display: flex; gap: 14px; flex-wrap: wrap; }
+  .ds-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.14); color: var(--orange); }
+
+  @media (max-width: 860px) { .ds-hero-img { display: none; } .ds-rhythm { grid-template-columns: 1fr 1fr; } }
+
+  /* vitrines de componentes globais (header/hero/footer) */
+  .ds-frame { border: 1px solid var(--border-2); border-radius: var(--r-20); overflow: hidden; box-shadow: var(--shadow-card); }
+  .ds-frame--flush { border-radius: 0; border-left: 0; border-right: 0; box-shadow: none; }
+
+  /* formulários */
+  .ds-forms { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: start; }
+  .ds-form-states { display: flex; flex-direction: column; gap: 20px; }
+  @media (max-width: 860px) { .ds-forms { grid-template-columns: 1fr; } }
+</style>

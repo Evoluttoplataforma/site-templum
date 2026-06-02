@@ -1,0 +1,168 @@
+---
+import Base from "../layouts/Base.astro";
+import HeroSlider from "../components/HeroSlider.astro";
+import NormShowcase from "../components/NormShowcase.astro";
+import OrbitPlatform from "../components/OrbitPlatform.astro";
+import SeloImplementando from "../components/SeloImplementando.astro";
+import Testimonials from "../components/Testimonials.astro";
+import Newsletter from "../components/Newsletter.astro";
+import BlogSection from "../components/BlogSection.astro";
+import ClientLogos from "../components/ClientLogos.astro";
+import Especialistas from "../components/Especialistas.astro";
+import { normas } from "../data/normas.js";
+
+const ecossistema = [
+  { icon: "solar:settings-bold", nome: "Consultoria", desc: "Implantamos sua certificação com método próprio e plataforma de gestão, do diagnóstico à auditoria.", href: "/consultoria" },
+  { icon: "solar:clipboard-check-bold", nome: "Auditoria", desc: "Auditorias internas e preparação para a certificadora, conduzidas por especialistas.", href: "/auditoria" },
+  { icon: "solar:square-academic-cap-bold", nome: "Treinamentos", desc: "Capacitação do seu time nas normas e na gestão, presencial e online.", href: "/cursos" },
+  { icon: "solar:cpu-bolt-bold", nome: "Soluções de IA", desc: "Inteligência artificial aplicada à gestão para acelerar processos e decisões.", href: "/solucoes-de-ia" },
+];
+
+// Números oficiais (fonte: site atual)
+const numeros = [
+  { value: "+2.000", label: "clientes certificados em todo o Brasil", icon: "solar:users-group-rounded-bold" },
+  { value: "+1,5 mi", label: "de interações entre clientes e especialistas", icon: "solar:chat-round-line-bold" },
+  { value: "R$ 3,3 bi", label: "em ganhos financeiros gerados aos clientes", icon: "solar:dollar-minimalistic-bold" },
+];
+
+const resultados = [
+  { pct: 40, label: "mais eficiência operacional" },
+  { pct: 30, label: "menos retrabalho" },
+  { pct: 85, label: "mais acesso a grandes contratos" },
+  { pct: 60, label: "decisões mais previsíveis" },
+];
+
+const faqs = [
+  { q: "Como funciona a garantia de 200%?", a: "Somos a única consultoria no Brasil que devolve o dobro do investimento caso sua empresa não obtenha a certificação seguindo o nosso método. É o nosso compromisso com o seu resultado." },
+  { q: "Quanto tempo leva para certificar?", a: "Depende da norma e da maturidade da sua gestão. No diagnóstico inicial apresentamos um cronograma realista — nosso método e o Orbit encurtam o caminho." },
+  { q: "Preciso parar a operação para implementar?", a: "Não. A metodologia roda em paralelo à operação, organizando o que já existe e preenchendo as lacunas de forma gradual." },
+  { q: "A Templum atende empresas de qualquer porte?", a: "Sim. São milhares de contratos com empresas de diferentes setores e tamanhos, da pequena indústria a grandes construtoras e empresas de tecnologia." },
+];
+---
+
+<Base>
+  <!-- 1. HERO (escura) -->
+  <HeroSlider />
+
+  <!-- LOGOS DE CLIENTES (trusted by) -->
+  <ClientLogos />
+
+  <!-- 2. ECOSSISTEMA (clara) -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">O ecossistema Templum</span>
+        <h2>Tudo o que sua empresa precisa para <em class="accent">crescer com gestão</em></h2>
+        <p>Da consultoria à inteligência artificial — uma plataforma completa para organizar, certificar e escalar.</p>
+      </div>
+      <div class="eco-grid">
+        {ecossistema.map((e) => (
+          <a class="eco-card reveal" href={e.href}>
+            <span class="eco-icon"><iconify-icon icon={e.icon}></iconify-icon></span>
+            <h3>{e.nome}</h3>
+            <p>{e.desc}</p>
+            <span class="eco-link">Explorar <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. NORMAS (escura) -->
+  <NormShowcase />
+
+  <!-- 4. GARANTIA 200% (clara) -->
+  <section class="section">
+    <div class="container xl">
+      <div class="split">
+        <div class="split-text">
+          <span class="tag-pill">Garantia de 200%</span>
+          <h2 class="h1">A única consultoria que devolve o <em class="accent">dobro</em> se você não certificar</h2>
+          <p class="paragraph">Não entregamos só um certificado na parede. Organizamos toda a gestão da sua empresa — e assumimos o risco com você.</p>
+          <ul class="check-list">
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Risco zero: o resultado é o nosso compromisso</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Método próprio refinado em +30 anos</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Plataforma Orbit que centraliza toda a gestão</li>
+          </ul>
+          <a href="/form" class="btn btn--primary btn--lg">Quero a garantia de 200% <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+        <div class="split-img reveal">
+          <img src="/assets/img/garantia-200.png" alt="Selo de garantia de 200% da Templum" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ORBIT (escura) -->
+  <OrbitPlatform />
+
+  <!-- 6. NÚMEROS + RESULTADOS (clara) -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Resultado que aparece</span>
+        <h2>A certificação que <em class="accent">paga por si só</em></h2>
+        <p>Em média, empresas certificadas com a Templum colhem ganhos reais de eficiência e mercado.</p>
+      </div>
+      <div class="numbers-grid">
+        {numeros.map((n) => (
+          <div class="number-card reveal">
+            <span class="number-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
+            <div class="value"><em>{n.value}</em></div>
+            <div class="label">{n.label}</div>
+          </div>
+        ))}
+      </div>
+      <div class="chart reveal">
+        {resultados.map((r) => (
+          <div class="bar-wrap">
+            <div class="bar" style={`height:${r.pct}%`}>{r.pct}%</div>
+            <span class="bar-label">{r.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. SELO ESTAMOS IMPLEMENTANDO (escura) -->
+  <SeloImplementando />
+
+  <!-- 8. DEPOIMENTOS (clara) -->
+  <Testimonials />
+
+  <!-- 9. ESPECIALISTAS (escura) -->
+  <Especialistas />
+
+  <!-- 10. NEWSLETTER (clara) -->
+  <Newsletter />
+
+  <!-- 11. BLOG (escura) -->
+  <BlogSection />
+
+  <!-- 12. FAQ (clara) -->
+  <section class="section section--cream">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Perguntas frequentes</span>
+        <h2>Ainda com <em class="accent">dúvidas?</em></h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. CTA FINAL (faixa laranja) -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para organizar sua empresa e <em>crescer do jeito certo?</em></h2>
+      <p>Fale com um consultor e receba um diagnóstico do caminho mais curto até a sua certificação.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>

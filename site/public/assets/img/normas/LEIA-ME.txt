@@ -1,0 +1,9 @@
+FOTOS DAS NORMAS
+================
+Coloque aqui a foto de cada norma com o nome = slug + .webp (ou .jpg).
+Slugs: iso-9001, iso-14001, iso-27001, iso-45001, iso-37001, pbqp-h,
+       fssc-22000, haccp, esg, sgi, sassmaq, lgpd
+Ex.: iso-9001.webp
+
+Enquanto a foto não existir, o card mostra um fundo na cor da norma + ícone (fallback automático).
+Proporção recomendada: vertical ~3:4 (ex.: 900x1200).

@@ -1,0 +1,156 @@
+---
+// Depoimentos em vídeo — carrossel + lightbox (Vimeo). Thumb automática do Vimeo.
+import { depoimentos } from "../data/depoimentos.js";
+const { nota } = Astro.props;
+---
+
+<section class="tm section--cream" data-carousel>
+  <div class="container xl tm-head">
+    <span class="tag-pill">Cases de sucesso</span>
+    <h2>Depoimentos de quem <em class="accent">transformou a gestão</em></h2>
+    <p>Empresários e gestores contam como organizaram a empresa e certificaram com a Templum.</p>
+    {nota && (
+      <div class="tm-google">
+        <iconify-icon icon="logos:google-icon"></iconify-icon>
+        <span class="tm-stars"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></span>
+        <strong>{nota}</strong> de nota no Google
+      </div>
+    )}
+  </div>
+
+  <div class="tm-stage">
+    <button class="tm-arrow prev" data-dir="prev" aria-label="Anterior"><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
+    <div class="tm-track" data-track>
+      {depoimentos.map((d) => (
+        <a class={`tm-card ${d.vimeo ? "" : "is-soon"}`} href={d.vimeo ? `https://vimeo.com/${d.vimeo}` : "/case-de-sucesso"} data-vimeo={d.vimeo || null}>
+          <div class={`tm-thumb ${d.vimeo ? "" : "is-soon"}`}>
+            {d.vimeo ? (
+              <>
+                <img src={`https://vumbnail.com/${d.vimeo}.jpg`} alt={d.nome} loading="lazy" onerror="this.style.display='none'" />
+                <span class="tm-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
+                <span class="tm-watch">Assista o vídeo</span>
+              </>
+            ) : (
+              <img class="tm-soon" src="/assets/img/estamos-implementando.webp" alt="Em breve" loading="lazy" />
+            )}
+            {d.norma && <span class="tm-norma">{d.norma}</span>}
+          </div>
+          <div class="tm-info">
+            <h4>{d.nome}</h4>
+            <p>{d.cargo}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+    <button class="tm-arrow next" data-dir="next" aria-label="Próximo"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
+  </div>
+
+  <div class="tm-dots" data-dots></div>
+  <div class="tm-cta"><a href="/case-de-sucesso" class="btn btn--dark btn--lg">Ver todos os depoimentos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+
+  <!-- lightbox -->
+  <div class="tm-lb" data-lightbox hidden>
+    <button class="tm-lb-close" data-lb-close aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+    <div class="tm-lb-frame" data-lb-frame></div>
+  </div>
+</section>
+
+<style>
+  .tm { padding: 88px 0 80px; overflow: hidden; }
+  .tm-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .tm-head .tag-pill { margin: 0 auto 18px; }
+  .tm-head h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; }
+  .tm-head p { font-size: 16.5px; color: var(--text-mid); margin-top: 14px; }
+  .tm-google { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 14px; color: var(--text-2); box-shadow: var(--shadow-soft); }
+  .tm-google iconify-icon { font-size: 18px; }
+  .tm-google .tm-stars { display: inline-flex; color: #FBBF24; gap: 1px; }
+  .tm-google .tm-stars iconify-icon { font-size: 15px; }
+  .tm-google strong { color: var(--text); font-weight: 800; }
+
+  .tm-stage { position: relative; display: flex; align-items: center; }
+  .tm-track { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 8px clamp(24px,5vw,64px) 12px; width: 100%; scrollbar-width: none; cursor: grab; }
+  .tm-track::-webkit-scrollbar { display: none; }
+  .tm-track.dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
+
+  .tm-card { scroll-snap-align: start; flex: 0 0 clamp(280px, 30vw, 380px); }
+  .tm-thumb { position: relative; aspect-ratio: 16/10; border-radius: var(--r-20); overflow: hidden; background: linear-gradient(135deg, var(--navy-2), var(--surface-deep)); box-shadow: var(--shadow-card); }
+  .tm-thumb.is-soon { background: var(--cream); display: grid; place-items: center; }
+  .tm-soon { width: auto; height: 92%; max-width: 86%; object-fit: contain; }
+  .tm-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .tm-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,12,15,0.6), transparent 55%); }
+  .tm-thumb.is-soon::after { display: none; }
+  .tm-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 60px; height: 60px; border-radius: 999px; background: rgba(255,255,255,0.92); color: var(--navy); display: grid; place-items: center; font-size: 24px; z-index: 2; transition: background .3s, transform .3s var(--ease-soft); }
+  .tm-card:hover .tm-play { background: var(--orange); color: #fff; transform: translate(-50%,-50%) scale(1.08); }
+  .tm-watch { position: absolute; left: 16px; bottom: 14px; z-index: 2; font-size: 13px; font-weight: 600; color: #fff; }
+  .tm-norma { position: absolute; top: 12px; right: 12px; z-index: 2; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; background: rgba(255,89,37,0.9); padding: 4px 9px; border-radius: 999px; }
+  .tm-info { text-align: center; padding: 16px 8px 0; }
+  .tm-info h4 { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; }
+  .tm-info p { font-size: 13px; color: var(--text-mid); margin-top: 3px; }
+
+  .tm-arrow { position: absolute; top: calc(50% - 18px); transform: translateY(-50%); z-index: 3; width: 46px; height: 46px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border-2); color: var(--text); display: grid; place-items: center; font-size: 20px; cursor: pointer; box-shadow: var(--shadow-card); transition: background .25s, color .25s, border-color .25s; }
+  .tm-arrow:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .tm-arrow.prev { left: 14px; } .tm-arrow.next { right: 14px; }
+  .tm-arrow:disabled { opacity: .3; pointer-events: none; }
+
+  .tm-dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+  .tm-dots button { width: 8px; height: 8px; border-radius: 999px; background: var(--border-3); transition: all .3s var(--ease-soft); }
+  .tm-dots button.active { background: var(--orange); width: 26px; border-radius: 5px; }
+  .tm-cta { text-align: center; margin-top: 34px; }
+
+  /* lightbox */
+  .tm-lb { position: fixed; inset: 0; z-index: 1000; background: rgba(10,12,15,0.9); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 24px; animation: lbFade .25s ease; }
+  .tm-lb[hidden] { display: none; }
+  @keyframes lbFade { from { opacity: 0; } to { opacity: 1; } }
+  .tm-lb-frame { position: relative; width: min(960px, 94vw); aspect-ratio: 16/9; border-radius: var(--r-16); overflow: hidden; box-shadow: var(--shadow-lift); background: #000; }
+  .tm-lb-frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .tm-lb-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 40px; line-height: 1; opacity: .85; transition: opacity .2s, transform .2s; }
+  .tm-lb-close:hover { opacity: 1; transform: scale(1.08); }
+
+  @media (max-width: 860px) { .tm { padding: 60px 0; } .tm-arrow { display: none; } .tm-card { flex-basis: 80%; } }
+</style>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll(".tm[data-carousel]").forEach((root) => {
+      const track = root.querySelector("[data-track]");
+      const dotsBox = root.querySelector("[data-dots]");
+      if (!track) return;
+      const card = track.querySelector(".tm-card");
+      const step = () => (card ? (card.getBoundingClientRect().width + 22) * 2 : 600);
+      const pages = () => Math.max(1, Math.ceil(track.scrollWidth / track.clientWidth));
+      function build() {
+        dotsBox.innerHTML = "";
+        for (let i = 0; i < pages(); i++) { const b = document.createElement("button"); b.addEventListener("click", () => track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" })); dotsBox.appendChild(b); }
+        sync();
+      }
+      function sync() {
+        const p = root.querySelector('[data-dir="prev"]'), n = root.querySelector('[data-dir="next"]');
+        const max = track.scrollWidth - track.clientWidth - 4;
+        if (p) p.disabled = track.scrollLeft <= 4; if (n) n.disabled = track.scrollLeft >= max;
+        const idx = Math.round(track.scrollLeft / track.clientWidth);
+        dotsBox.querySelectorAll("button").forEach((d, i) => d.classList.toggle("active", i === idx));
+      }
+      root.querySelectorAll(".tm-arrow").forEach((b) => b.addEventListener("click", () => track.scrollBy({ left: (b.dataset.dir === "next" ? 1 : -1) * step(), behavior: "smooth" })));
+      track.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", build); build();
+
+      let down=false,sx=0,ssl=0,moved=false;
+      track.addEventListener("mousedown",(e)=>{down=true;moved=false;sx=e.pageX;ssl=track.scrollLeft;track.classList.add("dragging");});
+      window.addEventListener("mouseup",()=>{down=false;track.classList.remove("dragging");});
+      window.addEventListener("mousemove",(e)=>{if(!down)return;const dx=e.pageX-sx;if(Math.abs(dx)>5)moved=true;track.scrollLeft=ssl-dx;});
+
+      // lightbox
+      const lb = root.querySelector("[data-lightbox]");
+      const frame = root.querySelector("[data-lb-frame]");
+      const open = (id) => {
+        frame.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id + '?autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+        lb.hidden = false; document.body.style.overflow = "hidden";
+      };
+      const close = () => { lb.hidden = true; frame.innerHTML = ""; document.body.style.overflow = ""; };
+      track.querySelectorAll(".tm-card[data-vimeo]").forEach((c) =>
+        c.addEventListener("click", (e) => { if (moved) { e.preventDefault(); return; } e.preventDefault(); open(c.dataset.vimeo); }));
+      lb.addEventListener("click", (e) => { if (e.target === lb || e.target.closest("[data-lb-close]")) close(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !lb.hidden) close(); });
+    });
+  })();
+</script>

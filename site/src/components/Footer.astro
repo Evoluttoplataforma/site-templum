@@ -1,0 +1,104 @@
+---
+import { normas } from "../data/normas.js";
+
+const cols = [
+  {
+    title: "Soluções",
+    links: [
+      { label: "Consultoria", href: "/consultoria" },
+      { label: "Auditoria", href: "/auditoria" },
+      { label: "Treinamentos", href: "/cursos" },
+      { label: "Soluções de IA", href: "/solucoes-de-ia" },
+    ],
+  },
+  {
+    title: "Empresa",
+    links: [
+      { label: "Quem somos", href: "/quem-somos/sobre" },
+      { label: "Nossos valores", href: "/quem-somos/valores" },
+      { label: "Metodologia", href: "/metodologia" },
+      { label: "Carreira", href: "/carreira" },
+      { label: "Franchising", href: "/franchising" },
+    ],
+  },
+  {
+    title: "Recursos",
+    links: [
+      { label: "Cases de sucesso", href: "/case-de-sucesso" },
+      { label: "Blog", href: "/blog" },
+      { label: "E-books", href: "/ebooks" },
+      { label: "Drops", href: "/drops" },
+    ],
+  },
+  {
+    title: "Contato",
+    links: [
+      { label: "Falar com especialista", href: "/form" },
+      { label: "Contato", href: "/contato" },
+      { label: "Canal de denúncias", href: "/contato/canal-de-denuncias" },
+    ],
+  },
+];
+---
+
+<footer class="footer">
+  <div class="container xl">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="templum-logo onDark" aria-label="Templum">
+          <img src="/assets/logo/templum.png" alt="Templum" />
+        </a>
+        <p>
+          Consultoria especializada em certificações com método próprio e
+          garantia de 200%. Há mais de 30 anos organizando a gestão de empresas
+          do diagnóstico à auditoria.
+        </p>
+        <ul class="footer-contact">
+          <li>
+            <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon>
+            <a href="https://wa.me/5519993521270" target="_blank" rel="noopener">
+              <span>Atendimento WhatsApp</span><strong>+55 19 99352-1270</strong>
+            </a>
+          </li>
+          <li>
+            <iconify-icon icon="solar:phone-bold"></iconify-icon>
+            <a href="tel:+351925654875">
+              <span>Atendimento Portugal</span><strong>+351 925 654 875</strong>
+            </a>
+          </li>
+        </ul>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/templumconsultoria/" target="_blank" rel="noopener" aria-label="Instagram"><iconify-icon icon="mdi:instagram"></iconify-icon></a>
+          <a href="https://www.linkedin.com/company/3033783/" target="_blank" rel="noopener" aria-label="LinkedIn"><iconify-icon icon="mdi:linkedin"></iconify-icon></a>
+        </div>
+      </div>
+
+      {cols.map((c) => (
+        <div class="footer-col">
+          <h5>{c.title}</h5>
+          {c.links.map((l) => <a href={l.href}>{l.label}</a>)}
+        </div>
+      ))}
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {new Date().getFullYear()} Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</span>
+      <span><a href="/page">Política de Privacidade</a> · Todos os direitos reservados</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer .templum-logo img { height: 36px; }
+  .footer-contact { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+  .footer-contact li { display: flex; align-items: center; gap: 12px; }
+  .footer-contact li > iconify-icon { width: 38px; height: 38px; min-width: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,89,37,0.16); color: var(--orange); font-size: 19px; }
+  .footer-contact a { display: flex; flex-direction: column; line-height: 1.3; }
+  .footer-contact a span { font-size: 11px; color: rgba(255,244,221,0.5); }
+  .footer-contact a strong { font-size: 15px; font-weight: 700; color: var(--cream); transition: color .3s; }
+  .footer-contact a:hover strong { color: var(--orange); }
+
+  .footer-social { display: flex; gap: 12px; margin-top: 22px; }
+  .footer-social a { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,244,221,0.25); display: grid; place-items: center; color: rgba(255,244,221,0.7); font-size: 18px; transition: color .3s, border-color .3s; }
+  .footer-social a:hover { color: var(--orange); border-color: var(--orange); }
+</style>

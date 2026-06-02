@@ -1,0 +1,40 @@
+# Dependências e build
+node_modules/
+site/node_modules/
+site/dist/
+site/.astro/
+dist/
+
+# Ambiente / segredos
+.env
+.env.*
+.dev.vars
+*.log
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Material-fonte local (pesado / referência — não vai pro repo do site)
+# Remova daqui se quiser versionar algum desses.
+site atual/
+site referencia /
+manual da marca/
+images/
+imagens para hero home/
+img socios /
+Logos templum clientes/
+logo templum/
+mapa templum atendimento/
+iscas templum/
+aieo-geo-skill/
+orbit - olivia agentes de ia/
+*.png
+*.jpg
+*.jpeg
+*.avif
+*.webp
+*.pdf
+
+# (os assets do site ficam em site/public/ e NÃO são ignorados)
+!site/public/**

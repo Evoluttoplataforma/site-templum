@@ -1,0 +1,1 @@
+Thumbnails dos depoimentos (vídeo). Nome = id do depoimento + .webp (ex.: case-solarz.webp). Proporção 16:9. Sem imagem, o card mostra um fundo escuro com o play.

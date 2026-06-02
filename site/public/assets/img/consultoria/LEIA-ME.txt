@@ -1,0 +1,2 @@
+Fotos por norma da página de consultoria. Nome = slug + .webp (ex.: iso-27001.webp).
+Proporção ~4:5 (vertical). Sem foto, mostra fundo na cor da norma + ícone.

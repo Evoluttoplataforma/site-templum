@@ -1,0 +1,107 @@
+---
+// Depoimentos em texto — cards laranja (citação + estrelas + autor). Carrossel.
+import { depoimentosTexto } from "../data/depoimentos-texto.js";
+---
+
+<section class="dt section--cream" data-carousel>
+  <div class="container xl dt-head">
+    <span class="tag-pill">O que dizem nossos clientes</span>
+    <h2>Quem certifica com a Templum <em class="accent">recomenda</em></h2>
+    <p>Depoimentos reais de empresas que organizaram a gestão e conquistaram a certificação.</p>
+  </div>
+
+  <div class="dt-stage">
+    <button class="dt-arrow prev" data-dir="prev" aria-label="Anterior"><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
+    <div class="dt-track" data-track>
+      {depoimentosTexto.map((d) => (
+        <article class="dt-card">
+          <div class="dt-stars">
+            <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+          </div>
+          <p class="dt-quote">{d.texto}</p>
+          <div class="dt-author">
+            <span class="dt-avatar">
+              <span class="dt-ini">{d.nome.charAt(0)}</span>
+              {d.foto && <img src={d.foto} alt={d.nome} loading="lazy" onerror="this.style.display='none'" />}
+            </span>
+            <div class="dt-author-info">
+              <strong>{d.nome}</strong>
+              {d.cargo && <span>{d.cargo}</span>}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    <button class="dt-arrow next" data-dir="next" aria-label="Próximo"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
+  </div>
+
+  <div class="dt-dots" data-dots></div>
+</section>
+
+<style>
+  .dt { padding: 88px 0; overflow: hidden; }
+  .dt-head { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+  .dt-head .tag-pill { margin: 0 auto 16px; }
+  .dt-head h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+  .dt-head p { font-size: 16px; color: var(--text-mid); margin-top: 12px; }
+
+  .dt-stage { position: relative; display: flex; align-items: center; }
+  .dt-track { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 8px clamp(20px,7vw,100px) 16px; width: 100%; scrollbar-width: none; cursor: grab; align-items: stretch; }
+  .dt-track::-webkit-scrollbar { display: none; }
+  .dt-track.dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
+
+  .dt-card { scroll-snap-align: start; flex: 0 0 clamp(300px, 32vw, 400px); display: flex; flex-direction: column; gap: 18px;
+    background: radial-gradient(140% 120% at 30% 0%, #FF7A4D, var(--orange) 55%, var(--orange-dark)); color: #fff;
+    border-radius: var(--r-24); padding: 32px 30px; box-shadow: 0 20px 44px -18px rgba(175,64,34,0.5); }
+  .dt-stars { display: flex; gap: 3px; color: #FFD84D; font-size: 19px; }
+  .dt-quote { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.96); flex: 1; }
+  .dt-author { display: flex; align-items: center; gap: 12px; padding-top: 6px; }
+  .dt-avatar { position: relative; width: 50px; height: 50px; border-radius: 999px; overflow: hidden; flex-shrink: 0; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+  .dt-ini { position: absolute; inset: 0; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: var(--orange); }
+  .dt-avatar img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
+  .dt-author-info strong { display: block; font-size: 15px; font-weight: 800; color: #fff; }
+  .dt-author-info span { font-size: 12.5px; color: rgba(255,255,255,0.85); }
+
+  .dt-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 46px; height: 46px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border-2); color: var(--text); display: grid; place-items: center; font-size: 20px; cursor: pointer; box-shadow: var(--shadow-card); transition: background .25s, color .25s, border-color .25s; }
+  .dt-arrow:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .dt-arrow.prev { left: 22px; } .dt-arrow.next { right: 22px; }
+  .dt-arrow:disabled { opacity: .3; pointer-events: none; }
+
+  .dt-dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+  .dt-dots button { width: 8px; height: 8px; border-radius: 999px; background: var(--border-3); transition: all .3s var(--ease-soft); }
+  .dt-dots button.active { background: var(--orange); width: 26px; border-radius: 5px; }
+
+  @media (max-width: 860px) { .dt { padding: 60px 0; } .dt-arrow { display: none; } .dt-card { flex-basis: 82%; } }
+</style>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll(".dt[data-carousel]").forEach((root) => {
+      const track = root.querySelector("[data-track]");
+      const dotsBox = root.querySelector("[data-dots]");
+      if (!track) return;
+      const card = track.querySelector(".dt-card");
+      const step = () => (card ? (card.getBoundingClientRect().width + 22) : 360);
+      const pages = () => Math.max(1, Math.ceil(track.scrollWidth / track.clientWidth));
+      function build() {
+        dotsBox.innerHTML = "";
+        for (let i = 0; i < pages(); i++) { const b = document.createElement("button"); b.addEventListener("click", () => track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" })); dotsBox.appendChild(b); }
+        sync();
+      }
+      function sync() {
+        const p = root.querySelector('[data-dir="prev"]'), n = root.querySelector('[data-dir="next"]');
+        const max = track.scrollWidth - track.clientWidth - 4;
+        if (p) p.disabled = track.scrollLeft <= 4; if (n) n.disabled = track.scrollLeft >= max;
+        const idx = Math.round(track.scrollLeft / track.clientWidth);
+        dotsBox.querySelectorAll("button").forEach((d, i) => d.classList.toggle("active", i === idx));
+      }
+      root.querySelectorAll(".dt-arrow").forEach((b) => b.addEventListener("click", () => track.scrollBy({ left: (b.dataset.dir === "next" ? 1 : -1) * step() * 2, behavior: "smooth" })));
+      track.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", build); build();
+      let down=false,sx=0,ssl=0,moved=false;
+      track.addEventListener("mousedown",(e)=>{down=true;moved=false;sx=e.pageX;ssl=track.scrollLeft;track.classList.add("dragging");});
+      window.addEventListener("mouseup",()=>{down=false;track.classList.remove("dragging");});
+      window.addEventListener("mousemove",(e)=>{if(!down)return;const dx=e.pageX-sx;if(Math.abs(dx)>5)moved=true;track.scrollLeft=ssl-dx;});
+    });
+  })();
+</script>

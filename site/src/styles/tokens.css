@@ -1,0 +1,75 @@
+/* =========================================================
+   TEMPLUM · DESIGN TOKENS
+   Fonte: Manual de Marca Templum (2025) + templum.css (iscas)
+   ========================================================= */
+:root {
+  /* ---- Paleta principal (Manual da Marca) ---- */
+  --orange-dark:   #AF4022;
+  --orange:        #FF5925;   /* cor primária da marca */
+  --peach:         #FDA47D;
+  --peach-light:   #FDD88C;
+  --cream:         #FFF4DD;
+  --cream-2:       #FFFAEB;
+  --yellow:        #FDB73F;
+  --yellow-bright: #FFEE0D;
+  --black:         #000000;
+  --navy:          #222831;   /* cinza-escuro institucional */
+  --navy-2:        #2D343E;
+  --brown-deep:    #4F251B;
+  --brown-pbqp:    #7F2611;
+
+  /* ---- Superfícies / texto ---- */
+  --bg:            #FFFAEB;
+  --surface:       #FFFFFF;
+  --surface-glass: rgba(255,255,255,0.92);
+  --surface-warm:  #FFF4DD;
+  --surface-deep:  #1A1F26;
+  --text:          #18191B;
+  --text-2:        #3F424B;
+  --text-mid:      rgba(24,25,27,0.62);
+  --text-soft:     rgba(24,25,27,0.42);
+  --text-faint:    rgba(24,25,27,0.18);
+  --border:        rgba(24,25,27,0.08);
+  --border-2:      rgba(24,25,27,0.14);
+  --border-3:      rgba(24,25,27,0.22);
+  --border-onDark: rgba(255,244,221,0.14);
+  --success:       #16A34A;
+  --danger:        #DC2626;
+
+  /* ---- Cores das sub-marcas (uma cor por norma — Manual da Marca) ---- */
+  --norm-iso9001:   #1167E4;
+  --norm-iso14001:  #00A844;
+  --norm-iso27001:  #14A7AF;
+  --norm-iso37001:  #BC0000;
+  --norm-iso37301:  #BC0000;
+  --norm-iso45001:  #7F2611;
+  --norm-pbqph:     #7F2611;
+  --norm-fssc22000: #FFB600;
+  --norm-haccp:     #FFB600;
+  --norm-esg:       #9DBF0D;
+  --norm-sgi:       #9DBF0D;
+  --norm-lgpd:      #14A7AF;
+  --norm-sassmaq:   #2E3191;
+  --norm-auditoria: #FF5925;
+
+  /* ---- Tipografia ---- */
+  --font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* ---- Raios ---- */
+  --r-12: 12px; --r-16: 16px; --r-20: 20px; --r-24: 24px;
+  --r-32: 32px; --r-40: 40px; --r-arch: 7rem;
+
+  /* ---- Sombras ---- */
+  --shadow-soft: 0 1px 2px rgba(24,25,27,0.04), 0 6px 16px rgba(24,25,27,0.05);
+  --shadow-card: 0 1px 2px rgba(24,25,27,0.04), 0 12px 32px rgba(24,25,27,0.08);
+  --shadow-lift: 0 28px 56px -16px rgba(24,25,27,0.18), 0 12px 28px -12px rgba(24,25,27,0.10);
+  --shadow-cta:  0 15px 25px -10px rgba(255,89,37,0.55), inset 0 4px 8px rgba(253,221,138,0.55), inset 0 -4px 8px rgba(255,89,37,0.55);
+  --shadow-cta-hover: 0 18px 30px -10px rgba(255,89,37,0.65), inset 0 4px 8px rgba(253,221,138,0.65), inset 0 -4px 8px rgba(255,89,37,0.65);
+
+  /* ---- Easing ---- */
+  --ease-soft: cubic-bezier(.22, 1, .36, 1);
+  --ease-snap: cubic-bezier(.4, 0, .2, 1);
+
+  /* ---- Layout ---- */
+  --nav-h: 72px;
+}

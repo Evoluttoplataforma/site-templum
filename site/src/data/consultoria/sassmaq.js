@@ -1,0 +1,32 @@
+import { baseConsultoria } from "./_base.js";
+
+export default {
+  ...baseConsultoria,
+  slug: "sassmaq",
+  hero: {
+    titulo: ["Aprovado no ", "SASSMAQ", " ou receba 2x o investimento de volta"],
+    sub: "Avaliação SASSMAQ para o transporte de produtos químicos com segurança e conformidade.",
+    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+  },
+  paraQuem: [
+    { icon: "solar:delivery-bold", t: "Transportadoras" },
+    { icon: "solar:tank-bold", t: "Logística de químicos" },
+    { icon: "solar:factory-bold", t: "Indústria química" },
+    { icon: "solar:box-bold", t: "Operadores logísticos" },
+    { icon: "solar:traffic-bold", t: "Frotas e distribuição" },
+    { icon: "solar:case-round-bold", t: "Armazenagem" },
+  ],
+  detalhes: {
+    titulo: "O SASSMAQ em detalhes",
+    sub: "Sistema de Avaliação de Segurança, Saúde, Meio Ambiente e Qualidade para o transporte de produtos químicos.",
+    faq: [
+      { q: "Qual é o objetivo principal do SASSMAQ?", a: "Reduzir riscos no transporte e na movimentação de produtos químicos, padronizando segurança, saúde, meio ambiente e qualidade." },
+      { q: "Quem deve implementar o SASSMAQ?", a: "Transportadoras, operadores logísticos e empresas que movimentam produtos químicos a granel ou fracionados." },
+      { q: "O SASSMAQ é obrigatório?", a: "É exigido por grande parte das indústrias químicas para contratar transportadores — na prática, é um passaporte para o setor." },
+      { q: "Quais são os principais elementos avaliados no SASSMAQ?", a: "Gestão, segurança, saúde ocupacional, meio ambiente, qualidade e os requisitos específicos para veículos e operações." },
+      { q: "Como obter a aprovação SASSMAQ?", a: "Implantando os requisitos e passando por avaliação de um organismo credenciado. A Templum prepara sua empresa do diagnóstico à avaliação." },
+      { q: "Qual é a validade da avaliação SASSMAQ?", a: "A avaliação tem validade definida pelo programa, com reavaliações periódicas." },
+      { q: "Quais são os benefícios da implementação?", a: "Acesso a contratos com as grandes indústrias químicas, menos acidentes e mais credibilidade no mercado." },
+    ],
+  },
+};

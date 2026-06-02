@@ -1,0 +1,176 @@
+---
+// Hero ESCURO full-bleed — fundo muda por slide (sócios em cada setor).
+// Imagens em /assets/img/hero/ (webp).
+const slides = [
+  {
+    tag: "Garantia de 200%",
+    title: ["Certificação ou o ", "dobro", " do seu dinheiro de volta"],
+    checklist: [
+      "Único no Brasil: devolvemos o dobro se você não certificar",
+      "Plataforma que organiza toda a gestão, do diagnóstico à auditoria",
+      "Método próprio refinado em +30 anos de mercado",
+    ],
+    cta: { label: "Falar com um especialista", href: "/form" },
+    img: "/assets/img/hero/templum-consultoria-industria.webp",
+  },
+  {
+    tag: "Plataforma + consultoria",
+    title: ["Toda a gestão da sua empresa ", "organizada", " num só lugar"],
+    text: "Sem planilhas, sem documentos soltos, sem surpresas. Nossa plataforma centraliza processos, responsáveis e prazos até o dia da auditoria.",
+    cta: { label: "Conhecer o método", href: "/metodologia" },
+    img: "/assets/img/hero/templum-consultoria-construcao.webp",
+  },
+  {
+    tag: "+30 anos de mercado",
+    title: ["A maior consultoria de ", "certificações", " do Brasil"],
+    text: "Mais de 8.000 contratos e 5.000 auditorias acompanhadas. Empresas de todos os portes confiam na Templum para crescer com gestão de excelência.",
+    cta: { label: "Conhecer a Templum", href: "/quem-somos/sobre" },
+    img: "/assets/img/hero/templum-consultoria-logistica.webp",
+  },
+  {
+    tag: "Para o seu setor",
+    title: ["A certificação certa para ", "cada setor"],
+    text: "Indústria, construção, alimentos, tecnologia, logística e serviços. Seja qual for o seu segmento, temos o método e a norma certos para você.",
+    cta: { label: "Ver todas as normas", href: "/consultoria" },
+    img: "/assets/img/hero/templum-consultoria-alimentos.webp",
+  },
+];
+
+const trust = [
+  { icon: "solar:users-group-rounded-bold", v: "+2.000", l: "clientes certificados" },
+  { icon: "solar:medal-star-bold", v: "+30", l: "anos de mercado" },
+  { icon: "solar:shield-check-bold", v: "200%", l: "de garantia" },
+];
+---
+
+<section class="hero" id="hero">
+  <div class="hero-bgs" aria-hidden="true">
+    {slides.map((s, i) => (
+      <img class={`hero-bg ${i === 0 ? "active" : ""}`} data-bg={i} src={s.img} alt="" fetchpriority={i === 0 ? "high" : null} loading={i === 0 ? "eager" : "lazy"} />
+    ))}
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="container xl hero-inner">
+    <div class="hero-slides">
+      {slides.map((s, i) => (
+        <div class={`hero-slide ${i === 0 ? "active" : ""}`} data-slide={i}>
+          <span class="tag-pill tag-pill--glow">{s.tag}</span>
+          <h1 class="hero-title">
+            {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
+          </h1>
+          {s.checklist && (
+            <ul class="check-list hero-checklist">
+              {s.checklist.map((c) => (
+                <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{c}</li>
+              ))}
+            </ul>
+          )}
+          {s.text && <p class="hero-text">{s.text}</p>}
+          <div class="hero-cta-row">
+            <a href={s.cta.href} class="btn btn--primary btn--lg">{s.cta.label} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+            <a href="/case-de-sucesso" class="btn btn--onDark btn--lg">Ver cases</a>
+          </div>
+        </div>
+      ))}
+
+      <div class="hero-trust">
+        {trust.map((t) => (
+          <div class="ht-item">
+            <span class="ht-ico"><iconify-icon icon={t.icon}></iconify-icon></span>
+            <div><strong>{t.v}</strong><span>{t.l}</span></div>
+          </div>
+        ))}
+      </div>
+
+      <div class="hero-controls">
+        <div class="hero-dots">
+          {slides.map((_, i) => (
+            <button class={`hero-dot ${i === 0 ? "active" : ""}`} data-dot={i} aria-label={`Slide ${i + 1}`}></button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- setas nas laterais -->
+  <button class="hero-arrow hero-arrow--side prev" data-dir="-1" aria-label="Anterior"><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
+  <button class="hero-arrow hero-arrow--side next" data-dir="1" aria-label="Próximo"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
+</section>
+
+<style>
+  .hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; min-height: 620px; display: flex; align-items: center; }
+  .hero-bgs { position: absolute; inset: 0; }
+  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 72% center; opacity: 0; transition: opacity .9s var(--ease-soft); }
+  .hero-bg.active { opacity: 1; }
+  .hero-overlay { position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(100deg, var(--navy) 0%, var(--navy) 28%, rgba(34,40,49,0.82) 44%, rgba(34,40,49,0.35) 62%, rgba(34,40,49,0.08) 80%, transparent 100%),
+      linear-gradient(to top, rgba(20,24,30,0.7), transparent 45%),
+      radial-gradient(700px 420px at 16% 28%, rgba(255,89,37,0.22), transparent 60%); }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding-top: 56px; padding-bottom: 56px; }
+  .hero-slides { max-width: 600px; }
+
+  .hero-slide { display: none; }
+  .hero-slide.active { display: block; animation: heroFade .55s var(--ease-soft); }
+  @keyframes heroFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .tag-pill--glow { margin-bottom: 22px; }
+  .hero-title { font-size: clamp(34px, 4.8vw, 60px); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 24px; text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+  .hero-checklist { margin-bottom: 28px; }
+  .hero-checklist .check-item { color: var(--cream); }
+  .hero-text { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.9); margin-bottom: 28px; max-width: 500px; }
+  .hero-cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hero-trust { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 34px; padding-top: 24px; border-top: 1px solid rgba(255,244,221,0.16); max-width: 600px; }
+  .ht-item { display: flex; align-items: center; gap: 10px; }
+  .ht-ico { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,89,37,0.18); color: var(--orange); font-size: 19px; }
+  .ht-item strong { display: block; font-size: 19px; font-weight: 800; color: var(--cream); line-height: 1; }
+  .ht-item span { font-size: 12px; color: rgba(255,244,221,0.65); }
+
+  .hero-controls { display: flex; align-items: center; gap: 20px; margin-top: 32px; }
+  .hero-dots { display: flex; gap: 8px; }
+  .hero-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,244,221,0.32); transition: all .3s var(--ease-soft); }
+  .hero-dot.active { background: var(--orange); width: 30px; border-radius: 5px; box-shadow: 0 0 14px rgba(255,89,37,0.7); }
+
+  /* setas nas laterais do hero */
+  .hero-arrow--side { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,244,221,0.3); color: var(--cream); display: grid; place-items: center; font-size: 22px; transition: background .3s, border-color .3s, color .3s; backdrop-filter: blur(4px); }
+  .hero-arrow--side:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .hero-arrow--side.prev { left: 20px; }
+  .hero-arrow--side.next { right: 20px; }
+
+  @media (max-width: 860px) {
+    .hero { min-height: 0; }
+    .hero-bg { object-position: 68% top; opacity: 0; }
+    .hero-bg.active { opacity: 0.4; }
+    .hero-overlay { background:
+      linear-gradient(to bottom, rgba(34,40,49,0.5), var(--navy) 60%),
+      radial-gradient(600px 360px at 50% 6%, rgba(255,89,37,0.22), transparent 60%); }
+    .hero-inner { padding-top: 210px; padding-bottom: 48px; }
+    .hero-slides, .hero-trust { max-width: 100%; }
+    .hero-arrow--side { display: none; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const root = document.getElementById("hero");
+    if (!root) return;
+    const slides = root.querySelectorAll("[data-slide]");
+    const bgs = root.querySelectorAll("[data-bg]");
+    const dots = root.querySelectorAll("[data-dot]");
+    let i = 0, timer;
+    const show = (n) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle("active", k === i));
+      bgs.forEach((b, k) => b.classList.toggle("active", k === i));
+      dots.forEach((d, k) => d.classList.toggle("active", k === i));
+    };
+    const start = () => { timer = setInterval(() => show(i + 1), 6500); };
+    const reset = () => { clearInterval(timer); start(); };
+    root.querySelectorAll(".hero-arrow").forEach((b) =>
+      b.addEventListener("click", () => { show(i + Number(b.dataset.dir)); reset(); }));
+    dots.forEach((d) => d.addEventListener("click", () => { show(Number(d.dataset.dot)); reset(); }));
+    start();
+  })();
+</script>

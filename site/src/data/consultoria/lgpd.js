@@ -1,0 +1,32 @@
+import { baseConsultoria } from "./_base.js";
+
+export default {
+  ...baseConsultoria,
+  slug: "lgpd",
+  hero: {
+    titulo: ["Adeque sua empresa à ", "LGPD", " com segurança jurídica"],
+    sub: "Implemente a conformidade com a Lei Geral de Proteção de Dados, com método próprio e suporte.",
+    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+  },
+  paraQuem: [
+    { icon: "solar:code-square-bold", t: "Tecnologia e software" },
+    { icon: "solar:cart-large-2-bold", t: "E-commerce e varejo" },
+    { icon: "solar:health-bold", t: "Saúde e clínicas" },
+    { icon: "solar:card-bold", t: "Serviços financeiros" },
+    { icon: "solar:buildings-3-bold", t: "Educação" },
+    { icon: "solar:case-round-bold", t: "Qualquer empresa que trate dados" },
+  ],
+  detalhes: {
+    titulo: "A LGPD em detalhes",
+    sub: "Lei Geral de Proteção de Dados: conformidade que protege a empresa e a confiança do cliente.",
+    faq: [
+      { q: "O que é a LGPD?", a: "É a Lei Geral de Proteção de Dados (Lei 13.709/2018), que regula o tratamento de dados pessoais por empresas e órgãos no Brasil." },
+      { q: "A LGPD é obrigatória?", a: "Sim. Toda empresa que trata dados pessoais precisa estar em conformidade, sob risco de sanções da ANPD." },
+      { q: "Quais são as sanções por descumprimento?", a: "Advertências, multas de até 2% do faturamento (limitadas a R$ 50 milhões por infração) e até a suspensão das atividades de tratamento." },
+      { q: "Como adequar minha empresa à LGPD?", a: "Com mapeamento de dados, análise de riscos, políticas, contratos e medidas de segurança. A Templum conduz toda a adequação." },
+      { q: "Preciso de um DPO?", a: "A lei exige um encarregado (DPO). Ajudamos a estruturar essa função, inclusive como serviço (DPO as a service)." },
+      { q: "Como a LGPD se relaciona com a ISO 27001?", a: "A ISO 27001 fornece os controles de segurança da informação que sustentam boa parte das exigências técnicas da LGPD." },
+      { q: "Quais são os benefícios da adequação?", a: "Segurança jurídica, proteção contra multas, mais confiança dos clientes e diferencial competitivo." },
+    ],
+  },
+};

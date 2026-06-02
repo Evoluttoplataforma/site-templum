@@ -1,0 +1,71 @@
+---
+// Grid de normas — seção escura, cada card com a COR da sub-marca presente
+// (tile de ícone sólido + tint no fundo + borda + glow). Inclui tagline.
+import { normas } from "../data/normas.js";
+---
+
+<section class="ng">
+  <div class="ng-bg" aria-hidden="true"></div>
+  <div class="container xl">
+    <div class="ng-head">
+      <span class="tag-pill tag-pill--glow">Todas as normas</span>
+      <h2>Uma especialidade para <em class="accent">cada certificação</em></h2>
+      <p>Cada norma tem cor, time e método próprios. Escolha a sua e conheça a consultoria.</p>
+    </div>
+
+    <div class="ng-grid">
+      {normas.map((n) => (
+        <a class="ng-card" href={n.href} style={`--c:${n.color}`}>
+          <div class="ng-top">
+            <span class="ng-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
+            <span class="ng-arrow"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span>
+          </div>
+          <h3>{n.nome}</h3>
+          <span class="ng-cat">{n.categoria}</span>
+          <p class="ng-tagline">{n.tagline}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ng { position: relative; background: var(--surface-deep); color: var(--cream); padding: 92px 0; overflow: hidden; }
+  .ng-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(760px 460px at 84% -8%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(620px 420px at 4% 108%, rgba(20,167,175,0.12), transparent 60%); }
+  .ng .container { position: relative; z-index: 1; }
+
+  .ng-head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .ng-head .tag-pill { margin-bottom: 18px; }
+  .ng-head h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; letter-spacing: -0.025em; color: var(--cream); line-height: 1.08; }
+  .ng-head p { font-size: 16.5px; color: rgba(255,244,221,0.7); margin-top: 14px; line-height: 1.6; }
+
+  .ng-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+  .ng-card { position: relative; display: flex; flex-direction: column; padding: 24px; border-radius: var(--r-20); overflow: hidden;
+    background:
+      radial-gradient(150% 120% at 100% 0%, color-mix(in srgb, var(--c) 22%, transparent), transparent 55%),
+      color-mix(in srgb, var(--c) 7%, #20262F);
+    border: 1px solid color-mix(in srgb, var(--c) 30%, rgba(255,244,221,0.08));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: transform .35s var(--ease-soft), box-shadow .35s, border-color .35s; }
+  .ng-card:hover { transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--c) 70%, transparent);
+    box-shadow: 0 24px 50px -18px rgba(0,0,0,0.6), 0 0 36px -10px color-mix(in srgb, var(--c) 75%, transparent); }
+
+  .ng-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+  .ng-ico { width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; font-size: 28px; color: #fff;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--c) 78%, white 12%), var(--c));
+    box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--c) 85%, transparent), inset 0 1px 0 rgba(255,255,255,0.25); }
+  .ng-arrow { font-size: 20px; color: rgba(255,244,221,0.4); transition: color .3s, transform .3s var(--ease-soft); }
+  .ng-card:hover .ng-arrow { color: var(--c); transform: translate(3px,-3px); }
+
+  .ng-card h3 { font-size: 22px; font-weight: 800; color: var(--cream); letter-spacing: -0.02em; line-height: 1.1; }
+  .ng-cat { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c);
+    filter: brightness(1.35) saturate(1.1); margin-top: 6px; }
+  .ng-tagline { font-size: 13.5px; color: rgba(255,244,221,0.66); line-height: 1.5; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,244,221,0.1); }
+
+  @media (max-width: 1024px) { .ng-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .ng-grid { grid-template-columns: 1fr; } .ng { padding: 60px 0; } }
+</style>

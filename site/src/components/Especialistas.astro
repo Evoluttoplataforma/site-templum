@@ -1,0 +1,27 @@
+---
+// Seção de sócios/especialistas (escura). Reutilizada na home e nas consultorias.
+import { socios } from "../data/socios.js";
+const { sub = "Sócios, diretores e um time de consultores dedicados a levar sua empresa até o certificado — e além." } = Astro.props;
+---
+
+<section class="section section--navy">
+  <div class="container xl">
+    <div class="section-header">
+      <span class="tag-pill tag-pill--glow">Quem conduz sua certificação</span>
+      <h2>Especialistas que <em class="accent">vivem certificação</em></h2>
+      <p>{sub}</p>
+    </div>
+    <div class="people-grid" style="max-width:1000px;margin:0 auto;">
+      {socios.map((p) => (
+        <div class="person-card reveal">
+          <img class="person-photo" src={p.img} alt={p.nome} loading="lazy" />
+          <div class="person-body">
+            <h4>{p.nome}</h4>
+            <div class="person-divider"></div>
+            <span class="person-role">{p.cargo}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

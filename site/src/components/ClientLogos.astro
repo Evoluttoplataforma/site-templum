@@ -1,0 +1,41 @@
+---
+// Mural de logos de clientes (marquee infinito). Logos curados em /assets/clientes.
+// dark=true → logos brancos sobre navy; senão → logos escuros sobre claro.
+const { dark = false, titulo = "Mais de 2.000 empresas já confiam na Templum" } = Astro.props;
+const N = 17;
+const logos = Array.from({ length: N }, (_, i) => `/assets/clientes/cliente-${i + 1}.svg`);
+const loop = [...logos, ...logos];
+---
+
+<section class={`cl ${dark ? "cl--dark section--navy" : "section--cream"}`}>
+  <div class="container xl">
+    <p class="cl-title">{titulo}</p>
+  </div>
+  <div class="cl-marquee">
+    <div class="cl-track">
+      {loop.map((src) => (
+        <span class="cl-item"><img src={src} alt="Cliente Templum" loading="lazy" /></span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cl { padding: 64px 0; overflow: hidden; }
+  .cl-title { text-align: center; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-mid); margin-bottom: 36px; }
+  .cl--dark .cl-title { color: rgba(255,244,221,0.6); }
+
+  .cl-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .cl-track { display: flex; align-items: center; gap: 72px; width: max-content; animation: clMarquee 48s linear infinite; }
+  .cl-marquee:hover .cl-track { animation-play-state: paused; }
+  @keyframes clMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .cl-item { flex-shrink: 0; display: grid; place-items: center; }
+  .cl-item img { height: 104px; width: auto; max-width: 230px; object-fit: contain;
+    filter: brightness(0); opacity: 0.5; transition: opacity .3s var(--ease-soft); }
+  .cl--dark .cl-item img { filter: brightness(0) invert(1); opacity: 0.7; }
+  .cl-item img:hover { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) { .cl-track { animation: none; } }
+  @media (max-width: 600px) { .cl-item img { height: 72px; } .cl-track { gap: 52px; } }
+</style>
