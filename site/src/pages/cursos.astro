@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
+import { proximosTreinamentos } from "../data/treinamentos.js";
 
 const temas = [
   { icon: "solar:buildings-2-bold", t: "Construção Civil", d: "PBQP-H, ISO 9001 e SGI aplicados à realidade da obra." },
@@ -39,7 +40,38 @@ const objetivos = [
     </Fragment>
   </PageHero>
 
+  <!-- PRÓXIMOS TREINAMENTOS (cards de inscrição → Zoom) -->
   <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Próximos treinamentos</span>
+        <h2>Garanta sua vaga nas <em class="accent">próximas turmas</em></h2>
+        <p>Treinamentos online ao vivo, conduzidos por especialistas. Inscreva-se e receba o acesso da sala.</p>
+      </div>
+      <div class="pt-grid">
+        {proximosTreinamentos.map((t) => (
+          <article class="pt-card">
+            <h3 class="pt-cat">{t.categoria}</h3>
+            <div class="pt-rows">
+              <div class="pt-row"><span class="pt-k">Tema:</span><span class="pt-tema">{t.tema}</span></div>
+              <div class="pt-row"><span class="pt-k">Palestrante:</span><span>{t.palestrante}</span></div>
+              <div class="pt-row"><span class="pt-k">Data e hora:</span><span>{t.dataLabel} às {t.hora}</span></div>
+            </div>
+            <button
+              type="button"
+              class="btn btn--primary pt-cta"
+              data-treino-open
+              data-treino={`${t.categoria} — ${t.tema}`}
+              data-zoom={t.zoom}
+              data-quando={`${t.dataLabel} às ${t.hora}`}
+            >Garanta sua vaga</button>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="container">
       <div class="section-header">
         <span class="tag-pill">Temas</span>
@@ -58,7 +90,7 @@ const objetivos = [
     </div>
   </section>
 
-  <section class="section">
+  <section class="section section--cream">
     <div class="container">
       <div class="split">
         <div class="split-text">
@@ -86,6 +118,32 @@ const objetivos = [
       <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--dark btn--lg">Avise-me pelo WhatsApp <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
+
+  <!-- MODAL DE INSCRIÇÃO -->
+  <div class="pt-modal" id="ptModal" hidden>
+    <div class="pt-modal-overlay" data-treino-close></div>
+    <div class="pt-modal-card lead-card" role="dialog" aria-modal="true" aria-labelledby="ptModalTitle">
+      <button type="button" class="pt-modal-x" data-treino-close aria-label="Fechar"><iconify-icon icon="solar:close-circle-bold"></iconify-icon></button>
+      <div class="lead-title" id="ptModalTitle">Garanta sua vaga</div>
+      <p class="lead-sub" id="ptModalSub">Preencha os dados para confirmar sua inscrição.</p>
+
+      <form class="form" id="ptForm" novalidate>
+        <input type="hidden" name="treinamento" id="ptTreino" />
+        <div class="form-row">
+          <div class="field"><label for="ptNome">Nome</label><input class="input" id="ptNome" name="nome" placeholder="Seu nome" required /></div>
+          <div class="field"><label for="ptTel">Telefone / WhatsApp</label><input class="input" id="ptTel" name="telefone" placeholder="(00) 00000-0000" required /></div>
+        </div>
+        <div class="field"><label for="ptEmail">E-mail</label><input class="input" id="ptEmail" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+        <div class="field"><label for="ptEmpresa">Empresa</label><input class="input" id="ptEmpresa" name="empresa" placeholder="Nome da empresa" /></div>
+        <button type="submit" class="btn btn--primary btn--block btn--lg">Confirmar inscrição <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+      </form>
+
+      <div class="form-success" id="ptSuccess" hidden>
+        <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+        <div><h4>Inscrição confirmada!</h4><p id="ptSuccessMsg">O link do Zoom será enviado para o seu e-mail.</p></div>
+      </div>
+    </div>
+  </div>
 </Base>
 
 <style>
@@ -93,4 +151,81 @@ const objetivos = [
   @media (max-width: 880px) { .tr-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .tr-grid { grid-template-columns: 1fr; } }
   .tr-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+
+  /* Cards de próximos treinamentos */
+  .pt-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 44px; }
+  @media (max-width: 760px) { .pt-grid { grid-template-columns: 1fr; } }
+  .pt-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px 30px; box-shadow: var(--shadow-card); }
+  .pt-cat { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--orange); line-height: 1.25; margin-bottom: 20px; }
+  .pt-rows { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .pt-row { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: start; font-size: 15px; color: var(--text-mid); }
+  .pt-k { color: var(--text-soft); }
+  .pt-tema { font-weight: 700; color: var(--text); }
+  .pt-cta { align-self: flex-start; width: fit-content; margin-top: 26px; }
+  @media (max-width: 480px) { .pt-row { grid-template-columns: 1fr; gap: 2px; } .pt-cta { width: 100%; align-self: stretch; } }
+
+  /* Modal de inscrição */
+  .pt-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; }
+  .pt-modal[hidden] { display: none; }
+  .pt-modal-overlay { position: absolute; inset: 0; background: rgba(12,14,18,0.62); backdrop-filter: blur(3px); }
+  .pt-modal-card { position: relative; z-index: 1; width: 100%; max-width: 520px; max-height: calc(100dvh - 40px); overflow-y: auto; animation: ptIn .28s var(--ease-soft); }
+  @keyframes ptIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .pt-modal-x { position: absolute; top: 14px; right: 14px; font-size: 28px; color: var(--text-soft); line-height: 1; }
+  .pt-modal-x:hover { color: var(--orange); }
 </style>
+
+<script is:inline>
+  (function () {
+    var modal = document.getElementById("ptModal");
+    if (!modal) return;
+    var form = document.getElementById("ptForm");
+    var success = document.getElementById("ptSuccess");
+    var titleEl = document.getElementById("ptModalTitle");
+    var subEl = document.getElementById("ptModalSub");
+    var treinoInput = document.getElementById("ptTreino");
+    var successMsg = document.getElementById("ptSuccessMsg");
+    var currentZoom = "";
+
+    function open(btn) {
+      currentZoom = btn.getAttribute("data-zoom") || "";
+      treinoInput.value = btn.getAttribute("data-treino") || "";
+      titleEl.textContent = "Garanta sua vaga";
+      subEl.textContent = (btn.getAttribute("data-quando") || "") + " · preencha para confirmar sua inscrição.";
+      form.hidden = false; success.hidden = true; form.reset();
+      treinoInput.value = btn.getAttribute("data-treino") || "";
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+    }
+    function close() { modal.hidden = true; document.body.style.overflow = ""; }
+
+    document.querySelectorAll("[data-treino-open]").forEach(function (b) {
+      b.addEventListener("click", function () { open(b); });
+    });
+    modal.querySelectorAll("[data-treino-close]").forEach(function (el) {
+      el.addEventListener("click", close);
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !modal.hidden) close(); });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
+      if (window.trk && typeof window.trk.lead === "function") {
+        try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
+      }
+      try {
+        fetch("/api/lead", {
+          method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+          body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Inscrição: " + (d.treinamento || ""), evento: "treinamento", pagina: location.pathname }),
+        });
+      } catch (_) {}
+      form.hidden = true; success.hidden = false;
+      if (currentZoom) {
+        successMsg.textContent = "Tudo certo! Redirecionando para a sala do treinamento…";
+        setTimeout(function () { window.location.href = currentZoom; }, 1400);
+      } else {
+        successMsg.textContent = "O link do Zoom será enviado para o seu e-mail antes do treinamento.";
+      }
+    });
+  })();
+</script>
