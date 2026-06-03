@@ -1,0 +1,124 @@
+---
+import Base from "../layouts/Base.astro";
+import { normas } from "../data/normas.js";
+import { baseConsultoria } from "../data/consultoria/_base.js";
+
+const { stats } = baseConsultoria;
+const garantias = [
+  { icon: "solar:clock-circle-bold", t: "Resposta em até 1 dia útil" },
+  { icon: "solar:shield-check-bold", t: "Garantia de 200% em contrato" },
+  { icon: "solar:videocamera-record-bold", t: "Atendimento 100% online" },
+  { icon: "solar:hand-stars-bold", t: "Sem compromisso" },
+];
+---
+
+<Base
+  title="Fale com um especialista — Diagnóstico gratuito | Templum"
+  description="Receba um diagnóstico gratuito da sua certificação. Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado. Sem compromisso."
+>
+  <section class="section section--navy fm" id="contato">
+    <div class="fm-bg" aria-hidden="true"></div>
+    <div class="container lg fm-grid">
+      <!-- PITCH -->
+      <div class="fm-pitch">
+        <span class="tag-pill tag-pill--glow">Comece agora</span>
+        <h1>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação</h1>
+        <p>Conte pra gente o momento da sua empresa. Um especialista analisa o cenário e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+
+        <ul class="fm-checks">
+          {garantias.map((g) => (
+            <li><span class="fm-check-ico"><iconify-icon icon={g.icon}></iconify-icon></span>{g.t}</li>
+          ))}
+        </ul>
+
+        <div class="fm-stats">
+          {stats.map((s) => (
+            <div class="fm-stat"><strong>{s.num}</strong><span>{s.label}</span></div>
+          ))}
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="lead-card fm-card">
+        <div class="lead-title">Fale com um especialista</div>
+        <p class="lead-sub">Preencha os dados abaixo. Retornamos em até 1 dia útil.</p>
+
+        <form class="form" id="lead-form" data-trk-event="lead" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="nome">Nome</label><input class="input" id="nome" name="nome" placeholder="Seu nome" required /></div>
+            <div class="field"><label for="telefone">Telefone / WhatsApp</label><input class="input" id="telefone" name="telefone" placeholder="(00) 00000-0000" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="email">E-mail</label><input class="input" id="email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+            <div class="field"><label for="empresa">Empresa</label><input class="input" id="empresa" name="empresa" placeholder="Nome da empresa" required /></div>
+          </div>
+          <div class="field">
+            <label for="norma">Qual norma você busca?</label>
+            <select class="select" id="norma" name="norma">
+              <option value="">Selecione (ou não sei ainda)</option>
+              {normas.map((n) => <option value={n.slug}>{n.nome} — {n.categoria}</option>)}
+              <option value="outra">Outra / não sei ainda</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="mensagem">Mensagem <span class="hint">(opcional)</span></label>
+            <textarea class="textarea" id="mensagem" name="mensagem" rows="3" placeholder="Conte um pouco sobre o momento da sua empresa"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+          <p class="fm-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
+        </form>
+
+        <div class="form-success" id="lead-success" hidden>
+          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <div>
+            <h4>Recebemos seu contato!</h4>
+            <p>Um especialista vai falar com você em até 1 dia útil. Enquanto isso, conheça nossas normas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fm { position: relative; overflow: hidden; padding-top: clamp(64px, 10vh, 104px); padding-bottom: clamp(64px, 10vh, 104px); }
+  .fm-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 88% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 0% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .fm-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 900px) { .fm-grid { grid-template-columns: 1fr; } }
+
+  .fm-pitch h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; color: var(--cream); margin: 22px 0 16px; }
+  .fm-pitch > p { font-size: 16.5px; line-height: 1.65; color: rgba(255,244,221,0.8); max-width: 480px; }
+
+  .fm-checks { list-style: none; margin: 28px 0; display: flex; flex-direction: column; gap: 14px; }
+  .fm-checks li { display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 600; color: var(--cream); }
+  .fm-check-ico { width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; display: grid; place-items: center; font-size: 18px; color: var(--orange); background: rgba(255,89,37,0.16); }
+
+  .fm-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px 28px; margin-top: 32px; padding-top: 28px; border-top: 1px solid rgba(255,244,221,0.14); max-width: 460px; }
+  .fm-stat strong { display: block; font-size: 24px; font-weight: 800; color: var(--cream); line-height: 1; }
+  .fm-stat span { font-size: 12.5px; color: rgba(255,244,221,0.6); }
+
+  .fm-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 4px; }
+
+  /* [hidden] precisa vencer o display:flex de .form-success / display:flex do form */
+  .form[hidden], .form-success[hidden] { display: none; }
+</style>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById("lead-form");
+    const success = document.getElementById("lead-success");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      // tracking-kit: conversão de lead (Fase 5 conecta Mailchimp/CAPI)
+      if (window.trk && typeof window.trk.lead === "function") {
+        try { window.trk.lead({ norma: form.norma.value || "indefinida" }); } catch (_) {}
+      }
+      form.hidden = true;
+      if (success) success.hidden = false;
+    });
+  })();
+</script>
