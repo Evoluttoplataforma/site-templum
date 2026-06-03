@@ -105,20 +105,3 @@ const garantias = [
   .form[hidden], .form-success[hidden] { display: none; }
 </style>
 
-<script is:inline>
-  (function () {
-    const form = document.getElementById("lead-form");
-    const success = document.getElementById("lead-success");
-    if (!form) return;
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      // tracking-kit: conversão de lead (Fase 5 conecta Mailchimp/CAPI)
-      if (window.trk && typeof window.trk.lead === "function") {
-        try { window.trk.lead({ norma: form.norma.value || "indefinida" }); } catch (_) {}
-      }
-      form.hidden = true;
-      if (success) success.hidden = false;
-    });
-  })();
-</script>

@@ -94,19 +94,3 @@ const canais = [
   .form[hidden], .form-success[hidden] { display: none; }
 </style>
 
-<script is:inline>
-  (function () {
-    const form = document.getElementById("contato-form");
-    const success = document.getElementById("contato-success");
-    if (!form) return;
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      if (window.trk && typeof window.trk.lead === "function") {
-        try { window.trk.lead({ origem: "contato", norma: form.norma.value || "indefinida" }); } catch (_) {}
-      }
-      form.hidden = true;
-      if (success) success.hidden = false;
-    });
-  })();
-</script>

@@ -247,6 +247,8 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
    FORMULÁRIOS / INPUTS (lead, contato, /form)
    ========================================================= */
 .form { display: flex; flex-direction: column; gap: 18px; }
+/* [hidden] precisa vencer o display:flex de .form / .form-success */
+.form[hidden], .form-success[hidden] { display: none; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field { display: flex; flex-direction: column; gap: 7px; }
 .field > label { font-size: 13px; font-weight: 700; color: var(--text-2); }

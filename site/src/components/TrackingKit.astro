@@ -1,0 +1,62 @@
+---
+// tracking-kit (https://github.com/rodrigoosouza/tracking-kit) — substituto do GTM.
+// IDs vazios = plataforma DESLIGADA. O cliente preenche meta/ga4/googleAds/etc.
+// quando tiver as credenciais. Conversões: forms com data-trk-event e trk.lead().
+---
+<script is:inline>
+window.TRACKING_CONFIG = {
+  client:    { name: 'Templum', debug: false, shadow: false },
+  business:  {
+    type: 'lead-gen-form',
+    hasWhatsApp: true, hasForm: true, hasScheduling: false,
+    hasEcommerce: false, hasRegistration: false, hasNewsletter: true,
+    primaryConversion: 'Lead'
+  },
+  meta:      { pixelId: '', capi: true, advancedMatching: true, ctwa: true },
+  googleAds: { conversionId: '', leadLabel: '', enhancedConversions: true, offlineConversions: false },
+  ga4:       { measurementId: '', apiSecret: '', engagementTracking: true },
+  tiktok:    { pixelId: '', eventsApi: false },
+  clarity:   { projectId: '' },
+  server:    {
+    endpoint: '',
+    sendOnEvents: ['Lead','PageView','Contact','Schedule','ViewContent','CompleteRegistration','Subscribe','CTAClick','FormStart'],
+    retryOnFail: 3
+  },
+  capture:   {
+    firstTouch: true, referrerMapping: true, geo: true,
+    journeyMaxTouches: 20, deviceFingerprint: true, ctwaCapture: true,
+    leadStorageKey: '__wl_lead'
+  },
+  engagement:{
+    scroll: true, heartbeat: 30, sections: true, sectionVisibleMs: 2000,
+    ctaTracking: true, formAnalytics: true, videoTracking: true
+  },
+  consent:   { required: false, defaultGranted: false, cookieName: 'trk_consent' },
+  helpers:   { whatsappNumber: '5519993521270', whatsappMessage: 'Olá! Vim pelo site da Templum.' },
+  integrations: { calendly: false, typeform: false, tally: false },
+  crossDomain:  { enabled: false, domains: [] }
+};
+window.TRACKING_KIT_VERSION = '1.0.0';
+</script>
+<script is:inline>
+(function () {
+  var BASE = 'https://cdn.jsdelivr.net/gh/rodrigoosouza/tracking-kit@v1.0.0/src/';
+  function load(file, cb) {
+    var s = document.createElement('script');
+    s.async = false; s.src = BASE + file;
+    if (cb) s.onload = cb;
+    document.head.appendChild(s);
+  }
+  load('01-capture.js', function () {
+    load('02-dispatch.js', function () {
+      load('03-engagement.js', function () {
+        load('trk-helpers.js', function () {
+          var I = window.TRACKING_CONFIG.integrations || {};
+          var CD = window.TRACKING_CONFIG.crossDomain || {};
+          if (I.calendly || I.typeform || I.tally || CD.enabled) load('integrations.js');
+        });
+      });
+    });
+  });
+})();
+</script>

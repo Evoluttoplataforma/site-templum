@@ -168,15 +168,20 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
         <div class="lead-card">
           <div class="lead-title">Fale com um especialista</div>
           <p class="lead-sub">Resposta em até 1 dia útil. Sem compromisso.</p>
-          <form class="form" data-trk-event="lead" onsubmit="return false">
+          <form class="form" data-trk-event="lead" novalidate>
+            <input type="hidden" name="norma" value={norma.nome} />
             <div class="form-row">
-              <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" /></div>
-              <div class="field"><label>Telefone</label><input class="input" name="telefone" placeholder="(00) 00000-0000" /></div>
+              <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
+              <div class="field"><label>Telefone</label><input class="input" name="telefone" placeholder="(00) 00000-0000" required /></div>
             </div>
-            <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" /></div>
+            <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
             <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
-            <button class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+            <button type="submit" class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
           </form>
+          <div class="form-success" hidden>
+            <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+            <div><h4>Recebemos seu contato!</h4><p>Um especialista vai falar com você em até 1 dia útil.</p></div>
+          </div>
         </div>
       </div>
     </section>

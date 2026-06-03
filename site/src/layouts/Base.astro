@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import TrackingKit from "../components/TrackingKit.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -41,6 +42,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
     <!-- Ícones (Iconify) -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" is:inline></script>
+
+    <!-- Tracking (tracking-kit) -->
+    <TrackingKit />
   </head>
   <body>
     {!noHeaderFooter && <Header />}
@@ -75,6 +79,47 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         );
         els.forEach((el) => io.observe(el));
       })();
+    </script>
+
+    <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
+         Mailchimp), dispara a conversão no tracking-kit e mostra o sucesso.
+         Vale para qualquer form[data-trk-event]. data-trk-event="denuncia"
+         não é enviado ao Mailchimp nem ao tracking (apenas UI). -->
+    <script is:inline>
+      document.addEventListener("submit", function (e) {
+        var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
+        if (!form) return;
+        e.preventDefault();
+        if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
+
+        var evt = form.getAttribute("data-trk-event");
+        var d = {};
+        new FormData(form).forEach(function (v, k) { d[k] = v; });
+
+        if (evt !== "denuncia") {
+          if (window.trk && typeof window.trk.lead === "function") {
+            try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
+          }
+          try {
+            fetch("/api/lead", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              keepalive: true,
+              body: JSON.stringify({
+                nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
+                empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
+                evento: evt, pagina: location.pathname,
+              }),
+            });
+          } catch (_) {}
+        }
+
+        // UI de sucesso: esconde o form e revela um .form-success irmão (se houver).
+        form.hidden = true;
+        var scope = form.parentElement || document;
+        var ok = scope.querySelector(".form-success");
+        if (ok) ok.hidden = false;
+      });
     </script>
   </body>
 </html>

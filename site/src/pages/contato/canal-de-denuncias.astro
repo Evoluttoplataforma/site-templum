@@ -95,16 +95,3 @@ const oque = ["Fraude ou corrupção", "Suborno e propina", "Conflito de interes
   .form[hidden], .form-success[hidden] { display: none; }
 </style>
 
-<script is:inline>
-  (function () {
-    const form = document.getElementById("cd-form");
-    const success = document.getElementById("cd-success");
-    if (!form) return;
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      form.hidden = true;
-      if (success) success.hidden = false;
-    });
-  })();
-</script>
