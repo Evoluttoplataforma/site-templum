@@ -1,0 +1,131 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+
+// NOTA: GERIC não tem página própria no site atual — copy baseada no contexto
+// "Construa com o dinheiro da Caixa / Geric da Caixa" da página PBQP-H. Validar.
+const motivos = [
+  { icon: "solar:wad-of-money-bold", t: "Construa com o dinheiro da Caixa", d: "Com a homologação, sua construtora fica apta a participar de programas habitacionais e acessar financiamentos que só aceitam empresas qualificadas." },
+  { icon: "solar:case-round-bold", t: "Mais contratos e credibilidade", d: "A habilitação no GERIC abre portas para novos contratos e fortalece a reputação da sua empresa no mercado da construção." },
+  { icon: "solar:rocket-2-bold", t: "Crescimento acelerado", d: "Acelere o crescimento da sua construtora com a força dos recursos da Caixa Federal por trás dos seus projetos." },
+];
+const passos = [
+  { t: "Diagnóstico", d: "Avaliamos o cenário da sua construtora e o que falta para a homologação no GERIC." },
+  { t: "PBQP-H", d: "Estruturamos a certificação PBQP-H, pré-requisito para a qualificação junto à Caixa." },
+  { t: "Documentação", d: "Organizamos a documentação técnica, jurídica e financeira exigida no processo." },
+  { t: "Submissão e acompanhamento", d: "Conduzimos a submissão ao GERIC e acompanhamos até a sua empresa ser homologada." },
+];
+const requisitos = [
+  "Certificação PBQP-H no nível adequado",
+  "Regularidade fiscal, jurídica e trabalhista",
+  "Comprovação de capacidade técnica e de obras",
+  "Documentação econômico-financeira organizada",
+  "Sistema de gestão da qualidade implantado",
+];
+---
+
+<Base
+  title="GERIC Caixa — Homologação de construtoras para financiamento | Templum"
+  description="Homologue sua construtora no GERIC da Caixa Econômica Federal e acesse financiamentos e programas habitacionais. A Templum prepara sua empresa para a qualificação, do PBQP-H à submissão."
+>
+  <PageHero
+    tag="GERIC · Caixa Econômica"
+    sub="A homologação no GERIC da Caixa abre acesso a financiamentos e programas habitacionais que só aceitam construtoras qualificadas. A Templum prepara a sua empresa para conquistar essa habilitação — do PBQP-H à submissão."
+    image="/assets/img/hero/templum-consultoria-construcao.webp"
+    badge="GERIC · Caixa"
+    icon="solar:buildings-3-bold"
+    chips={["Acesso a recursos da Caixa", "Programas habitacionais", "+30 anos de método"]}
+  >
+    <Fragment slot="title">Homologue sua construtora no GERIC e construa com o <em class="accent">dinheiro da Caixa</em></Fragment>
+    <Fragment slot="cta">
+      <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="/consultoria/pbqp-h" class="btn btn--onDark btn--lg">Ver PBQP-H</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- O QUE É -->
+  <section class="section section--cream">
+    <div class="container md gr-intro">
+      <span class="tag-pill">O que é o GERIC</span>
+      <h2>A porta de entrada para os <em class="accent">recursos da Caixa</em></h2>
+      <p>O GERIC é a área da Caixa Econômica Federal responsável por avaliar e homologar as construtoras aptas a operar com financiamentos e recursos do banco. Sem essa habilitação, a sua empresa fica de fora dos grandes programas habitacionais — com ela, você ganha acesso ao crédito que move a construção no Brasil.</p>
+    </div>
+  </section>
+
+  <!-- POR QUE HOMOLOGAR -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Por que homologar</span>
+        <h2>O que a sua construtora tem a <em class="accent">ganhar</em></h2>
+      </div>
+      <div class="gr-grid">
+        {motivos.map((m) => (
+          <div class="eco-card">
+            <span class="gr-ico"><iconify-icon icon={m.icon}></iconify-icon></span>
+            <h3>{m.t}</h3>
+            <p>{m.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO A TEMPLUM AJUDA -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Como a Templum ajuda</span>
+        <h2>Do PBQP-H à <em class="accent">homologação</em></h2>
+        <p>Conduzimos cada etapa para a sua construtora ser aprovada no GERIC com segurança.</p>
+      </div>
+      <div class="step-grid">
+        {passos.map((p, i) => (
+          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- REQUISITOS -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Requisitos</span>
+        <h2>O que é preciso para <em class="accent">se habilitar</em></h2>
+      </div>
+      <ul class="check-list gr-req">
+        {requisitos.map((r) => (
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{r}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ClientLogos dark={false} titulo="Construtoras que crescem com a Templum" />
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para construir com o <em>apoio da Caixa</em>?</h2>
+      <p>Fale com um especialista e descubra o caminho mais curto até a homologação no GERIC.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gr-intro { text-align: center; }
+  .gr-intro .tag-pill { margin: 0 auto 16px; }
+  .gr-intro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
+  .gr-intro p { font-size: 16.5px; color: var(--text-mid); line-height: 1.65; margin-top: 16px; }
+
+  .gr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .gr-grid { grid-template-columns: 1fr; } }
+  .gr-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+
+  .gr-req { max-width: 760px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 32px; }
+  .gr-req .check-item { color: var(--cream); }
+  @media (max-width: 700px) { .gr-req { grid-template-columns: 1fr; } }
+</style>

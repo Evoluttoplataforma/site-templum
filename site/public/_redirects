@@ -29,9 +29,8 @@
 /blog/understanding-the-enneagram-personality-system /blog                      302
 
 # → /consultoria
-/consultoria/geric                         /consultoria               302
 /lp                                        /consultoria               302
-/lp-antigas/geric                          /consultoria               302
+/lp-antigas/geric                          /consultoria/geric         302
 /lp/semana-qualidade                       /consultoria               302
 
 # → /consultoria/esg
