@@ -106,7 +106,17 @@ const { nota } = Astro.props;
   .tm-lb-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 40px; line-height: 1; opacity: .85; transition: opacity .2s, transform .2s; }
   .tm-lb-close:hover { opacity: 1; transform: scale(1.08); }
 
-  @media (max-width: 860px) { .tm { padding: 60px 0; } .tm-arrow { display: none; } .tm-card { flex-basis: 80%; } }
+  @media (max-width: 860px) {
+    .tm { padding: 60px 0; }
+    .tm-arrow { display: none; }
+    .tm-card { flex-basis: clamp(280px, 82vw, 360px); }
+  }
+  @media (max-width: 480px) {
+    /* lightbox: fechar botão acessível em telas pequenas */
+    .tm-lb { padding: 16px; }
+    .tm-lb-close { top: 12px; right: 12px; font-size: 32px; }
+    .tm-card { flex-basis: 88vw; }
+  }
 </style>
 
 <script is:inline>

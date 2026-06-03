@@ -92,6 +92,13 @@ const oque = ["Fraude ou corrupção", "Suborno e propina", "Conflito de interes
   .cd-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 14px 0 18px; }
   .cd-pitch .check-item { color: var(--cream); }
 
+  /* lead-card não estoura em mobile */
+  .cd-form-grid .lead-card { width: 100%; min-width: 0; box-sizing: border-box; }
+
+  @media (max-width: 520px) {
+    .cd-form-grid .lead-card { padding: 20px 16px; }
+  }
+
   .form[hidden], .form-success[hidden] { display: none; }
 </style>
 

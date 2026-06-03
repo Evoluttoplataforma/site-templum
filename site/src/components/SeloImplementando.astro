@@ -53,4 +53,10 @@ const { dark = true } = Astro.props;
     .selo-media { order: -1; }
     .selo-media img { max-height: 320px; }
   }
+  @media (max-width: 480px) {
+    .selo { padding: 60px 0; }
+    .selo-media img { max-height: 240px; }
+    /* botão ocupa largura total em mobile */
+    .selo-text .btn { align-self: stretch; justify-content: center; }
+  }
 </style>

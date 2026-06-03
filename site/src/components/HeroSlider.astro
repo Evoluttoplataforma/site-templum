@@ -140,15 +140,23 @@ const trust = [
   .hero-arrow--side.next { right: 20px; }
 
   @media (max-width: 860px) {
-    .hero { min-height: 0; }
+    .hero { min-height: 480px; }
     .hero-bg { object-position: 68% top; opacity: 0; }
     .hero-bg.active { opacity: 0.4; }
     .hero-overlay { background:
       linear-gradient(to bottom, rgba(34,40,49,0.5), var(--navy) 60%),
       radial-gradient(600px 360px at 50% 6%, rgba(255,89,37,0.22), transparent 60%); }
-    .hero-inner { padding-top: 210px; padding-bottom: 48px; }
+    .hero-inner { padding-top: 180px; padding-bottom: 48px; }
     .hero-slides, .hero-trust { max-width: 100%; }
     .hero-arrow--side { display: none; }
+  }
+  @media (max-width: 480px) {
+    .hero { min-height: 420px; }
+    .hero-inner { padding-top: 140px; padding-bottom: 40px; }
+    .hero-title { font-size: clamp(28px, 8vw, 38px); }
+    .hero-cta-row { flex-direction: column; }
+    .hero-cta-row .btn { width: 100%; justify-content: center; }
+    .hero-trust { gap: 16px; }
   }
 </style>
 

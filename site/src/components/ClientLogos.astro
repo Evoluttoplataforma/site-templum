@@ -11,10 +11,10 @@ const loop = [...logos, ...logos];
   <div class="container xl">
     <p class="cl-title">{titulo}</p>
   </div>
-  <div class="cl-marquee">
+  <div class="cl-marquee" aria-hidden="true">
     <div class="cl-track">
       {loop.map((src) => (
-        <span class="cl-item"><img src={src} alt="Cliente Templum" loading="lazy" /></span>
+        <span class="cl-item"><img src={src} alt="" loading="lazy" /></span>
       ))}
     </div>
   </div>

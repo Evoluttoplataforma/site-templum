@@ -91,6 +91,15 @@ const canais = [
   .ct-canal-body span { font-size: 14px; color: rgba(255,244,221,0.72); }
   .ct-canal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--orange); margin-top: 4px; }
 
+  /* card não estoura em mobile */
+  .ct-card { width: 100%; min-width: 0; box-sizing: border-box; }
+
+  @media (max-width: 520px) {
+    .ct-card { padding: 20px 16px; }
+    /* canais: texto do valor longo quebra sem cortar */
+    .ct-canal-body span { word-break: break-word; }
+  }
+
   .form[hidden], .form-success[hidden] { display: none; }
 </style>
 

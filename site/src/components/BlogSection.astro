@@ -39,7 +39,7 @@ import { artigos, categorias } from "../data/artigos.js";
 
 <style>
   .bg-sec { padding: 88px 0; }
-  .bg-filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 44px; }
+  .bg-filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 44px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .bg-filter { padding: 9px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,244,221,0.22); background: rgba(255,255,255,0.04); color: rgba(255,244,221,0.78); cursor: pointer; transition: all .25s var(--ease-soft); }
   .bg-filter:hover { border-color: var(--orange); color: var(--orange); }
   .bg-filter.active { background: var(--orange); color: #fff; border-color: var(--orange); }
@@ -60,7 +60,12 @@ import { artigos, categorias } from "../data/artigos.js";
   .bg-cta { text-align: center; margin-top: 44px; }
 
   @media (max-width: 1024px) { .bg-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .bg-grid { grid-template-columns: 1fr; } .bg-sec { padding: 60px 0; } }
+  @media (max-width: 560px) {
+    .bg-grid { grid-template-columns: 1fr; }
+    .bg-sec { padding: 60px 0; }
+    .bg-filters { flex-wrap: nowrap; justify-content: flex-start; padding-bottom: 4px; }
+    .bg-filter { flex-shrink: 0; }
+  }
 </style>
 
 <script is:inline>

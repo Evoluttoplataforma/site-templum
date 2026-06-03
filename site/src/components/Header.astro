@@ -90,16 +90,22 @@ const navLinks = [
   .mega-ico { width: 34px; height: 34px; min-width: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 19px; flex-shrink: 0; }
 
   .hd-burger { display: none; margin-left: auto; font-size: 26px; color: var(--text); padding: 6px; }
-  .hd-mobile { display: none; flex-direction: column; gap: 14px; padding: 20px 24px 28px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .hd-mobile { display: none; flex-direction: column; gap: 14px; padding: 20px 24px 28px; background: var(--surface); border-bottom: 1px solid var(--border); max-height: calc(100dvh - var(--nav-h, 64px)); overflow-y: auto; }
   .hd-mobile.open { display: flex; }
   .hd-mobile nav { display: flex; flex-direction: column; }
-  .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text); }
 
   @media (max-width: 1080px) {
     .hd-nav, .hd-ghost { display: none; }
     .hd-burger { display: inline-flex; }
   }
-  @media (max-width: 560px) { .hd-actions .btn { display: none; } .top-banner { font-size: 12px; } }
+  @media (max-width: 560px) {
+    .hd-actions .btn { display: none; }
+    .top-banner { font-size: 12px; }
+    /* garante que banner não estoure em telas estreitas */
+    .top-banner { padding: 8px 16px; }
+    .hd-inner { padding: 0 16px; }
+  }
 </style>
 
 <script is:inline>

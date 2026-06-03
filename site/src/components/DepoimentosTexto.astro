@@ -71,7 +71,15 @@ import { depoimentosTexto } from "../data/depoimentos-texto.js";
   .dt-dots button { width: 8px; height: 8px; border-radius: 999px; background: var(--border-3); transition: all .3s var(--ease-soft); }
   .dt-dots button.active { background: var(--orange); width: 26px; border-radius: 5px; }
 
-  @media (max-width: 860px) { .dt { padding: 60px 0; } .dt-arrow { display: none; } .dt-card { flex-basis: 82%; } }
+  @media (max-width: 860px) {
+    .dt { padding: 60px 0; }
+    .dt-arrow { display: none; }
+    .dt-card { flex-basis: clamp(300px, 84vw, 380px); }
+  }
+  @media (max-width: 480px) {
+    .dt-card { flex-basis: 88vw; padding: 24px 20px; }
+    .dt-track { padding-left: clamp(16px, 4vw, 24px); padding-right: clamp(16px, 4vw, 24px); }
+  }
 </style>
 
 <script is:inline>

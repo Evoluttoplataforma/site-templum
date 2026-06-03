@@ -46,7 +46,7 @@ const agentes = [
     <div class="orbit-hub" id="orbitHub">
       <div class="orbit-hub__center">
         <div class="orbit-hub__glow"></div>
-        <div class="orbit-hub__photo"><img src="/assets/img/olivia.webp" alt="Olívia" /></div>
+        <div class="orbit-hub__photo"><img src="/assets/img/olivia.webp" alt="Olívia, coordenadora de IA da plataforma Orbit" /></div>
         <div class="orbit-hub__name">Olívia</div>
         <div class="orbit-hub__role">Coordenadora Geral</div>
         <div class="orbit-hub__ring orbit-hub__ring--1"></div>
@@ -105,7 +105,7 @@ const agentes = [
   .orbit-subhead p em { color: var(--orange); font-style: normal; font-weight: 600; }
 
   /* hub */
-  .orbit-hub { position: relative; width: 100%; max-width: 1040px; height: 940px; margin: 0 auto 8px; }
+  .orbit-hub { position: relative; width: 100%; max-width: 1040px; height: 940px; margin: 0 auto 8px; overflow: clip; }
   .orbit-hub__lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0; }
   .orbit-visible .orbit-hub__lines { animation: orbit-lines-in .8s ease .3s forwards; }
   @keyframes orbit-lines-in { to { opacity: 1; } }
@@ -177,8 +177,20 @@ const agentes = [
     .orbit-hub__ring--1 { width: 140px; height: 140px; } .orbit-hub__ring--2 { width: 175px; height: 175px; } .orbit-hub__ring--3 { display: none; }
     .orbit-hub__node-icon { width: 44px; height: 44px; } .orbit-hub__node-icon iconify-icon { font-size: 18px; }
     .orbit-hub__node-label { font-size: 11px; }
-    .orbit-node-card { width: 220px; }
+    .orbit-node-card { width: min(220px, 80vw); }
     .orbit-stats { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .orbit { padding: 64px 0; }
+    .orbit-hub { height: 420px; }
+    .orbit-hub__photo { width: 80px; height: 80px; }
+    .orbit-hub__name { font-size: 13px; margin-top: 6px; }
+    .orbit-hub__role { font-size: 11px; }
+    .orbit-hub__ring--1 { width: 110px; height: 110px; }
+    .orbit-hub__ring--2 { width: 140px; height: 140px; }
+    .orbit-hub__node-icon { width: 36px; height: 36px; }
+    .orbit-hub__node-icon iconify-icon { font-size: 15px; }
+    .orbit-hub__node-label { font-size: 9px; }
   }
 </style>
 

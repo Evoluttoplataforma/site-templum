@@ -109,7 +109,8 @@ const problemas = [
 
 <style>
   .pc-prob { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
-  @media (max-width: 880px) { .pc-prob { grid-template-columns: 1fr; } }
+  @media (max-width: 980px) { .pc-prob { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .pc-prob { grid-template-columns: 1fr; } }
   .pc-prob-card { background: rgba(255,244,221,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 28px; }
   .pc-prob-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.16); margin-bottom: 16px; }
   .pc-prob-card h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
