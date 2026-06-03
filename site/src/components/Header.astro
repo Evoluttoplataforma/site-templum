@@ -3,11 +3,14 @@
 import { normas } from "../data/normas.js";
 
 const navLinks = [
-  { label: "Consultoria", href: "/consultoria" },
-  { label: "Auditoria", href: "/auditoria" },
-  { label: "Treinamentos", href: "/cursos" },
+  { label: "Certificações", href: "/consultoria" },
+  { label: "Auditorias", href: "/auditoria" },
+  { label: "Premiações", href: "/drops" },
   { label: "Soluções de IA", href: "/solucoes-de-ia" },
+  { label: "Presentes 🎁", href: "/presentes-templum" },
   { label: "Quem somos", href: "/quem-somos/sobre" },
+  { label: "Treinamentos", href: "/cursos" },
+  { label: "Carreira", href: "/carreira" },
   { label: "Cases", href: "/case-de-sucesso" },
 ];
 ---
@@ -27,7 +30,7 @@ const navLinks = [
 
     <nav class="hd-nav" aria-label="Navegação principal">
       <div class="hd-item has-mega">
-        <a href="/consultoria" class="hd-link">Consultoria <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
+        <a href="/consultoria" class="hd-link">Certificações <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
         <div class="mega">
           <div class="mega-grid">
             {normas.map((n) => (
@@ -69,10 +72,10 @@ const navLinks = [
   .top-banner .tb-link:hover iconify-icon { transform: translateX(3px); }
 
   .hd { position: sticky; top: 0; z-index: 60; background: rgba(255,255,255,0.92); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
-  .hd-inner { display: flex; align-items: center; gap: 24px; height: var(--nav-h); max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+  .hd-inner { display: flex; align-items: center; gap: 14px; height: var(--nav-h); max-width: 1400px; margin: 0 auto; padding: 0 24px; }
   .hd .templum-logo img { height: 42px; }
   .hd-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
-  .hd-link { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 600; color: var(--text); padding: 8px 13px; border-radius: 8px; transition: color .25s var(--ease-soft); cursor: pointer; }
+  .hd-link { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 8px 9px; border-radius: 8px; transition: color .25s var(--ease-soft); cursor: pointer; white-space: nowrap; }
   .hd-link iconify-icon { font-size: 14px; transition: transform .25s var(--ease-soft); }
   .hd-link:hover { color: var(--orange); }
   .hd-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
@@ -95,7 +98,7 @@ const navLinks = [
   .hd-mobile nav { display: flex; flex-direction: column; }
   .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text); }
 
-  @media (max-width: 1080px) {
+  @media (max-width: 1180px) {
     .hd-nav, .hd-ghost { display: none; }
     .hd-burger { display: inline-flex; }
   }
