@@ -6,7 +6,7 @@
   "description": "Site institucional Templum — Astro estático (substitui o Framer).",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/sitemap.mjs",
     "preview": "astro preview",
     "check": "astro check"
   },
