@@ -1,0 +1,72 @@
+---
+import Base from "../layouts/Base.astro";
+import OrbitPlatform from "../components/OrbitPlatform.astro";
+
+const beneficios = [
+  { icon: "solar:bolt-circle-bold", t: "Decisões mais rápidas", d: "A Olívia cruza dados de toda a operação e entrega insights acionáveis em tempo real." },
+  { icon: "solar:checklist-minimalistic-bold", t: "Gestão sem planilhas", d: "Processos, responsáveis e prazos organizados em um só lugar, do diagnóstico à auditoria." },
+  { icon: "solar:shield-check-bold", t: "Conformidade contínua", d: "Os agentes monitoram riscos, indicadores e não conformidades antes que virem problema." },
+];
+---
+
+<Base
+  title="Soluções de IA — Olívia e a plataforma Orbit | Templum"
+  description="Conheça a Olívia: 12 agentes de IA na plataforma Orbit que organizam a gestão da sua empresa. Até 40% menos tempo de execução, 85% menos erros e 65% mais produtividade."
+>
+  <section class="section section--navy ia-hero">
+    <div class="ia-hero-bg" aria-hidden="true"></div>
+    <div class="container ia-hero-inner">
+      <span class="tag-pill tag-pill--glow">Soluções de IA · Olívia</span>
+      <h1>Inteligência artificial que <em class="accent">organiza a sua gestão</em></h1>
+      <p>A Olívia é o cérebro da plataforma Orbit: 12 agentes de IA que trabalham juntos para mapear processos, treinar equipes, monitorar indicadores e antecipar riscos — acelerando o caminho até a certificação e além.</p>
+      <div class="ia-hero-cta">
+        <a href="/form" class="btn btn--primary btn--lg">Quero conhecer a Olívia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/metodologia" class="btn btn--onDark btn--lg">Ver o método</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Por que IA na gestão</span>
+        <h2>Tecnologia a serviço do <em class="accent">seu resultado</em></h2>
+      </div>
+      <div class="ia-grid">
+        {beneficios.map((b) => (
+          <div class="eco-card">
+            <span class="ia-ico"><iconify-icon icon={b.icon}></iconify-icon></span>
+            <h3>{b.t}</h3>
+            <p>{b.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <OrbitPlatform />
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para <em>colocar a IA</em> a trabalhar pela sua empresa?</h2>
+      <p>Fale com um especialista e veja a Olívia e a plataforma Orbit na prática.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Agendar uma demonstração <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ia-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
+  .ia-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .ia-hero-inner { position: relative; z-index: 1; max-width: 740px; }
+  .ia-hero .tag-pill { margin-bottom: 22px; }
+  .ia-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
+  .ia-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 640px; margin-bottom: 30px; }
+  .ia-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .ia-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .ia-grid { grid-template-columns: 1fr; } }
+  .ia-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+</style>

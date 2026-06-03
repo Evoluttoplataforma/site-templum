@@ -1,0 +1,103 @@
+---
+import Base from "../layouts/Base.astro";
+
+const temas = [
+  { icon: "solar:buildings-2-bold", t: "Construção Civil", d: "PBQP-H, ISO 9001 e SGI aplicados à realidade da obra." },
+  { icon: "solar:donut-bitten-bold", t: "Segurança de Alimentos", d: "FSSC 22000, HACCP e plano de controle de perigos." },
+  { icon: "solar:leaf-bold", t: "SGI & ESG", d: "Gestão de riscos e oportunidades ambientais e de SSO no Orbit." },
+  { icon: "solar:shield-keyhole-bold", t: "Segurança da Informação", d: "ISO 27001, ISO 27701 e planejamento sob a ótica de riscos." },
+  { icon: "solar:medal-ribbon-star-bold", t: "Qualidade", d: "Definição de escopo do SGQ e melhoria contínua na prática." },
+  { icon: "solar:chart-2-bold", t: "Gestão & Estratégia", d: "Planejamento estratégico, indicadores e tomada de decisão." },
+];
+const objetivos = [
+  "Capacitar e desenvolver os profissionais da empresa",
+  "Ensinar a implementação prática de estratégias para otimizar resultados",
+  "Integrar e qualificar a equipe para entregas de alto padrão",
+  "Aperfeiçoar produtos e serviços",
+  "Assegurar a retenção de talentos",
+  "Garantir vantagem competitiva para o negócio",
+];
+---
+
+<Base
+  title="Treinamentos Templum — Capacitação em gestão e certificação"
+  description="Treinamentos ministrados por especialistas para capacitar seu time em gestão, normas e certificação. Potencialize o seu negócio com vantagem competitiva real."
+>
+  <section class="section section--navy tr-hero">
+    <div class="tr-hero-bg" aria-hidden="true"></div>
+    <div class="container tr-hero-inner">
+      <span class="tag-pill tag-pill--glow">Treinamentos Templum</span>
+      <h1>Potencialize o seu negócio <em class="accent">com conhecimento</em></h1>
+      <p>Descubra como os treinamentos da Templum impulsionam o sucesso empresarial, capacitando e desenvolvendo profissionais para alcançar uma vantagem competitiva do seu negócio.</p>
+      <div class="tr-hero-cta">
+        <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--primary btn--lg">Quero garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/consultoria" class="btn btn--onDark btn--lg">Ver normas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Temas</span>
+        <h2>Treinamentos para <em class="accent">cada especialidade</em></h2>
+        <p>Ministrados por especialistas e consultores que vivem a rotina das normas e da gestão.</p>
+      </div>
+      <div class="tr-grid">
+        {temas.map((t) => (
+          <div class="eco-card">
+            <span class="tr-ico"><iconify-icon icon={t.icon}></iconify-icon></span>
+            <h3>{t.t}</h3>
+            <p>{t.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div class="split-text">
+          <span class="tag-pill">Para quem serve</span>
+          <h2 class="h1">Para quem quer <em class="accent">crescer com gestão</em></h2>
+          <p class="paragraph">Profissionais e empreendedores interessados em aprimorar suas habilidades em gestão, identificar oportunidades de negócios, implementar estratégias eficazes e enfrentar desafios no mercado. Indicado para quem deseja impulsionar o sucesso do seu empreendimento.</p>
+          <a href="/form" class="btn btn--primary btn--lg">Falar com a Templum <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+        <div class="split-text">
+          <span class="tag-pill">Principais objetivos</span>
+          <ul class="check-list">
+            {objetivos.map((o) => (
+              <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{o}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Não perca os <em>próximos treinamentos</em></h2>
+      <p>Fale com a gente pelo WhatsApp e seja avisado das próximas turmas e temas.</p>
+      <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--dark btn--lg">Avise-me pelo WhatsApp <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tr-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
+  .tr-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .tr-hero-inner { position: relative; z-index: 1; max-width: 720px; }
+  .tr-hero .tag-pill { margin-bottom: 22px; }
+  .tr-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
+  .tr-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 600px; margin-bottom: 30px; }
+  .tr-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .tr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .tr-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tr-grid { grid-template-columns: 1fr; } }
+  .tr-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+</style>
