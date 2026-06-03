@@ -2,24 +2,35 @@
 import Base from "../../layouts/Base.astro";
 import Especialistas from "../../components/Especialistas.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
+import { normas } from "../../data/normas.js";
 
+// Copy real de "site atual/Templum Consultoria - Sobre.html".
 const numeros = [
   { value: "+8.000", label: "empresas fortalecidas", icon: "solar:buildings-3-bold" },
   { value: "+1,5 mi", label: "trocas em atendimentos", icon: "solar:chat-round-line-bold" },
   { value: "R$ 3,3 bi", label: "em benefícios diretos aos clientes", icon: "solar:dollar-minimalistic-bold" },
-  { value: "+800", label: "cidades no Brasil, Portugal e África", icon: "solar:map-point-bold" },
 ];
 
-const pilares = [
-  { icon: "solar:rocket-2-bold", t: "Pioneirismo", d: "Fomos os primeiros a levar as certificações ISO para micro e pequenas empresas — porque excelência não é privilégio dos grandes." },
-  { icon: "solar:cpu-bolt-bold", t: "Inovação constante", d: "Investimos sem parar em tecnologia, metodologia e conhecimento para encurtar o caminho até o certificado." },
-  { icon: "solar:shield-check-bold", t: "Garantia real", d: "Somos a única consultoria com garantia de 200% em contrato: certificou ou devolvemos o dobro do investimento." },
+const depoimentos = [
+  { nome: "Talita Brandão", texto: "Finalizando o processo de implantação da ISO 9001 com a Templum. Confesso que no início fiquei com bastante medo, mas os consultores e o material são excelentes." },
+  { nome: "Marina Morici", texto: "Antes mesmo da auditoria da ISO, o trabalho da Templum já ajudou a realmente melhorar os processos e entregas da empresa." },
+  { nome: "Bruna Debiagi", texto: "A Templum foi a melhor escolha que fizemos. A plataforma que eles utilizam ajuda muito no entendimento e no caminhar da consultoria. Obrigada pela parceria e por nos ajudarem a conquistar esse sonho." },
 ];
+
+// Normas em destaque com as taglines da página Sobre.
+const destaques = [
+  { slug: "iso-9001", tag: "Qualidade que conquista clientes" },
+  { slug: "iso-14001", tag: "Sustentabilidade que gera lucro" },
+  { slug: "iso-45001", tag: "Segurança que gera produtividade" },
+  { slug: "iso-27001", tag: "Na era dos dados, a segurança é poder" },
+  { slug: "fssc-22000", tag: "Excelência que alimenta o sucesso" },
+  { slug: "pbqp-h", tag: "Excelência construída em cada detalhe" },
+].map((d) => ({ ...d, n: normas.find((x) => x.slug === d.slug) }));
 ---
 
 <Base
   title="Quem somos — A consultoria que revolucionou a certificação ISO | Templum"
-  description="Há +30 anos a Templum leva certificações ISO para empresas de todos os portes. Pioneiros em democratizar a ISO, com método próprio, plataforma de gestão e garantia de 200%."
+  description="Somos a Templum: pioneiros em levar as certificações ISO para micro e pequenas empresas. +2.000 clientes certificados, +800 cidades no Brasil, Portugal e África."
 >
   <!-- HERO -->
   <section class="section section--navy qs-hero">
@@ -28,58 +39,87 @@ const pilares = [
       <span class="tag-pill tag-pill--glow">Muito prazer, somos a Templum!</span>
       <h1>A consultoria que <em class="accent">revolucionou</em> o mercado de certificação ISO</h1>
       <p>Bem-vindo à Templum, onde a consultoria é transformada em força vital para o seu desempenho. Somos pioneiros em trazer as certificações ISO para micro e pequenas empresas, porque acreditamos que excelência não é privilégio dos grandes.</p>
+      <p class="qs-hero-sub">Esta convicção nos impulsiona a inovar constantemente em tecnologia, metodologia e conhecimento.</p>
       <div class="qs-hero-cta">
-        <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/form" class="btn btn--primary btn--lg">Consulte prazos e preços <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         <a href="/quem-somos/valores" class="btn btn--onDark btn--lg">Nossos valores</a>
       </div>
     </div>
   </section>
 
-  <!-- NÚMEROS -->
-  <section class="section section--cream qs-nums-sec">
+  <!-- MÉTODO + DEPOIMENTOS -->
+  <section class="section section--cream">
     <div class="container">
       <div class="section-header">
-        <span class="tag-pill">Histórico de sucesso</span>
-        <h2>Resultados que <em class="accent">fortalecem o país</em></h2>
-        <p>Esta convicção nos impulsiona a inovar constantemente em tecnologia, metodologia e conhecimento.</p>
+        <span class="tag-pill">+2.000 clientes certificados</span>
+        <h2>Conheça o método que já ajudou <em class="accent">+2.000 empresas</em> a se certificarem</h2>
+        <p>Temos orgulho dos resultados que entregamos — e de quem confia na Templum para crescer.</p>
       </div>
-      <div class="qs-nums">
-        {numeros.map((n) => (
-          <div class="number-card">
-            <span class="number-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
-            <div class="value">{n.value}</div>
-            <div class="label">{n.label}</div>
-          </div>
+      <div class="qs-depo">
+        {depoimentos.map((d) => (
+          <article class="qs-depo-card">
+            <div class="qs-depo-stars">
+              <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+            </div>
+            <p class="qs-depo-quote">{d.texto}</p>
+            <div class="qs-depo-author">
+              <span class="qs-depo-ini">{d.nome.charAt(0)}</span>
+              <strong>{d.nome}</strong>
+            </div>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- PILARES -->
+  <!-- 800 CIDADES -->
   <section class="section">
     <div class="container">
-      <div class="section-header">
-        <span class="tag-pill">No que acreditamos</span>
-        <h2>Excelência <em class="accent">não é privilégio dos grandes</em></h2>
-      </div>
-      <div class="qs-pilares">
-        {pilares.map((p) => (
-          <div class="eco-card">
-            <span class="qs-pilar-ico"><iconify-icon icon={p.icon}></iconify-icon></span>
-            <h3>{p.t}</h3>
-            <p>{p.d}</p>
+      <div class="split">
+        <div class="split-text">
+          <span class="tag-pill">Onde atuamos</span>
+          <h2 class="h1">Já levamos consultoria para mais de <em class="accent">800 cidades</em></h2>
+          <p class="paragraph">No Brasil, em Portugal e na África. Sistemas de gestão da qualidade para empresas dos mais diversos ramos de atividade e tamanho — tudo com atendimento 100% online.</p>
+          <a href="/form" class="btn btn--primary btn--lg">Consulte prazos e preços <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+        <div class="split-text">
+          <div class="qs-nums">
+            {numeros.map((n) => (
+              <div class="qs-num">
+                <span class="qs-num-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
+                <div><strong>{n.value}</strong><span>{n.label}</span></div>
+              </div>
+            ))}
           </div>
-        ))}
+          <span class="qs-num-cap">Histórico de sucesso Templum</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- INSPIRAÇÃO -->
+  <!-- BENEFÍCIOS POR NORMA -->
   <section class="section section--cream">
-    <div class="container md qs-insp">
-      <span class="tag-pill">Inspiração</span>
-      <h2>Maurício Furniel</h2>
-      <p class="qs-insp-quote">"Nosso grande exemplo, quem nos motivou a trabalhar com o olho brilhando e com vontade de fazer o melhor sempre."</p>
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Benefícios da certificação</span>
+        <h2>Aproveite ao máximo os benefícios da sua <em class="accent">certificação ISO</em></h2>
+        <p>Organizações com um sistema de gestão implementado têm indicadores-chave e evidências que empoderam o líder na tomada de decisão.</p>
+      </div>
+      <div class="qs-norm-grid">
+        {destaques.map((d) => (
+          <a class="qs-norm" href={`/consultoria/${d.slug}`} style={`--c:${d.n.color}`}>
+            <span class="qs-norm-ico"><iconify-icon icon={d.n.icon}></iconify-icon></span>
+            <div class="qs-norm-body">
+              <h3>{d.n.nome}</h3>
+              <p>{d.tag}</p>
+              <span class="qs-norm-link">Clique aqui e saiba mais <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="qs-norm-more">
+        <a href="/consultoria" class="btn btn--secondary btn--lg">Mais certificações <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
     </div>
   </section>
 
@@ -106,19 +146,37 @@ const pilares = [
   .qs-hero-inner { position: relative; z-index: 1; max-width: 760px; }
   .qs-hero .tag-pill { margin-bottom: 22px; }
   .qs-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
-  .qs-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 620px; margin-bottom: 30px; }
-  .qs-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .qs-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 620px; }
+  .qs-hero-sub { margin-top: 14px; color: rgba(255,244,221,0.62) !important; }
+  .qs-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
 
-  .qs-nums-sec { padding-top: 64px; padding-bottom: 64px; }
-  .qs-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 44px; }
-  @media (max-width: 880px) { .qs-nums { grid-template-columns: repeat(2, 1fr); } }
+  /* depoimentos */
+  .qs-depo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .qs-depo { grid-template-columns: 1fr; } }
+  .qs-depo-card { display: flex; flex-direction: column; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px 28px; box-shadow: var(--shadow-card); }
+  .qs-depo-stars { display: flex; gap: 3px; color: #FFB400; font-size: 18px; }
+  .qs-depo-quote { font-size: 15px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+  .qs-depo-author { display: flex; align-items: center; gap: 12px; }
+  .qs-depo-ini { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; font-size: 18px; font-weight: 800; color: #fff; background: var(--orange); }
+  .qs-depo-author strong { font-size: 15px; font-weight: 800; color: var(--text); }
 
-  .qs-pilares { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 44px; }
-  @media (max-width: 880px) { .qs-pilares { grid-template-columns: 1fr; } }
-  .qs-pilar-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+  /* números */
+  .qs-nums { display: flex; flex-direction: column; gap: 16px; }
+  .qs-num { display: flex; align-items: center; gap: 14px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); }
+  .qs-num-ico { width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center; font-size: 23px; color: var(--orange); background: rgba(255,89,37,0.10); }
+  .qs-num strong { display: block; font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; letter-spacing: -0.02em; }
+  .qs-num span { font-size: 13.5px; color: var(--text-mid); }
+  .qs-num-cap { display: block; text-align: center; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-soft); margin-top: 16px; }
 
-  .qs-insp { text-align: center; }
-  .qs-insp .tag-pill { margin: 0 auto 16px; }
-  .qs-insp h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
-  .qs-insp-quote { font-size: clamp(18px, 2.4vw, 24px); line-height: 1.5; color: var(--text-mid); font-style: italic; max-width: 700px; margin: 18px auto 0; }
+  /* normas */
+  .qs-norm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
+  @media (max-width: 980px) { .qs-norm-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .qs-norm-grid { grid-template-columns: 1fr; } }
+  .qs-norm { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 24px 24px; transition: transform .3s var(--ease-soft), box-shadow .3s var(--ease-soft), border-color .3s var(--ease-soft); }
+  .qs-norm:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: color-mix(in srgb, var(--c) 50%, var(--border)); }
+  .qs-norm-ico { width: 50px; height: 50px; flex-shrink: 0; border-radius: 13px; display: grid; place-items: center; font-size: 25px; color: #fff; background: var(--c); }
+  .qs-norm-body h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+  .qs-norm-body p { font-size: 14px; color: var(--text-mid); line-height: 1.5; margin: 4px 0 10px; }
+  .qs-norm-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--c); }
+  .qs-norm-more { text-align: center; margin-top: 36px; }
 </style>
