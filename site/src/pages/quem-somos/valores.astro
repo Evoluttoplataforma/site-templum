@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
 
 const valores = [
   { icon: "solar:hearts-bold", t: "Nossa empresa, segunda pele", d: "Vivemos e respiramos a Templum todos os dias. Nossa história, propósito e missão fazem parte de quem somos, como uma segunda pele que nos acompanha em cada desafio e conquista." },
@@ -20,14 +21,15 @@ const valores = [
   description="Missão, fórmula do sucesso e os valores que guiam a Templum. Acreditamos que a transformação empresarial acontece quando existe alinhamento entre propósito, pessoas e práticas."
 >
   <!-- HERO / MISSÃO -->
-  <section class="section section--navy vl-hero">
-    <div class="vl-hero-bg" aria-hidden="true"></div>
-    <div class="container vl-hero-inner">
-      <span class="tag-pill tag-pill--glow">Os valores Templum</span>
-      <h1>Nossa missão é <em class="accent">contribuir para um país mais forte</em> por meio de empresas mais fortes</h1>
-      <p>Na Templum, acreditamos que a transformação empresarial só acontece quando existe alinhamento entre propósito, pessoas e práticas. Nossos valores são o alicerce que guia nossas decisões, fortalece nossa cultura e inspira cada projeto que entregamos.</p>
-    </div>
-  </section>
+  <PageHero
+    tag="Os valores Templum"
+    sub="Na Templum, acreditamos que a transformação empresarial só acontece quando existe alinhamento entre propósito, pessoas e práticas. Nossos valores são o alicerce que guia nossas decisões, fortalece nossa cultura e inspira cada projeto que entregamos."
+    image="/assets/img/paginas/valores-hero.webp"
+    badge="Cultura Templum"
+    icon="solar:hearts-bold"
+  >
+    <Fragment slot="title">Nossa missão é <em class="accent">contribuir para um país mais forte</em> por meio de empresas mais fortes</Fragment>
+  </PageHero>
 
   <!-- FÓRMULA -->
   <section class="section section--cream">
@@ -68,15 +70,6 @@ const valores = [
 </Base>
 
 <style>
-  .vl-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
-  .vl-hero-bg { position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
-                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
-  .vl-hero-inner { position: relative; z-index: 1; max-width: 800px; }
-  .vl-hero .tag-pill { margin-bottom: 22px; }
-  .vl-hero h1 { font-size: clamp(32px, 4.6vw, 54px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
-  .vl-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 660px; }
-
   .vl-formula { text-align: center; }
   .vl-formula .tag-pill { margin: 0 auto 18px; }
   .vl-formula-eq { font-size: clamp(48px, 9vw, 96px); font-weight: 800; letter-spacing: -0.04em; color: var(--orange); line-height: 1; }

@@ -1,0 +1,100 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+
+// Copy real de "site atual/PQTA- Templum Consultoria.html" (cartórios / Anoreg).
+const beneficios = [
+  { icon: "solar:ranking-bold", t: "Gestão de alta performance", d: "Aplique técnicas de gestão reconhecidas mundialmente, que vão além da atividade notarial." },
+  { icon: "solar:users-group-rounded-bold", t: "Políticas organizacionais", d: "Estabeleça políticas que aumentam o comprometimento dos funcionários." },
+  { icon: "solar:clock-circle-bold", t: "Prazos mais curtos", d: "Reduza gargalos operacionais e ganhe eficiência na entrega dos atos." },
+  { icon: "solar:shield-warning-bold", t: "Gerenciamento de riscos", d: "Economize em correções com planejamento e investimento em prevenção." },
+  { icon: "solar:eye-bold", t: "Monitoramento do atendimento", d: "Diminua reclamações externas e aumente a fidelização do seu cliente." },
+  { icon: "solar:buildings-2-bold", t: "Posicionamento institucional", d: "Ganhe visibilidade e credibilidade junto aos órgãos regulatórios." },
+];
+const procedimentos = ["Protesto", "Apontamento", "Arquivo", "Cancelamento de Protesto", "Certidão", "Compensação", "Intimação", "Jurídico", "Selagem", "Notas", "Controle de Correntista", "Caixa"];
+---
+
+<Base
+  title="PQTA Anoreg — Consultoria de qualidade para cartórios | Templum"
+  description="Consultoria especializada para conquistar o PQTA da Anoreg. Estruture os processos da sua serventia, atenda aos critérios de excelência e alcance o nível diamante."
+>
+  <PageHero
+    tag="PQTA · Anoreg"
+    sub="Conquistar o PQTA é mais do que um selo de qualidade: é o reconhecimento de uma serventia que valoriza gestão, inovação e confiança. Com nossa consultoria especializada, você estrutura seus processos, atende aos critérios da Anoreg e se destaca no setor notarial e registral."
+    image="/assets/img/paginas/pqta-hero.webp"
+    badge="PQTA · Anoreg"
+    icon="solar:medal-ribbons-star-bold"
+    chips={["Para todos os cartórios", "Critérios Anoreg", "Nível diamante"]}
+  >
+    <Fragment slot="title">Qualidade & controle para a <em class="accent">sua serventia</em></Fragment>
+    <Fragment slot="cta">
+      <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--cream">
+    <div class="container md pq-intro">
+      <span class="tag-pill">Prêmio de Qualidade Total Anoreg</span>
+      <h2>Sua serventia pode alcançar o nível <em class="accent">diamante</em></h2>
+      <p>O PQTA premia os serviços notariais e de registro de todo o país que atendem aos requisitos de excelência e qualidade na gestão organizacional e na prestação de serviços aos usuários. Estão convidados todos os cartórios brasileiros, de todas as especialidades — independente do tamanho, número de funcionários e localização.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Benefícios para sua serventia</span>
+        <h2>O que sua serventia tem a <em class="accent">ganhar</em></h2>
+        <p>Independente do tipo e do tamanho do cartório.</p>
+      </div>
+      <div class="pq-grid">
+        {beneficios.map((b) => (
+          <div class="eco-card">
+            <span class="pq-ico"><iconify-icon icon={b.icon}></iconify-icon></span>
+            <h3>{b.t}</h3>
+            <p>{b.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Procedimentos operacionais</span>
+        <h2>Instruções de trabalho <em class="accent">para cada atribuição</em></h2>
+        <p>Padronizamos cada rotina da serventia com instruções específicas.</p>
+      </div>
+      <div class="pq-procs">
+        {procedimentos.map((p) => (
+          <span class="pq-proc"><iconify-icon icon="solar:document-text-bold"></iconify-icon>{p}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para conquistar o <em>PQTA</em>?</h2>
+      <p>Fale com um especialista e estruture sua serventia para alcançar o nível diamante.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pq-intro { text-align: center; }
+  .pq-intro .tag-pill { margin: 0 auto 16px; }
+  .pq-intro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
+  .pq-intro p { font-size: 16.5px; color: var(--text-mid); line-height: 1.65; margin-top: 16px; }
+
+  .pq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 980px) { .pq-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .pq-grid { grid-template-columns: 1fr; } }
+  .pq-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+
+  .pq-procs { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 40px; }
+  .pq-proc { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--cream); padding: 10px 18px; border-radius: 999px; background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); }
+  .pq-proc iconify-icon { color: var(--orange); font-size: 16px; }
+</style>

@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
 
 const temas = [
   { icon: "solar:buildings-2-bold", t: "Construção Civil", d: "PBQP-H, ISO 9001 e SGI aplicados à realidade da obra." },
@@ -23,18 +24,20 @@ const objetivos = [
   title="Treinamentos Templum — Capacitação em gestão e certificação"
   description="Treinamentos ministrados por especialistas para capacitar seu time em gestão, normas e certificação. Potencialize o seu negócio com vantagem competitiva real."
 >
-  <section class="section section--navy tr-hero">
-    <div class="tr-hero-bg" aria-hidden="true"></div>
-    <div class="container tr-hero-inner">
-      <span class="tag-pill tag-pill--glow">Treinamentos Templum</span>
-      <h1>Potencialize o seu negócio <em class="accent">com conhecimento</em></h1>
-      <p>Descubra como os treinamentos da Templum impulsionam o sucesso empresarial, capacitando e desenvolvendo profissionais para alcançar uma vantagem competitiva do seu negócio.</p>
-      <div class="tr-hero-cta">
-        <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--primary btn--lg">Quero garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-        <a href="/consultoria" class="btn btn--onDark btn--lg">Ver normas</a>
-      </div>
-    </div>
-  </section>
+  <PageHero
+    tag="Treinamentos Templum"
+    sub="Descubra como os treinamentos da Templum impulsionam o sucesso empresarial, capacitando e desenvolvendo profissionais para alcançar uma vantagem competitiva do seu negócio."
+    image="/assets/img/paginas/cursos-hero.webp"
+    badge="Treinamentos"
+    icon="solar:square-academic-cap-bold"
+    chips={["Ministrados por especialistas", "Presencial e online", "Para todo o time"]}
+  >
+    <Fragment slot="title">Potencialize o seu negócio <em class="accent">com conhecimento</em></Fragment>
+    <Fragment slot="cta">
+      <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--primary btn--lg">Quero garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="/consultoria" class="btn btn--onDark btn--lg">Ver normas</a>
+    </Fragment>
+  </PageHero>
 
   <section class="section section--cream">
     <div class="container">
@@ -86,16 +89,6 @@ const objetivos = [
 </Base>
 
 <style>
-  .tr-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
-  .tr-hero-bg { position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
-                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
-  .tr-hero-inner { position: relative; z-index: 1; max-width: 720px; }
-  .tr-hero .tag-pill { margin-bottom: 22px; }
-  .tr-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
-  .tr-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 600px; margin-bottom: 30px; }
-  .tr-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
-
   .tr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
   @media (max-width: 880px) { .tr-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .tr-grid { grid-template-columns: 1fr; } }

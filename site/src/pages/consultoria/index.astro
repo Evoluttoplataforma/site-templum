@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
 import { normas } from "../../data/normas.js";
 import { baseConsultoria } from "../../data/consultoria/_base.js";
 
@@ -11,18 +12,20 @@ const { stats, porques } = baseConsultoria;
   description="Consultoria para ISO 9001, 14001, 27001, 45001, 37001, PBQP-H, SASSMAQ, FSSC 22000, HACCP, ESG, SGI e LGPD. Método próprio, 100% online e garantia de 200% em contrato."
 >
   <!-- HERO -->
-  <section class="section section--navy cn-hero">
-    <div class="cn-hero-bg" aria-hidden="true"></div>
-    <div class="container cn-hero-inner">
-      <span class="tag-pill tag-pill--glow">Consultoria Templum</span>
-      <h1>A certificação certa para a <em class="accent">sua norma</em></h1>
-      <p>Há +30 anos implantamos sistemas de gestão do diagnóstico à auditoria, com método próprio, plataforma de gestão e a única garantia de 200% do mercado.</p>
-      <div class="cn-hero-cta">
-        <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-        <a href="#normas" class="btn btn--onDark btn--lg">Ver todas as normas</a>
-      </div>
-    </div>
-  </section>
+  <PageHero
+    tag="Consultoria Templum"
+    sub="Há +30 anos implantamos sistemas de gestão do diagnóstico à auditoria, com método próprio, plataforma de gestão e a única garantia de 200% do mercado."
+    image="/assets/img/hero/templum-consultoria-industria.webp"
+    badge="12 normas certificáveis"
+    icon="solar:checklist-minimalistic-bold"
+    chips={["+2.000 clientes certificados", "100% online", "Garantia de 200%"]}
+  >
+    <Fragment slot="title">A certificação certa para a <em class="accent">sua norma</em></Fragment>
+    <Fragment slot="cta">
+      <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#normas" class="btn btn--onDark btn--lg">Ver todas as normas</a>
+    </Fragment>
+  </PageHero>
 
   <!-- STATS -->
   <section class="section section--cream cn-stats-sec">
@@ -97,17 +100,6 @@ const { stats, porques } = baseConsultoria;
 </Base>
 
 <style>
-  /* HERO */
-  .cn-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
-  .cn-hero-bg { position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
-                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
-  .cn-hero-inner { position: relative; z-index: 1; max-width: 720px; }
-  .cn-hero .tag-pill { margin-bottom: 22px; }
-  .cn-hero h1 { font-size: clamp(34px, 5vw, 58px); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
-  .cn-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 560px; margin-bottom: 30px; }
-  .cn-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
-
   /* STATS */
   .cn-stats-sec { padding-top: 56px; padding-bottom: 56px; }
   .cn-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }

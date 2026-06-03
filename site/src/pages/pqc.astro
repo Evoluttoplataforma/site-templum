@@ -1,0 +1,117 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+
+// Copy real de "site atual/PQC- Templum Consultoria.html" (escritórios de contabilidade).
+const etapas = [
+  { t: "Diagnóstico", d: "Avaliamos o cenário do seu escritório e identificamos os pontos críticos de gestão." },
+  { t: "Processos", d: "Mapeamos seus processos com foco total na otimização e no desempenho." },
+  { t: "Organização", d: "O plano é executado e entra em vigor a padronização do escritório." },
+  { t: "Treinamento", d: "Todos os envolvidos são treinados e ficam aptos a executar a nova metodologia." },
+];
+const preparado = [
+  "Gerenciar riscos na operação",
+  "Conquistar novos clientes",
+  "Reduzir o custo operacional",
+  "Recrutar, capacitar e manter bons profissionais",
+  "Disseminar informações para sua equipe",
+  "Elaborar propostas e contratos mais claros",
+  "Controlar processos e garantir produtividade",
+  "Prevenir falhas, atrasos e penalidades",
+];
+const problemas = [
+  { icon: "solar:dollar-minimalistic-bold", t: "Rentabilidade do escritório", d: "Concorrência desleal, baixos honorários, custo operacional elevado e falta de tempo para investir na gestão são alguns dos principais desafios do setor." },
+  { icon: "solar:users-group-rounded-bold", t: "Atrair e manter bons profissionais", d: "A profissão contábil se reinventou nos últimos anos e encontrar profissionais qualificados está cada vez mais difícil." },
+  { icon: "solar:refresh-bold", t: "Adaptação às mudanças", d: "Acompanhar as constantes mudanças do setor exige processos sólidos e uma equipe preparada." },
+];
+---
+
+<Base
+  title="PQC — Programa de Qualidade Contábil para escritórios | Templum"
+  description="Leve seu escritório de contabilidade a outro patamar de desempenho e lucratividade. Programa de qualidade baseado na ISO 9001 para padronizar e preparar sua empresa para o selo internacional."
+>
+  <PageHero
+    tag="Programa de Qualidade Contábil"
+    sub="Multas por atrasos, desorganização, dificuldade de atrair e manter bons profissionais, falta de padronização no atendimento? Temos um programa de excelência que leva o seu escritório para outro patamar."
+    image="/assets/img/paginas/pqc-hero.webp"
+    badge="PQC · Contabilidade"
+    icon="solar:calculator-minimalistic-bold"
+    chips={["Metodologia ISO 9001", "Em até 12 meses", "Mais lucratividade"]}
+  >
+    <Fragment slot="title">Seu escritório de contabilidade em <em class="accent">alto desempenho e lucratividade</em></Fragment>
+    <Fragment slot="cta">
+      <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Como funciona</span>
+        <h2>Usamos a metodologia da <em class="accent">ISO 9001</em> para transformar seu escritório</h2>
+        <p>Quatro etapas para padronizar e elevar a gestão da sua empresa.</p>
+      </div>
+      <div class="step-grid">
+        {etapas.map((e, i) => (
+          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{e.t}</h3><p>{e.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div class="split-text">
+          <span class="tag-pill">Vamos juntos nessa?</span>
+          <h2 class="h1">Em até <em class="accent">12 meses</em>, seu escritório pronto para a ISO 9001</h2>
+          <p class="paragraph">Revisamos e aprimoramos os processos do seu escritório de contabilidade, aumentando a eficiência operacional e comercial da equipe. Além do aumento da lucratividade, seu escritório fica preparado para receber o selo internacional ISO 9001 — o Sistema de Gestão da Qualidade mais conhecido do mundo.</p>
+          <a href="/consultoria/iso-9001" class="btn btn--secondary btn--lg">Conhecer a ISO 9001 <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+        <div class="split-text">
+          <span class="tag-pill">Seu escritório será preparado para</span>
+          <ul class="check-list">
+            {preparado.map((p) => (
+              <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Por que ter um programa de qualidade</span>
+        <h2>Os mesmos problemas <em class="accent">do seu escritório?</em></h2>
+      </div>
+      <div class="pc-prob">
+        {problemas.map((p) => (
+          <div class="pc-prob-card">
+            <span class="pc-prob-ico"><iconify-icon icon={p.icon}></iconify-icon></span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Leve seu escritório para <em>outro patamar</em></h2>
+      <p>Fale com um especialista e descubra como o Programa de Qualidade Contábil pode transformar sua operação.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pc-prob { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .pc-prob { grid-template-columns: 1fr; } }
+  .pc-prob-card { background: rgba(255,244,221,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 28px; }
+  .pc-prob-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.16); margin-bottom: 16px; }
+  .pc-prob-card h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
+  .pc-prob-card p { font-size: 14.5px; color: rgba(255,244,221,0.72); line-height: 1.6; }
+</style>
