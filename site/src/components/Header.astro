@@ -60,6 +60,7 @@ const navLinks = [
 
   <div class="hd-mobile" id="hdMobile">
     <nav>{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+    <a href="/contato" class="btn btn--outline btn--block">Quero me inscrever</a>
     <a href="/form" class="btn btn--primary btn--block">Falar com especialista</a>
   </div>
 </header>
@@ -73,12 +74,13 @@ const navLinks = [
 
   .hd { position: sticky; top: 0; z-index: 60; background: rgba(255,255,255,0.92); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
   .hd-inner { display: flex; align-items: center; gap: 14px; height: var(--nav-h); max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+  .hd .templum-logo { flex-shrink: 0; }
   .hd .templum-logo img { height: 42px; }
-  .hd-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
-  .hd-link { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 8px 9px; border-radius: 8px; transition: color .25s var(--ease-soft); cursor: pointer; white-space: nowrap; }
+  .hd-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; flex-wrap: nowrap; min-width: 0; }
+  .hd-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 8px 8px; border-radius: 8px; transition: color .25s var(--ease-soft); cursor: pointer; white-space: nowrap; }
   .hd-link iconify-icon { font-size: 14px; transition: transform .25s var(--ease-soft); }
   .hd-link:hover { color: var(--orange); }
-  .hd-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .hd-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
   .hd-item { position: relative; }
   .mega { position: absolute; top: calc(100% + 12px); left: 0; width: 640px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); box-shadow: var(--shadow-lift); padding: 18px; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .25s var(--ease-soft), transform .25s var(--ease-soft), visibility .25s; }
@@ -98,8 +100,10 @@ const navLinks = [
   .hd-mobile nav { display: flex; flex-direction: column; }
   .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text); }
 
-  @media (max-width: 1180px) {
-    .hd-nav, .hd-ghost { display: none; }
+  /* CTA secundário (ghost) só em telas bem largas, p/ o nav de 9 itens caber */
+  @media (max-width: 1520px) { .hd-ghost { display: none; } }
+  @media (max-width: 1320px) {
+    .hd-nav { display: none; }
     .hd-burger { display: inline-flex; }
   }
   @media (max-width: 560px) {
