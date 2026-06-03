@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+
+// NOTA: texto-base de Política de Privacidade (LGPD) — revisar com o jurídico do cliente.
+const secoes = [
+  { t: "1. Quem somos", c: "Esta Política de Privacidade descreve como a Templum Consultoria Digital LTDA. (CNPJ 00.198.308/0001-93), doravante \"Templum\", coleta, usa e protege os dados pessoais de visitantes, clientes e usuários dos seus sites e plataformas, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD)." },
+  { t: "2. Dados que coletamos", c: "Coletamos os dados que você nos fornece em formulários (nome, e-mail, telefone, empresa e mensagem) e dados de navegação coletados automaticamente (páginas visitadas, origem do acesso, dispositivo e identificadores de cookies), com o objetivo de prestar e melhorar nossos serviços." },
+  { t: "3. Como usamos os dados", c: "Utilizamos os dados para responder solicitações de contato, apresentar propostas, prestar a consultoria contratada, enviar comunicações e conteúdos (quando autorizado), além de cumprir obrigações legais e aprimorar a experiência no site." },
+  { t: "4. Base legal", c: "O tratamento dos dados se apoia nas bases legais da LGPD, em especial: execução de contrato e procedimentos preliminares, consentimento do titular, cumprimento de obrigação legal e legítimo interesse." },
+  { t: "5. Compartilhamento", c: "A Templum não vende dados pessoais. Podemos compartilhá-los com prestadores de serviço que nos apoiam (por exemplo, ferramentas de e-mail, analytics e hospedagem), sempre sob obrigações de confidencialidade e proteção de dados, e com autoridades quando exigido por lei." },
+  { t: "6. Cookies e tecnologias de medição", c: "Utilizamos cookies e tecnologias semelhantes para lembrar preferências, medir audiência e personalizar comunicações. Você pode gerenciar os cookies nas configurações do seu navegador." },
+  { t: "7. Seus direitos como titular", c: "Você pode, a qualquer momento, solicitar confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação dos seus dados e revogação do consentimento, conforme previsto na LGPD." },
+  { t: "8. Segurança e retenção", c: "Adotamos medidas técnicas e organizacionais para proteger os dados e os mantemos apenas pelo tempo necessário às finalidades informadas ou ao cumprimento de obrigações legais." },
+  { t: "9. Contato", c: "Para exercer seus direitos ou esclarecer dúvidas sobre esta política, entre em contato pelo WhatsApp 55 19 99352-1270 ou pela nossa página de contato. Esta política pode ser atualizada periodicamente; a versão vigente estará sempre disponível nesta página." },
+];
+---
+
+<Base title="Política de Privacidade — Templum" description="Política de Privacidade da Templum: como coletamos, usamos e protegemos seus dados pessoais, em conformidade com a LGPD.">
+  <section class="section section--navy lg-hero">
+    <div class="container md">
+      <span class="tag-pill tag-pill--glow">Documento legal</span>
+      <h1>Política de <em class="accent">Privacidade</em></h1>
+      <p>Como a Templum coleta, usa e protege os seus dados pessoais — em conformidade com a LGPD.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container md lg-body">
+      {secoes.map((s) => (
+        <div class="lg-sec">
+          <h2>{s.t}</h2>
+          <p>{s.c}</p>
+        </div>
+      ))}
+      <p class="lg-foot">Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Ficou com <em>alguma dúvida</em>?</h2>
+      <p>Fale com a gente sobre privacidade e proteção de dados.</p>
+      <a href="/contato" class="btn btn--dark btn--lg">Falar com a Templum <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lg-hero { padding: clamp(56px, 9vh, 96px) 0; text-align: center; }
+  .lg-hero .tag-pill { margin: 0 auto 18px; }
+  .lg-hero h1 { font-size: clamp(32px, 4.6vw, 52px); font-weight: 800; letter-spacing: -0.03em; color: var(--cream); }
+  .lg-hero p { font-size: 16.5px; color: rgba(255,244,221,0.78); margin-top: 14px; max-width: 540px; margin-inline: auto; }
+
+  .lg-body { display: flex; flex-direction: column; gap: 32px; }
+  .lg-sec h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.015em; margin-bottom: 10px; }
+  .lg-sec p { font-size: 15.5px; color: var(--text-mid); line-height: 1.7; }
+  .lg-foot { font-size: 13px; color: var(--text-soft); padding-top: 20px; border-top: 1px solid var(--border); }
+</style>

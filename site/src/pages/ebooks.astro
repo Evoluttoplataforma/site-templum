@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Newsletter from "../components/Newsletter.astro";
+
+const temas = [
+  { icon: "solar:medal-ribbon-star-bold", t: "Guia da ISO 9001", d: "O passo a passo para implantar um sistema de gestão da qualidade." },
+  { icon: "solar:shield-keyhole-bold", t: "ISO 27001 na prática", d: "Como proteger a informação da sua empresa e certificar." },
+  { icon: "solar:checklist-minimalistic-bold", t: "Checklist de auditoria interna", d: "O que não pode faltar antes da certificadora chegar." },
+  { icon: "solar:leaf-bold", t: "ESG para começar", d: "Primeiros passos em sustentabilidade e governança." },
+];
+---
+
+<Base
+  title="E-books Templum — Materiais gratuitos de gestão e certificação"
+  description="Baixe e-books, guias e checklists gratuitos sobre normas ISO, gestão e certificação. Conteúdo prático de quem certifica há +30 anos."
+>
+  <PageHero
+    tag="Materiais gratuitos"
+    sub="Guias, checklists e e-books práticos para você dominar as normas e organizar a gestão da sua empresa — feitos por quem vive certificação."
+    image="/assets/img/hero/templum-consultoria-industria.webp"
+    badge="E-books Templum"
+    icon="solar:book-bookmark-bold"
+    chips={["Conteúdo prático", "Download gratuito", "Por especialistas"]}
+  >
+    <Fragment slot="title">Materiais que <em class="accent">aceleram a sua certificação</em></Fragment>
+  </PageHero>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Em breve</span>
+        <h2>Próximos <em class="accent">materiais</em></h2>
+        <p>Estamos preparando uma biblioteca de e-books e guias. Assine a newsletter para ser avisado dos lançamentos.</p>
+      </div>
+      <div class="eb-grid">
+        {temas.map((t) => (
+          <div class="eco-card eb-card">
+            <span class="eb-ico"><iconify-icon icon={t.icon}></iconify-icon></span>
+            <h3>{t.t}</h3>
+            <p>{t.d}</p>
+            <span class="eb-soon">Em breve</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Newsletter />
+</Base>
+
+<style>
+  .eb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 980px) { .eb-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .eb-grid { grid-template-columns: 1fr; } }
+  .eb-card { position: relative; }
+  .eb-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+  .eb-soon { display: inline-block; margin-top: 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-soft); padding: 5px 12px; border-radius: 999px; border: 1px dashed var(--border-3); }
+</style>

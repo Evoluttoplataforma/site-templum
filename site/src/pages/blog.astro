@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import BlogSection from "../components/BlogSection.astro";
+import Newsletter from "../components/Newsletter.astro";
+---
+
+<Base
+  title="Blog Templum — Gestão, qualidade e certificação"
+  description="Conteúdos práticos sobre gestão, normas ISO, certificação e tecnologia para liderar e organizar a sua empresa. Insights de quem certifica há +30 anos."
+>
+  <PageHero
+    tag="Blog Templum"
+    sub="Conteúdos práticos para liderar, organizar a empresa e tomar decisões melhores — de quem vive certificação há mais de 30 anos."
+    image="/assets/img/hero/templum-consultoria-industria.webp"
+    badge="Insights de gestão"
+    icon="solar:notebook-bold"
+    chips={["Gestão & qualidade", "Normas ISO", "Tecnologia & IA"]}
+  >
+    <Fragment slot="title">Conhecimento que <em class="accent">fortalece a sua gestão</em></Fragment>
+  </PageHero>
+
+  <BlogSection />
+
+  <Newsletter />
+</Base>

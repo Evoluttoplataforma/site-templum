@@ -1,0 +1,110 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+
+// NOTA: copy provisória de canal de denúncias — validar com o cliente/compliance.
+const principios = [
+  { icon: "solar:incognito-bold", t: "Anonimato garantido", d: "Você pode se identificar ou não. Em nenhum caso revelamos sua identidade sem autorização." },
+  { icon: "solar:shield-check-bold", t: "Não retaliação", d: "É proibida qualquer retaliação contra quem relata uma suspeita de boa-fé." },
+  { icon: "solar:lock-keyhole-bold", t: "Confidencialidade", d: "As informações são tratadas com sigilo e acessadas apenas pela área responsável." },
+  { icon: "solar:eye-scan-bold", t: "Apuração imparcial", d: "Todo relato é analisado com isenção e tratado conforme nossa política de integridade." },
+];
+const oque = ["Fraude ou corrupção", "Suborno e propina", "Conflito de interesses", "Assédio ou discriminação", "Uso indevido de recursos", "Violação de leis ou do código de conduta"];
+---
+
+<Base
+  title="Canal de Denúncias — Templum"
+  description="Canal de denúncias da Templum: relate, com sigilo e sem retaliação, condutas que violem nosso código de ética e integridade. Anonimato garantido."
+>
+  <PageHero
+    tag="Integridade · ISO 37001"
+    sub="O canal de denúncias é um instrumento do nosso programa de integridade. Use-o para relatar, com sigilo e sem medo de retaliação, qualquer conduta que viole nosso código de ética."
+    image="/assets/img/paginas/auditoria-hero.webp"
+    badge="Canal de denúncias"
+    icon="solar:shield-warning-bold"
+    chips={["Anônimo", "Sigiloso", "Sem retaliação"]}
+  >
+    <Fragment slot="title">Canal de <em class="accent">denúncias</em></Fragment>
+  </PageHero>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Nossos princípios</span>
+        <h2>Um canal <em class="accent">seguro e confiável</em></h2>
+      </div>
+      <div class="cd-grid">
+        {principios.map((p) => (
+          <div class="eco-card">
+            <span class="cd-ico"><iconify-icon icon={p.icon}></iconify-icon></span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container lg cd-form-grid">
+      <div class="cd-pitch">
+        <span class="tag-pill tag-pill--glow">O que relatar</span>
+        <h2>Em caso de suspeita, <em class="accent">relate</em></h2>
+        <ul class="check-list">
+          {oque.map((o) => (
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{o}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="lead-card">
+        <div class="lead-title">Registrar um relato</div>
+        <p class="lead-sub">Preencher os dados de contato é opcional — você pode relatar de forma anônima.</p>
+        <form class="form" id="cd-form" data-trk-event="denuncia" novalidate>
+          <div class="field">
+            <label for="tipo">Tipo de ocorrência</label>
+            <select class="select" id="tipo" name="tipo">
+              <option value="">Selecione</option>
+              {oque.map((o) => <option value={o}>{o}</option>)}
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="field"><label for="rel">Descreva a ocorrência</label><textarea class="textarea" id="rel" name="relato" rows="5" placeholder="Conte o que aconteceu, com o máximo de detalhes possível (datas, locais, envolvidos)." required></textarea></div>
+          <div class="field"><label for="email">E-mail para retorno <span class="hint">(opcional)</span></label><input class="input" id="email" type="email" name="email" placeholder="Deixe em branco para permanecer anônimo" /></div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">Enviar relato com sigilo <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+        </form>
+        <div class="form-success" id="cd-success" hidden>
+          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <div><h4>Relato registrado</h4><p>Obrigado. Sua mensagem será analisada com sigilo pela área responsável.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cd-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 980px) { .cd-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .cd-grid { grid-template-columns: 1fr; } }
+  .cd-ico { width: 50px; height: 50px; border-radius: 13px; display: grid; place-items: center; font-size: 25px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 14px; }
+
+  .cd-form-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 56px); align-items: start; }
+  @media (max-width: 900px) { .cd-form-grid { grid-template-columns: 1fr; } }
+  .cd-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 14px 0 18px; }
+  .cd-pitch .check-item { color: var(--cream); }
+
+  .form[hidden], .form-success[hidden] { display: none; }
+</style>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById("cd-form");
+    const success = document.getElementById("cd-success");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      form.hidden = true;
+      if (success) success.hidden = false;
+    });
+  })();
+</script>
