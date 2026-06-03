@@ -1,0 +1,124 @@
+---
+import Base from "../../layouts/Base.astro";
+import Especialistas from "../../components/Especialistas.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+
+const numeros = [
+  { value: "+8.000", label: "empresas fortalecidas", icon: "solar:buildings-3-bold" },
+  { value: "+1,5 mi", label: "trocas em atendimentos", icon: "solar:chat-round-line-bold" },
+  { value: "R$ 3,3 bi", label: "em benefícios diretos aos clientes", icon: "solar:dollar-minimalistic-bold" },
+  { value: "+800", label: "cidades no Brasil, Portugal e África", icon: "solar:map-point-bold" },
+];
+
+const pilares = [
+  { icon: "solar:rocket-2-bold", t: "Pioneirismo", d: "Fomos os primeiros a levar as certificações ISO para micro e pequenas empresas — porque excelência não é privilégio dos grandes." },
+  { icon: "solar:cpu-bolt-bold", t: "Inovação constante", d: "Investimos sem parar em tecnologia, metodologia e conhecimento para encurtar o caminho até o certificado." },
+  { icon: "solar:shield-check-bold", t: "Garantia real", d: "Somos a única consultoria com garantia de 200% em contrato: certificou ou devolvemos o dobro do investimento." },
+];
+---
+
+<Base
+  title="Quem somos — A consultoria que revolucionou a certificação ISO | Templum"
+  description="Há +30 anos a Templum leva certificações ISO para empresas de todos os portes. Pioneiros em democratizar a ISO, com método próprio, plataforma de gestão e garantia de 200%."
+>
+  <!-- HERO -->
+  <section class="section section--navy qs-hero">
+    <div class="qs-hero-bg" aria-hidden="true"></div>
+    <div class="container qs-hero-inner">
+      <span class="tag-pill tag-pill--glow">Muito prazer, somos a Templum!</span>
+      <h1>A consultoria que <em class="accent">revolucionou</em> o mercado de certificação ISO</h1>
+      <p>Bem-vindo à Templum, onde a consultoria é transformada em força vital para o seu desempenho. Somos pioneiros em trazer as certificações ISO para micro e pequenas empresas, porque acreditamos que excelência não é privilégio dos grandes.</p>
+      <div class="qs-hero-cta">
+        <a href="/form" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/quem-somos/valores" class="btn btn--onDark btn--lg">Nossos valores</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚMEROS -->
+  <section class="section section--cream qs-nums-sec">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Histórico de sucesso</span>
+        <h2>Resultados que <em class="accent">fortalecem o país</em></h2>
+        <p>Esta convicção nos impulsiona a inovar constantemente em tecnologia, metodologia e conhecimento.</p>
+      </div>
+      <div class="qs-nums">
+        {numeros.map((n) => (
+          <div class="number-card">
+            <span class="number-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
+            <div class="value">{n.value}</div>
+            <div class="label">{n.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PILARES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">No que acreditamos</span>
+        <h2>Excelência <em class="accent">não é privilégio dos grandes</em></h2>
+      </div>
+      <div class="qs-pilares">
+        {pilares.map((p) => (
+          <div class="eco-card">
+            <span class="qs-pilar-ico"><iconify-icon icon={p.icon}></iconify-icon></span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- INSPIRAÇÃO -->
+  <section class="section section--cream">
+    <div class="container md qs-insp">
+      <span class="tag-pill">Inspiração</span>
+      <h2>Maurício Furniel</h2>
+      <p class="qs-insp-quote">"Nosso grande exemplo, quem nos motivou a trabalhar com o olho brilhando e com vontade de fazer o melhor sempre."</p>
+    </div>
+  </section>
+
+  <!-- TIME -->
+  <Especialistas sub="Um time de mais de 50 profissionais apaixonados e dedicados a levar sua empresa até o certificado — e além." />
+
+  <ClientLogos titulo="Mais de 2.000 empresas já confiam na Templum" />
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para <em>fortalecer a sua empresa</em>?</h2>
+      <p>Fale com um especialista e descubra o caminho mais curto até a sua certificação — com garantia de 200% em contrato.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Quero falar com a Templum <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .qs-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
+  .qs-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .qs-hero-inner { position: relative; z-index: 1; max-width: 760px; }
+  .qs-hero .tag-pill { margin-bottom: 22px; }
+  .qs-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
+  .qs-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 620px; margin-bottom: 30px; }
+  .qs-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .qs-nums-sec { padding-top: 64px; padding-bottom: 64px; }
+  .qs-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 44px; }
+  @media (max-width: 880px) { .qs-nums { grid-template-columns: repeat(2, 1fr); } }
+
+  .qs-pilares { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 44px; }
+  @media (max-width: 880px) { .qs-pilares { grid-template-columns: 1fr; } }
+  .qs-pilar-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+
+  .qs-insp { text-align: center; }
+  .qs-insp .tag-pill { margin: 0 auto 16px; }
+  .qs-insp h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
+  .qs-insp-quote { font-size: clamp(18px, 2.4vw, 24px); line-height: 1.5; color: var(--text-mid); font-style: italic; max-width: 700px; margin: 18px auto 0; }
+</style>

@@ -1,0 +1,91 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const valores = [
+  { icon: "solar:hearts-bold", t: "Nossa empresa, segunda pele", d: "Vivemos e respiramos a Templum todos os dias. Nossa história, propósito e missão fazem parte de quem somos, como uma segunda pele que nos acompanha em cada desafio e conquista." },
+  { icon: "solar:home-smile-bold", t: "Nossa sede, nossa casa", d: "Mais que um espaço físico, nossa sede é um ponto de encontro de ideias, de energia e de pertencimento. Cada detalhe foi pensado para refletir nossa cultura e acolher quem faz parte dela." },
+  { icon: "solar:users-group-two-rounded-bold", t: "O cliente, nosso maior motivo", d: "Cada ação, cada entrega e cada inovação nasce do compromisso em transformar a vida dos nossos clientes. Eles são a razão da nossa existência e o centro de todas as nossas decisões." },
+  { icon: "solar:cup-star-bold", t: "Nosso sucesso é celebrado", d: "Valorizamos cada conquista, pequena ou grande. Celebrar o sucesso é reconhecer o esforço coletivo e reforçar que cada vitória fortalece nossa jornada." },
+  { icon: "solar:hand-heart-bold", t: "Mais do que colegas de trabalho", d: "Construímos laços verdadeiros que vão além do trabalho. A confiança e o respeito mútuo transformam nossa equipe em uma verdadeira família." },
+  { icon: "solar:fire-bold", t: "Apaixonados e motivados", d: "A paixão pelo que fazemos é nossa maior energia. Mantemos a chama da motivação acesa em cada projeto, inspirando uns aos outros a ir sempre além." },
+  { icon: "solar:square-academic-cap-bold", t: "Aprendemos sempre para entregar o máximo", d: "Temos sede de conhecimento e buscamos evoluir constantemente. Aprender não é uma etapa, mas parte do caminho para entregar o melhor resultado possível." },
+  { icon: "solar:shield-check-bold", t: "Abrimos mão de tudo em nome da verdade", d: "Para nós, a verdade está acima de qualquer conveniência. A transparência é inegociável e guia nossas relações com clientes, parceiros e colegas." },
+  { icon: "solar:hand-shake-bold", t: "O resultado deve ser partilhado", d: "Acreditamos na força do coletivo. Os frutos do nosso trabalho são compartilhados, porque sabemos que só crescemos de verdade quando todos crescem juntos." },
+  { icon: "solar:medal-ribbons-star-bold", t: "A prática coerente com o discurso", d: "Vivemos aquilo que pregamos. Nossa credibilidade é construída pela coerência entre o que dizemos e o que entregamos diariamente." },
+];
+---
+
+<Base
+  title="Nossos valores — Cultura Templum | Templum Consultoria"
+  description="Missão, fórmula do sucesso e os valores que guiam a Templum. Acreditamos que a transformação empresarial acontece quando existe alinhamento entre propósito, pessoas e práticas."
+>
+  <!-- HERO / MISSÃO -->
+  <section class="section section--navy vl-hero">
+    <div class="vl-hero-bg" aria-hidden="true"></div>
+    <div class="container vl-hero-inner">
+      <span class="tag-pill tag-pill--glow">Os valores Templum</span>
+      <h1>Nossa missão é <em class="accent">contribuir para um país mais forte</em> por meio de empresas mais fortes</h1>
+      <p>Na Templum, acreditamos que a transformação empresarial só acontece quando existe alinhamento entre propósito, pessoas e práticas. Nossos valores são o alicerce que guia nossas decisões, fortalece nossa cultura e inspira cada projeto que entregamos.</p>
+    </div>
+  </section>
+
+  <!-- FÓRMULA -->
+  <section class="section section--cream">
+    <div class="container md vl-formula">
+      <span class="tag-pill">Fórmula do sucesso Templum</span>
+      <div class="vl-formula-eq">S=(C+H)<sup>M</sup></div>
+      <p>Sucesso é resultado de <strong>Conhecimento</strong> e <strong>Habilidade</strong>, elevados pela <strong>Motivação</strong>. É essa equação que move cada consultor e cada entrega da Templum.</p>
+    </div>
+  </section>
+
+  <!-- VALORES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">No que acreditamos</span>
+        <h2>Os valores que <em class="accent">guiam cada decisão</em></h2>
+      </div>
+      <div class="vl-grid">
+        {valores.map((v) => (
+          <div class="eco-card vl-card">
+            <span class="vl-ico"><iconify-icon icon={v.icon}></iconify-icon></span>
+            <h3>{v.t}</h3>
+            <p>{v.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Quer <em>fazer parte</em> dessa história?</h2>
+      <p>Conheça as oportunidades de carreira na Templum e venha crescer com um time apaixonado pelo sucesso do cliente.</p>
+      <a href="/carreira" class="btn btn--dark btn--lg">Ver oportunidades <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .vl-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
+  .vl-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .vl-hero-inner { position: relative; z-index: 1; max-width: 800px; }
+  .vl-hero .tag-pill { margin-bottom: 22px; }
+  .vl-hero h1 { font-size: clamp(32px, 4.6vw, 54px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
+  .vl-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 660px; }
+
+  .vl-formula { text-align: center; }
+  .vl-formula .tag-pill { margin: 0 auto 18px; }
+  .vl-formula-eq { font-size: clamp(48px, 9vw, 96px); font-weight: 800; letter-spacing: -0.04em; color: var(--orange); line-height: 1; }
+  .vl-formula-eq sup { font-size: 0.5em; }
+  .vl-formula p { font-size: 17px; color: var(--text-mid); line-height: 1.6; max-width: 560px; margin: 20px auto 0; }
+
+  .vl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 980px) { .vl-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .vl-grid { grid-template-columns: 1fr; } }
+  .vl-card h3 { text-transform: none; letter-spacing: -0.01em; font-size: 17px; }
+  .vl-ico { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; font-size: 24px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 14px; }
+</style>
