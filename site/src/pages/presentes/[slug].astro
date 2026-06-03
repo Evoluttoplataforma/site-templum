@@ -1,0 +1,162 @@
+---
+import Base from "../../layouts/Base.astro";
+import { pages } from "../../data/iscas.js";
+import downloads from "../../data/iscas-downloads.json";
+
+export function getStaticPaths() {
+  return pages.map((p) => ({ params: { slug: p.slug }, props: { isca: p } }));
+}
+
+const { isca } = Astro.props;
+const download = downloads[isca.slug] || "";
+const isPlanilha = isca.type === "planilha";
+const tipoLabel = isPlanilha ? "Planilha gratuita" : "E-book gratuito";
+const icon = isPlanilha ? "solar:chart-square-bold" : "solar:book-bookmark-bold";
+const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
+---
+
+<Base title={isca.title} description={isca.metaDescription}>
+  <!-- HERO + FORM -->
+  <section class="isca-hero section--navy" id="form">
+    <div class="isca-hero-bg" aria-hidden="true"></div>
+    <div class="container lg isca-grid">
+      <div class="isca-pitch">
+        <span class="tag-pill tag-pill--glow"><iconify-icon icon={icon}></iconify-icon> {tipoLabel}</span>
+        <h1 set:html={isca.headlineHtml}></h1>
+        <p class="isca-sub">{isca.subhead}</p>
+        <ul class="check-list isca-benefits">
+          {(isca.benefits || []).map((b) => (
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span><span set:html={b}></span></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="lead-card isca-card">
+        <div class="lead-title">Receba agora — é grátis</div>
+        <p class="lead-sub">Preencha os dados e o material abre na hora.</p>
+        <form class="form" id="iscaForm" data-download={download} novalidate>
+          <input type="hidden" name="isca" value={isca.slug} />
+          <div class="field"><label for="i-nome">Nome</label><input class="input" id="i-nome" name="nome" placeholder="Seu nome" required /></div>
+          <div class="field"><label for="i-email">E-mail</label><input class="input" id="i-email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+          <div class="form-row">
+            <div class="field"><label for="i-tel">WhatsApp</label><input class="input" id="i-tel" name="telefone" placeholder="(00) 00000-0000" /></div>
+            <div class="field"><label for="i-emp">Empresa</label><input class="input" id="i-emp" name="empresa" placeholder="Sua empresa" /></div>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">{ctaBtn} <iconify-icon icon="solar:download-minimalistic-bold"></iconify-icon></button>
+          <p class="isca-legal">Ao enviar, você concorda em receber contato da Templum. Seus dados são protegidos conforme a LGPD.</p>
+        </form>
+        <div class="form-success" id="iscaSuccess" hidden>
+          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <div><h4>Material liberado!</h4><p id="iscaSuccessMsg">Se o download não abrir, clique no botão abaixo.</p><a id="iscaDl" class="btn btn--primary btn--sm" href={download || "#"} target="_blank" rel="noopener" style="margin-top:12px">Abrir material</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O QUE VOCÊ VAI APRENDER -->
+  {isca.steps && isca.steps.length > 0 && (
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">O que você vai encontrar</span>
+          <h2>Dentro do <em class="accent">{isPlanilha ? "material" : "e-book"}</em></h2>
+        </div>
+        <div class="step-grid">
+          {isca.steps.map((s) => (
+            <div class="step-card reveal"><span class="step-num">{s.num}</span><h3>{s.title}</h3><p>{s.text}</p></div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA INTERMEDIÁRIO -->
+  {isca.ctaTitle && (
+    <section class="section">
+      <div class="container md isca-mid">
+        <h2 set:html={isca.ctaTitle}></h2>
+        {isca.ctaCopy && <p>{isca.ctaCopy}</p>}
+        {isca.ctaItems && (
+          <ul class="check-list isca-mid-list">
+            {isca.ctaItems.map((c) => <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{c}</li>)}
+          </ul>
+        )}
+        <a href="#form" class="btn btn--primary btn--lg">{ctaBtn} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+  )}
+
+  <!-- FAQ -->
+  {isca.faqItems && isca.faqItems.length > 0 && (
+    <section class="section section--cream">
+      <div class="container md">
+        <div class="section-header"><span class="tag-pill">Dúvidas</span><h2>Perguntas <em class="accent">frequentes</em></h2></div>
+        <div class="faq-list">
+          {isca.faqItems.map((f) => (
+            <details class="faq-item"><summary>{f.q}<iconify-icon icon="solar:add-circle-linear"></iconify-icon></summary><div class="faq-a">{f.a}</div></details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA FINAL -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Quer ir <em>além do material</em>?</h2>
+      <p>Fale com um especialista e descubra como a Templum leva a sua empresa até a certificação — com garantia de 200%.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .isca-hero { position: relative; overflow: hidden; padding: clamp(48px,7vh,90px) 0; }
+  .isca-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 460px at 14% 0%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 380px at 100% 100%, rgba(20,167,175,0.10), transparent 60%); }
+  .isca-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px,5vw,60px); align-items: start; }
+  @media (max-width: 920px) { .isca-grid { grid-template-columns: 1fr; } }
+  .isca-pitch .tag-pill { margin-bottom: 20px; }
+  .isca-pitch h1 { font-size: clamp(30px,4vw,50px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); }
+  .isca-pitch h1 em { font-style: normal; color: var(--orange); }
+  .isca-sub { font-size: 16.5px; line-height: 1.65; color: rgba(255,244,221,0.82); margin: 18px 0 24px; max-width: 520px; }
+  .isca-benefits { gap: 14px; } .isca-benefits .check-item { color: var(--cream); }
+  .isca-benefits strong { color: var(--cream); font-weight: 800; }
+
+  .isca-card { width: 100%; min-width: 0; box-sizing: border-box; position: sticky; top: 96px; }
+  @media (max-width: 920px) { .isca-card { position: static; } }
+  .isca-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 4px; }
+  .form[hidden], .form-success[hidden] { display: none; }
+
+  .isca-mid { text-align: center; }
+  .isca-mid h2 { font-size: clamp(26px,3.4vw,40px); font-weight: 800; letter-spacing: -0.025em; }
+  .isca-mid h2 em { font-style: italic; color: var(--orange); }
+  .isca-mid p { font-size: 16.5px; color: var(--text-mid); line-height: 1.6; margin: 14px auto 0; max-width: 560px; }
+  .isca-mid-list { display: inline-flex; flex-direction: column; gap: 10px; text-align: left; margin: 22px 0; }
+</style>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById("iscaForm");
+    if (!form) return;
+    var success = document.getElementById("iscaSuccess");
+    var dl = form.getAttribute("data-download") || "";
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
+      if (window.trk && typeof window.trk.lead === "function") {
+        try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
+      }
+      try {
+        fetch("/api/lead", {
+          method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+          body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Isca: " + (d.isca || ""), evento: "isca", pagina: location.pathname }),
+        });
+      } catch (_) {}
+      form.hidden = true; if (success) success.hidden = false;
+      if (dl) window.open(dl, "_blank", "noopener");
+    });
+  })();
+</script>

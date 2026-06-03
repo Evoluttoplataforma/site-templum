@@ -181,7 +181,8 @@
 /workshop/planejamento-estrategico/obrigado /cursos                    302
 
 # → /drops
-/presentes-templum                         /drops                     302
+/presentes-templum                         /presentes                 302
+/ebooks                                    /presentes                 302
 
 # → /pqc
 /consultoria/pqc                           /pqc                       302

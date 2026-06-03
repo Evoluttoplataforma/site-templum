@@ -1,0 +1,110 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import { pages } from "../../data/iscas.js";
+
+const iscas = pages.map((p) => ({
+  slug: p.slug,
+  type: p.type,
+  titulo: (p.title || "").replace(/\s*·\s*Templum\s*$/i, ""),
+  desc: p.subhead || "",
+}));
+const ebooks = iscas.filter((i) => i.type !== "planilha").length;
+const planilhas = iscas.filter((i) => i.type === "planilha").length;
+---
+
+<Base
+  title="Presentes — E-books e planilhas gratuitas | Templum"
+  description="Materiais gratuitos da Templum: e-books e planilhas práticas sobre ISO, gestão, qualidade, segurança e mais. Baixe e acelere a gestão da sua empresa."
+>
+  <PageHero
+    tag="Materiais gratuitos"
+    sub="E-books e planilhas práticas para você dominar as normas e organizar a gestão da sua empresa — feitos por quem vive certificação há mais de 30 anos."
+    image="/assets/img/hero/templum-consultoria-industria.webp"
+    badge="Presentes Templum"
+    icon="solar:gift-bold"
+    chips={[`${ebooks} e-books`, `${planilhas} planilhas`, "Download gratuito"]}
+  >
+    <Fragment slot="title">Presentes para <em class="accent">acelerar a sua gestão</em></Fragment>
+  </PageHero>
+
+  <section class="section section--cream">
+    <div class="container" data-iscas>
+      <div class="section-header">
+        <span class="tag-pill">Escolha o seu</span>
+        <h2>Baixe agora, é <em class="accent">grátis</em></h2>
+      </div>
+
+      <div class="pr-filters" data-filters>
+        <button class="pr-filter active" data-f="all">Todos</button>
+        <button class="pr-filter" data-f="ebook">E-books</button>
+        <button class="pr-filter" data-f="planilha">Planilhas</button>
+      </div>
+
+      <div class="pr-grid">
+        {iscas.map((i) => (
+          <a class="pr-card" href={`/presentes/${i.slug}`} data-type={i.type}>
+            <span class={`pr-badge pr-badge--${i.type === "planilha" ? "pl" : "eb"}`}>
+              <iconify-icon icon={i.type === "planilha" ? "solar:chart-square-bold" : "solar:book-bookmark-bold"}></iconify-icon>
+              {i.type === "planilha" ? "Planilha" : "E-book"}
+            </span>
+            <h3>{i.titulo}</h3>
+            <p>{i.desc}</p>
+            <span class="pr-link">Quero o material <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Pronto para sair do material e <em>certificar de verdade</em>?</h2>
+      <p>Fale com um especialista e descubra o caminho mais curto até a sua certificação.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pr-filters { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+  .pr-filter { font-size: 14px; font-weight: 700; padding: 9px 20px; border-radius: 999px; border: 1px solid var(--border-2); color: var(--text-mid); background: var(--surface); transition: all .25s var(--ease-soft); }
+  .pr-filter:hover { border-color: var(--orange); color: var(--orange); }
+  .pr-filter.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+  .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 980px) { .pr-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .pr-grid { grid-template-columns: 1fr; } }
+  .pr-card { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; transition: transform .3s var(--ease-soft), box-shadow .3s var(--ease-soft), border-color .3s var(--ease-soft); }
+  .pr-card[hidden] { display: none; }
+  .pr-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-3); }
+  .pr-badge { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 5px 11px; border-radius: 999px; }
+  .pr-badge--eb { color: var(--orange); background: rgba(255,89,37,0.10); }
+  .pr-badge--pl { color: #1167E4; background: rgba(17,103,228,0.10); }
+  .pr-card h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; }
+  .pr-card p { font-size: 13.5px; color: var(--text-mid); line-height: 1.55; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .pr-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+  .pr-card:hover .pr-link iconify-icon { transform: translateX(4px); }
+  .pr-link iconify-icon { transition: transform .3s var(--ease-soft); }
+</style>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector("[data-iscas]");
+    if (!root) return;
+    var filters = root.querySelectorAll("[data-filters] .pr-filter");
+    var cards = root.querySelectorAll(".pr-card");
+    filters.forEach(function (b) {
+      b.addEventListener("click", function () {
+        filters.forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        var f = b.getAttribute("data-f");
+        cards.forEach(function (c) {
+          var t = c.getAttribute("data-type");
+          var show = f === "all" || (f === "planilha" ? t === "planilha" : t !== "planilha");
+          c.hidden = !show;
+        });
+      });
+    });
+  })();
+</script>
