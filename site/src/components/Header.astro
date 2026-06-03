@@ -100,8 +100,9 @@ const navLinks = [
   .hd-mobile nav { display: flex; flex-direction: column; }
   .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text); }
 
-  /* CTA secundário (ghost) só em telas bem largas, p/ o nav de 9 itens caber */
-  @media (max-width: 1520px) { .hd-ghost { display: none; } }
+  /* No topo fica só o CTA primário (o nav tem 9 itens). "Quero me inscrever"
+     vive no menu mobile. */
+  .hd-ghost { display: none; }
   @media (max-width: 1320px) {
     .hd-nav { display: none; }
     .hd-burger { display: inline-flex; }
