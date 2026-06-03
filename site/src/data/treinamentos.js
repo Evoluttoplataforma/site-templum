@@ -1,54 +1,46 @@
 // Próximos treinamentos (cards de inscrição → Zoom).
-// Copy real do site atual. `zoom` = link da sala (PENDENTE: o cliente vai enviar).
-// Enquanto `zoom` estiver vazio, a inscrição confirma e avisa "link por e-mail".
-// `data` no formato ISO (YYYY-MM-DD) p/ ordenar/filtrar; `dataLabel` é o texto exibido.
+// Fonte: planilha oficial Templum (agenda de treinamentos) — bloco de JUNHO/2026.
+// `zoom` = link de inscrição da sala (Zoom register). O modal captura o lead e
+// redireciona para este link. `data` ISO (YYYY-MM-DD) p/ ordenar; `dataLabel` exibido.
 export const proximosTreinamentos = [
   {
-    id: "sinat-eficiencia-energetica",
+    id: "orbit-mapear-processo-obra",
     categoria: "Construção Civil | ISO 9001 | SGI",
-    tema: "O Futuro do SINAT: Domine a Eficiência Energética de 2027 a 2040 no Orbit",
+    tema: "Orbit Gestão: como mapear o processo de cada obra?",
     palestrante: "Larissa",
-    data: "2026-05-07", dataLabel: "07/05/2026", hora: "16h",
-    zoom: "",
+    data: "2026-06-03", dataLabel: "03/06/2026", hora: "16h",
+    zoom: "https://zoom.us/meeting/register/2WiY6PBzRX-btYcibYNF8g",
   },
   {
-    id: "fssc-22000-plano-haccp",
-    categoria: "FSSC | HACCP | Segurança de Alimentos",
-    tema: "FSSC 22000 — Plano HACCP",
-    palestrante: "Cristina",
-    data: "2026-05-13", dataLabel: "13/05/2026", hora: "11h",
-    zoom: "",
-  },
-  {
-    id: "esg-ambiental-orbit",
-    categoria: "SGI | ESG Meio Ambiente",
-    tema: "Gestão de Riscos e Oportunidades Ambientais no Orbit: controle real das ações. Chega de perder o controle — gerencie e acompanhe na prática.",
-    palestrante: "Sâmady",
-    data: "2026-05-19", dataLabel: "19/05/2026", hora: "11h",
-    zoom: "",
-  },
-  {
-    id: "esg-sso-orbit",
-    categoria: "SGI | ESG Saúde e Segurança",
-    tema: "Gestão de Riscos e Oportunidades em SSO no Orbit: controle efetivo das ações. Pare de tratar riscos e oportunidades sem controle — gerencie e acompanhe na prática.",
-    palestrante: "Sâmady",
-    data: "2026-05-20", dataLabel: "20/05/2026", hora: "11h",
-    zoom: "",
-  },
-  {
-    id: "swot-gestao-de-riscos",
-    categoria: "ISO 27001 | ISO 27701",
-    tema: "SWOT: Planejamento sob a Ótica da Gestão de Riscos",
-    palestrante: "Jennifer",
-    data: "2026-05-21", dataLabel: "21/05/2026", hora: "11h",
-    zoom: "",
-  },
-  {
-    id: "escopo-sgq-orbit",
+    id: "homologacao-fornecedores-orbit",
     categoria: "Qualidade",
-    tema: "Definição de escopo do SGQ no Orbit",
+    tema: "Homologação e Avaliação de Fornecedores no Orbit",
     palestrante: "Nathália",
-    data: "2026-05-29", dataLabel: "29/05/2026", hora: "11h",
-    zoom: "",
+    data: "2026-06-11", dataLabel: "11/06/2026", hora: "16h",
+    zoom: "https://zoom.us/meeting/register/za5NK986SHaTwFK2LEL1tg",
+  },
+  {
+    id: "indicadores-ambientais-orbit",
+    categoria: "SGI | ESG Meio Ambiente",
+    tema: "Indicadores Ambientais no Orbit",
+    palestrante: "Sâmady",
+    data: "2026-06-16", dataLabel: "16/06/2026", hora: "11h",
+    zoom: "https://zoom.us/meeting/register/GGtnO118Sr-rEo3bU-Ac7w",
+  },
+  {
+    id: "indicadores-sso-orbit",
+    categoria: "SGI | ESG Saúde e Segurança",
+    tema: "Indicadores de SSO no Orbit",
+    palestrante: "Sâmady",
+    data: "2026-06-17", dataLabel: "17/06/2026", hora: "11h",
+    zoom: "https://zoom.us/meeting/register/mC2J7m1_SPGcFikYIx8_8w",
+  },
+  {
+    id: "gestao-fornecedores-27001-27701-lgpd",
+    categoria: "ISO 27001 | ISO 27701",
+    tema: "Gestão de Fornecedores: alinhando fornecedores às normas ISO 27001, 27701 e LGPD.",
+    palestrante: "Jennifer",
+    data: "2026-06-25", dataLabel: "25/06/2026", hora: "11h",
+    zoom: "https://zoom.us/meeting/register/k0uSoctPSCaYPwU9A0KR_g",
   },
 ];
