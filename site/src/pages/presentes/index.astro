@@ -3,23 +3,47 @@ import Base from "../../layouts/Base.astro";
 import PageHero from "../../components/PageHero.astro";
 import { pages } from "../../data/iscas.js";
 
+// Categorias (ordem + cor + ícone). Classificação por palavra-chave no slug/título.
+const CATS = [
+  { key: "qualidade", label: "Qualidade & Processos", norma: "ISO 9001", color: "#1167E4", icon: "solar:medal-ribbon-star-bold" },
+  { key: "construcao", label: "Construção Civil", norma: "PBQP-H", color: "#B45309", icon: "solar:buildings-2-bold" },
+  { key: "sst", label: "Saúde & Segurança", norma: "ISO 45001", color: "#C2410C", icon: "solar:health-bold" },
+  { key: "alimentos", label: "Segurança de Alimentos", norma: "FSSC / HACCP", color: "#CA8A04", icon: "solar:donut-bitten-bold" },
+  { key: "ambiente", label: "Meio Ambiente", norma: "ISO 14001", color: "#00A844", icon: "solar:leaf-bold" },
+  { key: "info", label: "Segurança da Informação", norma: "ISO 27001", color: "#14A7AF", icon: "solar:shield-keyhole-bold" },
+  { key: "gestao", label: "Gestão, Estratégia & IA", norma: "Para toda empresa", color: "#FF5925", icon: "solar:chart-2-bold" },
+];
+
+function catOf(p) {
+  const s = (p.slug + " " + (p.title || "")).toLowerCase();
+  if (/45001|perigos|\bsso\b|saúde e seg|seguranca do trabalho/.test(s)) return "sst";
+  if (/pbqp|obra|desempenho|construç|construc|\bpqo\b|canteiro/.test(s)) return "construcao";
+  if (/aliment|fssc|haccp/.test(s)) return "alimentos";
+  if (/14001|ambient|\besg\b/.test(s)) return "ambiente";
+  if (/27001|27701|informaç|informac/.test(s)) return "info";
+  if (/9001|processo|conformidade|tartaruga|controle-de-mudanca|qualidade/.test(s)) return "qualidade";
+  return "gestao";
+}
+
 const iscas = pages.map((p) => ({
   slug: p.slug,
   type: p.type,
+  cat: catOf(p),
   titulo: (p.title || "").replace(/\s*·\s*Templum\s*$/i, ""),
   desc: p.subhead || "",
 }));
+const grupos = CATS.map((c) => ({ ...c, itens: iscas.filter((i) => i.cat === c.key) })).filter((g) => g.itens.length);
 const ebooks = iscas.filter((i) => i.type !== "planilha").length;
 const planilhas = iscas.filter((i) => i.type === "planilha").length;
 ---
 
 <Base
   title="Presentes — E-books e planilhas gratuitas | Templum"
-  description="Materiais gratuitos da Templum: e-books e planilhas práticas sobre ISO, gestão, qualidade, segurança e mais. Baixe e acelere a gestão da sua empresa."
+  description="Materiais gratuitos da Templum por categoria: ISO 9001, PBQP-H, ISO 45001, segurança de alimentos, meio ambiente, ISO 27001, gestão e IA. Baixe e acelere a gestão da sua empresa."
 >
   <PageHero
     tag="Materiais gratuitos"
-    sub="E-books e planilhas práticas para você dominar as normas e organizar a gestão da sua empresa — feitos por quem vive certificação há mais de 30 anos."
+    sub="E-books e planilhas práticas, organizados por área, para você dominar as normas e a gestão da sua empresa — feitos por quem vive certificação há mais de 30 anos."
     image="/assets/img/hero/templum-consultoria-industria.webp"
     badge="Presentes Templum"
     icon="solar:gift-bold"
@@ -29,31 +53,31 @@ const planilhas = iscas.filter((i) => i.type === "planilha").length;
   </PageHero>
 
   <section class="section section--cream">
-    <div class="container" data-iscas>
-      <div class="section-header">
-        <span class="tag-pill">Escolha o seu</span>
-        <h2>Baixe agora, é <em class="accent">grátis</em></h2>
-      </div>
-
-      <div class="pr-filters" data-filters>
-        <button class="pr-filter active" data-f="all">Todos</button>
-        <button class="pr-filter" data-f="ebook">E-books</button>
-        <button class="pr-filter" data-f="planilha">Planilhas</button>
-      </div>
-
-      <div class="pr-grid">
-        {iscas.map((i) => (
-          <a class="pr-card" href={`/presentes/${i.slug}`} data-type={i.type}>
-            <span class={`pr-badge pr-badge--${i.type === "planilha" ? "pl" : "eb"}`}>
-              <iconify-icon icon={i.type === "planilha" ? "solar:chart-square-bold" : "solar:book-bookmark-bold"}></iconify-icon>
-              {i.type === "planilha" ? "Planilha" : "E-book"}
-            </span>
-            <h3>{i.titulo}</h3>
-            <p>{i.desc}</p>
-            <span class="pr-link">Quero o material <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
-          </a>
-        ))}
-      </div>
+    <div class="container">
+      {grupos.map((g) => (
+        <div class="pr-cat" style={`--c:${g.color}`}>
+          <header class="pr-cat-head">
+            <span class="pr-cat-ico"><iconify-icon icon={g.icon}></iconify-icon></span>
+            <div>
+              <h2>{g.label}</h2>
+              <span class="pr-cat-sub">{g.norma} · {g.itens.length} {g.itens.length === 1 ? "material" : "materiais"}</span>
+            </div>
+          </header>
+          <div class="pr-grid">
+            {g.itens.map((i) => (
+              <a class="pr-card" href={`/presentes/${i.slug}`}>
+                <span class="pr-type">
+                  <iconify-icon icon={i.type === "planilha" ? "solar:chart-square-bold" : "solar:book-bookmark-bold"}></iconify-icon>
+                  {i.type === "planilha" ? "Planilha" : "E-book"}
+                </span>
+                <h3>{i.titulo}</h3>
+                <p>{i.desc}</p>
+                <span class="pr-link">Baixar grátis <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </section>
 
@@ -67,44 +91,24 @@ const planilhas = iscas.filter((i) => i.type === "planilha").length;
 </Base>
 
 <style>
-  .pr-filters { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
-  .pr-filter { font-size: 14px; font-weight: 700; padding: 9px 20px; border-radius: 999px; border: 1px solid var(--border-2); color: var(--text-mid); background: var(--surface); transition: all .25s var(--ease-soft); }
-  .pr-filter:hover { border-color: var(--orange); color: var(--orange); }
-  .pr-filter.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .pr-cat { margin-top: 56px; }
+  .pr-cat:first-child { margin-top: 8px; }
+  .pr-cat-head { display: flex; align-items: center; gap: 16px; margin-bottom: 26px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .pr-cat-ico { width: 54px; height: 54px; flex-shrink: 0; border-radius: 15px; display: grid; place-items: center; font-size: 27px; color: #fff; background: var(--c); box-shadow: 0 8px 22px -8px color-mix(in srgb, var(--c) 70%, transparent); }
+  .pr-cat-head h2 { font-size: clamp(20px, 2.4vw, 27px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .pr-cat-sub { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: color-mix(in srgb, var(--c) 70%, var(--text-mid)); }
 
-  .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   @media (max-width: 980px) { .pr-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 620px) { .pr-grid { grid-template-columns: 1fr; } }
-  .pr-card { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; transition: transform .3s var(--ease-soft), box-shadow .3s var(--ease-soft), border-color .3s var(--ease-soft); }
-  .pr-card[hidden] { display: none; }
-  .pr-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-3); }
-  .pr-badge { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 5px 11px; border-radius: 999px; }
-  .pr-badge--eb { color: var(--orange); background: rgba(255,89,37,0.10); }
-  .pr-badge--pl { color: #1167E4; background: rgba(17,103,228,0.10); }
-  .pr-card h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; }
+
+  .pr-card { position: relative; display: flex; flex-direction: column; gap: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 24px 22px 22px; overflow: hidden; transition: transform .3s var(--ease-soft), box-shadow .3s var(--ease-soft), border-color .3s var(--ease-soft); }
+  .pr-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c); opacity: .9; }
+  .pr-card:hover { transform: translateY(-5px); box-shadow: 0 22px 44px -22px color-mix(in srgb, var(--c) 50%, rgba(0,0,0,0.4)); border-color: color-mix(in srgb, var(--c) 45%, var(--border)); }
+  .pr-type { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; padding: 5px 11px; border-radius: 999px; margin-top: 4px; color: var(--c); background: color-mix(in srgb, var(--c) 11%, transparent); }
+  .pr-card h3 { font-size: 16.5px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; color: var(--text); }
   .pr-card p { font-size: 13.5px; color: var(--text-mid); line-height: 1.55; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .pr-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+  .pr-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 800; color: var(--c); margin-top: 2px; }
   .pr-card:hover .pr-link iconify-icon { transform: translateX(4px); }
   .pr-link iconify-icon { transition: transform .3s var(--ease-soft); }
 </style>
-
-<script is:inline>
-  (function () {
-    var root = document.querySelector("[data-iscas]");
-    if (!root) return;
-    var filters = root.querySelectorAll("[data-filters] .pr-filter");
-    var cards = root.querySelectorAll(".pr-card");
-    filters.forEach(function (b) {
-      b.addEventListener("click", function () {
-        filters.forEach(function (x) { x.classList.remove("active"); });
-        b.classList.add("active");
-        var f = b.getAttribute("data-f");
-        cards.forEach(function (c) {
-          var t = c.getAttribute("data-type");
-          var show = f === "all" || (f === "planilha" ? t === "planilha" : t !== "planilha");
-          c.hidden = !show;
-        });
-      });
-    });
-  })();
-</script>
