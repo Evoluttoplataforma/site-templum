@@ -16,6 +16,23 @@ export default {
     { icon: "solar:card-bold", t: "Serviços financeiros" },
     { icon: "solar:delivery-bold", t: "Construção e engenharia" },
   ],
+  motivos: [
+    { t: "Credibilidade e acesso a contratos", d: "Sem um sistema formal de integridade, muitas empresas ficam fora de licitações, contratos com grandes grupos e cadeias mais rigorosas de fornecimento. Com a ISO 37001, sua empresa comprova políticas, controles e governança contra práticas ilícitas, aumentando a elegibilidade comercial." },
+    { t: "Redução de riscos legais", d: "Um único episódio de corrupção pode gerar multas, bloqueio de contratos, ações judiciais e danos irreversíveis à marca. A norma cria controles preventivos, monitoramento e canais de denúncia, reduzindo drasticamente a exposição a riscos jurídicos e perdas financeiras." },
+    { t: "Maturidade de gestão", d: "Empresas sem governança clara operam com processos frágeis e pouca rastreabilidade. A certificação organiza responsabilidades, padroniza processos críticos, fortalece controles internos e eleva a profissionalização da gestão." },
+  ],
+  beneficios: [
+    "Acesso a grandes contratos e licitações",
+    "Homologação em grandes clientes e grupos",
+    "Aumento da credibilidade e confiança no mercado",
+    "Abertura de novos canais de negócio",
+    "Fortalecimento da reputação da marca",
+    "Prevenção de fraudes, suborno e irregularidades",
+    "Redução de riscos legais e multas",
+    "Transparência e governança corporativa",
+    "Maior controle de processos e decisões",
+    "Gestão mais segura e profissional",
+  ],
   detalhes: {
     titulo: "A ISO 37001 em detalhes",
     sub: "Sistemas de gestão antissuborno para empresas que valorizam integridade e compliance.",

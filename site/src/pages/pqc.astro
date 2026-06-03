@@ -20,9 +20,20 @@ const preparado = [
   "Prevenir falhas, atrasos e penalidades",
 ];
 const problemas = [
-  { icon: "solar:dollar-minimalistic-bold", t: "Rentabilidade do escritório", d: "Concorrência desleal, baixos honorários, custo operacional elevado e falta de tempo para investir na gestão são alguns dos principais desafios do setor." },
-  { icon: "solar:users-group-rounded-bold", t: "Atrair e manter bons profissionais", d: "A profissão contábil se reinventou nos últimos anos e encontrar profissionais qualificados está cada vez mais difícil." },
-  { icon: "solar:refresh-bold", t: "Adaptação às mudanças", d: "Acompanhar as constantes mudanças do setor exige processos sólidos e uma equipe preparada." },
+  { icon: "solar:dollar-minimalistic-bold", t: "Rentabilidade do escritório", d: "Concorrência desleal, baixos honorários, custo operacional elevado e falta de tempo para investir na gestão da empresa são alguns dos principais desafios do setor." },
+  { icon: "solar:users-group-rounded-bold", t: "Atrair e manter bons profissionais", d: "A profissão contábil, sem sombra de dúvida, foi reinventada nos últimos anos. Encontrar profissionais qualificados está cada vez mais difícil." },
+  { icon: "solar:refresh-bold", t: "Adaptação às mudanças", d: "Sem ferramentas eficientes de comunicação e treinamento, seu escritório corre o risco de não atender às exigências do mercado contábil. Multas podem custar caro para o negócio do cliente e para o seu." },
+  { icon: "solar:shield-warning-bold", t: "Gerenciar riscos", d: "Identificação e medidas a serem tomadas em relação aos riscos." },
+  { icon: "solar:checklist-minimalistic-bold", t: "Falta de padronização", d: "A falta de padronização com certeza afeta a percepção e a satisfação do seu cliente, que está cada vez mais exigente." },
+  { icon: "solar:bill-cross-bold", t: "Inadimplência", d: "A inadimplência é um dos principais fatores que comprometem a sobrevivência de uma empresa contábil." },
+];
+
+const objetivos = [
+  "Incentivar as empresas a responder às pressões competitivas e aos avanços tecnológicos, por meio da melhoria contínua de seus serviços e processos.",
+  "Identificar as empresas comprometidas com a ética, a valorização da categoria e a responsabilidade no relacionamento com seus clientes e com as outras organizações do mercado.",
+  "Criar um diferencial de mercado para as organizações que aderirem ao PQC.",
+  "Desenvolver e adotar instrumentos para conscientizar o mercado e a sociedade sobre o valor e a importância dos serviços prestados pelas organizações contábeis, bem como a responsabilidade assumida contratualmente por estas diante do cumprimento das diversas obrigações empresariais de seus clientes.",
+  "Estruturar e implementar um sistema de gestão da qualidade (SGQ) no escritório contábil, preparando-o para alcançar a certificação internacional ISO 9001, focada na gestão da qualidade de organizações contábeis.",
 ];
 ---
 
@@ -98,6 +109,30 @@ const problemas = [
     </div>
   </section>
 
+  <section class="section section--cream">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Objetivos</span>
+        <h2>Para que serve o <em class="accent">PQC</em></h2>
+        <p>O PQC foi criado para incentivar as empresas a melhorar continuamente seus processos e serviços, aumentando a rentabilidade do negócio e reduzindo os riscos na sua operação. O programa visa:</p>
+      </div>
+      <ul class="check-list pqc-obj">
+        {objetivos.map((o) => (
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{o}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container md pqc-lucro">
+      <span class="tag-pill">Projeção financeira</span>
+      <h2>Seu lucro multiplicado, <em class="accent">em apenas 3 anos</em></h2>
+      <p>Veja uma projeção financeira conservadora para os 3 primeiros anos do programa: ao revisar processos, reduzir custos operacionais e ampliar a base de clientes, seu escritório passa a operar com mais eficiência e margens maiores ano após ano.</p>
+      <a href="/form" class="btn btn--secondary btn--lg">Solicitar a projeção do meu escritório <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+
   <section class="cta-band">
     <div class="container md">
       <h2>Leve seu escritório para <em>outro patamar</em></h2>
@@ -115,4 +150,10 @@ const problemas = [
   .pc-prob-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.16); margin-bottom: 16px; }
   .pc-prob-card h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
   .pc-prob-card p { font-size: 14.5px; color: rgba(255,244,221,0.72); line-height: 1.6; }
+
+  .pqc-obj { margin-top: 36px; display: grid; gap: 4px; }
+  .pqc-lucro { text-align: center; }
+  .pqc-lucro .tag-pill { margin: 0 auto 16px; }
+  .pqc-lucro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
+  .pqc-lucro p { font-size: 16.5px; color: var(--text-mid); line-height: 1.65; margin: 16px auto 28px; max-width: 640px; }
 </style>

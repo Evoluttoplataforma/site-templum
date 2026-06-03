@@ -28,6 +28,15 @@ export default {
       { q: "Como funciona o suporte?", a: "Você tem um consultor dedicado e suporte diário em horário comercial, em tempo real." },
       { q: "O que é a ISO 27001?", a: "É a norma internacional de Sistemas de Gestão de Segurança da Informação (SGSI), que protege a confidencialidade, integridade e disponibilidade dos dados." },
       { q: "Qual é a validade da certificação?", a: "3 anos, com auditorias de manutenção anuais." },
+      { q: "Já tenho processos internos - isso ajuda ou atrapalha?", a: "Ajuda, e muito. Partimos do que você já tem, aproveitamos os controles que funcionam e ajustamos apenas o que falta para atender a norma. Nada de jogar fora o que já está rodando." },
+      { q: "E se eu tiver urgência?", a: "Conseguimos priorizar etapas e intensificar o ritmo conforme a sua necessidade. No diagnóstico definimos um cronograma realista que respeite o seu prazo." },
+      { q: "O investimento é por projeto ou por hora?", a: "Por projeto, sem limite de horas. Você sabe o valor do início ao fim e não paga a mais por dúvidas ou reuniões extras." },
+      { q: "A plataforma substitui reuniões presenciais?", a: "Sim. A consultoria é 100% online: pela plataforma Orbit você acompanha tarefas, documentos e checkpoints, com o consultor disponível em tempo real no horário comercial." },
     ],
   },
+  motivos: [
+    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
+    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
+    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+  ],
 };

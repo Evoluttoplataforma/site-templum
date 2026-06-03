@@ -99,6 +99,30 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       </div>
     </section>
 
+    <!-- 3 MOTIVOS + BENEFÍCIOS (claro) — renderiza só se houver dados na norma -->
+    {d.motivos && d.motivos.length > 0 && (
+      <section class="section section--cream">
+        <div class="container xl">
+          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Motivos para conquistar a <em class="accent">{norma.nome}</em></h2></div>
+          <div class="cs-motivos">
+            {d.motivos.map((m, i) => (
+              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+            ))}
+          </div>
+          {d.beneficios && d.beneficios.length > 0 && (
+            <div class="cs-benef">
+              <h3 class="cs-benef-h">Benefícios para a sua empresa</h3>
+              <ul class="check-list cs-benef-list">
+                {d.beneficios.map((b) => (
+                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
     <!-- COBERTURA + MAPA (escuro) -->
     <section class="cs-cover section--navy">
       <div class="cs-cover-bg" aria-hidden="true"></div>
@@ -253,6 +277,18 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .why-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 28px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 18px; }
   .why-card h3 { font-size: 19px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
   .why-card p { font-size: 14.5px; color: rgba(255,244,221,0.7); line-height: 1.6; }
+
+  /* 3 motivos + benefícios */
+  .cs-motivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 12px; }
+  @media (max-width: 880px) { .cs-motivos { grid-template-columns: 1fr; } }
+  .cs-motivo { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
+  .cs-motivo-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 16px; }
+  .cs-motivo h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .cs-motivo p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+  .cs-benef { margin-top: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px clamp(24px,4vw,40px); }
+  .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
+  .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+  @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
 
   /* cobertura */
   .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }

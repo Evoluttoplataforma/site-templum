@@ -27,6 +27,13 @@ export default {
       { q: "Quais normas ISO se relacionam com ESG?", a: "ISO 14001 (ambiental), ISO 45001 (social/SSO), ISO 37001 (governança/antissuborno) e ISO 26000 (responsabilidade social), entre outras." },
       { q: "Como medir o desempenho ESG?", a: "Por indicadores em cada pilar (ambiental, social e governança), acompanhados ao longo do tempo — algo que a plataforma Orbit facilita." },
       { q: "Quais são os benefícios das práticas ESG?", a: "Acesso a investidores e financiamento, redução de riscos, atração de talentos e fortalecimento da reputação." },
+      { q: "A implementação de práticas ESG é obrigatória?", a: "Não é obrigatória por lei de forma geral, mas vem se tornando exigência de investidores, grandes contratantes e cadeias de fornecimento. Quem se antecipa ganha acesso e diferenciação." },
+      { q: "Como as práticas ESG se relacionam com os Objetivos de Desenvolvimento Sustentável (ODS) da ONU?", a: "Os pilares ambiental, social e de governança conversam diretamente com os 17 ODS. Estruturar o ESG ajuda a empresa a contribuir com essa agenda e a comunicar esse impacto de forma mensurável." },
     ],
   },
+  motivos: [
+    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
+    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
+    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+  ],
 };

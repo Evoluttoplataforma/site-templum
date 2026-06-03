@@ -11,7 +11,40 @@ const beneficios = [
   { icon: "solar:eye-bold", t: "Monitoramento do atendimento", d: "Diminua reclamações externas e aumente a fidelização do seu cliente." },
   { icon: "solar:buildings-2-bold", t: "Posicionamento institucional", d: "Ganhe visibilidade e credibilidade junto aos órgãos regulatórios." },
 ];
-const procedimentos = ["Protesto", "Apontamento", "Arquivo", "Cancelamento de Protesto", "Certidão", "Compensação", "Intimação", "Jurídico", "Selagem", "Notas", "Controle de Correntista", "Caixa"];
+const procGrupos = [
+  {
+    grupo: "Protesto",
+    itens: ["Apontamento", "Arquivo", "Cancelamento de Protesto", "Certidão", "Compensação", "Intimação", "Jurídico", "Selagem"],
+  },
+  {
+    grupo: "Notas",
+    itens: ["Controle de Correntista", "Caixa", "Reconhecimento de firma e Autenticação", "Aprovação de Minuta", "Cancelamento de Ato Notarial", "Atos sem conteúdo financeiro", "Atos com conteúdo financeiro", "Testamento", "Arquivo e Controle", "Comunicações externas"],
+  },
+  {
+    grupo: "Registro Civil",
+    itens: ["Atos de Registros Civis", "Averbação", "Anotação", "Expedição de Certidões"],
+  },
+  {
+    grupo: "Registro de Imóveis",
+    itens: ["Matrícula", "Registro", "Retificação Imobiliária"],
+  },
+];
+
+const incluso = [
+  { icon: "solar:medal-star-bold", t: "ISO 9001:2015", d: "Implementamos o sistema de gestão mais famoso do mundo em sua versão mais atual." },
+  { icon: "solar:document-add-bold", t: "NBR 15906", d: "Os requisitos desta norma são genéricos e aplicáveis a todas as organizações que fornecem serviços notariais e de registro, independentemente da sua dimensão." },
+  { icon: "solar:cup-star-bold", t: "Preparação PQTA", d: "Por meio do documento oficial da Anoreg, implementamos cada passo para que sua serventia atinja a maior pontuação e conquiste o nível diamante." },
+];
+
+const fases = [
+  { t: "Planejamento", d: "Formulação de objetivos para a seleção de programas de ação e para sua execução." },
+  { t: "Infraestrutura", d: "Verificação da infraestrutura, instalações e plano de ação." },
+  { t: "Pessoas", d: "Criação da política de saúde, segurança ocupacional e gestão de pessoas." },
+  { t: "Processos", d: "Criação de métodos para a operação da serventia." },
+  { t: "Programas", d: "Definição de programas ambientais e sociais para a serventia." },
+];
+
+const categorias = ["Estratégia", "Gestão Operacional", "Gestão de Pessoas", "Instalações", "Gestão da Inovação", "Compliance", "Gestão da Informação e Controle de Dados", "Gestão da Segurança e Saúde do Trabalho", "Gestão Socioambiental"];
 ---
 
 <Base
@@ -59,16 +92,72 @@ const procedimentos = ["Protesto", "Apontamento", "Arquivo", "Cancelamento de Pr
     </div>
   </section>
 
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">O que está incluso na consultoria?</span>
+        <h2>Tudo que sua serventia precisa, <em class="accent">no seu ritmo</em></h2>
+        <p>Utilizamos o que há de mais moderno para transferir o conhecimento que sua empresa precisa, no tempo e ritmo que ela precisa.</p>
+      </div>
+      <div class="pq-grid pq-grid--3">
+        {incluso.map((c) => (
+          <div class="eco-card">
+            <span class="pq-ico"><iconify-icon icon={c.icon}></iconify-icon></span>
+            <h3>{c.t}</h3>
+            <p>{c.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Passo a passo da consultoria</span>
+        <h2>Como implementamos a <em class="accent">qualidade</em> na sua serventia</h2>
+        <p>Entenda de que forma aplicamos as principais práticas e ferramentas da qualidade para aumentar o desempenho da sua serventia.</p>
+      </div>
+      <div class="step-grid">
+        {fases.map((f, i) => (
+          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{f.t}</h3><p>{f.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Como funciona o PQTA</span>
+        <h2>Entenda os critérios da <em class="accent">premiação</em></h2>
+        <p>O PQTA tem validade anual. A inscrição para a auditoria deve ser feita até o mês de junho, e as auditorias acontecem em agosto e setembro. Todos os anos o cartório precisa ser auditado em 10 categorias distintas:</p>
+      </div>
+      <ul class="check-list pq-cats">
+        {categorias.map((c) => (
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{c}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="container lg">
       <div class="section-header">
-        <span class="tag-pill tag-pill--glow">Procedimentos operacionais</span>
+        <span class="tag-pill">Procedimentos operacionais</span>
         <h2>Instruções de trabalho <em class="accent">para cada atribuição</em></h2>
-        <p>Padronizamos cada rotina da serventia com instruções específicas.</p>
+        <p>Padronizamos cada rotina da serventia com instruções específicas, organizadas por especialidade.</p>
       </div>
-      <div class="pq-procs">
-        {procedimentos.map((p) => (
-          <span class="pq-proc"><iconify-icon icon="solar:document-text-bold"></iconify-icon>{p}</span>
+      <div class="pq-proc-groups">
+        {procGrupos.map((g) => (
+          <div class="pq-proc-group">
+            <h3 class="pq-proc-title">{g.grupo}</h3>
+            <div class="pq-procs">
+              {g.itens.map((p) => (
+                <span class="pq-proc pq-proc--light"><iconify-icon icon="solar:document-text-bold"></iconify-icon>{p}</span>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -94,7 +183,20 @@ const procedimentos = ["Protesto", "Apontamento", "Arquivo", "Cancelamento de Pr
   @media (max-width: 620px) { .pq-grid { grid-template-columns: 1fr; } }
   .pq-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
 
-  .pq-procs { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 40px; }
+  .pq-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 980px) { .pq-grid--3 { grid-template-columns: 1fr; } }
+
+  .pq-cats { columns: 2; column-gap: 32px; margin-top: 40px; }
+  @media (max-width: 620px) { .pq-cats { columns: 1; } }
+  .pq-cats .check-item { break-inside: avoid; }
+
+  .pq-proc-groups { display: grid; gap: 28px; margin-top: 44px; }
+  .pq-proc-group { border-bottom: 1px solid var(--line, rgba(34,40,49,0.10)); padding-bottom: 24px; }
+  .pq-proc-group:last-child { border-bottom: 0; padding-bottom: 0; }
+  .pq-proc-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 16px; letter-spacing: -0.01em; }
+
+  .pq-procs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
   .pq-proc { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--cream); padding: 10px 18px; border-radius: 999px; background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); }
   .pq-proc iconify-icon { color: var(--orange); font-size: 16px; }
+  .pq-proc--light { color: var(--navy); background: rgba(255,89,37,0.06); border: 1px solid rgba(34,40,49,0.10); }
 </style>

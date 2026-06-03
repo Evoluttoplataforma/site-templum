@@ -28,6 +28,14 @@ export default {
       { q: "Quais são os benefícios da implementação?", a: "Redução de acidentes e afastamentos, mais produtividade, conformidade legal e melhor clima organizacional." },
       { q: "Como obter a certificação ISO 45001?", a: "Implantando o sistema conforme a norma e passando por auditoria de um organismo certificador. A Templum conduz do diagnóstico à auditoria." },
       { q: "Qual é a validade da certificação?", a: "3 anos, com auditorias de manutenção anuais." },
+      { q: "Quem pode usar a ISO 45001?", a: "Qualquer organização que queira proteger a saúde e a segurança de quem trabalha nela, independentemente de porte ou setor — da indústria aos serviços." },
+      { q: "Como a ISO 45001 promove a melhoria contínua?", a: "Pelo ciclo PDCA: você identifica perigos, define controles, monitora indicadores de SSO e age sobre incidentes e quase-acidentes. Cada ciclo torna o ambiente de trabalho mais seguro." },
+      { q: "Como a ISO 45001 se relaciona com outras normas ISO?", a: "Ela usa a mesma Estrutura de Alto Nível da ISO 9001 e da ISO 14001, o que permite integrar qualidade, meio ambiente e segurança num único sistema de gestão." },
     ],
   },
+  motivos: [
+    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
+    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
+    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+  ],
 };

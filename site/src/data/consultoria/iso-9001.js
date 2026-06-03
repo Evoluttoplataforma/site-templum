@@ -21,6 +21,13 @@ export default {
       { q: "A certificação ISO 9001 é obrigatória?", a: "Não é obrigatória por lei, mas é frequentemente exigida por clientes, licitações e cadeias de fornecimento como prova de qualidade." },
       { q: "Qual é a validade da certificação ISO 9001?", a: "O certificado vale 3 anos, com auditorias de manutenção anuais para garantir que o sistema continua eficaz." },
       { q: "Quem pode usar a ISO 9001?", a: "Qualquer empresa, de qualquer porte ou setor, que queira organizar a gestão e elevar a qualidade dos seus produtos e serviços." },
+      { q: "Como a ISO 9001 promove a melhoria contínua?", a: "Pelo ciclo PDCA (Planejar, Fazer, Checar, Agir): você monitora indicadores, audita os processos e age sobre as não-conformidades. Cada ciclo deixa a gestão um pouco melhor que a anterior." },
+      { q: "Como a ISO 9001 se relaciona com outras normas ISO?", a: "Ela adota a mesma Estrutura de Alto Nível da ISO 14001, ISO 45001 e ISO 27001, o que facilita integrar vários sistemas de gestão num só. Quem certifica na 9001 tem caminho mais curto para as demais." },
     ],
   },
+  motivos: [
+    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
+    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
+    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+  ],
 };
