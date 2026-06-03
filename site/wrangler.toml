@@ -1,0 +1,10 @@
+# Cloudflare Workers — deploy de site estático (static assets).
+# O build do Astro gera ./dist; o Worker serve esses arquivos.
+# IMPORTANTE: o `name` abaixo deve ser IGUAL ao nome do seu Worker no painel.
+name = "site-templum"
+compatibility_date = "2025-01-01"
+
+[assets]
+directory = "./dist"
+# serve /404.html em rotas não encontradas (quando a página 404 existir)
+not_found_handling = "404-page"

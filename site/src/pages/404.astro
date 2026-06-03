@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+import { normas } from "../data/normas.js";
+
+const atalhos = [
+  { label: "Página inicial", href: "/", icon: "solar:home-2-bold" },
+  { label: "Consultoria", href: "/consultoria", icon: "solar:settings-bold" },
+  { label: "Falar com especialista", href: "/form", icon: "solar:chat-round-call-bold" },
+];
+---
+
+<Base title="Página não encontrada — Templum" description="A página que você procura não existe ou foi movida.">
+  <section class="section section--navy nf">
+    <div class="container nf-inner">
+      <span class="tag-pill tag-pill--glow">Erro 404</span>
+      <h1 class="nf-code">404</h1>
+      <h2 class="nf-title">Essa página <em class="accent">não foi encontrada</em></h2>
+      <p class="nf-text">O link pode estar desatualizado ou a página foi movida. Veja por onde continuar:</p>
+
+      <div class="nf-cta">
+        {atalhos.map((a) => (
+          <a href={a.href} class="btn btn--onDark btn--lg nf-btn">
+            <iconify-icon icon={a.icon}></iconify-icon>{a.label}
+          </a>
+        ))}
+      </div>
+
+      <div class="nf-normas">
+        <span class="nf-normas-h">Ou escolha uma norma:</span>
+        <div class="nf-normas-grid">
+          {normas.map((n) => (
+            <a class="nf-norma" href={`/consultoria/${n.slug}`} style={`--c:${n.color}`}>{n.nome}</a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 78vh; display: flex; align-items: center; }
+  .nf-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+  .nf-inner .tag-pill { margin: 0 auto 22px; }
+  .nf-code { font-size: clamp(90px, 18vw, 180px); font-weight: 800; line-height: .9; letter-spacing: -0.04em; color: var(--cream); opacity: .14; margin-bottom: -10px; }
+  .nf-title { font-size: clamp(26px, 4vw, 44px); font-weight: 800; letter-spacing: -0.025em; color: var(--cream); line-height: 1.1; }
+  .nf-text { font-size: 16px; color: rgba(255,244,221,0.78); margin: 16px auto 32px; max-width: 480px; }
+  .nf-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .nf-btn iconify-icon { margin-right: 8px; }
+
+  .nf-normas { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .nf-normas-h { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,244,221,0.55); margin-bottom: 18px; }
+  .nf-normas-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .nf-norma { font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 999px; color: var(--cream);
+    background: color-mix(in srgb, var(--c) 22%, transparent); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); transition: background .25s, transform .25s; }
+  .nf-norma:hover { background: color-mix(in srgb, var(--c) 40%, transparent); transform: translateY(-2px); }
+</style>
