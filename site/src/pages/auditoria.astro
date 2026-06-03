@@ -1,0 +1,91 @@
+---
+import Base from "../layouts/Base.astro";
+
+// NOTA: copy provisória (não há página de auditoria no site atual) — validar com o cliente.
+const tipos = [
+  { icon: "solar:clipboard-check-bold", t: "Auditoria interna", d: "Verificamos seu sistema de gestão contra os requisitos da norma e apontamos não conformidades antes da certificadora." },
+  { icon: "solar:shield-check-bold", t: "Preparação para a certificadora", d: "Simulamos a auditoria de certificação para sua equipe chegar segura e sem surpresas no dia." },
+  { icon: "solar:refresh-circle-bold", t: "Auditoria de manutenção", d: "Acompanhamento periódico para manter o certificado válido e o sistema sempre em conformidade." },
+  { icon: "solar:users-group-rounded-bold", t: "Auditoria de fornecedores", d: "Avaliamos seus fornecedores e parceiros para garantir conformidade ao longo de toda a cadeia." },
+];
+const passos = [
+  { t: "Planejamento", d: "Definimos escopo, critérios e cronograma alinhados à sua realidade." },
+  { t: "Execução", d: "Auditores especialistas avaliam processos, documentos e evidências." },
+  { t: "Relatório", d: "Você recebe não conformidades, oportunidades de melhoria e plano de ação." },
+  { t: "Acompanhamento", d: "Apoiamos a correção das pendências até a sua empresa estar pronta." },
+];
+---
+
+<Base
+  title="Auditoria — Auditorias internas e preparação para a certificadora | Templum"
+  description="Auditorias conduzidas por especialistas: auditoria interna, preparação para a certificadora, manutenção e auditoria de fornecedores. Chegue seguro no dia da certificação."
+>
+  <section class="section section--navy ad-hero">
+    <div class="ad-hero-bg" aria-hidden="true"></div>
+    <div class="container ad-hero-inner">
+      <span class="tag-pill tag-pill--glow">Auditorias Templum</span>
+      <h1>Chegue <em class="accent">seguro</em> no dia da certificação</h1>
+      <p>Auditorias conduzidas por especialistas que conhecem cada requisito das normas. Identificamos não conformidades antes da certificadora e preparamos sua equipe para o sucesso.</p>
+      <div class="ad-hero-cta">
+        <a href="/form" class="btn btn--primary btn--lg">Solicitar uma auditoria <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/consultoria" class="btn btn--onDark btn--lg">Ver normas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">O que oferecemos</span>
+        <h2>Auditorias para <em class="accent">cada momento</em> da sua jornada</h2>
+      </div>
+      <div class="ad-grid">
+        {tipos.map((t) => (
+          <div class="eco-card">
+            <span class="ad-ico"><iconify-icon icon={t.icon}></iconify-icon></span>
+            <h3>{t.t}</h3>
+            <p>{t.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Como conduzimos</span>
+        <h2>Um processo <em class="accent">claro e sem surpresas</em></h2>
+      </div>
+      <div class="step-grid">
+        {passos.map((p, i) => (
+          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Quer <em>garantir o resultado</em> da sua auditoria?</h2>
+      <p>Fale com um especialista e descubra como preparar sua empresa para certificar sem retrabalho.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ad-hero { position: relative; overflow: hidden; padding-top: clamp(72px, 12vh, 120px); padding-bottom: clamp(72px, 12vh, 120px); }
+  .ad-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 82% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 6% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .ad-hero-inner { position: relative; z-index: 1; max-width: 720px; }
+  .ad-hero .tag-pill { margin-bottom: 22px; }
+  .ad-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); margin-bottom: 20px; }
+  .ad-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 600px; margin-bottom: 30px; }
+  .ad-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .ad-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 760px) { .ad-grid { grid-template-columns: 1fr; } }
+  .ad-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+</style>

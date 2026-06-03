@@ -1,0 +1,112 @@
+---
+import Base from "../layouts/Base.astro";
+import { normas } from "../data/normas.js";
+
+const canais = [
+  { icon: "logos:whatsapp-icon", t: "WhatsApp Brasil", v: "55 19 99352-1270", href: "https://wa.me/5519993521270", cta: "Conversar agora" },
+  { icon: "solar:phone-calling-bold", t: "Atendimento Portugal", v: "+351 925 654 875", href: "tel:+351925654875", cta: "Ligar" },
+  { icon: "solar:map-point-bold", t: "Onde atuamos", v: "+800 cidades no Brasil, Portugal e África · atendimento 100% online", href: null, cta: null },
+];
+---
+
+<Base
+  title="Contato — Fale com a Templum"
+  description="Fale com a Templum pelo WhatsApp, telefone ou formulário. Atendimento 100% online em mais de 800 cidades no Brasil, Portugal e África."
+>
+  <section class="section section--navy ct" id="contato">
+    <div class="ct-bg" aria-hidden="true"></div>
+    <div class="container lg ct-grid">
+      <div class="ct-info">
+        <span class="tag-pill tag-pill--glow">Fale com a gente</span>
+        <h1>Vamos conversar sobre a <em class="accent">sua certificação</em></h1>
+        <p>Escolha o canal que preferir ou preencha o formulário. Um especialista responde em até 1 dia útil — sem compromisso.</p>
+
+        <div class="ct-canais">
+          {canais.map((c) => (
+            <div class="ct-canal">
+              <span class="ct-canal-ico"><iconify-icon icon={c.icon}></iconify-icon></span>
+              <div class="ct-canal-body">
+                <strong>{c.t}</strong>
+                <span>{c.v}</span>
+                {c.href && <a href={c.href} target="_blank" rel="noopener" class="ct-canal-link">{c.cta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="lead-card ct-card">
+        <div class="lead-title">Envie sua mensagem</div>
+        <p class="lead-sub">Preencha os dados e retornamos em até 1 dia útil.</p>
+
+        <form class="form" id="contato-form" data-trk-event="lead" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="nome">Nome</label><input class="input" id="nome" name="nome" placeholder="Seu nome" required /></div>
+            <div class="field"><label for="telefone">Telefone / WhatsApp</label><input class="input" id="telefone" name="telefone" placeholder="(00) 00000-0000" required /></div>
+          </div>
+          <div class="field"><label for="email">E-mail</label><input class="input" id="email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+          <div class="field">
+            <label for="norma">Assunto / norma</label>
+            <select class="select" id="norma" name="norma">
+              <option value="">Selecione</option>
+              {normas.map((n) => <option value={n.slug}>{n.nome}</option>)}
+              <option value="auditoria">Auditoria</option>
+              <option value="treinamento">Treinamento</option>
+              <option value="franquia">Franquia</option>
+              <option value="outro">Outro assunto</option>
+            </select>
+          </div>
+          <div class="field"><label for="mensagem">Mensagem</label><textarea class="textarea" id="mensagem" name="mensagem" rows="3" placeholder="Como podemos ajudar?"></textarea></div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">Enviar mensagem <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+        </form>
+
+        <div class="form-success" id="contato-success" hidden>
+          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <div>
+            <h4>Mensagem enviada!</h4>
+            <p>Recebemos seu contato e retornamos em até 1 dia útil.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ct { position: relative; overflow: hidden; padding-top: clamp(64px, 10vh, 104px); padding-bottom: clamp(64px, 10vh, 104px); }
+  .ct-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 88% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 0% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .ct-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 900px) { .ct-grid { grid-template-columns: 1fr; } }
+
+  .ct-info h1 { font-size: clamp(30px, 4vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; color: var(--cream); margin: 22px 0 16px; }
+  .ct-info > p { font-size: 16.5px; line-height: 1.65; color: rgba(255,244,221,0.8); max-width: 480px; }
+
+  .ct-canais { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+  .ct-canal { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-radius: var(--r-16); background: rgba(255,244,221,0.04); border: 1px solid rgba(255,244,221,0.12); }
+  .ct-canal-ico { width: 42px; height: 42px; flex-shrink: 0; border-radius: 11px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.14); }
+  .ct-canal-body { display: flex; flex-direction: column; gap: 2px; }
+  .ct-canal-body strong { font-size: 15px; font-weight: 800; color: var(--cream); }
+  .ct-canal-body span { font-size: 14px; color: rgba(255,244,221,0.72); }
+  .ct-canal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+
+  .form[hidden], .form-success[hidden] { display: none; }
+</style>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById("contato-form");
+    const success = document.getElementById("contato-success");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (window.trk && typeof window.trk.lead === "function") {
+        try { window.trk.lead({ origem: "contato", norma: form.norma.value || "indefinida" }); } catch (_) {}
+      }
+      form.hidden = true;
+      if (success) success.hidden = false;
+    });
+  })();
+</script>
