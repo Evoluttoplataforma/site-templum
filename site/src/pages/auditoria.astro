@@ -1,34 +1,47 @@
 ---
 import Base from "../layouts/Base.astro";
 
-// NOTA: copy provisória (não há página de auditoria no site atual) — validar com o cliente.
-const tipos = [
-  { icon: "solar:clipboard-check-bold", t: "Auditoria interna", d: "Verificamos seu sistema de gestão contra os requisitos da norma e apontamos não conformidades antes da certificadora." },
-  { icon: "solar:shield-check-bold", t: "Preparação para a certificadora", d: "Simulamos a auditoria de certificação para sua equipe chegar segura e sem surpresas no dia." },
-  { icon: "solar:refresh-circle-bold", t: "Auditoria de manutenção", d: "Acompanhamento periódico para manter o certificado válido e o sistema sempre em conformidade." },
-  { icon: "solar:users-group-rounded-bold", t: "Auditoria de fornecedores", d: "Avaliamos seus fornecedores e parceiros para garantir conformidade ao longo de toda a cadeia." },
+// Copy real extraída de "site atual/auditoria templum.html".
+const diferenciais = [
+  { n: "1", t: "Diagnóstico preciso, resultados potentes", d: "Cada auditoria interna realiza uma análise minuciosa dos seus sistemas críticos, assegurando que operem de maneira otimizada e segura. Identificamos falhas antes que se transformem em problemas, protegendo sua empresa contra riscos e fortalecendo sua estabilidade." },
+  { n: "2", t: "Mais do que compliance: performance máxima", d: "Nossas auditorias vão além da conformidade com as normas ISO, impulsionando a eficiência dos seus processos. Cada etapa é uma oportunidade para otimizar operações, aumentar a produtividade e descobrir novas possibilidades de crescimento e inovação." },
+  { n: "3", t: "Controle total, tranquilidade absoluta", d: "Com nossa abordagem detalhada, você tem a certeza de que todos os seus processos funcionam com segurança e eficiência. Prevenimos riscos e reforçamos as defesas da sua empresa contra ameaças potenciais, garantindo uma operação estável e sem surpresas." },
 ];
-const passos = [
-  { t: "Planejamento", d: "Definimos escopo, critérios e cronograma alinhados à sua realidade." },
-  { t: "Execução", d: "Auditores especialistas avaliam processos, documentos e evidências." },
-  { t: "Relatório", d: "Você recebe não conformidades, oportunidades de melhoria e plano de ação." },
-  { t: "Acompanhamento", d: "Apoiamos a correção das pendências até a sua empresa estar pronta." },
+const beneficios = [
+  { icon: "solar:shield-check-bold", t: "Tranquilidade pré-certificação", d: "Conhecemos a fundo as exigências das certificadoras e garantimos que sua empresa esteja totalmente preparada." },
+  { icon: "solar:users-group-rounded-bold", t: "Especialistas proativos", d: "Nossa equipe não apenas identifica problemas — orienta seu time, com foco em resultados concretos." },
+  { icon: "solar:chart-2-bold", t: "Relatórios estratégicos", d: "Fornecemos insights valiosos que vão além das normas e transformam suas auditorias em oportunidades de crescimento." },
+  { icon: "solar:refresh-circle-bold", t: "Monitoramento contínuo", d: "Acompanhamos de perto os processos críticos da sua empresa, prevenindo desvios e minimizando riscos." },
+  { icon: "solar:copy-bold", t: "Segurança na replicação", d: "Para empresas com múltiplas unidades, asseguramos que todas operem com os mesmos padrões de excelência." },
+  { icon: "solar:ranking-bold", t: "Padronização de alta performance", d: "Desenvolvemos modelos de auditoria personalizados que garantem uniformidade e promovem um crescimento sustentável." },
+];
+const stats = [
+  { num: "98%", label: "de precisão na análise", icon: "solar:chart-square-bold" },
+  { num: "5 min", label: "de tempo médio", icon: "solar:bolt-circle-bold" },
 ];
 ---
 
 <Base
-  title="Auditoria — Auditorias internas e preparação para a certificadora | Templum"
-  description="Auditorias conduzidas por especialistas: auditoria interna, preparação para a certificadora, manutenção e auditoria de fornecedores. Chegue seguro no dia da certificação."
+  title="Auditoria Interna Inteligente — Identifique riscos em minutos | Templum"
+  description="Auditorias internas inteligentes da Templum: análise de riscos com base nas normas ISO, relatório personalizado e especialistas proativos. Proteja, fortaleça e certifique sua empresa."
 >
   <section class="section section--navy ad-hero">
     <div class="ad-hero-bg" aria-hidden="true"></div>
     <div class="container ad-hero-inner">
-      <span class="tag-pill tag-pill--glow">Auditorias Templum</span>
-      <h1>Chegue <em class="accent">seguro</em> no dia da certificação</h1>
-      <p>Auditorias conduzidas por especialistas que conhecem cada requisito das normas. Identificamos não conformidades antes da certificadora e preparamos sua equipe para o sucesso.</p>
+      <span class="tag-pill tag-pill--glow">Auditorias internas inteligentes</span>
+      <h1>Identifique os riscos para a <em class="accent">auditoria interna</em> da sua empresa em minutos</h1>
+      <p>Analisamos os riscos para a auditoria interna da sua organização com base nas normas ISO e geramos um relatório personalizado com recomendações práticas.</p>
       <div class="ad-hero-cta">
-        <a href="/form" class="btn btn--primary btn--lg">Solicitar uma auditoria <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-        <a href="/consultoria" class="btn btn--onDark btn--lg">Ver normas</a>
+        <a href="/form" class="btn btn--primary btn--lg">Calcular riscos gratuitamente <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="/form" class="btn btn--onDark btn--lg">Solicitar uma proposta</a>
+      </div>
+      <div class="ad-stats">
+        {stats.map((s) => (
+          <div class="ad-stat">
+            <span class="ad-stat-ico"><iconify-icon icon={s.icon}></iconify-icon></span>
+            <div><strong>{s.num}</strong><span>{s.label}</span></div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -36,15 +49,16 @@ const passos = [
   <section class="section section--cream">
     <div class="container">
       <div class="section-header">
-        <span class="tag-pill">O que oferecemos</span>
-        <h2>Auditorias para <em class="accent">cada momento</em> da sua jornada</h2>
+        <span class="tag-pill">O que a Templum faz por você</span>
+        <h2>Com a Templum, você vai <em class="accent">além do básico</em></h2>
+        <p>Uma avaliação completa da saúde empresarial, do diagnóstico à proteção contra riscos.</p>
       </div>
-      <div class="ad-grid">
-        {tipos.map((t) => (
-          <div class="eco-card">
-            <span class="ad-ico"><iconify-icon icon={t.icon}></iconify-icon></span>
-            <h3>{t.t}</h3>
-            <p>{t.d}</p>
+      <div class="ad-dif">
+        {diferenciais.map((d) => (
+          <div class="ad-dif-card">
+            <span class="ad-dif-num">{d.n}</span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
           </div>
         ))}
       </div>
@@ -52,14 +66,19 @@ const passos = [
   </section>
 
   <section class="section">
-    <div class="container xl">
+    <div class="container">
       <div class="section-header">
-        <span class="tag-pill">Como conduzimos</span>
-        <h2>Um processo <em class="accent">claro e sem surpresas</em></h2>
+        <span class="tag-pill">Benefícios de escolher a Templum</span>
+        <h2>Cada auditoria, uma dose de <em class="accent">precisão e eficiência</em></h2>
+        <p>Nossa metodologia afiada e proativa ajuda sua empresa a crescer com segurança e resiliência.</p>
       </div>
-      <div class="step-grid">
-        {passos.map((p, i) => (
-          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>
+      <div class="ad-grid">
+        {beneficios.map((b) => (
+          <div class="eco-card">
+            <span class="ad-ico"><iconify-icon icon={b.icon}></iconify-icon></span>
+            <h3>{b.t}</h3>
+            <p>{b.d}</p>
+          </div>
         ))}
       </div>
     </div>
@@ -67,9 +86,9 @@ const passos = [
 
   <section class="cta-band">
     <div class="container md">
-      <h2>Quer <em>garantir o resultado</em> da sua auditoria?</h2>
-      <p>Fale com um especialista e descubra como preparar sua empresa para certificar sem retrabalho.</p>
-      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <h2>Sua auditoria interna é a <em>chave para o sucesso contínuo</em></h2>
+      <p>Proteja, fortaleça e certifique sua empresa com a Templum.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Solicitar uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
 </Base>
@@ -85,7 +104,21 @@ const passos = [
   .ad-hero p { font-size: 17px; line-height: 1.65; color: rgba(255,244,221,0.82); max-width: 600px; margin-bottom: 30px; }
   .ad-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 
-  .ad-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 44px; }
-  @media (max-width: 760px) { .ad-grid { grid-template-columns: 1fr; } }
+  .ad-stats { display: flex; gap: 40px; margin-top: 38px; padding-top: 28px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .ad-stat { display: flex; align-items: center; gap: 12px; }
+  .ad-stat-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.16); }
+  .ad-stat strong { display: block; font-size: 26px; font-weight: 800; color: var(--cream); line-height: 1; }
+  .ad-stat span { font-size: 13px; color: rgba(255,244,221,0.65); }
+
+  .ad-dif { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .ad-dif { grid-template-columns: 1fr; } }
+  .ad-dif-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 32px 28px; }
+  .ad-dif-num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.12); margin-bottom: 16px; }
+  .ad-dif-card h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 10px; }
+  .ad-dif-card p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+
+  .ad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 980px) { .ad-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .ad-grid { grid-template-columns: 1fr; } }
   .ad-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
 </style>
