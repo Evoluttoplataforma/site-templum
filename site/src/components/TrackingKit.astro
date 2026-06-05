@@ -12,9 +12,10 @@ window.TRACKING_CONFIG = {
     hasEcommerce: false, hasRegistration: false, hasNewsletter: true,
     primaryConversion: 'Lead'
   },
-  meta:      { pixelId: '', capi: true, advancedMatching: true, ctwa: true },
-  googleAds: { conversionId: '', leadLabel: '', enhancedConversions: true, offlineConversions: false },
-  ga4:       { measurementId: '', apiSecret: '', engagementTracking: true },
+  // IDs públicos (client-side). Tokens de CAPI/api_secret são SECRETOS → vão no servidor, nunca aqui.
+  meta:      { pixelId: '4177249519256900', capi: true, advancedMatching: true, ctwa: true },
+  googleAds: { conversionId: 'AW-17896226473', leadLabel: 'Atq7CISCiusbEKn9ytVC', enhancedConversions: true, offlineConversions: false },
+  ga4:       { measurementId: 'G-2BW8QTYLB5', apiSecret: '', engagementTracking: true },
   tiktok:    { pixelId: '', eventsApi: false },
   clarity:   { projectId: '' },
   server:    {
