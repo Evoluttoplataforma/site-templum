@@ -120,17 +120,8 @@
 /ab/auditoria                              /auditoria                 302
 /auditoria/lp                              /auditoria                 302
 
-# → /blog
-/blog/boosting-self-confidence             /blog                      302
-/blog/building-resilience-in-challenging-times /blog                      302
-/blog/embracing-change-and-uncertainty     /blog                      302
-/blog/finding-your-life-purpose            /blog                      302
-/blog/managing-work-life-balance           /blog                      302
-/blog/mindfulness-meditation-for-stress-reduction /blog                      302
-/blog/the-art-of-effective-communication   /blog                      302
-/blog/the-benefits-of-journaling-for-self-reflection /blog                      302
-/blog/the-power-of-setting-smart-goals     /blog                      302
-/blog/understanding-the-enneagram-personality-system /blog                      302
+# → / (blog saiu deste site — vai p/ certificacaoiso.com.br; repointar quando no ar)
+/blog                                      /                          302
 
 # → /consultoria
 /lp                                        /consultoria               302
@@ -316,7 +307,7 @@
 /sgi/*                                     /consultoria/sgi           302
 /iso-37001/*                               /consultoria/iso-37001     302
 /lgpd/*                                    /consultoria/lgpd          302
-/blog/*                                    /blog                      302
+/blog/*                                    /                          302
 /nucleos/*                                 /solucoes-de-ia            302
 /setembro-especial/*                       /treinamento-fase-a-fase   302
 /ia/*                                      /solucoes-de-ia            302
