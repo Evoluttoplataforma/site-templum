@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+
+const atalhos = [
+  { label: "Conhecer as certificações", href: "/consultoria", icon: "solar:medal-ribbon-star-bold" },
+  { label: "Baixar materiais grátis", href: "/presentes", icon: "solar:gift-bold" },
+  { label: "Ver cases de sucesso", href: "/case-de-sucesso", icon: "solar:cup-star-bold" },
+];
+---
+
+<Base title="Obrigado! — Templum" description="Recebemos seu contato. Um especialista da Templum falará com você em breve.">
+  <section class="section section--navy ob">
+    <div class="ob-bg" aria-hidden="true"></div>
+    <div class="container md ob-inner">
+      <span class="ob-check"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
+      <span class="tag-pill tag-pill--glow">Recebido com sucesso</span>
+      <h1>Obrigado! Recebemos o seu <em class="accent">contato</em></h1>
+      <p>Um especialista da Templum vai falar com você em até <strong>1 dia útil</strong>. Enquanto isso, aproveite para conhecer mais:</p>
+      <div class="ob-links">
+        {atalhos.map((a) => (
+          <a href={a.href} class="ob-link"><iconify-icon icon={a.icon}></iconify-icon>{a.label} <iconify-icon icon="solar:arrow-right-linear" class="ob-arrow"></iconify-icon></a>
+        ))}
+      </div>
+      <a href="https://wa.me/5519993521270" target="_blank" rel="noopener" class="btn btn--primary btn--lg ob-wpp">Falar agora no WhatsApp <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ob { min-height: 72vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .ob-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(700px 440px at 50% 0%, rgba(255,89,37,0.20), transparent 60%); }
+  .ob-inner { position: relative; z-index: 1; text-align: center; }
+  .ob-check { font-size: 64px; color: var(--success, #16a34a); display: block; margin-bottom: 18px; }
+  .ob-inner .tag-pill { margin: 0 auto 18px; }
+  .ob-inner h1 { font-size: clamp(30px, 4.4vw, 50px); font-weight: 800; letter-spacing: -0.03em; color: var(--cream); line-height: 1.08; }
+  .ob-inner > p { font-size: 17px; color: rgba(255,244,221,0.82); line-height: 1.6; margin: 16px auto 30px; max-width: 520px; }
+  .ob-inner > p strong { color: var(--cream); }
+  .ob-links { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto 28px; }
+  .ob-link { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: var(--r-16); background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); color: var(--cream); font-weight: 600; font-size: 15px; transition: background .25s, border-color .25s; }
+  .ob-link:hover { background: rgba(255,89,37,0.14); border-color: rgba(255,89,37,0.4); }
+  .ob-link > iconify-icon:first-child { color: var(--orange); font-size: 20px; }
+  .ob-arrow { margin-left: auto; color: rgba(255,244,221,0.5); }
+  .ob-wpp iconify-icon { font-size: 20px; }
+</style>
