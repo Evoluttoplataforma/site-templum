@@ -4,6 +4,38 @@
 # Regras específicas primeiro; splats por família ao final.
 # =========================================================
 
+# ---- 301 do domínio antigo (certificacaoiso.com.br) ----
+# Apontam direto para o destino FINAL (sem cadeia). Com e sem barra final.
+# Query string / UTM são preservadas automaticamente pelo Cloudflare.
+/canal-de-denuncias                        /contato/canal-de-denuncias  301
+/canal-de-denuncias/                       /contato/canal-de-denuncias  301
+/certificacao-iso-9001-t01                 /consultoria/iso-9001        301
+/certificacao-iso-9001-t01/                /consultoria/iso-9001        301
+/consultoria-geric                         /consultoria/geric           301
+/consultoria-geric/                        /consultoria/geric           301
+/consultoria-pqta                          /pqta                        301
+/consultoria-pqta/                         /pqta                        301
+/esg                                       /consultoria/esg             301
+/esg/                                      /consultoria/esg             301
+/fssc-22000                                /consultoria/fssc-22000      301
+/fssc-22000/                               /consultoria/fssc-22000      301
+/haccp                                     /consultoria/haccp           301
+/haccp/                                    /consultoria/haccp           301
+/iso-14001                                 /consultoria/iso-14001       301
+/iso-14001/                                /consultoria/iso-14001       301
+/iso-45001                                 /consultoria/iso-45001       301
+/iso-45001/                                /consultoria/iso-45001       301
+/lgpd                                      /consultoria/lgpd            301
+/lgpd/                                     /consultoria/lgpd            301
+/estrategia                                /solucoes-de-ia              301
+/estrategia/                               /solucoes-de-ia              301
+/gente-cultura                             /solucoes-de-ia              301
+/gente-cultura/                            /solucoes-de-ia              301
+/governanca-gestao                         /solucoes-de-ia              301
+/governanca-gestao/                        /solucoes-de-ia              301
+/marketing-vendas                          /solucoes-de-ia              301
+/marketing-vendas/                         /solucoes-de-ia              301
+
 # → /
 /ab/revie-2                                /                          302
 /dia-zero                                  /                          302
