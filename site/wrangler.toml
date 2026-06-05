@@ -10,3 +10,8 @@ directory = "./dist"
 binding = "ASSETS"
 # serve /404.html em rotas não encontradas (quando a página 404 existir)
 not_found_handling = "404-page"
+
+# Logs no Workers (runtime) — p/ depurar /api/lead e /api/track (CAPI/Mailchimp).
+[observability.logs]
+enabled = true
+invocation_logs = true
