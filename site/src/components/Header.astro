@@ -6,9 +6,15 @@ const navLinks = [
   { label: "Certificações", href: "/consultoria" },
   { label: "Auditorias", href: "/auditoria" },
   { label: "Premiações", href: "/drops" },
-  { label: "Soluções de IA", href: "/solucoes-de-ia" },
+  { label: "Soluções de IA", href: "/solucoes-de-ia", children: [
+    { label: "Plataforma Orbit & Olívia", href: "/solucoes-de-ia" },
+    { label: "Agendar demonstração", href: "/form" },
+  ] },
   { label: "Presentes 🎁", href: "/presentes" },
-  { label: "Quem somos", href: "/quem-somos/sobre" },
+  { label: "Quem somos", href: "/quem-somos/sobre", children: [
+    { label: "Sobre a Templum", href: "/quem-somos/sobre" },
+    { label: "Nossos valores", href: "/quem-somos/valores" },
+  ] },
   { label: "Treinamentos", href: "/treinamento-fase-a-fase" },
   { label: "Carreira", href: "/carreira" },
   { label: "Cases", href: "/case-de-sucesso" },
@@ -45,7 +51,18 @@ const navLinks = [
           </div>
         </div>
       </div>
-      {navLinks.slice(1).map((l) => <a class="hd-link" href={l.href}>{l.label}</a>)}
+      {navLinks.slice(1).map((l) => (
+        l.children ? (
+          <div class="hd-item has-drop">
+            <a href={l.href} class="hd-link">{l.label} <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
+            <div class="drop">
+              {l.children.map((c) => <a class="drop-link" href={c.href}>{c.label}</a>)}
+            </div>
+          </div>
+        ) : (
+          <a class="hd-link" href={l.href}>{l.label}</a>
+        )
+      ))}
     </nav>
 
     <div class="hd-actions">
@@ -59,7 +76,12 @@ const navLinks = [
   </div>
 
   <div class="hd-mobile" id="hdMobile">
-    <nav>{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+    <nav>{navLinks.map((l) => (
+      <Fragment>
+        <a href={l.href}>{l.label}</a>
+        {l.children && l.children.map((c) => <a class="hd-mobile-sub" href={c.href}>{c.label}</a>)}
+      </Fragment>
+    ))}</nav>
     <a href="/contato" class="btn btn--outline btn--block">Quero me inscrever</a>
     <a href="/form" class="btn btn--primary btn--block">Falar com especialista</a>
   </div>
@@ -94,11 +116,19 @@ const navLinks = [
   .mega-link em { font-size: 11px; font-style: normal; color: var(--text-mid); line-height: 1.3; }
   .mega-ico { width: 34px; height: 34px; min-width: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 19px; flex-shrink: 0; }
 
+  /* Dropdown simples (Soluções de IA, Quem somos) */
+  .has-drop { position: relative; }
+  .drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 230px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); box-shadow: var(--shadow-lift); padding: 8px; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .25s var(--ease-soft), transform .25s var(--ease-soft), visibility .25s; }
+  .has-drop:hover .drop { opacity: 1; visibility: visible; transform: none; }
+  .drop-link { display: block; padding: 10px 14px; border-radius: var(--r-12); font-size: 14px; font-weight: 600; color: var(--text); transition: background .2s var(--ease-soft), color .2s var(--ease-soft); }
+  .drop-link:hover { background: var(--bg); color: var(--orange); }
+
   .hd-burger { display: none; margin-left: auto; font-size: 26px; color: var(--text); padding: 6px; }
   .hd-mobile { display: none; flex-direction: column; gap: 14px; padding: 20px 24px 28px; background: var(--surface); border-bottom: 1px solid var(--border); max-height: calc(100dvh - var(--nav-h, 64px)); overflow-y: auto; }
   .hd-mobile.open { display: flex; }
   .hd-mobile nav { display: flex; flex-direction: column; }
   .hd-mobile nav a { padding: 12px 0; font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text); }
+  .hd-mobile nav a.hd-mobile-sub { padding-left: 18px; font-size: 14.5px; font-weight: 500; color: var(--text-mid); }
 
   /* No topo fica só o CTA primário (o nav tem 9 itens). "Quero me inscrever"
      vive no menu mobile. */
