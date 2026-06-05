@@ -11,6 +11,16 @@ binding = "ASSETS"
 # serve /404.html em rotas não encontradas (quando a página 404 existir)
 not_found_handling = "404-page"
 
+# Variáveis NÃO-sensíveis (ficam aqui p/ não sumir nos deploys via Git).
+# Valores sensíveis (tokens/chaves) NÃO entram aqui — são Secrets no painel:
+#   MAILCHIMP_API_KEY, META_CAPI_TOKEN, META_CAPI_TOKEN_2
+# Remova os META_TEST_EVENT_CODE* após validar (p/ contar conversão real).
+[vars]
+META_PIXEL_ID = "4177249519256900"
+META_PIXEL_ID_2 = "953370546204625"
+META_TEST_EVENT_CODE = "TEST5322"
+META_TEST_EVENT_CODE_2 = "TEST5239"
+
 # Logs no Workers (runtime) — p/ depurar /api/lead e /api/track (CAPI/Mailchimp).
 [observability.logs]
 enabled = true
