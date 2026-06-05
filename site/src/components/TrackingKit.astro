@@ -70,8 +70,14 @@ window.TRACKING_KIT_VERSION = '1.0.0';
   if (!SECOND_PIXEL) return;
   var n = 0, t = setInterval(function () {
     n++;
-    if (window.fbq) { try { window.fbq('init', SECOND_PIXEL); } catch (e) {} clearInterval(t); }
-    else if (n > 100) clearInterval(t);
-  }, 200);
+    if (window.fbq) {
+      try {
+        window.fbq('init', SECOND_PIXEL);
+        // PageView só p/ o 2º pixel (o kit já disparou o do 1º) — trackSingle não duplica.
+        window.fbq('trackSingle', SECOND_PIXEL, 'PageView');
+      } catch (e) {}
+      clearInterval(t);
+    } else if (n > 100) { clearInterval(t); }
+  }, 150);
 })();
 </script>
