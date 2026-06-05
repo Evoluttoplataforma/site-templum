@@ -1,5 +1,7 @@
 # =========================================================
-# TEMPLUM · Redirects (Cloudflare) — gerado de urls-templum.md
+# TEMPLUM · Redirects (Cloudflare Workers) — sem origens duplicadas.
+# (Workers rejeita regra duplicada p/ o mesmo path — diferente do Pages.)
+# Base: urls-templum.md + redirects 301 do go-live.
 # 302 = temporário (trocar p/ 301 no go-live definitivo).
 # Regras específicas primeiro; splats por família ao final.
 # =========================================================
