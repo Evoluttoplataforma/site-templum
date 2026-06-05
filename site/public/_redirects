@@ -213,7 +213,6 @@
 /certificado/iso-9001-v3                   /consultoria/iso-9001      302
 /certificado/iso-9001-v4                   /consultoria/iso-9001      302
 /consult/iso-9001                          /consultoria/iso-9001      302
-/iso-9001                                  /consultoria/iso-9001      302
 /iso-9001/aprenda                          /consultoria/iso-9001      302
 /iso-9001/beneficios                       /consultoria/iso-9001      302
 /iso-9001/ia                               /consultoria/iso-9001      302
@@ -240,7 +239,6 @@
 /consult/pbqp-h                            /consultoria/pbqp-h        302
 /lp-antigas/pbqp-h                         /consultoria/pbqp-h        302
 /lp/pbqp-h                                 /consultoria/pbqp-h        302
-/pbqp-h                                    /consultoria/pbqp-h        302
 /pbqp-h/aprenda                            /consultoria/pbqp-h        302
 /pbqp-h/beneficios                         /consultoria/pbqp-h        302
 /pbqp-h/ia                                 /consultoria/pbqp-h        302
