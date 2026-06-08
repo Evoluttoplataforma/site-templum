@@ -86,7 +86,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
          client_id (visitante), session_id e session_attributes. window.__tplAttrib(). -->
     <script is:inline>
       (function () {
-        var KEYS = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid","gad_source","gad_campaignid"];
+        var KEYS = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid","gad_source","gad_campaignid","msclkid","ttclid"];
         function uuid() { try { return crypto.randomUUID(); } catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); } }
         function cookie(n) { var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)"); return m ? decodeURIComponent(m.pop()) : ""; }
         try {
@@ -124,11 +124,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
             utm_term: g("utm_term"), utm_content: g("utm_content"),
             gclid: g("gclid"), fbclid: g("fbclid"), gbraid: g("gbraid"), wbraid: g("wbraid"),
             gad_source: g("gad_source"), gad_campaignid: g("gad_campaignid"),
+            msclkid: g("msclkid"), ttclid: g("ttclid"),
             // first-touch
             utm_source_ft: ft("utm_source"), utm_medium_ft: ft("utm_medium"), utm_campaign_ft: ft("utm_campaign"),
             utm_term_ft: ft("utm_term"), utm_content_ft: ft("utm_content"),
             gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"), gbraid_ft: ft("gbraid"), wbraid_ft: ft("wbraid"),
             gad_source_ft: ft("gad_source"), gad_campaignid_ft: ft("gad_campaignid"),
+            msclkid_ft: ft("msclkid"), ttclid_ft: ft("ttclid"),
             fbp: cookie("_fbp"), fbc: cookie("_fbc"),
             referrer: f.referrer || document.referrer || "", landing: f.landing || location.pathname,
             session_attributes: sa,

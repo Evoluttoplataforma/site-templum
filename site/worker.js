@@ -93,6 +93,8 @@ async function handleLead(request, env) {
     wbraid: body.wbraid || "",
     gad_source: body.gad_source || "",
     gad_campaignid: body.gad_campaignid || "",
+    msclkid: body.msclkid || "",
+    ttclid: body.ttclid || "",
     // Atribuição / tracking — first-touch (originais)
     utm_source_ft: body.utm_source_ft || "",
     utm_medium_ft: body.utm_medium_ft || "",
@@ -105,6 +107,8 @@ async function handleLead(request, env) {
     wbraid_ft: body.wbraid_ft || "",
     gad_source_ft: body.gad_source_ft || "",
     gad_campaignid_ft: body.gad_campaignid_ft || "",
+    msclkid_ft: body.msclkid_ft || "",
+    ttclid_ft: body.ttclid_ft || "",
     fbp: body.fbp || "",
     fbc: body.fbc || "",
     referrer: body.referrer || "",
