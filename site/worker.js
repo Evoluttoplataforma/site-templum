@@ -4,6 +4,10 @@
 // Sem as secrets configuradas, ambos respondem ok sem efeito (não quebram a UX).
 //
 // Secrets/vars (Settings → Variables and Secrets do Worker):
+//   LEAD_WEBHOOK_URL       URL do webhook (n8n/Make/RD/Zapier) que recebe o lead
+//                          completo: { nome,email,telefone,empresa,norma,mensagem,
+//                          evento,pagina }. Opcional — pode usar só Mailchimp, só
+//                          webhook, ou os dois.
 //   MAILCHIMP_API_KEY      ex.: abc123...-us21   (o datacenter vem após o "-")
 //   MAILCHIMP_LIST_ID      ex.: 1a2b3c4d5e       (Audience ID)
 //   MAILCHIMP_TAG          (opcional) ex.: site-templum
@@ -52,7 +56,7 @@ async function sha256(value) {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// ---------------------- Mailchimp ----------------------
+// ---------------------- Lead: Webhook + Mailchimp ----------------------
 async function handleLead(request, env) {
   let body = {};
   try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
@@ -60,38 +64,64 @@ async function handleLead(request, env) {
   const email = (body.email || "").trim().toLowerCase();
   if (!email || !email.includes("@")) return json({ ok: false, error: "invalid_email" }, 422);
 
-  const apiKey = env.MAILCHIMP_API_KEY;
-  const listId = env.MAILCHIMP_LIST_ID;
-  if (!apiKey || !listId) return json({ ok: true, configured: false });
-
-  const dc = apiKey.split("-")[1];
-  if (!dc) return json({ ok: false, error: "bad_api_key" }, 500);
-
-  const endpoint = `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members`;
-  const payload = {
-    email_address: email,
-    status: "subscribed",
-    merge_fields: {
-      FNAME: body.nome || "",
-      PHONE: body.telefone || "",
-      COMPANY: body.empresa || "",
-      NORMA: body.norma || "",
-      MENSAGEM: body.mensagem || "",
-      ORIGEM: body.pagina || body.evento || "site",
-    },
-    tags: [env.MAILCHIMP_TAG || "site-templum"],
+  // Lead normalizado (vai pro webhook e alimenta os merge fields do Mailchimp).
+  const lead = {
+    nome: body.nome || "",
+    email,
+    telefone: body.telefone || "",
+    empresa: body.empresa || "",
+    norma: body.norma || "",
+    mensagem: body.mensagem || "",
+    evento: body.evento || "lead",
+    pagina: body.pagina || "",
   };
 
-  const resp = await fetch(endpoint, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: "Basic " + btoa("anystring:" + apiKey) },
-    body: JSON.stringify(payload),
-  });
-  if (resp.ok) return json({ ok: true, configured: true });
+  const tasks = [];
+  let configured = false;
 
-  const err = await resp.json().catch(() => ({}));
-  if (err && err.title === "Member Exists") return json({ ok: true, configured: true, existing: true });
-  return json({ ok: false, error: err.title || "mailchimp_error" }, 502);
+  // 1) Webhook (n8n / Make / RDStation / Zapier / etc.) — recebe o lead completo.
+  if (env.LEAD_WEBHOOK_URL) {
+    configured = true;
+    tasks.push(
+      fetch(env.LEAD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(lead),
+      }).then((r) => ({ webhook: r.ok })).catch(() => ({ webhook: false }))
+    );
+  }
+
+  // 2) Mailchimp (opcional) — cadastra/atualiza o contato.
+  if (env.MAILCHIMP_API_KEY && env.MAILCHIMP_LIST_ID) {
+    configured = true;
+    const dc = env.MAILCHIMP_API_KEY.split("-")[1];
+    if (dc) {
+      const mc = {
+        email_address: email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
+          NORMA: lead.norma, MENSAGEM: lead.mensagem, ORIGEM: lead.pagina || lead.evento || "site",
+        },
+        tags: [env.MAILCHIMP_TAG || "site-templum"],
+      };
+      tasks.push(
+        fetch(`https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members`, {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY) },
+          body: JSON.stringify(mc),
+        }).then(async (r) => {
+          if (r.ok) return { mailchimp: true };
+          const e = await r.json().catch(() => ({}));
+          if (e && e.title === "Member Exists") return { mailchimp: true, existing: true };
+          return { mailchimp: false, error: e.title || "mailchimp_error" };
+        }).catch(() => ({ mailchimp: false }))
+      );
+    }
+  }
+
+  const results = await Promise.all(tasks);
+  return json({ ok: true, configured, results });
 }
 
 // ---------------------- Meta Conversions API ----------------------
