@@ -77,6 +77,18 @@ async function handleLead(request, env) {
     mensagem: body.mensagem || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
+    // Atribuição / tracking
+    utm_source: body.utm_source || "",
+    utm_medium: body.utm_medium || "",
+    utm_campaign: body.utm_campaign || "",
+    utm_term: body.utm_term || "",
+    utm_content: body.utm_content || "",
+    gclid: body.gclid || "",
+    fbclid: body.fbclid || "",
+    fbp: body.fbp || "",
+    fbc: body.fbc || "",
+    referrer: body.referrer || "",
+    landing: body.landing || "",
   };
 
   const tasks = [];
@@ -107,6 +119,7 @@ async function handleLead(request, env) {
           NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
           FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
           ORIGEM: lead.pagina || lead.evento || "site",
+          UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
         tags: [env.MAILCHIMP_TAG || "site-templum"],
       };

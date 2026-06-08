@@ -82,10 +82,40 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       })();
     </script>
 
+    <!-- Atribuição: captura UTMs/click-ids (first-touch + last-touch), referrer,
+         landing e cookies fbp/fbc. Exposta em window.__tplAttrib() p/ ir no lead. -->
+    <script is:inline>
+      (function () {
+        var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"];
+        try {
+          var p = new URLSearchParams(location.search), cur = {};
+          KEYS.forEach(function (k) { var v = p.get(k); if (v) cur[k] = v; });
+          if (!localStorage.getItem("tpl_first")) {
+            localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "" }, cur)));
+          }
+          if (Object.keys(cur).length) localStorage.setItem("tpl_last", JSON.stringify(cur));
+        } catch (_) {}
+        function cookie(n) { var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)"); return m ? decodeURIComponent(m.pop()) : ""; }
+        window.__tplAttrib = function () {
+          var f = {}, l = {};
+          try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
+          try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
+          function g(k) { return l[k] || f[k] || ""; }
+          return {
+            utm_source: g("utm_source"), utm_medium: g("utm_medium"), utm_campaign: g("utm_campaign"),
+            utm_term: g("utm_term"), utm_content: g("utm_content"),
+            gclid: g("gclid"), fbclid: g("fbclid"),
+            fbp: cookie("_fbp"), fbc: cookie("_fbc"),
+            referrer: f.referrer || document.referrer || "", landing: f.landing || location.pathname,
+          };
+        };
+      })();
+    </script>
+
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
-         Mailchimp), dispara a conversão no tracking-kit e mostra o sucesso.
+         Mailchimp + webhook), dispara a conversão no tracking-kit e redireciona.
          Vale para qualquer form[data-trk-event]. data-trk-event="denuncia"
-         não é enviado ao Mailchimp nem ao tracking (apenas UI). -->
+         não é enviado ao Mailchimp/webhook nem ao tracking (apenas UI). -->
     <script is:inline>
       document.addEventListener("submit", function (e) {
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
@@ -115,12 +145,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
             method: "POST",
             headers: { "Content-Type": "application/json" },
             keepalive: true,
-            body: JSON.stringify({
+            body: JSON.stringify(Object.assign({
               nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
               empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               evento: evt, pagina: location.pathname,
-            }),
+            }, (window.__tplAttrib && window.__tplAttrib()) || {})),
           });
         } catch (_) {}
 
