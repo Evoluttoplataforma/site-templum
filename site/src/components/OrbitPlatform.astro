@@ -40,7 +40,7 @@ const agentes = [
     <!-- Hub orbital: Olívia + 12 agentes -->
     <div class="orbit-subhead">
       <h3>Seu time de IA coordenado pela <span>Olívia</span></h3>
-      <p>Cada agente domina uma área. A Olívia coordena todos, conecta os dados e entrega clareza. <em>Passe o mouse</em> em cada agente.</p>
+      <p>Cada agente domina uma área. A Olívia coordena todos, conecta os dados e entrega clareza. <em>Toque em cada agente</em> para ver os detalhes.</p>
     </div>
 
     <div class="orbit-hub" id="orbitHub">
@@ -178,6 +178,16 @@ const agentes = [
     .orbit-hub__node-icon { width: 44px; height: 44px; } .orbit-hub__node-icon iconify-icon { font-size: 18px; }
     .orbit-hub__node-label { font-size: 11px; }
     .orbit-node-card { width: min(220px, 80vw); }
+    /* no toque o card é movido p/ o hub (.--docked) e fixado embaixo, centralizado,
+       sempre no mesmo lugar — não importa em qual nó (borda) o usuário tocou. */
+    .orbit-node-card--docked {
+      position: absolute; left: 50%; right: auto; top: auto; bottom: 10px;
+      transform: translateX(-50%); width: min(330px, calc(100% - 20px));
+      opacity: 1; pointer-events: auto; z-index: 300; padding: 16px 18px;
+      animation: orbit-card-in .28s cubic-bezier(.16,1,.3,1);
+    }
+    .orbit-node-card--docked::before { display: none; }
+    @keyframes orbit-card-in { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
     .orbit-stats { grid-template-columns: 1fr; }
   }
   @media (max-width: 480px) {
@@ -249,12 +259,30 @@ const agentes = [
     var t;
     window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { if (hub.classList.contains("orbit-visible")) layout(); }, 150); });
 
+    // Mobile/touch: o card é posicionado relativo ao nó (left:50%), então em nós
+    // da borda ele vaza p/ fora da tela e é cortado pelo overflow:clip do hub.
+    // Solução: "dockar" o card no próprio hub (centralizado), igual p/ todo nó.
+    var dockedCard = null, dockedHome = null;
+    function dock(node) {
+      var card = node.querySelector(".orbit-node-card");
+      if (!card) return;
+      if (dockedCard && dockedCard !== card) undock();
+      dockedCard = card; dockedHome = node;
+      hub.appendChild(card);
+      card.classList.add("orbit-node-card--docked");
+    }
+    function undock() {
+      if (dockedCard && dockedHome) { dockedHome.appendChild(dockedCard); dockedCard.classList.remove("orbit-node-card--docked"); }
+      dockedCard = null; dockedHome = null;
+    }
     function activate(node) {
-      nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
+      clearAll();
       node.classList.add("orbit-node--active");
       nodes.forEach(function (n) { if (n !== node) n.classList.add("orbit-node--dimmed"); });
+      if (!hasHover) dock(node);
     }
     function clearAll() {
+      if (!hasHover) undock();
       nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
     }
     var hasHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
