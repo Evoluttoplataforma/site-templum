@@ -118,6 +118,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
             body: JSON.stringify({
               nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
               empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
+              cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               evento: evt, pagina: location.pathname,
             }),
           });

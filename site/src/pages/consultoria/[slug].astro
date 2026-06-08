@@ -5,6 +5,7 @@ import Especialistas from "../../components/Especialistas.astro";
 import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
 import { normas } from "../../data/normas.js";
 
 const dataModules = import.meta.glob("../../data/consultoria/*.js", { eager: true });
@@ -189,24 +190,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <div class="lead-card">
-          <div class="lead-title">Fale com um especialista</div>
-          <p class="lead-sub">Resposta em até 1 dia útil. Sem compromisso.</p>
-          <form class="form" data-trk-event="lead" novalidate>
-            <input type="hidden" name="norma" value={norma.nome} />
-            <div class="form-row">
-              <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
-              <div class="field"><label>Telefone</label><input class="input" name="telefone" placeholder="(00) 00000-0000" required /></div>
-            </div>
-            <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
-            <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
-            <button type="submit" class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
-          </form>
-          <div class="form-success" hidden>
-            <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-            <div><h4>Recebemos seu contato!</h4><p>Um especialista vai falar com você em até 1 dia útil.</p></div>
-          </div>
-        </div>
+        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." />
       </div>
     </section>
 

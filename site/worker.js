@@ -71,6 +71,9 @@ async function handleLead(request, env) {
     telefone: body.telefone || "",
     empresa: body.empresa || "",
     norma: body.norma || "",
+    cargo: body.cargo || "",
+    urgencia: body.urgencia || "",
+    funcionarios: body.funcionarios || "",
     mensagem: body.mensagem || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
@@ -101,7 +104,9 @@ async function handleLead(request, env) {
         status: "subscribed",
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
-          NORMA: lead.norma, MENSAGEM: lead.mensagem, ORIGEM: lead.pagina || lead.evento || "site",
+          NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
+          FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
+          ORIGEM: lead.pagina || lead.evento || "site",
         },
         tags: [env.MAILCHIMP_TAG || "site-templum"],
       };

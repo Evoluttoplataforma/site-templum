@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { normas } from "../data/normas.js";
+import LeadForm from "../components/LeadForm.astro";
 import { baseConsultoria } from "../data/consultoria/_base.js";
 
 const { stats } = baseConsultoria;
@@ -39,39 +39,7 @@ const garantias = [
       </div>
 
       <!-- FORM -->
-      <div class="lead-card fm-card">
-        <div class="lead-title">Fale com um especialista</div>
-        <p class="lead-sub">Preencha os dados abaixo. Retornamos em até 1 dia útil.</p>
-
-        <form class="form" id="lead-form" data-trk-event="lead" novalidate>
-          <div class="form-row">
-            <div class="field"><label for="nome">Nome</label><input class="input" id="nome" name="nome" placeholder="Seu nome" required /></div>
-            <div class="field"><label for="telefone">Telefone / WhatsApp</label><input class="input" id="telefone" name="telefone" placeholder="(00) 00000-0000" required /></div>
-          </div>
-          <div class="form-row">
-            <div class="field"><label for="email">E-mail</label><input class="input" id="email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
-            <div class="field"><label for="empresa">Empresa</label><input class="input" id="empresa" name="empresa" placeholder="Nome da empresa" required /></div>
-          </div>
-          <div class="field">
-            <label for="norma">Qual norma você busca?</label>
-            <select class="select" id="norma" name="norma">
-              <option value="">Selecione (ou não sei ainda)</option>
-              {normas.map((n) => <option value={n.slug}>{n.nome} — {n.categoria}</option>)}
-              <option value="outra">Outra / não sei ainda</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
-          <p class="fm-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
-        </form>
-
-        <div class="form-success" id="lead-success" hidden>
-          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-          <div>
-            <h4>Recebemos seu contato!</h4>
-            <p>Um especialista vai falar com você em até 1 dia útil. Enquanto isso, conheça nossas normas.</p>
-          </div>
-        </div>
-      </div>
+      <LeadForm titulo="Fale com um especialista" sub="Preencha os dados abaixo. Retornamos em até 1 dia útil." />
     </div>
   </section>
 </Base>
