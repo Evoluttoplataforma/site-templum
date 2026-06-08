@@ -20,7 +20,7 @@ export default {
     titulo: "A ISO 27001 em detalhes",
     sub: "Segurança da informação para empresas que tratam dados críticos e querem confiança do mercado.",
     faq: [
-      { q: "Quanto tempo leva para conseguir a certificação?", a: "Depende do tamanho e da maturidade da empresa. No diagnóstico inicial apresentamos um cronograma realista — o método e a plataforma Orbit encurtam o caminho." },
+      { q: "Quanto tempo leva para conseguir a certificação?", a: "Depende do tamanho e da maturidade da empresa. No diagnóstico inicial apresentamos um cronograma realista — o método e a plataforma Templum OS encurtam o caminho." },
       { q: "Preciso ter equipe de TI interna?", a: "Não necessariamente. Conduzimos a implementação e elaboramos os documentos; o envolvimento da TI ajuda, mas não é pré-requisito." },
       { q: "A certificação é mesmo garantida por contrato?", a: "Sim. Se você concluir todas as etapas do método e ainda assim não certificar, devolvemos 200% do investimento." },
       { q: "E se eu não passar na auditoria?", a: "Acompanhamos a auditoria do início ao fim e tratamos eventuais não-conformidades até a certificação — coberto pela garantia." },
@@ -31,7 +31,7 @@ export default {
       { q: "Já tenho processos internos - isso ajuda ou atrapalha?", a: "Ajuda, e muito. Partimos do que você já tem, aproveitamos os controles que funcionam e ajustamos apenas o que falta para atender a norma. Nada de jogar fora o que já está rodando." },
       { q: "E se eu tiver urgência?", a: "Conseguimos priorizar etapas e intensificar o ritmo conforme a sua necessidade. No diagnóstico definimos um cronograma realista que respeite o seu prazo." },
       { q: "O investimento é por projeto ou por hora?", a: "Por projeto, sem limite de horas. Você sabe o valor do início ao fim e não paga a mais por dúvidas ou reuniões extras." },
-      { q: "A plataforma substitui reuniões presenciais?", a: "Sim. A consultoria é 100% online: pela plataforma Orbit você acompanha tarefas, documentos e checkpoints, com o consultor disponível em tempo real no horário comercial." },
+      { q: "A plataforma substitui reuniões presenciais?", a: "Sim. A consultoria é 100% online: pela plataforma Templum OS você acompanha tarefas, documentos e checkpoints, com o consultor disponível em tempo real no horário comercial." },
     ],
   },
   motivos: [

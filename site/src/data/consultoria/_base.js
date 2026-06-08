@@ -27,7 +27,7 @@ export const baseConsultoria = {
   cobertura: "Nossa consultoria é 100% online, atendendo empresas em mais de 800 cidades no Brasil, Portugal e África.",
   incluso: [
     "Consultor dedicado, sem limite de horas",
-    "Plataforma Orbit para organizar toda a gestão",
+    "Plataforma Templum OS para organizar toda a gestão",
     "Todos os documentos elaborados por nós",
     "Suporte diário com especialistas em horário comercial",
     "Selo “Estamos Implementando” para exibir ao mercado",
