@@ -97,29 +97,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
 
-        if (evt !== "denuncia") {
-          if (window.trk && typeof window.trk.lead === "function") {
-            try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
-          }
-          try {
-            fetch("/api/lead", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              keepalive: true,
-              body: JSON.stringify({
-                nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
-                empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
-                evento: evt, pagina: location.pathname,
-              }),
-            });
-          } catch (_) {}
+        // Denúncia: confirmação na própria página (sensível) — sem envio/tracking.
+        if (evt === "denuncia") {
+          form.hidden = true;
+          var scopeD = form.parentElement || document;
+          var okD = scopeD.querySelector(".form-success");
+          if (okD) okD.hidden = false;
+          return;
         }
 
-        // UI de sucesso: esconde o form e revela um .form-success irmão (se houver).
-        form.hidden = true;
-        var scope = form.parentElement || document;
-        var ok = scope.querySelector(".form-success");
-        if (ok) ok.hidden = false;
+        // Lead: dispara conversão (tracking-kit → pixels + CAPI) + grava no Mailchimp.
+        if (window.trk && typeof window.trk.lead === "function") {
+          try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
+        }
+        try {
+          fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            keepalive: true,
+            body: JSON.stringify({
+              nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
+              empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
+              evento: evt, pagina: location.pathname,
+            }),
+          });
+        } catch (_) {}
+
+        // Feedback imediato no botão e redireciona para a página de obrigado
+        // (a conversão conta no pageview da /obrigado). keepalive garante o envio.
+        var btn = form.querySelector('[type="submit"]');
+        if (btn) { btn.disabled = true; }
+        setTimeout(function () { window.location.href = "/obrigado"; }, 400);
       });
     </script>
   </body>
