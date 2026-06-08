@@ -1,0 +1,45 @@
+---
+// Formulário de lead reutilizável (ilha clara — funciona em seção navy ou clara).
+// - Passe `norma` (nome da norma) p/ páginas específicas → vai oculto no envio.
+// - Sem `norma` → mostra o seletor de norma (ex.: home).
+// O envio é tratado pelo handler global do Base.astro: dispara conversão
+// (pixels + CAPI), grava no Mailchimp (/api/lead com `norma` + `pagina`) e
+// redireciona para /obrigado.
+import { normas } from "../data/normas.js";
+const {
+  norma = "",
+  titulo = "Fale com um especialista",
+  sub = "Resposta em até 1 dia útil. Sem compromisso.",
+  cta = "Quero meu diagnóstico gratuito",
+} = Astro.props;
+---
+
+<div class="lead-card">
+  <div class="lead-title">{titulo}</div>
+  <p class="lead-sub">{sub}</p>
+  <form class="form" data-trk-event="lead" novalidate>
+    {norma && <input type="hidden" name="norma" value={norma} />}
+    <div class="form-row">
+      <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
+      <div class="field"><label>Telefone / WhatsApp</label><input class="input" name="telefone" placeholder="(00) 00000-0000" required /></div>
+    </div>
+    <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+    <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
+    {!norma && (
+      <div class="field">
+        <label>Qual norma você busca?</label>
+        <select class="select" name="norma">
+          <option value="">Selecione (ou não sei ainda)</option>
+          {normas.map((n) => <option value={n.nome}>{n.nome} — {n.categoria}</option>)}
+          <option value="Outra / não sei ainda">Outra / não sei ainda</option>
+        </select>
+      </div>
+    )}
+    <button type="submit" class="btn btn--primary btn--block btn--lg">{cta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+    <p class="lead-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
+  </form>
+</div>
+
+<style>
+  .lead-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 2px; }
+</style>

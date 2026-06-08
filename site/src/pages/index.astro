@@ -8,6 +8,7 @@ import Testimonials from "../components/Testimonials.astro";
 import Newsletter from "../components/Newsletter.astro";
 import ClientLogos from "../components/ClientLogos.astro";
 import Especialistas from "../components/Especialistas.astro";
+import LeadForm from "../components/LeadForm.astro";
 import { normas } from "../data/normas.js";
 
 const ecossistema = [
@@ -135,6 +136,24 @@ const faqs = [
   <!-- 10. NEWSLETTER (clara) -->
   <Newsletter />
 
+  <!-- 11. FORMULÁRIO DE LEAD (escura) -->
+  <section class="section section--navy hf" id="form">
+    <div class="hf-bg" aria-hidden="true"></div>
+    <div class="container lg hf-grid">
+      <div class="hf-pitch">
+        <span class="tag-pill tag-pill--glow">Comece agora</span>
+        <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação</h2>
+        <p>Conte o momento da sua empresa. Um especialista analisa o cenário e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+        <ul class="check-list hf-checks">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Diagnóstico e cronograma sob medida</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Garantia de 200% em contrato</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Atendimento 100% online</li>
+        </ul>
+      </div>
+      <LeadForm titulo="Fale com um especialista" sub="Escolha a norma e preencha — retornamos em até 1 dia útil." />
+    </div>
+  </section>
+
   <!-- FAQ (clara) -->
   <section class="section section--cream">
     <div class="container md">
@@ -158,7 +177,20 @@ const faqs = [
     <div class="container md">
       <h2>Pronto para organizar sua empresa e <em>crescer do jeito certo?</em></h2>
       <p>Fale com um consultor e receba um diagnóstico do caminho mais curto até a sua certificação.</p>
-      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
 </Base>
+
+<style>
+  .hf { position: relative; overflow: hidden; }
+  .hf-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 440px at 88% -10%, rgba(255,89,37,0.20), transparent 60%),
+                radial-gradient(560px 400px at 0% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .hf-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 900px) { .hf-grid { grid-template-columns: 1fr; } }
+  .hf-pitch h2 { font-size: clamp(26px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.025em; color: var(--cream); line-height: 1.1; margin: 14px 0 14px; }
+  .hf-pitch > p { font-size: 16.5px; line-height: 1.65; color: rgba(255,244,221,0.8); max-width: 480px; }
+  .hf-checks { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .hf-checks .check-item { color: var(--cream); }
+</style>
