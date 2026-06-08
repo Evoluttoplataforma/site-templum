@@ -77,7 +77,7 @@ async function handleLead(request, env) {
     mensagem: body.mensagem || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
-    // Atribuição / tracking
+    // Atribuição / tracking — last-touch
     utm_source: body.utm_source || "",
     utm_medium: body.utm_medium || "",
     utm_campaign: body.utm_campaign || "",
@@ -85,6 +85,14 @@ async function handleLead(request, env) {
     utm_content: body.utm_content || "",
     gclid: body.gclid || "",
     fbclid: body.fbclid || "",
+    // Atribuição / tracking — first-touch (originais)
+    utm_source_ft: body.utm_source_ft || "",
+    utm_medium_ft: body.utm_medium_ft || "",
+    utm_campaign_ft: body.utm_campaign_ft || "",
+    utm_term_ft: body.utm_term_ft || "",
+    utm_content_ft: body.utm_content_ft || "",
+    gclid_ft: body.gclid_ft || "",
+    fbclid_ft: body.fbclid_ft || "",
     fbp: body.fbp || "",
     fbc: body.fbc || "",
     referrer: body.referrer || "",

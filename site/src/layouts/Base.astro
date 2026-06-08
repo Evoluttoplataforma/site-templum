@@ -100,11 +100,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           var f = {}, l = {};
           try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
           try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
-          function g(k) { return l[k] || f[k] || ""; }
+          function g(k) { return l[k] || f[k] || ""; } // last-touch (com fallback p/ first)
+          function ft(k) { return f[k] || ""; }          // first-touch (original)
           return {
+            // Last-touch (efetivo)
             utm_source: g("utm_source"), utm_medium: g("utm_medium"), utm_campaign: g("utm_campaign"),
             utm_term: g("utm_term"), utm_content: g("utm_content"),
             gclid: g("gclid"), fbclid: g("fbclid"),
+            // First-touch (a primeira campanha que trouxe a pessoa)
+            utm_source_ft: ft("utm_source"), utm_medium_ft: ft("utm_medium"), utm_campaign_ft: ft("utm_campaign"),
+            utm_term_ft: ft("utm_term"), utm_content_ft: ft("utm_content"),
+            gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"),
             fbp: cookie("_fbp"), fbc: cookie("_fbc"),
             referrer: f.referrer || document.referrer || "", landing: f.landing || location.pathname,
           };
