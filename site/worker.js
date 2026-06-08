@@ -77,6 +77,10 @@ async function handleLead(request, env) {
     mensagem: body.mensagem || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
+    // IDs de sessão/visitante
+    client_id: body.client_id || "",
+    session_id: body.session_id || "",
+    session_attributes: body.session_attributes || {},
     // Atribuição / tracking — last-touch
     utm_source: body.utm_source || "",
     utm_medium: body.utm_medium || "",
@@ -85,6 +89,10 @@ async function handleLead(request, env) {
     utm_content: body.utm_content || "",
     gclid: body.gclid || "",
     fbclid: body.fbclid || "",
+    gbraid: body.gbraid || "",
+    wbraid: body.wbraid || "",
+    gad_source: body.gad_source || "",
+    gad_campaignid: body.gad_campaignid || "",
     // Atribuição / tracking — first-touch (originais)
     utm_source_ft: body.utm_source_ft || "",
     utm_medium_ft: body.utm_medium_ft || "",
@@ -93,6 +101,10 @@ async function handleLead(request, env) {
     utm_content_ft: body.utm_content_ft || "",
     gclid_ft: body.gclid_ft || "",
     fbclid_ft: body.fbclid_ft || "",
+    gbraid_ft: body.gbraid_ft || "",
+    wbraid_ft: body.wbraid_ft || "",
+    gad_source_ft: body.gad_source_ft || "",
+    gad_campaignid_ft: body.gad_campaignid_ft || "",
     fbp: body.fbp || "",
     fbc: body.fbc || "",
     referrer: body.referrer || "",

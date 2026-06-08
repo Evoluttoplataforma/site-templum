@@ -82,37 +82,56 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       })();
     </script>
 
-    <!-- Atribuição: captura UTMs/click-ids (first-touch + last-touch), referrer,
-         landing e cookies fbp/fbc. Exposta em window.__tplAttrib() p/ ir no lead. -->
+    <!-- Atribuição: UTMs + click-ids (Google/Meta) first/last-touch, fbp/fbc,
+         client_id (visitante), session_id e session_attributes. window.__tplAttrib(). -->
     <script is:inline>
       (function () {
-        var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"];
+        var KEYS = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid","gad_source","gad_campaignid"];
+        function uuid() { try { return crypto.randomUUID(); } catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); } }
+        function cookie(n) { var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)"); return m ? decodeURIComponent(m.pop()) : ""; }
         try {
-          var p = new URLSearchParams(location.search), cur = {};
+          var p = new URLSearchParams(location.search), cur = {}, now = Date.now();
           KEYS.forEach(function (k) { var v = p.get(k); if (v) cur[k] = v; });
           if (!localStorage.getItem("tpl_first")) {
-            localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "" }, cur)));
+            localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "", first_seen: now }, cur)));
           }
           if (Object.keys(cur).length) localStorage.setItem("tpl_last", JSON.stringify(cur));
+          if (!localStorage.getItem("tpl_cid")) localStorage.setItem("tpl_cid", uuid());
+          if (!sessionStorage.getItem("tpl_sid")) { sessionStorage.setItem("tpl_sid", uuid()); sessionStorage.setItem("tpl_sstart", String(now)); sessionStorage.setItem("tpl_spages", "0"); }
+          sessionStorage.setItem("tpl_spages", String((parseInt(sessionStorage.getItem("tpl_spages") || "0", 10)) + 1));
         } catch (_) {}
-        function cookie(n) { var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)"); return m ? decodeURIComponent(m.pop()) : ""; }
         window.__tplAttrib = function () {
           var f = {}, l = {};
           try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
           try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
           function g(k) { return l[k] || f[k] || ""; } // last-touch (com fallback p/ first)
           function ft(k) { return f[k] || ""; }          // first-touch (original)
+          var sa = {
+            device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop",
+            language: navigator.language || "",
+            screen: (screen.width || 0) + "x" + (screen.height || 0),
+            landing: f.landing || location.pathname,
+            referrer: f.referrer || document.referrer || "",
+            first_seen: f.first_seen || "",
+            session_start: sessionStorage.getItem("tpl_sstart") || "",
+            page_count: sessionStorage.getItem("tpl_spages") || "1",
+          };
           return {
-            // Last-touch (efetivo)
+            client_id: localStorage.getItem("tpl_cid") || "",
+            session_id: sessionStorage.getItem("tpl_sid") || "",
+            // last-touch
             utm_source: g("utm_source"), utm_medium: g("utm_medium"), utm_campaign: g("utm_campaign"),
             utm_term: g("utm_term"), utm_content: g("utm_content"),
-            gclid: g("gclid"), fbclid: g("fbclid"),
-            // First-touch (a primeira campanha que trouxe a pessoa)
+            gclid: g("gclid"), fbclid: g("fbclid"), gbraid: g("gbraid"), wbraid: g("wbraid"),
+            gad_source: g("gad_source"), gad_campaignid: g("gad_campaignid"),
+            // first-touch
             utm_source_ft: ft("utm_source"), utm_medium_ft: ft("utm_medium"), utm_campaign_ft: ft("utm_campaign"),
             utm_term_ft: ft("utm_term"), utm_content_ft: ft("utm_content"),
-            gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"),
+            gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"), gbraid_ft: ft("gbraid"), wbraid_ft: ft("wbraid"),
+            gad_source_ft: ft("gad_source"), gad_campaignid_ft: ft("gad_campaignid"),
             fbp: cookie("_fbp"), fbc: cookie("_fbc"),
             referrer: f.referrer || document.referrer || "", landing: f.landing || location.pathname,
+            session_attributes: sa,
           };
         };
       })();
