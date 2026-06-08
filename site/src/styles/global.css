@@ -83,7 +83,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .btn--onDark:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
 .btn--lg { padding: 16px 34px; font-size: 15px; }
 .btn--sm { padding: 10px 20px; font-size: 13px; }
-.btn--block { width: 100%; }
+.btn--block { width: 100%; white-space: normal; }
 .btn--disabled, .btn[disabled] { opacity: .5; pointer-events: none; }
 
 /* ---------- Badges ---------- */
@@ -149,9 +149,14 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 
 /* ---------- Gráfico de barras (setores/resultados) ---------- */
 .chart { display: flex; align-items: flex-end; gap: 18px; height: 280px; margin-top: 32px; }
-.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; height: 100%; justify-content: flex-end; }
+.bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; height: 100%; justify-content: flex-end; }
 .bar { width: 100%; max-width: 90px; background: linear-gradient(180deg, var(--orange), var(--orange-dark)); border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 10px; color: #fff; font-weight: 800; font-size: 14px; }
 .bar-label { font-size: 13px; color: var(--text-mid); text-align: center; font-weight: 500; }
+@media (max-width: 600px) {
+  .chart { gap: 8px; height: 220px; margin-top: 24px; }
+  .bar { font-size: 13px; padding-top: 8px; border-radius: 6px 6px 0 0; }
+  .bar-label { font-size: 11px; line-height: 1.25; }
+}
 
 /* ---------- Missão / BHAG ---------- */
 .mission { background: var(--navy); color: var(--cream); text-align: center; padding: 96px 0; position: relative; overflow: hidden; }
@@ -276,7 +281,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .choice input { width: 18px; height: 18px; accent-color: var(--orange); margin-top: 1px; flex-shrink: 0; }
 
 /* card de captura de lead */
-.lead-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(24px, 3vw, 36px); box-shadow: var(--shadow-card); }
+.lead-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(24px, 3vw, 36px); box-shadow: var(--shadow-card); min-width: 0; }
 .lead-card .lead-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
 .lead-card .lead-sub { font-size: 14px; color: var(--text-mid); margin-bottom: 22px; line-height: 1.5; }
 

@@ -50,6 +50,7 @@ const garantias = [
     background: radial-gradient(720px 440px at 88% -10%, rgba(255,89,37,0.20), transparent 60%),
                 radial-gradient(560px 400px at 0% 110%, rgba(20,167,175,0.10), transparent 60%); }
   .fm-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .fm-grid > * { min-width: 0; }
   @media (max-width: 900px) { .fm-grid { grid-template-columns: 1fr; } }
 
   .fm-pitch h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; color: var(--cream); margin: 22px 0 16px; }

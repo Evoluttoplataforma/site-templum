@@ -249,15 +249,31 @@ const agentes = [
     var t;
     window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { if (hub.classList.contains("orbit-visible")) layout(); }, 150); });
 
+    function activate(node) {
+      nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
+      node.classList.add("orbit-node--active");
+      nodes.forEach(function (n) { if (n !== node) n.classList.add("orbit-node--dimmed"); });
+    }
+    function clearAll() {
+      nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
+    }
+    var hasHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+
     nodes.forEach(function (node) {
-      node.addEventListener("mouseenter", function () {
-        nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
-        node.classList.add("orbit-node--active");
-        nodes.forEach(function (n) { if (n !== node) n.classList.add("orbit-node--dimmed"); });
+      // Desktop (mouse): hover mostra/esconde o card.
+      node.addEventListener("mouseenter", function () { if (hasHover) activate(node); });
+      node.addEventListener("mouseleave", function () { if (hasHover) clearAll(); });
+      // Touch/click: alterna o card (mouseenter não dispara em toque).
+      node.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (node.classList.contains("orbit-node--active")) clearAll();
+        else activate(node);
       });
-      node.addEventListener("mouseleave", function () {
-        nodes.forEach(function (n) { n.classList.remove("orbit-node--active", "orbit-node--dimmed"); });
-      });
+    });
+    // Tocar fora do hub fecha o card aberto (mobile).
+    document.addEventListener("click", function (e) {
+      if (!hub.contains(e.target)) clearAll();
     });
   })();
 </script>

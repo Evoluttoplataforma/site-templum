@@ -22,11 +22,12 @@ const navLinks = [
 ---
 
 <!-- TOP BANNER -->
-<div class="top-banner">
+<a href="/form" class="top-banner">
   <iconify-icon icon="solar:fire-bold"></iconify-icon>
-  <span><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
-  <a href="/form" class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-</div>
+  <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
+  <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
+  <span class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+</a>
 
 <header class="hd">
   <div class="hd-inner">
@@ -88,7 +89,8 @@ const navLinks = [
 </header>
 
 <style>
-  .top-banner { background: var(--surface-deep); color: var(--cream); display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 24px; font-size: 13px; font-weight: 600; text-align: center; flex-wrap: wrap; }
+  .top-banner { background: var(--surface-deep); color: var(--cream); display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 24px; font-size: 13px; font-weight: 600; text-align: center; flex-wrap: wrap; text-decoration: none; }
+  .top-banner .tb-short { display: none; }
   .top-banner iconify-icon { color: var(--orange); font-size: 15px; }
   .top-banner .tb-link { display: inline-flex; align-items: center; gap: 5px; color: var(--orange); font-weight: 700; }
   .top-banner .tb-link iconify-icon { color: var(--orange); transition: transform .3s var(--ease-soft); }
@@ -139,9 +141,10 @@ const navLinks = [
   }
   @media (max-width: 560px) {
     .hd-actions .btn { display: none; }
-    .top-banner { font-size: 12px; }
-    /* garante que banner não estoure em telas estreitas */
-    .top-banner { padding: 8px 16px; }
+    /* top-banner compacto: texto curto, 1 linha, sem o CTA */
+    .top-banner { font-size: 12px; padding: 7px 14px; gap: 7px; flex-wrap: nowrap; white-space: nowrap; }
+    .top-banner .tb-full, .top-banner .tb-link { display: none; }
+    .top-banner .tb-short { display: inline; }
     .hd-inner { padding: 0 16px; }
   }
 </style>
