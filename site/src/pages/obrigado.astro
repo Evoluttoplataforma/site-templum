@@ -1,45 +1,108 @@
 ---
 import Base from "../layouts/Base.astro";
 
-const atalhos = [
-  { label: "Conhecer as certificações", href: "/consultoria", icon: "solar:medal-ribbon-star-bold" },
-  { label: "Baixar materiais grátis", href: "/presentes", icon: "solar:gift-bold" },
-  { label: "Ver cases de sucesso", href: "/case-de-sucesso", icon: "solar:cup-star-bold" },
+// Copy real de "site atual/Templum Consultoria obrigado.html".
+const motivos = [
+  { t: "Processos bem definidos, resultados consistentes", d: "A certificação ISO é, antes de tudo, uma forma de estruturar seus processos com excelência: padronização, qualidade e melhoria contínua. Com processos mapeados e otimizados, sua operação ganha eficiência e confiança para crescer de forma sustentável." },
+  { t: "Cultura de excelência no dia a dia", d: "As normas ISO não mudam apenas documentos — transformam a mentalidade da empresa. Criam uma cultura de qualidade, segurança e responsabilidade, onde todos sabem o seu papel e trabalham em sinergia." },
+  { t: "Liderança que promove evolução contínua", d: "A ISO exige um papel ativo da liderança, no planejamento e no exemplo. Líderes que abraçam o sistema de gestão colhem times mais engajados, decisões mais embasadas e uma empresa que aprende com seus erros e acertos." },
+  { t: "O caminho para as melhores práticas de gestão", d: "Ao buscar a certificação, você adota um modelo de gestão reconhecido mundialmente, com ferramentas de análise, controle, melhoria e tomada de decisão. Mais do que um selo, a ISO é um guia prático para elevar o seu negócio." },
+];
+const depoimentos = [
+  { nome: "Sthefany Makita", texto: "Iniciamos o projeto de implantação da NBR ISO 27001 + LGPD em junho com a Templum, e já estamos encaminhando para a certificação." },
+  { nome: "Alexandre Martins", texto: "Estamos em processo de implementação das normas ISO 27001 + ISO 27701/LGPD. E a Templum, além de mostrar o caminho, está junto com a gente construindo essa estrada com destino à nossa tão esperada certificação." },
+  { nome: "Thiago Todorow", texto: "Experiência excelente com toda a equipe da Templum, desde a negociação comercial, entendendo todas as necessidades da incorporadora, até a entrega final, que é realmente garantida. Ótima escolha sem dúvidas — uma das boas parcerias no mercado." },
 ];
 ---
 
-<Base title="Obrigado! — Templum" description="Recebemos seu contato. Um especialista da Templum falará com você em breve.">
+<Base
+  title="Obrigado pelo seu interesse — Templum"
+  description="Recebemos seu contato. Nosso time já vai falar com você. Enquanto isso, fale agora com um especialista."
+>
+  <!-- HERO -->
   <section class="section section--navy ob">
     <div class="ob-bg" aria-hidden="true"></div>
     <div class="container md ob-inner">
       <span class="ob-check"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
-      <span class="tag-pill tag-pill--glow">Recebido com sucesso</span>
-      <h1>Obrigado! Recebemos o seu <em class="accent">contato</em></h1>
-      <p>Um especialista da Templum vai falar com você em até <strong>1 dia útil</strong>. Enquanto isso, aproveite para conhecer mais:</p>
-      <div class="ob-links">
-        {atalhos.map((a) => (
-          <a href={a.href} class="ob-link"><iconify-icon icon={a.icon}></iconify-icon>{a.label} <iconify-icon icon="solar:arrow-right-linear" class="ob-arrow"></iconify-icon></a>
+      <h1>Muito obrigado pelo seu <em class="accent">interesse!</em></h1>
+      <p>Nosso time já vai entrar em contato com você. Enquanto isso, se quiser um atendimento mais agilizado, clique no botão abaixo e fale agora mesmo com um especialista.</p>
+      <a href="https://wa.me/5519993521270" target="_blank" rel="noopener" class="btn btn--primary btn--lg ob-wpp">Falar com um especialista <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon></a>
+    </div>
+  </section>
+
+  <!-- POR QUE ESSA SESSÃO É FUNDAMENTAL -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">O valor da certificação</span>
+        <h2>Por que essa conversa é <em class="accent">fundamental para você</em></h2>
+      </div>
+      <div class="ob-grid">
+        {motivos.map((m, i) => (
+          <div class="ob-card">
+            <span class="ob-num">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{m.t}</h3>
+            <p>{m.d}</p>
+          </div>
         ))}
       </div>
-      <a href="https://wa.me/5519993521270" target="_blank" rel="noopener" class="btn btn--primary btn--lg ob-wpp">Falar agora no WhatsApp <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon></a>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Quem já está com a gente</span>
+        <h2>Empresas que <em class="accent">confiam na Templum</em></h2>
+      </div>
+      <div class="ob-depo">
+        {depoimentos.map((d) => (
+          <article class="ob-depo-card">
+            <div class="ob-stars">
+              <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+            </div>
+            <p class="ob-quote">{d.texto}</p>
+            <div class="ob-author"><span class="ob-ini">{d.nome.charAt(0)}</span><strong>{d.nome}</strong></div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Junte-se a <em>mais de 2.000 empresas</em></h2>
+      <p>Que já descobriram o poder da nossa metodologia e transformaram a empresa em uma potência de alta performance.</p>
+      <a href="/consultoria" class="btn btn--dark btn--lg">Conhecer as certificações <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
 </Base>
 
 <style>
-  .ob { min-height: 72vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .ob { position: relative; overflow: hidden; padding-top: clamp(64px, 11vh, 110px); padding-bottom: clamp(56px, 9vh, 90px); }
   .ob-bg { position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(700px 440px at 50% 0%, rgba(255,89,37,0.20), transparent 60%); }
   .ob-inner { position: relative; z-index: 1; text-align: center; }
   .ob-check { font-size: 64px; color: var(--success, #16a34a); display: block; margin-bottom: 18px; }
-  .ob-inner .tag-pill { margin: 0 auto 18px; }
-  .ob-inner h1 { font-size: clamp(30px, 4.4vw, 50px); font-weight: 800; letter-spacing: -0.03em; color: var(--cream); line-height: 1.08; }
-  .ob-inner > p { font-size: 17px; color: rgba(255,244,221,0.82); line-height: 1.6; margin: 16px auto 30px; max-width: 520px; }
-  .ob-inner > p strong { color: var(--cream); }
-  .ob-links { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto 28px; }
-  .ob-link { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: var(--r-16); background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); color: var(--cream); font-weight: 600; font-size: 15px; transition: background .25s, border-color .25s; }
-  .ob-link:hover { background: rgba(255,89,37,0.14); border-color: rgba(255,89,37,0.4); }
-  .ob-link > iconify-icon:first-child { color: var(--orange); font-size: 20px; }
-  .ob-arrow { margin-left: auto; color: rgba(255,244,221,0.5); }
+  .ob-inner h1 { font-size: clamp(32px, 4.6vw, 52px); font-weight: 800; letter-spacing: -0.03em; color: var(--cream); line-height: 1.08; }
+  .ob-inner > p { font-size: 17px; color: rgba(255,244,221,0.82); line-height: 1.6; margin: 16px auto 30px; max-width: 560px; }
   .ob-wpp iconify-icon { font-size: 20px; }
+
+  .ob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 760px) { .ob-grid { grid-template-columns: 1fr; } }
+  .ob-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
+  .ob-num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.12); margin-bottom: 16px; }
+  .ob-card h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .ob-card p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+
+  .ob-depo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 880px) { .ob-depo { grid-template-columns: 1fr; } }
+  .ob-depo-card { display: flex; flex-direction: column; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px 28px; box-shadow: var(--shadow-card); }
+  .ob-stars { display: flex; gap: 3px; color: #FFB400; font-size: 18px; }
+  .ob-quote { font-size: 15px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+  .ob-author { display: flex; align-items: center; gap: 12px; }
+  .ob-ini { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; font-size: 18px; font-weight: 800; color: #fff; background: var(--orange); }
+  .ob-author strong { font-size: 15px; font-weight: 800; color: var(--text); }
 </style>
