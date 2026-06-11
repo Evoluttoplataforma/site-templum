@@ -17,6 +17,11 @@
 //   META_PIXEL_ID_2        (opcional) 2ª conta Meta — ex.: 953370546204625
 //   META_CAPI_TOKEN_2      (opcional, SECRETO) token CAPI da 2ª conta
 //   META_TEST_EVENT_CODE_2 (opcional) ex.: TEST5239 — 2ª conta
+//   CRM_ORIGIN             domínio enviado no header Origin p/ o CRM Orbit —
+//                          PRECISA estar na allowlist do webform (ex.: https://templum.com.br)
+//   CRM_FORM_ID            (opcional) id do webform — default já no código
+//   CRM_WEBFORM_URL        (opcional) URL da edge function — default já no código
+//   CRM_API_KEY            (opcional, SECRETO) api key do CRM (auth server-side)
 //
 // O GA4 e o Google Ads são tratados no navegador (gtag via tracking-kit); fazer
 // GA4 server-side aqui duplicaria os eventos, por isso não é feito.
@@ -160,6 +165,45 @@ async function handleLead(request, env) {
         }).catch(() => ({ mailchimp: false }))
       );
     }
+  }
+
+  // 3) CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
+  //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
+  //    server-side, mandamos o Origin de CRM_ORIGIN — esse domínio PRECISA estar
+  //    na allowlist do webform no CRM, senão volta 403 "Domain not allowed".
+  //    CRM_API_KEY (secret, opcional) é enviado junto p/ o caso de auth por chave.
+  const crmUrl = env.CRM_WEBFORM_URL || "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-webform-submit";
+  const crmFormId = env.CRM_FORM_ID || "933f0ed2-a158-41d0-bcdf-6377e342f826";
+  const crmOrigin = env.CRM_ORIGIN || "https://templum.com.br";
+  if (crmUrl && (crmFormId || env.CRM_API_KEY)) {
+    configured = true;
+    const cf = {};
+    const put = (k, v) => { if (v) cf[k] = v; };
+    put("cf_utm_source", lead.utm_source); put("cf_utm_medium", lead.utm_medium);
+    put("cf_utm_campaign", lead.utm_campaign); put("cf_utm_term", lead.utm_term);
+    put("cf_utm_content", lead.utm_content);
+    put("cf_first_touch_utm_source", lead.utm_source_ft); put("cf_first_touch_utm_medium", lead.utm_medium_ft);
+    put("cf_first_touch_utm_campaign", lead.utm_campaign_ft); put("cf_first_touch_utm_term", lead.utm_term_ft);
+    put("cf_first_touch_utm_content", lead.utm_content_ft);
+    put("cf_fbclid", lead.fbclid); put("cf_facebook_browser_id_fbp", lead.fbp); put("cf_facebook_click_id_fbc", lead.fbc);
+    put("cf_gclid", lead.gclid); put("cf_gad_source", lead.gad_source); put("cf_gad_campaignid", lead.gad_campaignid);
+    put("cf_gbraid", lead.gbraid); put("cf_msclkid", lead.msclkid); put("cf_ttclid", lead.ttclid);
+    put("cf_id_da_sess_o", lead.session_id); put("cf_landing_page", lead.landing);
+    put("cf_faixa_de_funcion_rios", lead.funcionarios); put("cf_cargo", lead.cargo);
+    const crmBody = { name: lead.nome, email, phone: lead.telefone, company: lead.empresa, custom_fields: cf };
+    if (crmFormId) crmBody.form_id = crmFormId;
+    if (env.CRM_API_KEY) crmBody.api_key = env.CRM_API_KEY;
+    tasks.push(
+      fetch(crmUrl, {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: crmOrigin, referer: crmOrigin + "/" },
+        body: JSON.stringify(crmBody),
+      }).then(async (r) => {
+        if (r.ok) return { crm: true };
+        const e = await r.text().catch(() => "");
+        return { crm: false, status: r.status, error: e.slice(0, 140) };
+      }).catch(() => ({ crm: false }))
+    );
   }
 
   const results = await Promise.all(tasks);
