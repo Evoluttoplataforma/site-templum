@@ -6,7 +6,7 @@ export default {
   hero: {
     titulo: ["Certificado no ", "PBQP-H", " ou receba 2x o investimento de volta"],
     sub: "Certifique a qualidade da sua obra no PBQP-H, com método próprio e garantia em contrato.",
-    preco: "A partir de R$ 1.500/mês, com acompanhamento completo do início ao fim.",
+    preco: "A partir de R$ 2.200/mês, com acompanhamento completo do início ao fim.",
   },
   paraQuem: [
     { icon: "solar:buildings-2-bold", t: "Construtoras" },
