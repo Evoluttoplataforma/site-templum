@@ -32,6 +32,12 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
+    if (url.hostname.startsWith("www.")) {
+      url.hostname = url.hostname.slice(4);
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleLead(request, env);
