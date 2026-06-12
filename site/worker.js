@@ -38,6 +38,29 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // DIAGNÓSTICO TEMPORÁRIO (remover depois): inspeciona os tokens CAPI via
+    // debug_token do Meta — mostra a quais pixels/assets o token tem acesso,
+    // validade e app. NÃO retorna o token em si. Protegido por chave.
+    if (url.pathname === "/api/_diag") {
+      if (url.searchParams.get("k") !== "tpl-diag-9x7k2026") return json({ ok: false }, 404);
+      const out = { pixels: { p1: env.META_PIXEL_ID, p2: env.META_PIXEL_ID_2 } };
+      for (const [name, tok] of [["token1", env.META_CAPI_TOKEN], ["token2", env.META_CAPI_TOKEN_2]]) {
+        if (!tok) { out[name] = "(vazio)"; continue; }
+        try {
+          const r = await fetch(`https://graph.facebook.com/debug_token?input_token=${encodeURIComponent(tok)}&access_token=${encodeURIComponent(tok)}`);
+          const j = await r.json();
+          const d = j.data || {};
+          out[name] = {
+            len: tok.length, head: tok.slice(0, 6), tail: tok.slice(-4),
+            is_valid: d.is_valid, type: d.type, app_id: d.app_id, application: d.application,
+            user_id: d.user_id, expires_at: d.expires_at, scopes: d.scopes,
+            granular_scopes: d.granular_scopes, error: j.error || d.error || null,
+          };
+        } catch (e) { out[name] = { error: "fetch_failed" }; }
+      }
+      return json({ ok: true, diag: out });
+    }
+
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleLead(request, env);
