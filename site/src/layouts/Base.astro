@@ -249,5 +249,21 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         setTimeout(function () { window.location.href = "/obrigado"; }, 400);
       });
     </script>
+
+    <script is:inline>
+      document.addEventListener("input", function (e) {
+        var el = e.target;
+        if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
+        var d = el.value.replace(/\D/g, "").substring(0, 11);
+        var len = d.length;
+        var mask = "";
+        if (len === 0) { el.value = ""; return; }
+        if (len <= 2) { mask = "(" + d; }
+        else if (len <= 6) { mask = "(" + d.slice(0,2) + ") " + d.slice(2); }
+        else if (len <= 10) { mask = "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6); }
+        else { mask = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7); }
+        el.value = mask;
+      });
+    </script>
   </body>
 </html>

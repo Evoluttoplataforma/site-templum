@@ -24,7 +24,7 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
     {norma && <input type="hidden" name="norma" value={norma} />}
     <div class="form-row">
       <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
-      <div class="field"><label>Telefone / WhatsApp</label><input class="input" name="telefone" placeholder="(00) 00000-0000" required /></div>
+      <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
     </div>
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
     <div class="form-row">

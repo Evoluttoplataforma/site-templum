@@ -39,7 +39,7 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
           <div class="field"><label for="i-nome">Nome</label><input class="input" id="i-nome" name="nome" placeholder="Seu nome" required /></div>
           <div class="field"><label for="i-email">E-mail</label><input class="input" id="i-email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
           <div class="form-row">
-            <div class="field"><label for="i-tel">WhatsApp</label><input class="input" id="i-tel" name="telefone" placeholder="(00) 00000-0000" /></div>
+            <div class="field"><label for="i-tel">WhatsApp</label><input class="input" type="tel" inputmode="numeric" id="i-tel" name="telefone" placeholder="(00) 00000-0000" /></div>
             <div class="field"><label for="i-emp">Empresa</label><input class="input" id="i-emp" name="empresa" placeholder="Sua empresa" /></div>
           </div>
           <button type="submit" class="btn btn--primary btn--block btn--lg">{ctaBtn} <iconify-icon icon="solar:download-minimalistic-bold"></iconify-icon></button>
