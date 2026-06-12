@@ -224,10 +224,14 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           return;
         }
 
-        // Lead: dispara conversão (tracking-kit → pixels + CAPI) + grava no Mailchimp.
-        if (window.trk && typeof window.trk.lead === "function") {
-          try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
-        }
+        // Conversão (evento Lead): guardamos os dados e disparamos na /obrigado.
+        // Fazer aqui correria com o redirect (400ms) e o Pixel Helper só veria o
+        // PageView da /obrigado. Disparar na thank-you page é confiável e visível.
+        try {
+          sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+            email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
+          }));
+        } catch (_) {}
         try {
           fetch("/api/lead", {
             method: "POST",

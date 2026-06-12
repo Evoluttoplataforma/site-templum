@@ -78,6 +78,33 @@ const depoimentos = [
       <a href="/consultoria" class="btn btn--dark btn--lg">Conhecer as certificações <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
+
+  <!-- Conversão: dispara o evento Lead aqui (thank-you page), confiável e visível
+       no Pixel Helper. Os dados vêm do form (sessionStorage), e o disparo acontece
+       só uma vez por envio (a flag é apagada). -->
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return; // visita direta à /obrigado não conta conversão
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var SECOND_PIXEL = "953370546204625";
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        // pixel primário + Google Ads + CAPI (via tracking-kit)
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+        // Lead também na 2ª conta Meta (o kit dispara só no pixel primário)
+        try { if (window.fbq) window.fbq("trackSingle", SECOND_PIXEL, "Lead"); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.fbq && window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
 </Base>
 
 <style>
