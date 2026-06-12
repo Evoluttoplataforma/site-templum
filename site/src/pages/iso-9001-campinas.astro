@@ -1,0 +1,231 @@
+---
+import Base from "../layouts/Base.astro";
+
+const beneficios = [
+  { icon: "solar:handshake-bold", t: "Feche contratos com montadoras e grandes indústrias", d: "Empresas que exigem ISO 9001 dos fornecedores passam a te considerar. Abre portas que antes estavam fechadas." },
+  { icon: "solar:medal-star-bold", t: "Ganhe licitações públicas e privadas", d: "O certificado ISO 9001 é critério eliminatório em muitas licitações. Com ele, você concorre — e vence." },
+  { icon: "solar:settings-bold", t: "Reduza retrabalho e desperdício no chão de fábrica", d: "Processos padronizados eliminam erros repetitivos e aumentam a margem de lucro de cada peça produzida." },
+  { icon: "solar:dollar-minimalistic-bold", t: "Justifique preços maiores com qualidade comprovada", d: "Clientes pagam mais por fornecedores certificados. O certificado vira argumento comercial no orçamento." },
+];
+
+const passos = [
+  { n: "1", t: "Diagnóstico gratuito", d: "Um especialista analisa sua empresa e mostra o que falta para certificar — sem custo e sem compromisso." },
+  { n: "2", t: "Consultoria dedicada", d: "Consultor exclusivo cuida de toda a documentação e implementação. Você foca na produção, nós no SGQ." },
+  { n: "3", t: "Auditoria e certificado", d: "Preparamos sua equipe para a auditoria externa. Você conquista o certificado dentro do prazo combinado." },
+];
+
+const stats = [
+  { num: "+2.000", label: "empresas certificadas" },
+  { num: "+30 anos", label: "de experiência em ISO" },
+  { num: "4,9★", label: "de avaliação no Google" },
+  { num: "200%", label: "de garantia em contrato" },
+];
+---
+
+<Base
+  title="ISO 9001 para Usinagens e Caldeirarias em Campinas | Templum"
+  description="Sua usinagem ou caldeiraria em Campinas pode fechar contratos maiores com a ISO 9001:2015. Diagnóstico gratuito, consultor dedicado e garantia de 200%. Fale com um especialista."
+  noHeaderFooter={true}
+>
+
+  <!-- LOGO BAR -->
+  <header class="lp-bar">
+    <div class="container">
+      <a href="/" aria-label="Templum">
+        <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-logo" />
+      </a>
+      <a href="https://wa.me/5519993521270" class="btn btn--primary btn--sm lp-bar-cta" target="_blank" rel="noopener">
+        <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon> Falar no WhatsApp
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="lp-hero section--navy">
+    <div class="lp-hero-bg" aria-hidden="true"></div>
+    <div class="container lg lp-hero-grid">
+
+      <!-- PITCH -->
+      <div class="lp-pitch">
+        <span class="tag-pill tag-pill--glow">ISO 9001:2015 · Campinas e região</span>
+        <h1>Usinagens e Caldeirarias estão <em class="accent">fechando contratos maiores</em> com a ISO 9001</h1>
+        <p>Fornecedores certificados entram em listas de montadoras, ganham licitações e cobram mais pela qualidade comprovada. Seu concorrente já está fazendo isso.</p>
+
+        <ul class="lp-checks">
+          <li><span class="lp-check-ico"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>Consultor dedicado do diagnóstico à auditoria</li>
+          <li><span class="lp-check-ico"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>Documentação elaborada por nós — você não para a produção</li>
+          <li><span class="lp-check-ico"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>Garantia de 200%: certifica ou devolvemos o dobro</li>
+          <li><span class="lp-check-ico"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>Diagnóstico gratuito, sem compromisso</li>
+        </ul>
+      </div>
+
+      <!-- FORM -->
+      <div class="lead-card lp-form-card">
+        <div class="lead-title">Fale com um especialista</div>
+        <p class="lead-sub">Um consultor analisa sua empresa e manda a proposta em até 1 dia útil.</p>
+        <form class="form" data-trk-event="lead" novalidate>
+          <input type="hidden" name="norma" value="ISO 9001" />
+          <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
+          <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(19) 90000-0000" required /></div>
+          <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da usinagem / caldeiraria" required /></div>
+          <div class="field">
+            <label>Nº de funcionários</label>
+            <select class="select" name="funcionarios">
+              <option value="">Selecione</option>
+              <option>1 a 10</option>
+              <option>11 a 50</option>
+              <option>51 a 100</option>
+              <option>101 a 250</option>
+              <option>Mais de 250</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">Quero meu diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+          <p class="lead-legal">Seus dados estão protegidos conforme a LGPD. Sem spam.</p>
+        </form>
+        <div class="form-success" hidden>
+          <iconify-icon icon="solar:check-circle-bold" style="font-size:48px;color:var(--orange)"></iconify-icon>
+          <p><strong>Recebemos seu contato!</strong><br/>Um especialista retorna em até 1 dia útil.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="lp-stats-bar section--cream">
+    <div class="container lg">
+      <div class="lp-stats-grid">
+        {stats.map(s => (
+          <div class="lp-stat">
+            <strong>{s.num}</strong>
+            <span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUE ISO 9001 PARA SEU SETOR -->
+  <section class="section section--navy reveal">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Por que ISO 9001 para usinagens e caldeirarias?</span>
+        <h2>O certificado que abre <em class="accent">portas comerciais</em> no seu setor</h2>
+        <p>Empresas industriais com ISO 9001 não competem por preço — competem por qualidade e confiança.</p>
+      </div>
+      <div class="eco-grid">
+        {beneficios.map(b => (
+          <div class="eco-card">
+            <div class="eco-icon"><iconify-icon icon={b.icon}></iconify-icon></div>
+            <h3>{b.t}</h3>
+            <p>{b.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="section section--cream reveal">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Como funciona</span>
+        <h2>Do diagnóstico ao <em class="accent">certificado</em> em 3 etapas</h2>
+        <p>Método próprio, com mais de 30 anos de resultado comprovado em empresas industriais.</p>
+      </div>
+      <div class="step-grid" style="grid-template-columns: repeat(3,1fr)">
+        {passos.map(p => (
+          <div class="step-card">
+            <div class="step-num">{p.n}</div>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- GARANTIA -->
+  <section class="section section--navy reveal">
+    <div class="container lg lp-garantia-grid">
+      <div>
+        <span class="tag-pill tag-pill--glow">Risco zero para você</span>
+        <h2 style="color:var(--cream);font-size:clamp(28px,3.6vw,44px);font-weight:800;letter-spacing:-0.025em;margin:20px 0 16px;line-height:1.1">
+          Garantia de <em class="accent">200%</em> em contrato
+        </h2>
+        <p style="color:rgba(255,244,221,0.8);font-size:16.5px;line-height:1.65;max-width:500px">
+          Se a sua empresa cumprir todas as etapas da nossa consultoria e ainda assim não obtiver a certificação, devolvemos o dobro do valor investido. Sem letras miúdas.
+        </p>
+        <a href="#contato" class="btn btn--primary btn--lg" style="margin-top:28px">Quero a garantia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+      <div class="lp-garantia-card">
+        <iconify-icon icon="solar:shield-check-bold" style="font-size:56px;color:var(--orange)"></iconify-icon>
+        <div class="lp-garantia-num">200%</div>
+        <p>de garantia sobre o investimento<br/>prevista em contrato</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band" id="contato">
+    <div class="container">
+      <h2>Pronto para <em>fechar contratos maiores?</em></h2>
+      <p>Diagnóstico gratuito, sem compromisso. Um especialista retorna em até 1 dia útil.</p>
+      <a href="#" class="btn btn--dark btn--lg" onclick="document.querySelector('.lp-form-card .input').focus();window.scrollTo({top:0,behavior:'smooth'});return false;">
+        Solicitar diagnóstico gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
+    </div>
+  </section>
+
+  <!-- WHATSAPP FLOAT -->
+  <a class="whatsapp-float" href="https://wa.me/5519993521270" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon>
+  </a>
+
+</Base>
+
+<style>
+  /* LOGO BAR */
+  .lp-bar { background: var(--navy); border-bottom: 1px solid rgba(255,244,221,0.1); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
+  .lp-bar .container { display: flex; align-items: center; justify-content: space-between; }
+  .lp-logo { height: 36px; }
+  .lp-bar-cta { gap: 6px; }
+
+  /* HERO */
+  .lp-hero { position: relative; overflow: hidden; padding-top: clamp(56px, 9vh, 96px); padding-bottom: clamp(56px, 9vh, 96px); }
+  .lp-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(700px 420px at 85% -10%, rgba(255,89,37,0.22), transparent 60%),
+                radial-gradient(500px 380px at 0% 110%, rgba(20,167,175,0.10), transparent 60%); }
+  .lp-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 900px) { .lp-hero-grid { grid-template-columns: 1fr; } }
+
+  .lp-pitch h1 { font-size: clamp(28px, 3.8vw, 46px); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; color: var(--cream); margin: 20px 0 16px; }
+  .lp-pitch > p { font-size: 16.5px; line-height: 1.65; color: rgba(255,244,221,0.8); max-width: 480px; }
+
+  .lp-checks { list-style: none; margin: 24px 0 0; display: flex; flex-direction: column; gap: 14px; }
+  .lp-checks li { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; color: var(--cream); }
+  .lp-check-ico { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+
+  .lp-form-card { width: 100%; min-width: 0; box-sizing: border-box; }
+
+  /* STATS BAR */
+  .lp-stats-bar { padding: 48px 0; }
+  .lp-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  @media (max-width: 700px) { .lp-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .lp-stat { text-align: center; }
+  .lp-stat strong { display: block; font-size: clamp(26px, 3vw, 36px); font-weight: 900; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
+  .lp-stat span { font-size: 13px; color: var(--text-mid); margin-top: 6px; display: block; }
+
+  /* GARANTIA */
+  .lp-garantia-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+  @media (max-width: 760px) { .lp-garantia-grid { grid-template-columns: 1fr; } }
+  .lp-garantia-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,89,37,0.35); border-radius: 20px; padding: 40px 44px; text-align: center; min-width: 220px; }
+  .lp-garantia-card iconify-icon { display: block; margin-bottom: 12px; }
+  .lp-garantia-num { font-size: 56px; font-weight: 900; color: var(--cream); letter-spacing: -0.04em; line-height: 1; }
+  .lp-garantia-card p { color: rgba(255,244,221,0.65); font-size: 13.5px; line-height: 1.5; margin-top: 8px; }
+
+  /* form success state */
+  .form-success { text-align: center; padding: 32px 16px; }
+  .form-success p { margin-top: 16px; font-size: 16px; line-height: 1.6; color: var(--text); }
+  .form[hidden], .form-success[hidden] { display: none; }
+</style>
