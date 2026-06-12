@@ -16,11 +16,34 @@ const beneficios = [
   { icon: "solar:copy-bold", t: "Segurança na replicação", d: "Para empresas com múltiplas unidades, asseguramos que todas operem com os mesmos padrões de excelência." },
   { icon: "solar:ranking-bold", t: "Padronização de alta performance", d: "Desenvolvemos modelos de auditoria personalizados que garantem uniformidade e promovem um crescimento sustentável." },
 ];
+
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const pageSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Auditoria interna",
+    serviceType: "Auditoria interna de sistemas de gestão ISO",
+    description: "Auditoria interna inteligente: análise de riscos com base nas normas ISO e relatório personalizado com recomendações práticas, preparando a empresa para a certificação.",
+    provider: { "@id": `${SITE}/#organization` },
+    areaServed: { "@type": "Country", name: "Brasil" },
+    url: `${SITE}/auditoria`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "Auditoria interna", item: `${SITE}/auditoria` },
+    ],
+  },
+];
 ---
 
 <Base
   title="Auditoria Interna Inteligente — Identifique riscos em minutos | Templum"
   description="Auditorias internas inteligentes da Templum: análise de riscos com base nas normas ISO, relatório personalizado e especialistas proativos. Proteja, fortaleça e certifique sua empresa."
+  schemas={pageSchemas}
 >
   <PageHero
     tag="Auditorias internas inteligentes"

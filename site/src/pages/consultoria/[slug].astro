@@ -24,9 +24,46 @@ const c = norma.color || "var(--orange)";
 const foto = `/assets/img/consultoria/${slug}.webp`;
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+
+// --- JSON-LD: Service + BreadcrumbList + FAQPage (AIEO/GEO) ---
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const faqItems = (d.detalhes && d.detalhes.faq) || [];
+const pageSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Consultoria ${norma.nome}`,
+    serviceType: `Consultoria para certificação ${norma.nome}`,
+    description: d.hero.sub,
+    category: norma.categoria,
+    provider: { "@id": `${SITE}/#organization` },
+    areaServed: { "@type": "Country", name: "Brasil" },
+    url: `${SITE}/consultoria/${slug}`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "Certificações", item: `${SITE}/consultoria` },
+      { "@type": "ListItem", position: 3, name: norma.nome, item: `${SITE}/consultoria/${slug}` },
+    ],
+  },
+];
+if (faqItems.length) {
+  pageSchemas.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  });
+}
 ---
 
-<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={d.hero.sub}>
+<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={d.hero.sub} schemas={pageSchemas}>
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
     <section class="cs-hero">

@@ -38,9 +38,42 @@ const faqs = [
   { q: "Preciso parar a operação para implementar?", a: "Não. A metodologia roda em paralelo à operação, organizando o que já existe e preenchendo as lacunas de forma gradual." },
   { q: "A Templum atende empresas de qualquer porte?", a: "Sim. São milhares de contratos com empresas de diferentes setores e tamanhos, da pequena indústria a grandes construtoras e empresas de tecnologia." },
 ];
+
+// --- JSON-LD da home: FAQPage + Service (catálogo das normas) ---
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Consultoria de certificação ISO",
+  serviceType: "Consultoria para certificação de normas ISO",
+  provider: { "@id": `${SITE}/#organization` },
+  areaServed: { "@type": "Country", name: "Brasil" },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Certificações e normas",
+    itemListElement: normas.map((n) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: `Consultoria ${n.nome}`,
+        category: n.categoria,
+        url: `${SITE}${n.href}`,
+      },
+    })),
+  },
+};
 ---
 
-<Base>
+<Base schemas={[faqSchema, serviceSchema]}>
   <!-- 1. HERO (escura) -->
   <HeroSlider />
 

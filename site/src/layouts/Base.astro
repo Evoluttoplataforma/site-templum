@@ -9,11 +9,55 @@ const {
   description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
   ogImage = "/assets/og/templum-og.jpg",
   noHeaderFooter = false,
+  schemas = [],
 } = Astro.props;
 
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // og:image precisa ser URL ABSOLUTA (WhatsApp/Facebook ignoram caminho relativo).
 const ogImageUrl = new URL(ogImage, Astro.site).href;
+
+// --- JSON-LD (Schema.org) — entidade + site, em todas as páginas (AIEO/GEO) ---
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE}/#organization`,
+  name: "Templum Consultoria",
+  alternateName: "Templum",
+  url: `${SITE}/`,
+  logo: { "@type": "ImageObject", url: `${SITE}/assets/logo/templum.png` },
+  image: `${SITE}/assets/og/templum-og.jpg`,
+  description:
+    "Consultoria de certificações ISO com método próprio e garantia de 200%: há mais de 30 anos organiza a gestão de empresas do diagnóstico à auditoria, com atendimento 100% online em todo o Brasil.",
+  slogan: "Certificação ISO com garantia de 200%",
+  areaServed: { "@type": "Country", name: "Brasil" },
+  knowsAbout: [
+    "ISO 9001", "ISO 14001", "ISO 27001", "ISO 45001", "ISO 37001", "PBQP-H",
+    "FSSC 22000", "HACCP", "ESG", "SGI", "SASSMAQ", "LGPD",
+    "Certificação ISO", "Auditoria interna", "Sistema de gestão",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+55-19-99352-1270",
+    contactType: "customer service",
+    areaServed: "BR",
+    availableLanguage: ["Portuguese"],
+  },
+  sameAs: [
+    "https://www.instagram.com/templumconsultoriailimitada/",
+    "https://www.linkedin.com/company/3033783/",
+  ],
+};
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE}/#website`,
+  url: `${SITE}/`,
+  name: "Templum Consultoria",
+  inLanguage: "pt-BR",
+  publisher: { "@id": `${SITE}/#organization` },
+};
+const allSchemas = [orgSchema, websiteSchema, ...schemas];
 ---
 
 <!doctype html>
@@ -44,6 +88,11 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Schema.org JSON-LD (Organization + WebSite + schemas da página) -->
+    {allSchemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
 
     <!-- Montserrat (Medium / SemiBold / Bold / Extrabold) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

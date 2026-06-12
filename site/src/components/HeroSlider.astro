@@ -56,9 +56,15 @@ const trust = [
       {slides.map((s, i) => (
         <div class={`hero-slide ${i === 0 ? "active" : ""}`} data-slide={i}>
           <span class="tag-pill tag-pill--glow">{s.tag}</span>
-          <h1 class="hero-title">
-            {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
-          </h1>
+          {i === 0 ? (
+            <h1 class="hero-title">
+              {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
+            </h1>
+          ) : (
+            <h2 class="hero-title">
+              {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
+            </h2>
+          )}
           {s.checklist && (
             <ul class="check-list hero-checklist">
               {s.checklist.map((c) => (
