@@ -75,9 +75,8 @@ window.TRACKING_KIT_VERSION = '1.0.0';
       try {
         window.fbq('init', SECOND_PIXEL);
         window.fbq('trackSingle', SECOND_PIXEL, 'PageView');
-        console.log('[TK2] 2o pixel Meta inicializado:', SECOND_PIXEL);
-      } catch (e) { console.log('[TK2] erro ao iniciar 2o pixel:', e && e.message); }
-    } else if (n > 150) { clearInterval(t); console.log('[TK2] fbq nao apareceu (kit nao carregou?)'); }
+      } catch (e) {}
+    } else if (n > 150) { clearInterval(t); }
   }, 100);
 })();
 </script>
