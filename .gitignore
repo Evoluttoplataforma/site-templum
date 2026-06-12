@@ -11,6 +11,10 @@ dist/
 .dev.vars
 *.log
 
+# Backups/documentos privados (rollback DNS etc.) — NUNCA versionar
+_backup-*
+_private/
+
 # macOS
 .DS_Store
 **/.DS_Store
