@@ -7,11 +7,13 @@ import TrackingKit from "../components/TrackingKit.astro";
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
   description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
-  ogImage = "/assets/img/garantia-200.png",
+  ogImage = "/assets/og/templum-og.jpg",
   noHeaderFooter = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+// og:image precisa ser URL ABSOLUTA (WhatsApp/Facebook ignoram caminho relativo).
+const ogImageUrl = new URL(ogImage, Astro.site).href;
 ---
 
 <!doctype html>
@@ -27,11 +29,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Templum Consultoria" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:secure_url" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Templum Consultoria — Certificação ISO com garantia de 200%" />
     <meta property="og:locale" content="pt_BR" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <!-- Montserrat (Medium / SemiBold / Bold / Extrabold) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
