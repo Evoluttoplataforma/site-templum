@@ -1,21 +1,29 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const artigos = await getCollection("blog");
-  return artigos.map((a) => ({ params: { slug: a.slug } }));
+  return artigos.map((a) => ({
+    params: { slug: a.slug },
+    props: { artigo: a },
+  }));
 }
 
-const { slug } = Astro.params;
-const artigo = await getEntry("blog", slug);
-if (!artigo) return Astro.redirect("/404");
-
+const { artigo } = Astro.props;
 const { Content } = await artigo.render();
-const { titulo, descricao, categoria, data, dataISO, autor, capa, keywords } = artigo.data;
+
+const titulo = artigo.data.titulo;
+const descricao = artigo.data.descricao;
+const categoria = artigo.data.categoria;
+const data = artigo.data.data;
+const dataISO = artigo.data.dataISO;
+const autor = artigo.data.autor || "Equipe Templum";
+const capa = artigo.data.capa || "";
+const keywords = artigo.data.keywords || [];
 
 const SITE = "https://templum.com.br";
-const url = `${SITE}/blog/${slug}`;
+const url = `${SITE}/blog/${artigo.slug}`;
 
 const schemaArticle = {
   "@context": "https://schema.org",
@@ -31,7 +39,6 @@ const schemaArticle = {
   datePublished: dataISO,
   dateModified: dataISO,
   url,
-  ...(capa ? { image: `${SITE}${capa}` } : {}),
   keywords: keywords.join(", "),
   mainEntityOfPage: { "@type": "WebPage", "@id": url },
 };
@@ -54,7 +61,6 @@ const schemaBreadcrumb = {
   schemas={[schemaArticle, schemaBreadcrumb]}
 >
 
-  <!-- BREADCRUMB -->
   <nav class="breadcrumb-bar" aria-label="Navegação estrutural">
     <div class="container lg">
       <ol class="breadcrumb">
@@ -67,7 +73,6 @@ const schemaBreadcrumb = {
     </div>
   </nav>
 
-  <!-- HERO DO ARTIGO -->
   <header class="art-hero">
     <div class="container md">
       <span class="tag-pill">{categoria}</span>
@@ -87,7 +92,6 @@ const schemaBreadcrumb = {
     </div>
   </header>
 
-  <!-- CAPA -->
   {capa && (
     <div class="art-capa-wrap">
       <div class="container lg">
@@ -96,13 +100,11 @@ const schemaBreadcrumb = {
     </div>
   )}
 
-  <!-- CONTEÚDO -->
   <div class="art-layout container lg">
     <article class="art-content prose">
       <Content />
     </article>
 
-    <!-- SIDEBAR -->
     <aside class="art-sidebar">
       <div class="sidebar-cta">
         <span class="tag-pill" style="margin-bottom:16px">Diagnóstico gratuito</span>
@@ -119,7 +121,6 @@ const schemaBreadcrumb = {
     </aside>
   </div>
 
-  <!-- CTA FINAL -->
   <section class="cta-band">
     <div class="container md">
       <h2>Pronto para <em>certificar</em> seu laboratório?</h2>
@@ -133,14 +134,12 @@ const schemaBreadcrumb = {
 </Base>
 
 <style>
-  /* ── BREADCRUMB ── */
   .breadcrumb-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 0; }
   .breadcrumb { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
   .breadcrumb a { color: var(--text-mid); transition: color .2s; }
   .breadcrumb a:hover { color: var(--orange); }
   .breadcrumb li:last-child { color: var(--text); font-weight: 600; }
 
-  /* ── HERO ── */
   .art-hero {
     background: var(--navy); color: var(--cream);
     padding: clamp(56px, 7vw, 96px) 0 clamp(40px, 5vw, 64px);
@@ -157,43 +156,31 @@ const schemaBreadcrumb = {
   .art-autor, .art-data { display: flex; align-items: center; gap: 6px; }
   .art-cat { background: rgba(255,89,37,0.25); color: var(--orange); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* ── CAPA ── */
-  .art-capa-wrap { background: var(--navy); padding-bottom: 0; }
+  .art-capa-wrap { background: var(--navy); }
   .art-capa { width: 100%; border-radius: var(--r-20) var(--r-20) 0 0; aspect-ratio: 16/6; object-fit: cover; display: block; }
 
-  /* ── LAYOUT ── */
   .art-layout {
-    display: grid;
-    grid-template-columns: 1fr 320px;
+    display: grid; grid-template-columns: 1fr 320px;
     gap: clamp(40px, 5vw, 72px);
-    padding-top: 56px; padding-bottom: 72px;
-    align-items: start;
+    padding-top: 56px; padding-bottom: 72px; align-items: start;
   }
   @media (max-width: 960px) { .art-layout { grid-template-columns: 1fr; } }
 
-  /* ── PROSE (conteúdo markdown) ── */
   .prose { color: var(--text); font-size: 17px; line-height: 1.8; }
-  .prose h2 { font-size: clamp(22px, 2.8vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin: 48px 0 18px; color: var(--text); }
-  .prose h3 { font-size: 19px; font-weight: 700; margin: 32px 0 12px; color: var(--text); }
-  .prose p { margin-bottom: 22px; }
-  .prose strong { font-weight: 700; color: var(--text); }
-  .prose em { font-style: italic; }
-  .prose ul, .prose ol { margin: 18px 0 22px 24px; display: flex; flex-direction: column; gap: 10px; }
-  .prose ul { list-style: disc; }
-  .prose ol { list-style: decimal; }
-  .prose li { line-height: 1.7; }
-  .prose hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
-  .prose a { color: var(--orange); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; transition: color .2s; }
-  .prose a:hover { color: var(--orange-dark); }
-  .prose blockquote { border-left: 3px solid var(--orange); padding: 14px 20px; margin: 28px 0; background: rgba(255,89,37,0.05); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-mid); }
+  .prose :global(h2) { font-size: clamp(22px, 2.8vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin: 48px 0 18px; color: var(--text); }
+  .prose :global(h3) { font-size: 19px; font-weight: 700; margin: 32px 0 12px; color: var(--text); }
+  .prose :global(p) { margin-bottom: 22px; }
+  .prose :global(strong) { font-weight: 700; color: var(--text); }
+  .prose :global(ul), .prose :global(ol) { margin: 18px 0 22px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .prose :global(ul) { list-style: disc; }
+  .prose :global(ol) { list-style: decimal; }
+  .prose :global(hr) { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+  .prose :global(a) { color: var(--orange); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .prose :global(a:hover) { color: var(--orange-dark); }
+  .prose :global(blockquote) { border-left: 3px solid var(--orange); padding: 14px 20px; margin: 28px 0; background: rgba(255,89,37,0.05); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-mid); }
 
-  /* ── SIDEBAR ── */
   .art-sidebar { position: sticky; top: 100px; }
-  .sidebar-cta {
-    background: var(--navy); color: var(--cream);
-    border-radius: var(--r-20); padding: 28px 24px;
-    border: 1px solid rgba(255,244,221,0.08);
-  }
+  .sidebar-cta { background: var(--navy); color: var(--cream); border-radius: var(--r-20); padding: 28px 24px; border: 1px solid rgba(255,244,221,0.08); }
   .sidebar-cta p { font-size: 15px; color: rgba(255,244,221,0.72); line-height: 1.65; }
   .sidebar-selos { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
   .sidebar-selos li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,244,221,0.7); }
