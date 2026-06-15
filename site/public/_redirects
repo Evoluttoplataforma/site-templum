@@ -124,8 +124,7 @@
 /ab/auditoria                              /auditoria                 301
 /auditoria/lp                              /auditoria                 301
 
-# → / (blog saiu deste site — vai p/ certificacaoiso.com.br; repointar quando no ar)
-/blog                                      /                          301
+# blog voltou para este site em jun 2026
 
 # → /consultoria
 /lp                                        /consultoria               301
@@ -309,7 +308,6 @@
 /sgi/*                                     /consultoria/sgi           301
 /iso-37001/*                               /consultoria/iso-37001     301
 /lgpd/*                                    /consultoria/lgpd          301
-/blog/*                                    /                          301
 /nucleos/*                                 /solucoes-de-ia            301
 /setembro-especial/*                       /treinamento-fase-a-fase   301
 /ia/*                                      /solucoes-de-ia            301
