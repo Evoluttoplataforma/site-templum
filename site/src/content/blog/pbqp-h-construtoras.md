@@ -43,19 +43,15 @@ Além da Caixa, outros agentes financeiros e prefeituras também passaram a exig
 
 ---
 
-## Os níveis do PBQP-H: A, B, C e D
+## Os níveis do PBQP-H: A e B
 
-O SiAC prevê quatro níveis de certificação, que representam estágios progressivos de implantação do sistema de gestão da qualidade:
+O SiAC prevê dois níveis de certificação, que representam estágios de implantação do sistema de gestão da qualidade:
 
-**Nível D** — é o ponto de entrada. A empresa demonstra que iniciou o processo de implantação do sistema de gestão e que já atende a um conjunto mínimo de requisitos. É o nível exigido para acesso a alguns programas habitacionais em faixas de menor valor.
+**Nível B** — é o ponto de entrada. A empresa demonstra que implantou cerca de 70% dos requisitos da norma SiAC. Tem validade de 36 meses, com auditorias de acompanhamento aos 12 e 24 meses. É aceito em alguns programas habitacionais, mas em muitos contratos já não é suficiente.
 
-**Nível C** — a empresa avança na estruturação dos processos. Mais requisitos implantados, maior controle de materiais e serviços, gestão mais formalizada.
+**Nível A** — é o nível máximo e o mais exigido. A empresa demonstra maturidade plena no sistema de gestão da qualidade, com 100% dos requisitos do SiAC implantados, auditoria interna funcionando e indicadores de desempenho ativos. É obrigatório para acesso ao MCMV em empreendimentos de maior porte e para contratos com valores mais elevados de financiamento. Também tem validade de 36 meses com auditorias anuais de manutenção.
 
-**Nível B** — estágio intermediário avançado. Os processos estão documentados, monitorados e o sistema começa a gerar evidências de melhoria contínua.
-
-**Nível A** — é o nível mais alto e o mais exigido. A empresa demonstra maturidade plena no sistema de gestão da qualidade, com todos os requisitos do SiAC implantados, auditoria interna funcionando e indicadores de desempenho ativos. É obrigatório para acesso ao MCMV em empreendimentos de maior porte e para contratos com valores mais elevados de financiamento.
-
-Na prática, a maioria das construtoras que operam no segmento de habitação de interesse social precisam chegar ao **Nível A** para não perder contratos.
+Na prática, a maioria das construtoras que operam no segmento de habitação de interesse social precisam chegar ao **Nível A** para não perder contratos. Iniciar pelo Nível B e evoluir para o A é uma rota válida — mas sair direto para o A, quando a empresa tem condições, evita pagar por dois processos de certificação.
 
 ---
 
@@ -100,9 +96,9 @@ A certificação PBQP-H não acontece da noite para o dia. O prazo realista depe
 
 Para uma construtora que não tem nenhum sistema de gestão implantado:
 
-**Nível D:** de 3 a 5 meses. O sistema mínimo pode ser implantado com relativamente pouco esforço — a auditoria de certificação avalia um conjunto reduzido de requisitos.
+**Nível B:** de 4 a 7 meses. O sistema pode ser implantado com esforço concentrado — a auditoria avalia cerca de 70% dos requisitos do SiAC.
 
-**Nível A direto:** de 8 a 14 meses. O caminho mais eficiente para empresas que precisam chegar ao Nível A é ir diretamente, sem passar pelos níveis intermediários. Isso exige mais trabalho concentrado, mas evita pagar por múltiplas auditorias.
+**Nível A direto:** de 8 a 14 meses. O caminho mais eficiente para empresas que precisam chegar ao Nível A é ir diretamente, sem passar pelo Nível B antes. Isso exige mais trabalho, mas evita pagar por duas certificações.
 
 Esses prazos consideram uma equipe interna que dedica entre 4 e 8 horas semanais ao processo de implantação, com suporte de uma consultoria experiente no setor.
 
@@ -142,7 +138,7 @@ Depois de mais de 30 anos atuando no setor e mais de 2.000 empresas certificadas
 
 **Subestimar o trabalho de campo.** Os serviços controlados são executados nas obras, não no escritório. Treinar mestres de obra, encarregados e técnicos para seguir os procedimentos e fazer os registros é o ponto mais trabalhoso — e mais importante — da implantação.
 
-**Começar pelo Nível D com intenção de chegar ao A depois.** A certificação em nível D tem validade, mas a empresa vai precisar de uma nova auditoria para cada evolução de nível. O custo total acaba sendo maior do que ir direto para o Nível A desde o início.
+**Começar pelo Nível B sem planejar a evolução para o A.** A certificação no Nível B tem validade, mas a empresa vai precisar de um novo processo de certificação para evoluir ao Nível A. Se o objetivo é o Nível A, o custo total acaba sendo maior do que ir diretamente para ele desde o início.
 
 **Não manter o sistema após a certificação.** O certificado dura um ano. Se a empresa não mantiver o sistema ativo — fazendo auditorias internas, atualizando documentos, monitorando indicadores — a auditoria de manutenção pode resultar em perda da certificação.
 
