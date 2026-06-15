@@ -1171,11 +1171,42 @@ footer {
   }, { passive: true });
 })();
 
-// ─── FORM SUBMIT ───────────────────────────────
+// ─── FORM SUBMIT → /api/lead (mesmo endpoint do site principal) ────────────
 document.getElementById('leadForm').addEventListener('submit', function (e) {
   e.preventDefault();
-  // redireciona para /obrigado (o handler real do site base.astro pode ser integrado depois)
-  window.location.href = '/obrigado';
+  var form = e.target;
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+
+  var d = {};
+  new FormData(form).forEach(function (v, k) { d[k] = v; });
+
+  var btn = form.querySelector('[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
+
+  // Guarda no sessionStorage para a /obrigado disparar os pixels (mesmo padrão do Base.astro)
+  try {
+    sessionStorage.setItem('tpl_lead_pending', JSON.stringify({
+      email: d.email || '', phone: d.telefone || '', name: d.nome || '', norma: d.norma || '',
+    }));
+  } catch (_) {}
+
+  // POST para o mesmo endpoint do site
+  try {
+    fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        nome: d.nome || '', email: d.email || '', telefone: d.telefone || '',
+        empresa: d.empresa || '', norma: d.norma || 'ISO 9001',
+        cargo: d.cargo || '', funcionarios: d.funcionarios || '',
+        mensagem: 'Tipo de laboratório: ' + (d.tipo_lab || ''),
+        evento: 'lead', pagina: location.pathname,
+      }),
+    });
+  } catch (_) {}
+
+  setTimeout(function () { window.location.href = '/obrigado'; }, 400);
 });
 </script>
 </body>
