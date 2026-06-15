@@ -1,0 +1,535 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Testimonials from "../components/Testimonials.astro";
+
+const dores = [
+  { icon: "solar:users-group-rounded-bold", t: "Processos dependentes de pessoas", d: "Quando um colaborador sai, o conhecimento vai junto. Sem documentação, o erro se repete." },
+  { icon: "solar:danger-triangle-bold", t: "Não conformidades recorrentes", d: "Os mesmos problemas voltam porque nunca foram tratados na raiz." },
+  { icon: "solar:document-text-bold", t: "Falta de padronização", d: "Cada um faz do seu jeito. O resultado varia, e o cliente percebe." },
+  { icon: "solar:clipboard-check-bold", t: "Dificuldade em auditorias", d: "Sem registros organizados, a auditoria vira um pesadelo de última hora." },
+  { icon: "solar:hand-money-bold", t: "Perda de oportunidades comerciais", d: "Contratos e licitações exigem ISO 9001. Sem ela, você fica de fora." },
+  { icon: "solar:restart-square-bold", t: "Excesso de retrabalho", d: "Erros que custam tempo e dinheiro porque o processo não foi feito certo da primeira vez." },
+  { icon: "solar:graph-new-bold", t: "Falta de indicadores confiáveis", d: "Decisões tomadas no feeling porque não há dados consistentes para embasar a gestão." },
+];
+
+const beneficios = [
+  "Processos padronizados e documentados",
+  "Maior confiabilidade dos resultados analíticos",
+  "Redução de falhas operacionais e retrabalho",
+  "Melhor preparação para auditorias internas e externas",
+  "Fortalecimento da reputação no mercado",
+  "Mais segurança para expansão e abertura de filiais",
+  "Maior competitividade em licitações e contratos públicos",
+  "Base sólida para acreditações futuras (ISO 15189, PALC, DICQ)",
+];
+
+const numeros = [
+  { n: "+2.000", l: "empresas certificadas" },
+  { n: "+30", l: "anos de experiência" },
+  { n: "200%", l: "de garantia" },
+  { n: "100%", l: "online, todo o Brasil" },
+];
+
+const diferenciais = [
+  { icon: "solar:medal-ribbons-star-bold", t: "Metodologia exclusiva", d: "Método próprio desenvolvido em +30 anos de prática, adaptado à realidade dos laboratórios brasileiros." },
+  { icon: "solar:user-check-rounded-bold", t: "Consultores especializados", d: "Equipe multidisciplinar com vivência em laboratórios clínicos, ambientais, industriais e de ensaio." },
+  { icon: "solar:shield-check-bold", t: "Garantia de 200%", d: "Certificação garantida ou o dobro do investimento de volta. Confiança que poucas consultorias oferecem." },
+  { icon: "solar:map-point-bold", t: "Atendimento em todo o Brasil", d: "Consultoria 100% online, sem deslocamento. Do Norte ao Sul, seu laboratório recebe o mesmo nível de atendimento." },
+  { icon: "solar:clipboard-list-bold", t: "Acompanhamento até a certificação", d: "Não entregamos um manual e sumimos. Ficamos do diagnóstico inicial até o certificado na parede." },
+  { icon: "solar:cpu-bolt-bold", t: "Tecnologia + IA no processo", d: "O Templum OS com a Norma, nossa IA especializada, acelera a implementação e mantém tudo organizado." },
+];
+
+const passos = [
+  { n: "01", t: "Diagnóstico gratuito", d: "Avaliamos a situação atual do seu laboratório, identificamos gaps e mapeamos o caminho mais rápido até a certificação." },
+  { n: "02", t: "Planejamento personalizado", d: "Montamos um plano de ação realista, com cronograma, responsáveis e metas claras para cada etapa." },
+  { n: "03", t: "Implementação guiada", d: "Nossa equipe acompanha a construção do sistema de gestão, adaptando os processos à rotina do laboratório." },
+  { n: "04", t: "Auditoria interna", d: "Realizamos uma auditoria simulada para identificar pontos de melhoria antes da certificadora chegar." },
+  { n: "05", t: "Certificação", d: "Com tudo preparado, o laboratório passa pela auditoria da certificadora com confiança e conquista o certificado." },
+];
+
+const faqs = [
+  { q: "Quanto tempo leva para um laboratório conseguir a ISO 9001?", a: "O prazo médio é de 6 a 12 meses, dependendo do tamanho do laboratório, maturidade dos processos e disponibilidade da equipe interna. Após o diagnóstico, apresentamos um cronograma realista para o seu caso." },
+  { q: "Quanto custa a consultoria?", a: "O investimento varia conforme o porte do laboratório e o escopo de trabalho. O diagnóstico inicial é gratuito e, a partir dele, apresentamos uma proposta personalizada. Trabalhamos com condições flexíveis para laboratórios de diferentes tamanhos." },
+  { q: "Preciso parar a operação para implementar a ISO 9001?", a: "Não. A implementação é feita de forma gradual, respeitando a rotina operacional do laboratório. Nossa metodologia foi desenhada para causar o mínimo de impacto possível nas atividades do dia a dia." },
+  { q: "A certificação é garantida?", a: "Sim. Oferecemos garantia de 200%: seu laboratório se certifica ou devolvemos o dobro do investimento. Essa é a nossa confiança no método que desenvolvemos ao longo de mais de 30 anos." },
+  { q: "Meu laboratório é pequeno. Vale a pena certificar?", a: "Com certeza. Laboratórios menores têm vantagem: processos mais simples de padronizar e equipe mais ágil para mudanças. A ISO 9001 abre portas para contratos que antes eram inacessíveis e fortalece a credibilidade com clientes e parceiros." },
+  { q: "Qual a diferença entre ISO 9001 e ISO 15189?", a: "A ISO 9001 é um sistema de gestão da qualidade aplicável a qualquer organização. A ISO 15189 é específica para laboratórios clínicos e de medicina laboratorial, com requisitos técnicos mais rigorosos. A ISO 9001 é frequentemente o primeiro passo e serve como base sólida para quem busca a 15189 ou acreditações como PALC e DICQ no futuro." },
+];
+
+const schemaService = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Consultoria ISO 9001 para Laboratórios",
+  description: "Implementação da ISO 9001 em laboratórios clínicos, ambientais, de análises e ensaio. Do diagnóstico à certificação com garantia de 200%.",
+  provider: {
+    "@type": "Organization",
+    name: "Templum Consultoria",
+    url: "https://templum.com.br"
+  },
+  areaServed: { "@type": "Country", name: "Brasil" },
+  serviceType: "Consultoria de certificação ISO 9001",
+  audience: {
+    "@type": "Audience",
+    audienceType: "Laboratórios clínicos, ambientais, de análises e ensaio"
+  }
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a }
+  }))
+};
+---
+
+<Base
+  title="ISO 9001 para Laboratórios | Consultoria Especializada — Templum"
+  description="A Templum implementa a ISO 9001 em laboratórios clínicos, ambientais e de ensaio. Metodologia própria, garantia de 200% e acompanhamento do diagnóstico até a certificação."
+  schemas={[schemaService, schemaFaq]}
+>
+
+  <!-- HERO -->
+  <PageHero
+    tag="ISO 9001 · Laboratórios"
+    sub="A Templum já ajudou milhares de empresas a implementar sistemas de gestão da qualidade que reduzem falhas, aumentam a confiabilidade dos processos e aceleram a conquista da certificação ISO 9001."
+    badge="ISO 9001 · Laboratórios"
+    icon="solar:test-tube-bold"
+    chips={["+2.000 certificados", "Garantia 200%", "+30 anos"]}
+  >
+    <Fragment slot="title">Seu laboratório está preparado para <em class="accent">crescer com segurança</em> e conquistar novos contratos?</Fragment>
+    <Fragment slot="cta">
+      <a href="#diagnostico" class="btn btn--primary btn--lg">Solicitar Diagnóstico Gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#como-funciona" class="btn btn--onDark btn--lg">Ver como funciona</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- SEÇÃO 2 — DORES -->
+  <section class="section section--navy dores-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Os desafios do setor</span>
+        <h2>Os desafios que impedem muitos laboratórios de <em class="accent">crescer</em></h2>
+        <p>Muitos laboratórios possuem excelentes profissionais e equipamentos, mas sem processos estruturados acabam enfrentando desperdícios, riscos e limitações para crescer.</p>
+      </div>
+      <div class="dores-grid">
+        {dores.map((d) => (
+          <div class="dor-card">
+            <span class="dor-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 — BENEFÍCIOS -->
+  <section class="section section--cream beneficios-sec">
+    <div class="container lg">
+      <div class="beneficios-wrap">
+        <div class="beneficios-text">
+          <span class="tag-pill">O que muda com a ISO 9001</span>
+          <h2>O que muda quando seu laboratório <em class="accent">implementa a ISO 9001</em></h2>
+          <p>A certificação não é apenas um papel na parede. É a estrutura que permite ao seu laboratório crescer com previsibilidade, reduzir custos operacionais e conquistar contratos de maior valor.</p>
+        </div>
+        <ul class="beneficios-list">
+          {beneficios.map((b) => (
+            <li>
+              <span class="check-icon"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
+              {b}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 — POR QUE TEMPLUM -->
+  <section class="section section--navy porque-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Por que a Templum</span>
+        <h2>A consultoria que <em class="accent">mais certifica</em> no Brasil</h2>
+      </div>
+
+      <div class="numeros-grid">
+        {numeros.map((n) => (
+          <div class="numero-card">
+            <span class="numero-n">{n.n}</span>
+            <span class="numero-l">{n.l}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="diferenciais-grid">
+        {diferenciais.map((d) => (
+          <div class="eco-card diff-card">
+            <span class="diff-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 — COMO FUNCIONA -->
+  <section id="como-funciona" class="section section--cream passos-sec">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O caminho até a certificação</span>
+        <h2>Um processo simples, <em class="accent">guiado do início ao fim</em></h2>
+        <p>Não existe burocracia desnecessária. Cada etapa é planejada para avançar com segurança, sem paralisar a operação do seu laboratório.</p>
+      </div>
+      <div class="passos-list">
+        {passos.map((p, i) => (
+          <div class="passo-item">
+            <div class="passo-num">{p.n}</div>
+            <div class="passo-connector" aria-hidden="true"></div>
+            <div class="passo-body">
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6 — DEPOIMENTOS -->
+  <Testimonials nota="4.9" />
+
+  <!-- SEÇÃO 7 — FAQ -->
+  <section class="section faq-sec">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Dúvidas frequentes</span>
+        <h2>Perguntas sobre ISO 9001 <em class="accent">para laboratórios</em></h2>
+      </div>
+      <dl class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">
+              {f.q}
+              <span class="faq-arrow">+</span>
+            </summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 8 — CTA FINAL + FORMULÁRIO -->
+  <section id="diagnostico" class="section section--navy form-sec">
+    <div class="container xl form-split">
+      <div class="form-copy">
+        <span class="tag-pill tag-pill--navy">Diagnóstico gratuito</span>
+        <h2>Descubra o caminho mais rápido para estruturar seu laboratório e <em class="accent">conquistar a ISO 9001</em></h2>
+        <p>Agende uma conversa com um especialista da Templum. Sem compromisso, sem burocracia — só clareza sobre o próximo passo.</p>
+
+        <ul class="form-selos">
+          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200%</li>
+          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 empresas certificadas</li>
+          <li><iconify-icon icon="solar:clock-circle-bold"></iconify-icon> Resposta em até 1 dia útil</li>
+          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
+        </ul>
+      </div>
+      <div class="form-col">
+        <LeadForm
+          norma="ISO 9001"
+          titulo="Quero meu diagnóstico gratuito"
+          sub="Preencha o formulário e um especialista entrará em contato."
+          cta="Quero Meu Diagnóstico"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY CTA -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="container sticky-cta-inner">
+      <p>ISO 9001 para laboratórios · diagnóstico gratuito sem compromisso</p>
+      <a href="#diagnostico" class="btn btn--primary btn--sm">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </div>
+
+  <!-- WHATSAPP FLUTUANTE -->
+  <a
+    class="whatsapp-fab"
+    href="https://wa.me/5511999999999?text=Olá! Tenho interesse em certificar meu laboratório com a ISO 9001."
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Falar pelo WhatsApp"
+  >
+    <iconify-icon icon="mdi:whatsapp"></iconify-icon>
+  </a>
+
+</Base>
+
+<style>
+  /* ---- TAG PILL SOBRE NAVY ---- */
+  .tag-pill--navy {
+    background: rgba(255,89,37,0.18);
+    border-color: rgba(255,89,37,0.55);
+    color: var(--orange);
+  }
+
+  /* ============================
+     SEÇÃO 2 — DORES
+  ============================ */
+  .dores-sec { padding-bottom: 80px; }
+  .dores-sec .section-header h2 { color: var(--cream); }
+  .dores-sec .section-header p { color: rgba(255,244,221,0.7); }
+
+  .dores-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1100px) { .dores-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .dores-grid { grid-template-columns: 1fr; } }
+
+  .dor-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.1);
+    border-radius: var(--r-20);
+    padding: 26px 22px;
+    transition: background .3s, border-color .3s;
+  }
+  .dor-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .dor-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+  .dor-card h3 { font-size: 15px; font-weight: 800; color: var(--cream); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .dor-card p { font-size: 13.5px; color: rgba(255,244,221,0.65); line-height: 1.6; }
+
+  /* ============================
+     SEÇÃO 3 — BENEFÍCIOS
+  ============================ */
+  .beneficios-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 860px) { .beneficios-wrap { grid-template-columns: 1fr; } }
+
+  .beneficios-text .tag-pill { margin-bottom: 18px; }
+  .beneficios-text h2 { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
+  .beneficios-text p { font-size: 16px; color: var(--text-mid); line-height: 1.7; }
+
+  .beneficios-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .beneficios-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .check-icon { color: var(--orange); font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ============================
+     SEÇÃO 4 — POR QUE TEMPLUM
+  ============================ */
+  .porque-sec .section-header h2 { color: var(--cream); }
+
+  .numeros-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 860px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .numero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,244,221,0.12);
+    border-radius: var(--r-20);
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .numero-n { display: block; font-size: clamp(32px, 4vw, 52px); font-weight: 800; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
+  .numero-l { display: block; font-size: 13px; color: rgba(255,244,221,0.65); margin-top: 8px; font-weight: 500; }
+
+  .diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 960px) { .diferenciais-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .diferenciais-grid { grid-template-columns: 1fr; } }
+
+  .diff-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.1); }
+  .diff-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .diff-card h3 { color: var(--cream); }
+  .diff-card p { color: rgba(255,244,221,0.65); }
+  .diff-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+
+  /* ============================
+     SEÇÃO 5 — PASSOS
+  ============================ */
+  .passos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 8px;
+  }
+  .passo-item {
+    display: grid;
+    grid-template-columns: 72px 40px 1fr;
+    gap: 0 20px;
+    align-items: start;
+    padding: 10px 0;
+  }
+  .passo-num {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    text-align: right;
+  }
+  .passo-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+  }
+  .passo-connector::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+  .passo-connector::after {
+    content: "";
+    width: 2px;
+    flex: 1;
+    background: linear-gradient(to bottom, var(--orange), rgba(255,89,37,0.1));
+    margin-top: 6px;
+    min-height: 60px;
+  }
+  .passo-item:last-child .passo-connector::after { display: none; }
+  .passo-body { padding: 8px 0 32px; }
+  .passo-body h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .passo-body p { font-size: 15px; color: var(--text-mid); line-height: 1.7; }
+
+  @media (max-width: 600px) {
+    .passo-item { grid-template-columns: 52px 28px 1fr; }
+    .passo-num { font-size: 32px; }
+  }
+
+  /* ============================
+     SEÇÃO 7 — FAQ
+  ============================ */
+  .faq-sec { background: var(--surface); }
+  .faq-sec .section-header h2 { color: var(--text); }
+
+  /* ============================
+     SEÇÃO 8 — FORM
+  ============================ */
+  .form-sec { padding-top: 80px; padding-bottom: 80px; }
+  .form-split {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+  @media (max-width: 960px) { .form-split { grid-template-columns: 1fr; } }
+
+  .form-copy .tag-pill { margin-bottom: 20px; }
+  .form-copy h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 16px; }
+  .form-copy p { font-size: 16px; color: rgba(255,244,221,0.72); line-height: 1.7; margin-bottom: 32px; }
+
+  .form-selos { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .form-selos li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,244,221,0.85);
+  }
+  .form-selos iconify-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; }
+
+  /* ============================
+     STICKY CTA
+  ============================ */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,89,37,0.3);
+    padding: 14px 0;
+    transform: translateY(100%);
+    transition: transform .4s var(--ease-soft);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .sticky-cta p {
+    font-size: 14px;
+    color: rgba(255,244,221,0.8);
+    font-weight: 500;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .sticky-cta p { display: none; }
+    .sticky-cta .btn { width: 100%; }
+  }
+
+  /* ============================
+     WHATSAPP FAB
+  ============================ */
+  .whatsapp-fab {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 95;
+    width: 58px;
+    height: 58px;
+    border-radius: 999px;
+    background: #25D366;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    box-shadow: 0 8px 28px rgba(37,211,102,0.45);
+    transition: transform .3s var(--ease-soft), box-shadow .3s;
+  }
+  .whatsapp-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 36px rgba(37,211,102,0.55);
+  }
+  @media (max-width: 600px) {
+    .whatsapp-fab { bottom: 76px; right: 16px; width: 52px; height: 52px; font-size: 26px; }
+  }
+</style>
+
+<script is:inline>
+  // Sticky CTA — aparece após rolar 300px
+  (function () {
+    const bar = document.getElementById("stickyCta");
+    if (!bar) return;
+    const toggle = () => bar.classList.toggle("visible", window.scrollY > 300);
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+  })();
+</script>
