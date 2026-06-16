@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raio-X da Sua Empresa — Templum</title>
+  <meta name="description" content="Descubra em minutos onde sua empresa está perdendo dinheiro, dependendo demais de você e afastando clientes. Diagnóstico gratuito com especialista." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1265191353683807');
+    fbq('init', '4177249519256900');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1"/></noscript>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fire: #FF4500;
+      --ember: #FF6B00;
+      --blood: #8B0000;
+      --dark: #0a0a0a;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --cream: #f5f0e8;
+      --text-muted: #aaa;
+    }
+
+    html, body {
+      background: var(--dark);
+      color: var(--cream);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 40px 24px 100px;
+    }
+
+    /* ── TOPO ── */
+    .logo-top {
+      display: block;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    /* ── HEADLINE ── */
+    .hook {
+      border-left: 4px solid var(--fire);
+      padding-left: 16px;
+      margin-bottom: 28px;
+    }
+
+    .hook-tag {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--fire);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 6vw, 40px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      color: var(--fire);
+      font-style: normal;
+    }
+
+    .sub {
+      font-size: clamp(15px, 3.5vw, 17px);
+      color: rgba(245,240,232,0.75);
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── SINTOMAS ── */
+    .symptoms-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 36px 0 16px;
+    }
+
+    .symptoms {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .symptoms li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: clamp(14px, 3.2vw, 16px);
+      line-height: 1.5;
+      color: var(--cream);
+      background: var(--dark3);
+      border: 1px solid rgba(255,69,0,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .symptoms li .ico {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── RAIO-X BLOCK ── */
+    .raio-x-block {
+      background: linear-gradient(135deg, #1a0a00, #0f0000);
+      border: 1px solid rgba(255,69,0,0.35);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .raio-x-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blood), var(--fire), var(--ember));
+    }
+
+    .raio-x-label {
+      display: inline-block;
+      background: var(--fire);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .raio-x-title {
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .raio-x-desc {
+      font-size: 15px;
+      color: rgba(245,240,232,0.7);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .raio-x-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .raio-x-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .raio-x-list li::before {
+      content: '→';
+      color: var(--fire);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-bottom: 28px;
+    }
+
+    .form-title {
+      font-size: clamp(17px, 4vw, 20px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group input,
+    .form-group select {
+      background: var(--dark3);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: var(--cream);
+      font-size: 15px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    .form-group input::placeholder { color: #555; }
+    .form-group select { color: #555; }
+    .form-group select.filled { color: var(--cream); }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--fire);
+    }
+
+    .btn-submit {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--fire), var(--blood));
+      color: #fff;
+      font-size: clamp(16px, 4vw, 19px);
+      font-weight: 800;
+      border: none;
+      border-radius: 8px;
+      padding: 18px 20px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 16px;
+      line-height: 1.3;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-submit span {
+      display: block;
+      font-size: 0.78em;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 3px;
+    }
+
+    .btn-submit:active { transform: scale(0.97); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── SOCIAL PROOF ── */
+    .proof {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      padding: 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .proof-item {
+      text-align: center;
+    }
+
+    .proof-num {
+      display: block;
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 900;
+      color: var(--fire);
+    }
+
+    .proof-label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── SUCESSO ── */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .success-msg .ico { font-size: 48px; margin-bottom: 16px; }
+    .success-msg h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .success-msg p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    .footer-logo {
+      text-align: center;
+      font-size: 12px;
+      color: #444;
+      margin-top: 32px;
+    }
+
+    /* ── STICKY MOBILE ── */
+    .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--fire); padding: 14px 20px; z-index: 999; box-shadow: 0 -4px 20px rgba(0,0,0,0.6); }
+    .sticky-cta a { display: block; color: #fff; font-size: 17px; font-weight: 800; text-align: center; text-decoration: none; }
+    @media (max-width: 600px) {
+      .sticky-cta { display: block; }
+      .page { padding-bottom: 90px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <span class="logo-top">Templum Consultoria</span>
+
+  <!-- HEADLINE -->
+  <div class="hook">
+    <span class="hook-tag">Para empresários que vivem apagando incêndio</span>
+    <h1>ISO 9001 não é para empresa <em>organizada.</em><br>É para empresa que vive no <em>improviso.</em></h1>
+    <p class="sub">Se você acorda todo dia resolvendo o que deveria estar resolvido, depende demais de você mesmo e sente que a empresa não avança — você está no lugar certo.</p>
+  </div>
+
+  <!-- SINTOMAS -->
+  <p class="symptoms-title">Você se identifica com isso?</p>
+  <ul class="symptoms">
+    <li><span class="ico">🔥</span> Você é o único que resolve — sem você, trava</li>
+    <li><span class="ico">🔥</span> Retrabalho toda semana. Sempre o mesmo erro</li>
+    <li><span class="ico">🔥</span> Cliente reclama, prazo estoura, qualidade oscila</li>
+    <li><span class="ico">🔥</span> Sente que está correndo muito mas crescendo pouco</li>
+  </ul>
+
+  <!-- RAIO-X -->
+  <div class="raio-x-block">
+    <span class="raio-x-label">Diagnóstico gratuito</span>
+    <h2 class="raio-x-title">O Raio-X vai mostrar em minutos:</h2>
+    <p class="raio-x-desc">Uma conversa direta com um especialista Templum. Sem enrolação, sem pitch de venda forçado — só o mapa do que está travando sua empresa.</p>
+    <ul class="raio-x-list">
+      <li>Onde sua empresa depende demais de você</li>
+      <li>Onde o retrabalho está escondido</li>
+      <li>Onde clientes correm risco de ir embora</li>
+      <li>Onde você está perdendo dinheiro agora</li>
+    </ul>
+  </div>
+
+  <!-- PROVA SOCIAL -->
+  <div class="proof">
+    <div class="proof-item">
+      <span class="proof-num">+2.000</span>
+      <span class="proof-label">empresas certificadas</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-num">+30 anos</span>
+      <span class="proof-label">de operação</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-num">90 dias</span>
+      <span class="proof-label">para certificar</span>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div class="form-section" id="formSection">
+    <h3 class="form-title">Quero meu Raio-X gratuito</h3>
+    <p class="form-subtitle">Preencha abaixo — um especialista entra em contato em até 1 dia útil.</p>
+
+    <form id="leadForm" novalidate>
+      <div class="form-group">
+        <input type="text" name="nome" placeholder="Seu nome" autocomplete="name" required />
+        <input type="email" name="email" placeholder="E-mail corporativo" autocomplete="email" required />
+        <input type="tel" name="telefone" placeholder="WhatsApp (com DDD)" autocomplete="tel" required />
+        <input type="text" name="empresa" placeholder="Nome da empresa" autocomplete="organization" required />
+        <select name="funcionarios" id="selFunc" required>
+          <option value="" disabled selected>Quantos funcionários?</option>
+          <option value="1-10">1 a 10</option>
+          <option value="11-50">11 a 50</option>
+          <option value="51-200">51 a 200</option>
+          <option value="+200">Mais de 200</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        Quero meu Raio-X gratuito
+        <span>Diagnóstico com especialista · Sem compromisso</span>
+      </button>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      <div class="ico">✅</div>
+      <h2>Recebemos seu pedido!</h2>
+      <p>Um especialista Templum vai entrar em contato pelo WhatsApp em até 1 dia útil para agendar o seu Raio-X.</p>
+    </div>
+  </div>
+
+  <p class="footer-logo">Templum Consultoria · +30 anos · +2.000 empresas certificadas · Garantia de 200%</p>
+
+</div>
+
+<!-- STICKY MOBILE -->
+<div class="sticky-cta">
+  <a href="#formSection" onclick="document.getElementById('formSection').scrollIntoView({behavior:'smooth'}); return false;">
+    🔥 Quero meu Raio-X gratuito
+  </a>
+</div>
+
+<script>
+  // select color fix
+  document.getElementById('selFunc').addEventListener('change', function() {
+    this.classList.add('filled');
+  });
+
+  // UTM capture
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid'];
+    var store = {};
+    keys.forEach(function(k) { var v = p.get(k); if (v) store[k] = v; });
+    if (Object.keys(store).length) {
+      try { sessionStorage.setItem('_trk', JSON.stringify(store)); } catch(e) {}
+    }
+    var fbclid = p.get('fbclid');
+    if (fbclid) document.cookie = 'fbclid=' + fbclid + '; path=/; max-age=7776000; SameSite=Lax';
+  })();
+
+  function getUtms() {
+    try { return JSON.parse(sessionStorage.getItem('_trk') || '{}'); } catch(e) { return {}; }
+  }
+
+  function getFbc() {
+    var m = document.cookie.match(/fbclid=([^;]+)/);
+    if (m) return 'fb.1.' + Date.now() + '.' + m[1];
+    return '';
+  }
+
+  function getFbp() {
+    var m = document.cookie.match(/_fbp=([^;]+)/);
+    return m ? m[1] : '';
+  }
+
+  // Form submit
+  document.getElementById('leadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    var fd = new FormData(this);
+    var utms = getUtms();
+
+    var payload = {
+      nome: fd.get('nome'),
+      email: fd.get('email'),
+      telefone: fd.get('telefone'),
+      empresa: fd.get('empresa'),
+      funcionarios: fd.get('funcionarios'),
+      evento: 'raio-x-iso9001',
+      pagina: window.location.href,
+      utm_source: utms.utm_source || '',
+      utm_medium: utms.utm_medium || '',
+      utm_campaign: utms.utm_campaign || '',
+      utm_term: utms.utm_term || '',
+      utm_content: utms.utm_content || '',
+      fbclid: utms.fbclid || '',
+      gclid: utms.gclid || '',
+      fbp: getFbp(),
+      fbc: getFbc(),
+      referrer: document.referrer,
+      landing: window.location.href,
+    };
+
+    try {
+      // Lead
+      await fetch('https://templum.com.br/api/lead', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      // CAPI
+      var eventId = 'rxiso-' + Date.now();
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', { content_name: 'raio-x-iso9001' }, { eventID: eventId });
+      }
+      fetch('https://templum.com.br/api/track', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'Lead',
+          event_id: eventId,
+          email: payload.email,
+          phone: payload.telefone,
+          first_name: payload.nome.split(' ')[0],
+          last_name: payload.nome.split(' ').slice(1).join(' '),
+          page_url: window.location.href,
+          fbp: payload.fbp,
+          fbc: payload.fbc,
+          properties: { content_name: 'raio-x-iso9001' },
+        }),
+      });
+
+    } catch(err) { /* silencioso — não bloqueia UX */ }
+
+    // Sucesso
+    document.getElementById('leadForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
