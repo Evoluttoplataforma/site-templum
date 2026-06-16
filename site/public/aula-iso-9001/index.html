@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aula Ao Vivo: Como Usar a ISO 9001 Para Crescer Até 30% — Templum</title>
-  <meta name="description" content="Aula ao vivo gratuita para empresários: como usar a ISO 9001 para crescer até 30% com mais faturamento, clientes maiores e operação organizada." />
+  <title>Aula Ao Vivo: Como Usar a ISO 9001 Para Crescer — Templum</title>
+  <meta name="description" content="Aula ao vivo gratuita para empresários: como usar a ISO 9001 para crescer com mais faturamento, clientes maiores e operação organizada." />
   <meta name="robots" content="noindex, nofollow" />
 
-  <!-- Meta Pixel 1 -->
+  <!-- Meta Pixel -->
   <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -26,392 +26,153 @@
     html, body {
       background: #000;
       color: #fff;
-      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
 
     .page {
-      max-width: 540px;
+      max-width: 580px;
       margin: 0 auto;
-      padding: 28px 20px 48px;
-      text-align: center;
+      padding: 32px 24px 64px;
     }
 
-    /* ── TAG TOPO ── */
     .tag-top {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      color: #ccc;
-      letter-spacing: 0.04em;
-      margin-bottom: 20px;
-      font-family: Arial, sans-serif;
-    }
-
-    /* ── HEADLINE ── */
-    .headline-small {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-    }
-
-    .headline-big {
-      font-size: clamp(52px, 16vw, 88px);
-      font-weight: 900;
-      color: #FF5925;
-      text-transform: uppercase;
-      line-height: 0.95;
-      letter-spacing: -0.02em;
-      margin: 4px 0;
-    }
-
-    .headline-sub {
-      font-size: clamp(22px, 6vw, 36px);
-      font-weight: 900;
-      color: #fff;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .headline-pct {
-      display: inline-block;
-      background: #FF5925;
-      color: #fff;
-      font-size: clamp(22px, 6vw, 36px);
-      font-weight: 900;
-      padding: 2px 10px;
-      margin-left: 6px;
-      border-radius: 4px;
-    }
-
-    /* ── ÍCONES BENEFÍCIOS ── */
-    .benefits {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 24px 0;
-    }
-    .benefit-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-    }
-    .benefit-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 2px solid #FF5925;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-    .benefit-label {
-      font-size: 10px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #fff;
-      line-height: 1.2;
+      display: block;
       text-align: center;
-    }
-
-    /* ── COMPARATIVO ── */
-    .compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 20px 0;
-    }
-    .compare-col {
-      border-radius: 8px;
-      padding: 12px 10px;
-      text-align: left;
-    }
-    .compare-col.sem { background: #1a0000; border: 1.5px solid #8b0000; }
-    .compare-col.com { background: #001a00; border: 1.5px solid #006400; }
-    .compare-title {
-      font-size: 13px;
-      font-weight: 900;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 4px 0 10px;
-      letter-spacing: 0.04em;
-    }
-    .compare-col.sem .compare-title { color: #ff4444; }
-    .compare-col.com .compare-title { color: #44dd44; }
-    .compare-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      font-size: 11.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      color: #fff;
-      margin-bottom: 8px;
-      line-height: 1.25;
-    }
-    .compare-item:last-child { margin-bottom: 0; }
-    .ico-x { color: #ff3333; font-size: 14px; flex-shrink: 0; }
-    .ico-check { color: #33cc33; font-size: 14px; flex-shrink: 0; }
-
-    /* ── ALERTA ── */
-    .alert-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #111;
-      border: 1.5px solid #FF5925;
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin: 16px 0;
-      text-align: left;
-    }
-    .alert-icon { font-size: 28px; flex-shrink: 0; }
-    .alert-text {
       font-size: 14px;
-      font-weight: 900;
-      text-transform: uppercase;
-      line-height: 1.35;
+      color: #aaa;
+      margin-bottom: 20px;
       letter-spacing: 0.02em;
     }
-    .alert-text em { color: #FF5925; font-style: normal; }
 
-    /* ── CHECKLIST ── */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #888;
-      margin: 24px 0 12px;
-      font-family: Arial, sans-serif;
+    h1 {
+      font-size: clamp(26px, 6vw, 36px);
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+      margin-bottom: 28px;
+      color: #fff;
+    }
+
+    h1 em {
+      color: #25D366;
+      font-style: normal;
     }
 
     .checklist {
       list-style: none;
-      text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 20px;
       margin-bottom: 24px;
     }
+
     .checklist li {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.4;
-      font-family: Arial, sans-serif;
+      font-size: clamp(15px, 3.5vw, 17px);
+      line-height: 1.5;
+      color: #fff;
     }
+
     .checklist li::before {
       content: '✅';
-      font-size: 18px;
+      font-size: 20px;
       flex-shrink: 0;
       margin-top: 1px;
     }
 
-    /* ── URGÊNCIA ── */
-    .urgency-box {
-      background: linear-gradient(135deg, #8b0000, #cc0000);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin: 20px 0 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-    }
-    .urgency-icon { font-size: 28px; }
-    .urgency-text { text-align: left; }
-    .urgency-main {
-      font-size: 18px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      line-height: 1.1;
-    }
-    .urgency-sub {
-      font-size: 13px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.85);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-top: 3px;
+    .e-principal {
+      font-size: clamp(15px, 3.5vw, 17px);
+      color: #fff;
+      margin: 4px 0 20px;
     }
 
-    /* ── BOTÃO URGÊNCIA VERMELHO ── */
+    /* ── BOTÕES ── */
     .btn-urgency {
       display: block;
       background: linear-gradient(135deg, #cc0000, #990000);
       color: #fff;
-      font-size: clamp(16px, 4vw, 20px);
-      font-weight: 900;
-      text-transform: uppercase;
+      font-size: clamp(16px, 4vw, 19px);
+      font-weight: 800;
       text-decoration: none;
-      letter-spacing: 0.03em;
-      padding: 16px 20px;
-      border-radius: 10px;
-      line-height: 1.25;
+      padding: 18px 20px;
+      border-radius: 8px;
       text-align: center;
+      line-height: 1.3;
       margin-bottom: 12px;
-      transition: background 0.2s, transform 0.15s;
+      transition: opacity 0.2s, transform 0.15s;
     }
+    .btn-urgency span { display: block; font-size: 0.82em; font-weight: 700; opacity: 0.9; margin-top: 3px; }
     .btn-urgency:active { transform: scale(0.97); }
-    .btn-urgency-sub { font-size: 0.8em; opacity: 0.9; }
 
-    /* ── BOTÃO WHATSAPP ── */
     .btn-wpp {
       display: block;
       background: #25D366;
       color: #fff;
-      font-size: clamp(17px, 4.5vw, 22px);
-      font-weight: 900;
-      text-transform: uppercase;
+      font-size: clamp(17px, 4vw, 21px);
+      font-weight: 800;
       text-decoration: none;
-      letter-spacing: 0.02em;
-      padding: 20px 24px;
-      border-radius: 10px;
-      line-height: 1.25;
+      padding: 20px 20px;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 1.3;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.3);
       transition: background 0.2s, transform 0.15s;
-      box-shadow: 0 6px 24px rgba(37,211,102,0.35);
     }
     .btn-wpp:active { transform: scale(0.97); }
     .btn-wpp:hover { background: #1ebe5d; }
-    .btn-wpp .arr { font-size: 1.1em; }
 
-    /* ── LOGO RODAPÉ ── */
     .footer-logo {
       margin-top: 36px;
-      opacity: 0.4;
-      font-size: 13px;
-      font-family: Arial, sans-serif;
-      color: #888;
+      text-align: center;
+      font-size: 12px;
+      color: #555;
     }
 
-    /* ── STICKY CTA mobile ── */
-    .sticky-cta {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #25D366;
-      padding: 14px 20px;
-      z-index: 999;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    }
-    .sticky-cta a {
-      display: block;
-      color: #fff;
-      font-size: 17px;
-      font-weight: 900;
-      text-transform: uppercase;
-      text-align: center;
-      text-decoration: none;
-      letter-spacing: 0.02em;
-    }
-    @media (max-width: 600px) {
-      .sticky-cta { display: block; }
-      .page { padding-bottom: 90px; }
-    }
+    /* sticky mobile */
+    .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #25D366; padding: 14px 20px; z-index: 999; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+    .sticky-cta a { display: block; color: #fff; font-size: 17px; font-weight: 800; text-align: center; text-decoration: none; }
+    @media (max-width: 600px) { .sticky-cta { display: block; } .page { padding-bottom: 90px; } }
   </style>
 </head>
 <body>
 
 <div class="page">
 
-  <!-- TAG TOPO -->
-  <p class="tag-top">— Aula Ao Vivo no Google Meet —</p>
+  <span class="tag-top">— Aula Ao Vivo no Google Meet —</span>
 
-  <!-- HEADLINE -->
-  <p class="headline-small">Como usar a</p>
-  <h1 class="headline-big">ISO 9001</h1>
-  <p class="headline-sub">Para crescer até <span class="headline-pct">30%</span></p>
+  <h1>Como Usar a ISO 9001 Para Crescer Até 30% — <em>sem burocracia</em></h1>
 
-  <!-- BENEFÍCIOS -->
-  <div class="benefits">
-    <div class="benefit-item">
-      <div class="benefit-icon">📈</div>
-      <p class="benefit-label">Mais<br>Faturamento</p>
-    </div>
-    <div class="benefit-item">
-      <div class="benefit-icon">🤝</div>
-      <p class="benefit-label">Clientes<br>Maiores</p>
-    </div>
-    <div class="benefit-item">
-      <div class="benefit-icon">⚙️</div>
-      <p class="benefit-label">Operação<br>Organizada</p>
-    </div>
-  </div>
-
-  <!-- COMPARATIVO -->
-  <div class="compare">
-    <div class="compare-col sem">
-      <p class="compare-title">Sem ISO 9001</p>
-      <div class="compare-item"><span class="ico-x">✗</span> Perde contratos</div>
-      <div class="compare-item"><span class="ico-x">✗</span> Retrabalho</div>
-      <div class="compare-item"><span class="ico-x">✗</span> Desorganização</div>
-      <div class="compare-item"><span class="ico-x">✗</span> Crescimento travado</div>
-    </div>
-    <div class="compare-col com">
-      <p class="compare-title">Com ISO 9001</p>
-      <div class="compare-item"><span class="ico-check">✓</span> Mais contratos</div>
-      <div class="compare-item"><span class="ico-check">✓</span> Mais produtividade</div>
-      <div class="compare-item"><span class="ico-check">✓</span> Mais confiança</div>
-      <div class="compare-item"><span class="ico-check">✓</span> Crescimento previsível</div>
-    </div>
-  </div>
-
-  <!-- ALERTA -->
-  <div class="alert-box">
-    <span class="alert-icon">⚠️</span>
-    <p class="alert-text">Sua empresa <em>não cresce</em><br>por falta de gestão.</p>
-  </div>
-
-  <!-- CHECKLIST -->
-  <p class="section-label">O que você vai aprender na aula</p>
   <ul class="checklist">
-    <li>Como a ISO 9001 abre portas para contratos com grandes empresas e licitações públicas</li>
-    <li>Por que empresas certificadas faturam, em média, 27% mais do que as concorrentes</li>
-    <li>O método que a Templum usa para certificar em até 90 dias — com garantia em contrato</li>
-    <li>Os 3 erros que travam a certificação e como evitar cada um deles</li>
-    <li>E o principal: como transformar a ISO 9001 em vantagem competitiva real para o seu negócio</li>
+    <li>Como a ISO 9001 abre portas para contratos com grandes empresas e licitações públicas que sua concorrente ainda não consegue acessar</li>
+    <li>Por que empresas certificadas faturam, em média, 27% mais — e o que muda na operação para isso acontecer</li>
+    <li>O método que a Templum usa para certificar em até 90 dias, com garantia em contrato e sem parar a operação</li>
+    <li>Os 3 erros que fazem a certificação travar — e como evitar cada um deles antes de começar</li>
   </ul>
 
-  <!-- BOTÃO URGÊNCIA VERMELHO → WPP -->
-  <a
-    class="btn-urgency"
-    href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
-    onclick="trackWpp(this)"
-  >
-    Aula ao Vivo · Segunda · 12h<br>
-    <span class="btn-urgency-sub">Limite de 100 pessoas</span>
+  <p class="e-principal">E o principal:</p>
+
+  <ul class="checklist">
+    <li>Como transformar o certificado ISO 9001 em vantagem competitiva real: mais clientes, ticket maior e operação organizada</li>
+  </ul>
+
+  <br>
+
+  <a class="btn-urgency" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+    Aula Ao Vivo · Segunda · 12h
+    <span>Limite de 100 pessoas — não haverá replay</span>
   </a>
 
-  <!-- BOTÃO PRINCIPAL VERDE → WPP -->
-  <a
-    class="btn-wpp"
-    href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
-    id="btn-wpp-main"
-    data-track="wpp_group_click"
-    onclick="trackWpp(this)"
-  >
-    Toque para Entrar no<br>Grupo de WhatsApp <span class="arr">>></span>
+  <a class="btn-wpp" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+    Toque para Entrar no Grupo de WhatsApp >>
   </a>
 
-  <!-- RODAPÉ -->
   <p class="footer-logo">Templum Consultoria · +30 anos · +2.000 empresas certificadas</p>
 
 </div>
 
-<!-- STICKY CTA mobile -->
 <div class="sticky-cta">
   <a href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
     📲 Entrar no Grupo do WhatsApp >>
@@ -420,25 +181,17 @@
 
 <script>
   function trackWpp(el) {
-    // Dispara evento Lead no Meta Pixel ao clicar no WhatsApp
     if (typeof fbq === 'function') {
-      fbq('track', 'Lead', { content_name: 'aula-iso-9001-wpp-group' });
+      fbq('track', 'Lead', { content_name: 'aula-iso-9001-wpp' });
     }
-    // Pequeno delay para pixel disparar antes de navegar
-    var href = el.getAttribute('href') || el.href;
-    if (href && href.indexOf('LINK-DO-GRUPO') === -1) {
-      setTimeout(function() { window.location.href = href; }, 300);
-      return false;
-    }
+    var href = el.getAttribute('href');
+    setTimeout(function() { window.location.href = href; }, 250);
+    return false;
   }
-
-  // Captura UTMs para passar ao WhatsApp (futuro uso)
   (function() {
-    var params = new URLSearchParams(window.location.search);
-    var fbclid = params.get('fbclid');
-    if (fbclid) {
-      document.cookie = 'fbclid=' + fbclid + '; path=/; max-age=7776000; SameSite=Lax';
-    }
+    var p = new URLSearchParams(window.location.search);
+    var fbclid = p.get('fbclid');
+    if (fbclid) document.cookie = 'fbclid=' + fbclid + '; path=/; max-age=7776000; SameSite=Lax';
   })();
 </script>
 
