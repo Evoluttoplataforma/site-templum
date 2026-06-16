@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula Ao Vivo: Como Usar a ISO 9001 Para Crescer Até 30% — Templum</title>
+  <meta name="description" content="Aula ao vivo gratuita para empresários: como usar a ISO 9001 para crescer até 30% com mais faturamento, clientes maiores e operação organizada." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Meta Pixel 1 -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1265191353683807');
+    fbq('init', '4177249519256900');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1"/></noscript>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: #000;
+      color: #fff;
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+      text-align: center;
+    }
+
+    /* ── TAG TOPO ── */
+    .tag-top {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ccc;
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ── HEADLINE ── */
+    .headline-small {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .headline-big {
+      font-size: clamp(52px, 16vw, 88px);
+      font-weight: 900;
+      color: #FF5925;
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin: 4px 0;
+    }
+
+    .headline-sub {
+      font-size: clamp(22px, 6vw, 36px);
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .headline-pct {
+      display: inline-block;
+      background: #FF5925;
+      color: #fff;
+      font-size: clamp(22px, 6vw, 36px);
+      font-weight: 900;
+      padding: 2px 10px;
+      margin-left: 6px;
+      border-radius: 4px;
+    }
+
+    /* ── ÍCONES BENEFÍCIOS ── */
+    .benefits {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .benefit-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .benefit-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid #FF5925;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .benefit-label {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    /* ── COMPARATIVO ── */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .compare-col {
+      border-radius: 8px;
+      padding: 12px 10px;
+      text-align: left;
+    }
+    .compare-col.sem { background: #1a0000; border: 1.5px solid #8b0000; }
+    .compare-col.com { background: #001a00; border: 1.5px solid #006400; }
+    .compare-title {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 4px 0 10px;
+      letter-spacing: 0.04em;
+    }
+    .compare-col.sem .compare-title { color: #ff4444; }
+    .compare-col.com .compare-title { color: #44dd44; }
+    .compare-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .compare-item:last-child { margin-bottom: 0; }
+    .ico-x { color: #ff3333; font-size: 14px; flex-shrink: 0; }
+    .ico-check { color: #33cc33; font-size: 14px; flex-shrink: 0; }
+
+    /* ── ALERTA ── */
+    .alert-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #111;
+      border: 1.5px solid #FF5925;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      text-align: left;
+    }
+    .alert-icon { font-size: 28px; flex-shrink: 0; }
+    .alert-text {
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+    }
+    .alert-text em { color: #FF5925; font-style: normal; }
+
+    /* ── CHECKLIST ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 24px 0 12px;
+      font-family: Arial, sans-serif;
+    }
+
+    .checklist {
+      list-style: none;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+      font-family: Arial, sans-serif;
+    }
+    .checklist li::before {
+      content: '✅';
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── URGÊNCIA ── */
+    .urgency-box {
+      background: linear-gradient(135deg, #8b0000, #cc0000);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 20px 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .urgency-icon { font-size: 28px; }
+    .urgency-text { text-align: left; }
+    .urgency-main {
+      font-size: 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+    .urgency-sub {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 3px;
+    }
+
+    /* ── BOTÃO WHATSAPP ── */
+    .btn-wpp {
+      display: block;
+      background: #25D366;
+      color: #fff;
+      font-size: clamp(17px, 4.5vw, 22px);
+      font-weight: 900;
+      text-transform: uppercase;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      padding: 20px 24px;
+      border-radius: 10px;
+      line-height: 1.25;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.35);
+    }
+    .btn-wpp:active { transform: scale(0.97); }
+    .btn-wpp:hover { background: #1ebe5d; }
+    .btn-wpp .arr { font-size: 1.1em; }
+
+    /* ── LOGO RODAPÉ ── */
+    .footer-logo {
+      margin-top: 36px;
+      opacity: 0.4;
+      font-size: 13px;
+      font-family: Arial, sans-serif;
+      color: #888;
+    }
+
+    /* ── STICKY CTA mobile ── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #25D366;
+      padding: 14px 20px;
+      z-index: 999;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+    }
+    .sticky-cta a {
+      display: block;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 600px) {
+      .sticky-cta { display: block; }
+      .page { padding-bottom: 90px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- TAG TOPO -->
+  <p class="tag-top">— Aula Ao Vivo no Google Meet —</p>
+
+  <!-- HEADLINE -->
+  <p class="headline-small">Como usar a</p>
+  <h1 class="headline-big">ISO 9001</h1>
+  <p class="headline-sub">Para crescer até <span class="headline-pct">30%</span></p>
+
+  <!-- BENEFÍCIOS -->
+  <div class="benefits">
+    <div class="benefit-item">
+      <div class="benefit-icon">📈</div>
+      <p class="benefit-label">Mais<br>Faturamento</p>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🤝</div>
+      <p class="benefit-label">Clientes<br>Maiores</p>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">⚙️</div>
+      <p class="benefit-label">Operação<br>Organizada</p>
+    </div>
+  </div>
+
+  <!-- COMPARATIVO -->
+  <div class="compare">
+    <div class="compare-col sem">
+      <p class="compare-title">Sem ISO 9001</p>
+      <div class="compare-item"><span class="ico-x">✗</span> Perde contratos</div>
+      <div class="compare-item"><span class="ico-x">✗</span> Retrabalho</div>
+      <div class="compare-item"><span class="ico-x">✗</span> Desorganização</div>
+      <div class="compare-item"><span class="ico-x">✗</span> Crescimento travado</div>
+    </div>
+    <div class="compare-col com">
+      <p class="compare-title">Com ISO 9001</p>
+      <div class="compare-item"><span class="ico-check">✓</span> Mais contratos</div>
+      <div class="compare-item"><span class="ico-check">✓</span> Mais produtividade</div>
+      <div class="compare-item"><span class="ico-check">✓</span> Mais confiança</div>
+      <div class="compare-item"><span class="ico-check">✓</span> Crescimento previsível</div>
+    </div>
+  </div>
+
+  <!-- ALERTA -->
+  <div class="alert-box">
+    <span class="alert-icon">⚠️</span>
+    <p class="alert-text">Sua empresa <em>não cresce</em><br>por falta de gestão.</p>
+  </div>
+
+  <!-- CHECKLIST -->
+  <p class="section-label">O que você vai aprender na aula</p>
+  <ul class="checklist">
+    <li>Como a ISO 9001 abre portas para contratos com grandes empresas e licitações públicas</li>
+    <li>Por que empresas certificadas faturam, em média, 27% mais do que as concorrentes</li>
+    <li>O método que a Templum usa para certificar em até 90 dias — com garantia em contrato</li>
+    <li>Os 3 erros que travam a certificação e como evitar cada um deles</li>
+    <li>E o principal: como transformar a ISO 9001 em vantagem competitiva real para o seu negócio</li>
+  </ul>
+
+  <!-- URGÊNCIA -->
+  <div class="urgency-box">
+    <span class="urgency-icon">📡</span>
+    <div class="urgency-text">
+      <p class="urgency-main">Aula ao vivo<br>para empresários</p>
+      <p class="urgency-sub">⏰ Toda segunda · 12h · Vagas limitadas<br>🚫 Não haverá replay</p>
+    </div>
+  </div>
+
+  <!-- BOTÃO PRINCIPAL -->
+  <a
+    class="btn-wpp"
+    href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
+    id="btn-wpp-main"
+    data-track="wpp_group_click"
+    onclick="trackWpp(this)"
+  >
+    Toque para Entrar no<br>Grupo de WhatsApp <span class="arr">>></span>
+  </a>
+
+  <!-- RODAPÉ -->
+  <p class="footer-logo">Templum Consultoria · +30 anos · +2.000 empresas certificadas</p>
+
+</div>
+
+<!-- STICKY CTA mobile -->
+<div class="sticky-cta">
+  <a href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+    📲 Entrar no Grupo do WhatsApp >>
+  </a>
+</div>
+
+<script>
+  function trackWpp(el) {
+    // Dispara evento Lead no Meta Pixel ao clicar no WhatsApp
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', { content_name: 'aula-iso-9001-wpp-group' });
+    }
+    // Pequeno delay para pixel disparar antes de navegar
+    var href = el.getAttribute('href') || el.href;
+    if (href && href.indexOf('LINK-DO-GRUPO') === -1) {
+      setTimeout(function() { window.location.href = href; }, 300);
+      return false;
+    }
+  }
+
+  // Captura UTMs para passar ao WhatsApp (futuro uso)
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var fbclid = params.get('fbclid');
+    if (fbclid) {
+      document.cookie = 'fbclid=' + fbclid + '; path=/; max-age=7776000; SameSite=Lax';
+    }
+  })();
+</script>
+
+</body>
+</html>
