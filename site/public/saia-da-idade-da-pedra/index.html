@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Saia da Idade da Pedra — Templum</title>
-  <meta name="description" content="Sua empresa ainda funciona no improviso, na donodependência e sem processos? Descubra como sair da idade da pedra com um diagnóstico gratuito." />
+  <meta name="description" content="Sua empresa ainda funciona no improviso, sem processos e dependente demais de você? Descubra como sair da era das cavernas com um diagnóstico gratuito." />
   <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet" />
 
   <!-- Meta Pixel -->
   <script>
@@ -24,569 +27,508 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --amber: #D4820A;
-      --amber-light: #F0A830;
-      --stone: #8B6914;
-      --cave: #0e0a06;
-      --cave2: #161008;
-      --cave3: #1f1608;
-      --cave4: #2a1e0a;
-      --sand: #f5ead8;
-      --text-muted: #9a8060;
+      --orange:      #FF5925;
+      --orange-dark: #AF4022;
+      --navy:        #222831;
+      --navy-2:      #2D343E;
+      --cream:       #FFF4DD;
+      --cream-2:     #FFFAEB;
+      --surface:     #ffffff;
+      --bg:          #FFFAEB;
+      --text:        #18191B;
+      --text-2:      #3F424B;
+      --text-mid:    rgba(24,25,27,0.62);
+      --border:      rgba(24,25,27,0.08);
+      --border-onDark: rgba(255,244,221,0.14);
+      --shadow-card: 0 1px 2px rgba(24,25,27,0.04), 0 12px 32px rgba(24,25,27,0.08);
+      --shadow-cta:  0 15px 25px -10px rgba(255,89,37,0.55), inset 0 4px 8px rgba(253,221,138,0.55), inset 0 -4px 8px rgba(255,89,37,0.55);
+      --ease-soft: cubic-bezier(.22, 1, .36, 1);
+      --r-12: 12px; --r-16: 16px; --r-20: 20px; --r-24: 24px; --r-32: 32px;
     }
 
     html, body {
-      background: var(--cave);
-      color: var(--sand);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
+      font-family: 'Montserrat', -apple-system, sans-serif;
+      font-size: 16px; font-weight: 500; line-height: 1.6;
+      color: var(--text); background: var(--navy);
+      -webkit-font-smoothing: antialiased; overflow-x: clip;
     }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
 
-    /* rock texture overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.055'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
+    /* ── NAV ── */
+    .nav { background: rgba(34,40,49,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-onDark); position: sticky; top: 0; z-index: 80; }
+    .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { height: 38px; filter: brightness(0) invert(1); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 7px; background: var(--orange); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; padding: 9px 20px; border-radius: 50px; transition: background .25s var(--ease-soft), transform .25s var(--ease-soft); }
+    .nav-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    @media (max-width: 480px) { .nav-cta { display: none; } }
 
-    .page {
-      position: relative;
-      z-index: 1;
-      max-width: 620px;
-      margin: 0 auto;
-      padding: 40px 24px 100px;
-    }
+    /* ── HERO ── */
+    .hero { background: linear-gradient(135deg, #1a1000 0%, var(--navy) 55%, #0a0c10 100%); position: relative; overflow: hidden; padding: clamp(56px, 8vw, 96px) 0 clamp(48px, 7vw, 80px); }
+    .hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(600px 400px at 5% 0%, rgba(255,89,37,0.18), transparent 65%), radial-gradient(400px 300px at 90% 80%, rgba(255,89,37,0.08), transparent 65%); }
+    .hero-inner { max-width: 780px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
-    /* ── TOPO ── */
-    .logo-top {
-      display: block;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
+    .tag-pill { display: inline-block; width: fit-content; background: rgba(255,89,37,0.16); border: 1px solid var(--orange); box-shadow: 0 0 0 1px rgba(255,89,37,0.45), 0 8px 26px -8px rgba(255,89,37,0.55); color: var(--orange); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; padding: 5px 14px; border-radius: 6px; text-transform: uppercase; margin-bottom: 20px; }
 
-    /* ── BADGE ERA ── */
-    .era-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--cave4);
-      border: 1px solid rgba(212,130,10,0.3);
-      border-radius: 999px;
-      padding: 8px 16px;
-      width: fit-content;
-      margin-bottom: 24px;
-    }
+    .hero h1 { font-size: clamp(32px, 5.5vw, 58px); font-weight: 900; line-height: 1.06; letter-spacing: -0.03em; color: #fff; margin-bottom: 20px; }
+    .hero h1 em { color: var(--orange); font-style: italic; }
+    .hero-sub { font-size: clamp(16px, 2.2vw, 18px); color: rgba(255,244,221,0.78); line-height: 1.65; max-width: 620px; margin-bottom: 32px; }
+    .hero-cta-wrap { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
-    .era-badge .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--amber);
-      flex-shrink: 0;
-      animation: pulse 2s infinite;
-    }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--orange); color: #fff; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; padding: 16px 32px; border-radius: 50px; border: none; cursor: pointer; box-shadow: var(--shadow-cta); transition: background .3s var(--ease-soft), transform .3s var(--ease-soft); }
+    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-2px); }
+    .hero-note { font-size: 13px; color: rgba(255,244,221,0.5); display: flex; align-items: center; gap: 6px; }
+    .hero-note::before { content: '🔒'; font-size: 12px; }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    /* ── NÚMEROS ── */
+    .numbers-strip { background: var(--cream-2); border-top: 1px solid rgba(24,25,27,0.06); border-bottom: 1px solid rgba(24,25,27,0.06); padding: 28px 24px; }
+    .numbers-inner { max-width: 780px; margin: 0 auto; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .num-item { text-align: center; flex: 1; min-width: 140px; padding: 16px 12px; border-radius: var(--r-16); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-card); }
+    .num-value { display: block; font-size: clamp(24px, 4vw, 34px); font-weight: 900; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px; }
+    .num-value em { color: var(--orange); font-style: normal; }
+    .num-label { font-size: 12px; color: var(--text-mid); font-weight: 500; line-height: 1.4; }
 
-    .era-badge span {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--amber);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+    /* ── SEÇÕES ── */
+    .section-dark { background: var(--navy); padding: clamp(48px, 6vw, 72px) 0; }
+    .section-cream { background: var(--bg); padding: clamp(48px, 6vw, 72px) 0; }
+    .section-white { background: var(--surface); padding: clamp(48px, 6vw, 72px) 0; }
+    .inner { max-width: 780px; margin: 0 auto; padding: 0 24px; }
 
-    /* ── HEADLINE ── */
-    h1 {
-      font-size: clamp(28px, 6.5vw, 44px);
-      font-weight: 900;
-      line-height: 1.08;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-bottom: 18px;
-    }
-
-    h1 em {
-      color: var(--amber-light);
-      font-style: normal;
-    }
-
-    h1 s {
-      color: var(--text-muted);
-      text-decoration-color: var(--amber);
-    }
-
-    .sub {
-      font-size: clamp(15px, 3.5vw, 17px);
-      color: rgba(245,234,216,0.72);
-      line-height: 1.65;
-      margin-bottom: 36px;
-      border-left: 3px solid var(--amber);
-      padding-left: 16px;
-    }
+    .section-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+    .section-h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.12; margin-bottom: 10px; }
+    .section-h2.onDark { color: var(--cream); }
+    .section-sub { font-size: 16px; color: var(--text-mid); line-height: 1.6; margin-bottom: 32px; max-width: 580px; }
+    .section-sub.onDark { color: rgba(255,244,221,0.65); }
 
     /* ── SINTOMAS ── */
-    .symptoms-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
+    .symptoms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+    @media (max-width: 560px) { .symptoms-grid { grid-template-columns: 1fr; } }
 
-    .symptoms {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 36px;
-    }
+    .symptom-card { display: flex; align-items: flex-start; gap: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-onDark); border-radius: var(--r-16); padding: 18px 16px; transition: border-color .25s, background .25s; }
+    .symptom-card:hover { background: rgba(255,89,37,0.07); border-color: rgba(255,89,37,0.3); }
+    .symptom-ico { width: 40px; height: 40px; min-width: 40px; border-radius: var(--r-12); background: rgba(255,89,37,0.14); display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
+    .symptom-text { font-size: 14.5px; font-weight: 600; color: rgba(255,244,221,0.9); line-height: 1.5; padding-top: 8px; }
 
-    .symptoms li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: clamp(14px, 3.2vw, 16px);
-      line-height: 1.5;
-      color: var(--sand);
-      background: var(--cave3);
-      border: 1px solid rgba(212,130,10,0.18);
-      border-radius: 8px;
-      padding: 13px 15px;
-    }
+    /* ── CONTRASTE ERA DAS CAVERNAS vs HOJE ── */
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+    @media (max-width: 560px) { .contrast-grid { grid-template-columns: 1fr; } }
 
-    .symptoms li .ico { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .contrast-card { border-radius: var(--r-20); padding: 24px 20px; }
+    .contrast-card.old { background: rgba(255,255,255,0.04); border: 1px solid var(--border-onDark); }
+    .contrast-card.new { background: rgba(255,89,37,0.12); border: 1px solid rgba(255,89,37,0.3); }
+    .contrast-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .contrast-card.old .contrast-label { color: rgba(255,244,221,0.4); }
+    .contrast-card.new .contrast-label { color: var(--orange); }
+    .contrast-list { display: flex; flex-direction: column; gap: 10px; }
+    .contrast-item { font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.82); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .contrast-item .ci { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
 
-    /* ── VIRADA ── */
-    .turn {
-      text-align: center;
-      margin: 8px 0 32px;
-      position: relative;
-    }
+    /* ── REVEAL LIST ── */
+    .reveal-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .reveal-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); transition: border-color .25s, box-shadow .25s; }
+    .reveal-item:hover { border-color: rgba(255,89,37,0.3); box-shadow: 0 4px 20px rgba(255,89,37,0.08); }
+    .reveal-check { width: 28px; height: 28px; min-width: 28px; border-radius: 999px; background: var(--orange); color: #fff; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .reveal-text { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.5; }
+    .reveal-text span { display: block; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-top: 2px; }
 
-    .turn::before {
-      content: '';
-      position: absolute;
-      left: 0; right: 0;
-      top: 50%;
-      height: 1px;
-      background: rgba(212,130,10,0.2);
-    }
+    /* ── STEPS ── */
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 680px) { .steps-grid { grid-template-columns: 1fr; } }
+    .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 28px 22px; transition: transform .35s var(--ease-soft), box-shadow .35s var(--ease-soft); }
+    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+    .step-num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-12); background: rgba(255,89,37,0.12); color: var(--orange); font-weight: 900; font-size: 18px; margin-bottom: 16px; }
+    .step-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .step-card p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
 
-    .turn span {
-      position: relative;
-      background: var(--cave);
-      padding: 0 16px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--amber);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
+    /* ── DEPOIMENTO ── */
+    .depo-card { background: var(--navy); border: 1px solid var(--border-onDark); border-radius: var(--r-24); padding: 32px 28px; position: relative; }
+    .depo-card::before { content: '"'; position: absolute; top: 16px; left: 22px; font-size: 80px; font-weight: 900; color: var(--orange); line-height: 1; opacity: 0.3; font-family: Georgia, serif; }
+    .depo-stars { color: #FFAD33; font-size: 18px; letter-spacing: 2px; margin-bottom: 14px; }
+    .depo-text { font-size: 16px; font-weight: 500; color: rgba(255,244,221,0.88); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .depo-author { display: flex; align-items: center; gap: 12px; }
+    .depo-avatar { width: 44px; height: 44px; border-radius: 999px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); display: grid; place-items: center; font-weight: 900; font-size: 16px; color: #fff; flex-shrink: 0; }
+    .depo-name { font-weight: 700; font-size: 15px; color: var(--cream); }
+    .depo-role { font-size: 12.5px; color: rgba(255,244,221,0.5); margin-top: 1px; }
 
-    /* ── DIAGNÓSTICO ── */
-    .diag-block {
-      background: linear-gradient(135deg, #1a1000, #110b00);
-      border: 1px solid rgba(212,130,10,0.4);
-      border-radius: 12px;
-      padding: 28px 24px;
-      margin-bottom: 36px;
-      position: relative;
-      overflow: hidden;
-    }
+    /* ── GARANTIA ── */
+    .guarantee-bar { background: linear-gradient(90deg, #1a0600, var(--orange-dark), #1a0600); padding: 20px 24px; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; text-align: center; }
+    .guarantee-bar .g-ico { font-size: 28px; }
+    .guarantee-bar .g-text { font-size: clamp(14px, 2.5vw, 16px); font-weight: 700; color: #fff; }
+    .guarantee-bar .g-text em { color: var(--cream); font-style: normal; font-weight: 900; }
 
-    .diag-block::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #5c3a00, var(--amber), var(--amber-light));
-    }
+    /* ── FORMULÁRIO ── */
+    .form-section { background: var(--bg); padding: clamp(48px, 6vw, 80px) 0; }
+    .form-card { background: var(--surface); border-radius: var(--r-32); box-shadow: var(--shadow-card); border: 1px solid var(--border); overflow: hidden; }
+    .form-card-header { background: var(--navy); padding: 28px 32px; position: relative; overflow: hidden; }
+    .form-card-header::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(500px 300px at 100% 0%, rgba(255,89,37,0.2), transparent 65%); }
+    .form-card-header h2 { font-size: clamp(20px, 3vw, 28px); font-weight: 900; color: #fff; letter-spacing: -0.025em; line-height: 1.15; position: relative; z-index: 1; }
+    .form-card-header h2 em { color: var(--orange); font-style: normal; }
+    .form-card-header p { font-size: 14px; color: rgba(255,244,221,0.65); margin-top: 8px; position: relative; z-index: 1; }
+    .form-body { padding: 28px 32px; }
+    @media (max-width: 560px) { .form-body { padding: 20px 20px; } .form-card-header { padding: 22px 20px; } }
 
-    .diag-label {
-      display: inline-block;
-      background: var(--amber);
-      color: #000;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 4px;
-      margin-bottom: 14px;
-    }
+    .field-wrap { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .field-wrap label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-mid); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; gap: 0; } }
 
-    .diag-title {
-      font-size: clamp(18px, 4.5vw, 24px);
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 10px;
-    }
-
-    .diag-desc {
-      font-size: 15px;
-      color: rgba(245,234,216,0.68);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .diag-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .diag-list li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--sand);
-    }
-
-    .diag-list li::before {
-      content: '→';
-      color: var(--amber);
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    /* ── PROVA SOCIAL ── */
-    .proof {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-      padding: 20px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .proof-item { text-align: center; }
-
-    .proof-num {
-      display: block;
-      font-size: clamp(20px, 5vw, 26px);
-      font-weight: 900;
-      color: var(--amber-light);
-    }
-
-    .proof-label {
-      display: block;
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* ── FORM ── */
-    .form-section {
-      background: var(--cave2);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-    }
-
-    .form-title {
-      font-size: clamp(17px, 4vw, 21px);
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    .form-subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 22px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .form-group input,
-    .form-group select {
-      background: var(--cave3);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      color: var(--sand);
-      font-size: 15px;
-      padding: 14px 16px;
-      outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
-      -webkit-appearance: none;
-    }
-
-    .form-group input::placeholder { color: #5a4a30; }
-    .form-group select { color: #5a4a30; }
-    .form-group select.filled { color: var(--sand); }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--amber);
-    }
-
-    .form-group .field-wrap { display: flex; flex-direction: column; gap: 4px; }
-    .form-group input.error,
-    .form-group select.error { border-color: #e53e3e !important; }
-    .error-msg { font-size: 12px; color: #e06030; padding-left: 4px; display: none; }
+    .input, .select { width: 100%; padding: 13px 16px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r-12); font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; }
+    .input::placeholder { color: rgba(24,25,27,0.3); }
+    .input:focus, .select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,89,37,0.12); }
+    .input.error, .select.error { border-color: #DC2626; }
+    .select { color: rgba(24,25,27,0.4); cursor: pointer; }
+    .select.filled { color: var(--text); }
+    .error-msg { font-size: 11.5px; color: #DC2626; font-weight: 600; display: none; }
     .error-msg.show { display: block; }
 
-    .btn-submit {
-      display: block;
-      width: 100%;
-      background: linear-gradient(135deg, var(--amber), var(--stone));
-      color: #000;
-      font-size: clamp(16px, 4vw, 19px);
-      font-weight: 800;
-      border: none;
-      border-radius: 8px;
-      padding: 18px 20px;
-      text-align: center;
-      cursor: pointer;
-      margin-top: 16px;
-      line-height: 1.3;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-
-    .btn-submit span {
-      display: block;
-      font-size: 0.78em;
-      font-weight: 600;
-      opacity: 0.7;
-      margin-top: 3px;
-    }
-
+    .btn-submit { width: 100%; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--orange); color: #fff; font-family: 'Montserrat', sans-serif; font-size: clamp(15px, 3.5vw, 17px); font-weight: 800; padding: 18px 24px; border-radius: 50px; border: none; cursor: pointer; box-shadow: var(--shadow-cta); transition: background .3s var(--ease-soft), transform .3s var(--ease-soft); }
+    .btn-submit:hover { background: var(--orange-dark); transform: translateY(-2px); }
     .btn-submit:active { transform: scale(0.97); }
-    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-submit:disabled { opacity: 0.5; pointer-events: none; }
+    .btn-submit .arrow { font-size: 18px; transition: transform .3s var(--ease-soft); }
+    .btn-submit:hover .arrow { transform: translateX(4px); }
 
-    /* ── SUCESSO ── */
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 32px 20px;
-    }
-
-    .success-msg .ico { font-size: 48px; margin-bottom: 16px; }
-    .success-msg h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; }
-    .success-msg p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+    .form-legal { font-size: 11.5px; color: var(--text-mid); text-align: center; margin-top: 12px; line-height: 1.5; }
+    .success-msg { display: none; text-align: center; padding: 48px 24px; }
+    .success-msg .ico { font-size: 52px; margin-bottom: 16px; }
+    .success-msg h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .success-msg p { font-size: 15px; color: var(--text-mid); line-height: 1.6; }
 
     /* ── FOOTER ── */
-    .footer-logo {
-      text-align: center;
-      font-size: 12px;
-      color: #3a2e1a;
-      margin-top: 32px;
-    }
+    .footer { background: var(--navy); color: rgba(255,244,221,0.5); padding: 24px; text-align: center; font-size: 12px; border-top: 1px solid var(--border-onDark); }
+    .footer a { color: var(--orange); }
 
     /* ── STICKY MOBILE ── */
-    .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--amber); padding: 14px 20px; z-index: 999; box-shadow: 0 -4px 20px rgba(0,0,0,0.6); }
-    .sticky-cta a { display: block; color: #000; font-size: 17px; font-weight: 800; text-align: center; text-decoration: none; }
-    @media (max-width: 600px) {
-      .sticky-cta { display: block; }
-      .page { padding-bottom: 90px; }
+    .sticky-cta { display: none; }
+    @media (max-width: 640px) {
+      .sticky-cta { display: block; position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; z-index: 999; background: var(--orange); box-shadow: 0 -4px 24px rgba(255,89,37,0.4); }
+      .sticky-cta a { display: block; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; text-align: center; }
+      body { padding-bottom: 68px; }
     }
   </style>
 </head>
 <body>
 
-<div class="page">
-
-  <span class="logo-top">Templum Consultoria</span>
-
-  <!-- BADGE -->
-  <div class="era-badge">
-    <div class="dot"></div>
-    <span>Diagnóstico gratuito · Vagas limitadas</span>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <img class="nav-logo" src="/assets/logo/templum.png" alt="Templum" />
+    <a class="nav-cta" href="#form">Quero sair da idade da pedra →</a>
   </div>
+</nav>
 
-  <!-- HEADLINE -->
-  <h1>Sua empresa ainda<br>vive na <em>idade da pedra?</em></h1>
-
-  <p class="sub">
-    Sem processos, sem padrão, sem previsibilidade — empresa que depende de uma pessoa só para funcionar é empresa presa no passado. A ISO 9001 existe exatamente para isso.
-  </p>
-
-  <!-- SINTOMAS -->
-  <p class="symptoms-title">Sintomas de uma empresa na era das cavernas:</p>
-  <ul class="symptoms">
-    <li><span class="ico">🪨</span> <span>Sem você, a empresa trava. Tudo passa pela sua mão</span></li>
-    <li><span class="ico">🪨</span> <span>Cada funcionário faz do seu jeito. Não tem padrão</span></li>
-    <li><span class="ico">🪨</span> <span>Cliente nunca sabe o que vai receber — qualidade oscila</span></li>
-    <li><span class="ico">🪨</span> <span>Retrabalho toda semana. Os mesmos erros, de novo</span></li>
-    <li><span class="ico">🪨</span> <span>Não consegue crescer porque a base está quebrada</span></li>
-  </ul>
-
-  <div class="turn"><span>É hora de sair disso</span></div>
-
-  <!-- DIAGNÓSTICO -->
-  <div class="diag-block">
-    <span class="diag-label">Diagnóstico gratuito</span>
-    <h2 class="diag-title">O Raio-X da sua empresa:<br>em uma conversa, você descobre</h2>
-    <p class="diag-desc">Um especialista Templum analisa sua operação e aponta exatamente o que está travando seu crescimento — sem enrolação, sem pitch de venda.</p>
-    <ul class="diag-list">
-      <li>Onde sua empresa depende demais de você</li>
-      <li>Onde o retrabalho está escondido e custando caro</li>
-      <li>Onde clientes correm risco de ir embora</li>
-      <li>O que mudar primeiro para sair do improviso</li>
-    </ul>
-  </div>
-
-  <!-- PROVA SOCIAL -->
-  <div class="proof">
-    <div class="proof-item">
-      <span class="proof-num">+2.000</span>
-      <span class="proof-label">empresas certificadas</span>
-    </div>
-    <div class="proof-item">
-      <span class="proof-num">+30 anos</span>
-      <span class="proof-label">de operação</span>
-    </div>
-    <div class="proof-item">
-      <span class="proof-num">Garantia</span>
-      <span class="proof-label">de 200%</span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="tag-pill">Diagnóstico Gratuito · ISO 9001</span>
+    <h1>Sua empresa ainda vive<br>na <em>idade da pedra?</em></h1>
+    <p class="hero-sub">Sem processos, sem padrão, cada um fazendo do seu jeito — empresa que funciona no improviso não cresce, não escala e não sobrevive à concorrência. A ISO 9001 muda isso.</p>
+    <div class="hero-cta-wrap">
+      <a class="btn-primary" href="#form">Quero meu diagnóstico gratuito →</a>
+      <span class="hero-note">100% gratuito, sem compromisso</span>
     </div>
   </div>
+</section>
 
-  <!-- FORMULÁRIO -->
-  <div class="form-section" id="formSection">
-    <h3 class="form-title">Quero sair da idade da pedra</h3>
-    <p class="form-subtitle">Preencha abaixo — um especialista entra em contato em até 1 dia útil.</p>
-
-    <form id="leadForm" novalidate>
-      <div class="form-group">
-        <div class="field-wrap">
-          <input type="text" id="fNome" name="nome" placeholder="Seu nome *" autocomplete="name" required />
-          <span class="error-msg" id="errNome">Informe seu nome.</span>
-        </div>
-        <div class="field-wrap">
-          <input type="email" id="fEmail" name="email" placeholder="E-mail corporativo *" autocomplete="email" required />
-          <span class="error-msg" id="errEmail">Informe um e-mail válido.</span>
-        </div>
-        <div class="field-wrap">
-          <input type="tel" id="fTel" name="telefone" placeholder="WhatsApp (ex.: (11) 99999-9999) *" autocomplete="tel" required />
-          <span class="error-msg" id="errTel">Informe o WhatsApp com DDD.</span>
-        </div>
-        <div class="field-wrap">
-          <input type="text" id="fEmp" name="empresa" placeholder="Nome da empresa *" autocomplete="organization" required />
-          <span class="error-msg" id="errEmp">Informe o nome da empresa.</span>
-        </div>
-        <div class="field-wrap">
-          <select name="funcionarios" id="selFunc" required>
-            <option value="" disabled selected>Quantos funcionários? *</option>
-            <option value="1-10">1 a 10</option>
-            <option value="11-50">11 a 50</option>
-            <option value="51-200">51 a 200</option>
-            <option value="+200">Mais de 200</option>
-          </select>
-          <span class="error-msg" id="errFunc">Selecione o número de funcionários.</span>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit" id="btnSubmit">
-        Quero meu diagnóstico gratuito
-        <span>Reunião com especialista · Sem compromisso</span>
-      </button>
-    </form>
-
-    <div class="success-msg" id="successMsg">
-      <div class="ico">✅</div>
-      <h2>Pedido recebido!</h2>
-      <p>Um especialista Templum vai entrar em contato pelo WhatsApp em até 1 dia útil para agendar o seu diagnóstico.</p>
+<!-- NÚMEROS -->
+<div class="numbers-strip">
+  <div class="numbers-inner">
+    <div class="num-item">
+      <span class="num-value">+<em>2.000</em></span>
+      <span class="num-label">empresas certificadas</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value">+<em>30</em> anos</span>
+      <span class="num-label">de atuação no mercado</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value"><em>200</em>%</span>
+      <span class="num-label">de garantia em contrato</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value"><em>90</em> dias</span>
+      <span class="num-label">para certificar</span>
     </div>
   </div>
-
-  <p class="footer-logo">Templum Consultoria · +30 anos · +2.000 empresas certificadas · Garantia de 200%</p>
-
 </div>
 
-<!-- STICKY MOBILE -->
+<!-- SINTOMAS -->
+<section class="section-dark">
+  <div class="inner">
+    <span class="section-tag">Sintomas da era das cavernas</span>
+    <h2 class="section-h2 onDark">Empresa sem processo é empresa<br>presa no passado</h2>
+    <p class="section-sub onDark">Se pelo menos 2 dessas situações acontecem na sua empresa hoje, você está mais perto da era das cavernas do que imagina.</p>
+    <div class="symptoms-grid">
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Sem você, a empresa para. Você é o processo</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Cada funcionário faz do seu jeito. Zero padrão</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Retrabalho toda semana. Os mesmos erros, de novo</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Perde contratos com grandes empresas por falta de certificação</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Cliente nunca sabe o que vai receber. Qualidade oscila</p>
+      </div>
+      <div class="symptom-card">
+        <div class="symptom-ico">🪨</div>
+        <p class="symptom-text">Corre muito, cresce pouco. A base está quebrada</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRASTE: ERA DAS CAVERNAS vs COM ISO 9001 -->
+<section class="section-dark" style="padding-top:0">
+  <div class="inner">
+    <div class="contrast-grid">
+      <div class="contrast-card old">
+        <div class="contrast-label">🪨 Sem ISO 9001</div>
+        <ul class="contrast-list">
+          <li class="contrast-item"><span class="ci">✗</span> Empresa depende de você 24h</li>
+          <li class="contrast-item"><span class="ci">✗</span> Sem processo documentado</li>
+          <li class="contrast-item"><span class="ci">✗</span> Clientes de risco à vista</li>
+          <li class="contrast-item"><span class="ci">✗</span> Bloqueado em licitações</li>
+        </ul>
+      </div>
+      <div class="contrast-card new">
+        <div class="contrast-label">🚀 Com ISO 9001</div>
+        <ul class="contrast-list">
+          <li class="contrast-item"><span class="ci" style="color:var(--orange)">✓</span> Operação roda sem você</li>
+          <li class="contrast-item"><span class="ci" style="color:var(--orange)">✓</span> Processos claros, time alinhado</li>
+          <li class="contrast-item"><span class="ci" style="color:var(--orange)">✓</span> Clientes maiores, ticket maior</li>
+          <li class="contrast-item"><span class="ci" style="color:var(--orange)">✓</span> Acesso a licitações públicas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE O DIAGNÓSTICO REVELA -->
+<section class="section-cream">
+  <div class="inner">
+    <span class="section-tag">O diagnóstico</span>
+    <h2 class="section-h2">O que o Raio-X vai mostrar<br>na sua empresa</h2>
+    <p class="section-sub">Em uma conversa com um especialista Templum, você vai sair com o mapa claro do que está travando seu crescimento.</p>
+    <div class="reveal-list">
+      <div class="reveal-item">
+        <div class="reveal-check">✓</div>
+        <div class="reveal-text">
+          Onde sua empresa depende demais de você
+          <span>Quais processos precisam de você para funcionar — e como mudar isso.</span>
+        </div>
+      </div>
+      <div class="reveal-item">
+        <div class="reveal-check">✓</div>
+        <div class="reveal-text">
+          Onde o retrabalho está escondido e custando caro
+          <span>Os pontos exatos onde tempo e dinheiro estão sendo desperdiçados.</span>
+        </div>
+      </div>
+      <div class="reveal-item">
+        <div class="reveal-check">✓</div>
+        <div class="reveal-text">
+          Onde clientes correm risco de ir embora
+          <span>As falhas de qualidade e entrega que destroem sua reputação silenciosamente.</span>
+        </div>
+      </div>
+      <div class="reveal-item">
+        <div class="reveal-check">✓</div>
+        <div class="reveal-text">
+          O caminho mais rápido para sair da idade da pedra
+          <span>Quanto tempo leva, o que muda primeiro e como a Templum acompanha cada etapa.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section-white">
+  <div class="inner">
+    <span class="section-tag">Como funciona</span>
+    <h2 class="section-h2">Do formulário à reunião:<br>em 3 passos simples</h2>
+    <p class="section-sub">Sem enrolação. Sem apresentação comercial forçada. Só o diagnóstico do que está travando sua empresa.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Preencha o formulário</h3>
+        <p>Leva menos de 2 minutos. Só o básico para preparar o diagnóstico certo para a sua empresa.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Especialista entra em contato</h3>
+        <p>Em até 1 dia útil, um especialista Templum te manda mensagem no WhatsApp para agendar.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Raio-X da sua operação</h3>
+        <p>Conversa de 30–45 minutos. Saída: mapa claro do que está travando e os próximos passos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="section-cream">
+  <div class="inner">
+    <span class="section-tag">Quem já saiu da idade da pedra</span>
+    <h2 class="section-h2" style="margin-bottom:28px">O que nossos clientes dizem</h2>
+    <div class="depo-card">
+      <div class="depo-stars">★★★★★</div>
+      <p class="depo-text">"Os ganhos são imensuráveis quando temos processos mapeados e implementados. Os procedimentos, controles e formulários organizaram tanto a Operação quanto a Administração, gerando maior confiabilidade e rastreabilidade — e melhorando a tomada de decisão."</p>
+      <div class="depo-author">
+        <div class="depo-avatar">JL</div>
+        <div>
+          <div class="depo-name">Jessica Mesquita Lapa</div>
+          <div class="depo-role">Agrimol Soluções Agrícolas · ISO 9001 + ISO 14001</div>
+        </div>
+      </div>
+    </div>
+    <div class="depo-card" style="margin-top:16px">
+      <div class="depo-stars">★★★★★</div>
+      <p class="depo-text">"Mesmo sendo uma consultoria remota, não nos sentimos sozinhos na execução das tarefas. Tivemos o retorno esperado, com a certificação na norma 9001:2015 em 10 meses de projeto."</p>
+      <div class="depo-author">
+        <div class="depo-avatar">GN</div>
+        <div>
+          <div class="depo-name">Gleyse Nunes</div>
+          <div class="depo-role">ISO 9001 · Certificada em 10 meses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARANTIA -->
+<div class="guarantee-bar">
+  <span class="g-ico">🏆</span>
+  <span class="g-text">Garantia Templum: <em>certifique ou devolvemos o dobro do investimento.</em> 200% garantido em contrato.</span>
+</div>
+
+<!-- FORMULÁRIO -->
+<section class="form-section" id="form">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:28px">
+      <span class="section-tag">Vagas limitadas por semana</span>
+      <h2 class="section-h2">Quero sair da idade da pedra</h2>
+      <p class="section-sub" style="margin:8px auto 0">Preencha abaixo — um especialista entra em contato em até 1 dia útil pelo WhatsApp.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-card-header">
+        <h2>Diagnóstico gratuito com <em>especialista Templum</em></h2>
+        <p>30–45 minutos · 100% gratuito · Sem compromisso de compra</p>
+      </div>
+      <div class="form-body">
+        <form id="leadForm" novalidate>
+          <div class="form-row">
+            <div class="field-wrap">
+              <label for="fNome">Nome *</label>
+              <input class="input" type="text" id="fNome" name="nome" placeholder="Seu nome completo" autocomplete="name" required />
+              <span class="error-msg" id="errNome">Informe seu nome.</span>
+            </div>
+            <div class="field-wrap">
+              <label for="fEmp">Empresa *</label>
+              <input class="input" type="text" id="fEmp" name="empresa" placeholder="Nome da empresa" autocomplete="organization" required />
+              <span class="error-msg" id="errEmp">Informe o nome da empresa.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field-wrap">
+              <label for="fEmail">E-mail *</label>
+              <input class="input" type="email" id="fEmail" name="email" placeholder="voce@empresa.com" autocomplete="email" required />
+              <span class="error-msg" id="errEmail">Informe um e-mail válido.</span>
+            </div>
+            <div class="field-wrap">
+              <label for="fTel">WhatsApp *</label>
+              <input class="input" type="tel" id="fTel" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel" required />
+              <span class="error-msg" id="errTel">Informe o WhatsApp com DDD.</span>
+            </div>
+          </div>
+          <div class="field-wrap">
+            <label for="selFunc">Número de funcionários *</label>
+            <select class="select" id="selFunc" name="funcionarios" required>
+              <option value="" disabled selected>Selecione</option>
+              <option value="1-10">1 a 10</option>
+              <option value="11-50">11 a 50</option>
+              <option value="51-200">51 a 200</option>
+              <option value="+200">Mais de 200</option>
+            </select>
+            <span class="error-msg" id="errFunc">Selecione o número de funcionários.</span>
+          </div>
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            Quero meu diagnóstico gratuito <span class="arrow">→</span>
+          </button>
+          <p class="form-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
+        </form>
+        <div class="success-msg" id="successMsg">
+          <div class="ico">✅</div>
+          <h2>Pedido recebido!</h2>
+          <p>Um especialista Templum vai entrar em contato pelo WhatsApp em até 1 dia útil para agendar o seu diagnóstico gratuito.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© Templum Consultoria · +30 anos · +2.000 empresas certificadas · <a href="/privacidade">Política de Privacidade</a></p>
+</footer>
+
 <div class="sticky-cta">
-  <a href="#formSection" onclick="document.getElementById('formSection').scrollIntoView({behavior:'smooth'}); return false;">
-    🪨 Quero sair da idade da pedra
+  <a href="#form" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'}); return false;">
+    Quero sair da idade da pedra →
   </a>
 </div>
 
 <script>
-  document.getElementById('selFunc').addEventListener('change', function() {
-    this.classList.add('filled');
-    clearError(this, document.getElementById('errFunc'));
-  });
-
-  // Phone mask (11) 99999-9999
   document.getElementById('fTel').addEventListener('input', function() {
     var v = this.value.replace(/\D/g, '').slice(0, 11);
-    if (v.length === 0) { this.value = ''; return; }
-    if (v.length <= 2)  { this.value = '(' + v; return; }
-    if (v.length <= 7)  { this.value = '(' + v.slice(0,2) + ') ' + v.slice(2); return; }
-    this.value = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    if (!v) { this.value = ''; return; }
+    if (v.length <= 2) this.value = '(' + v;
+    else if (v.length <= 7) this.value = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    else this.value = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
   });
 
-  function clearError(el, errEl) {
-    el.classList.remove('error');
-    errEl.classList.remove('show');
-  }
-  function showError(el, errEl) {
-    el.classList.add('error');
-    errEl.classList.add('show');
-  }
+  document.getElementById('selFunc').addEventListener('change', function() {
+    this.classList.add('filled');
+    clearErr(this, document.getElementById('errFunc'));
+  });
+
+  function showErr(el, msg) { el.classList.add('error'); msg.classList.add('show'); }
+  function clearErr(el, msg) { el.classList.remove('error'); msg.classList.remove('show'); }
 
   ['fNome','fEmail','fTel','fEmp'].forEach(function(id) {
     var el = document.getElementById(id);
-    var errId = { fNome:'errNome', fEmail:'errEmail', fTel:'errTel', fEmp:'errEmp' }[id];
-    el.addEventListener('input', function() { clearError(el, document.getElementById(errId)); });
+    var errId = {fNome:'errNome',fEmail:'errEmail',fTel:'errTel',fEmp:'errEmp'}[id];
+    el.addEventListener('input', function() { clearErr(el, document.getElementById(errId)); });
   });
 
-  // UTM capture
   (function() {
     var p = new URLSearchParams(window.location.search);
     var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid'];
-    var store = {};
-    keys.forEach(function(k) { var v = p.get(k); if (v) store[k] = v; });
-    if (Object.keys(store).length) {
-      try { sessionStorage.setItem('_trk', JSON.stringify(store)); } catch(e) {}
-    }
+    var s = {};
+    keys.forEach(function(k) { var v = p.get(k); if (v) s[k] = v; });
+    if (Object.keys(s).length) try { sessionStorage.setItem('_trk', JSON.stringify(s)); } catch(e){}
     var fbclid = p.get('fbclid');
     if (fbclid) document.cookie = 'fbclid=' + fbclid + '; path=/; max-age=7776000; SameSite=Lax';
   })();
 
-  function getUtms() {
-    try { return JSON.parse(sessionStorage.getItem('_trk') || '{}'); } catch(e) { return {}; }
-  }
-
-  function getFbc() {
-    var m = document.cookie.match(/fbclid=([^;]+)/);
-    if (m) return 'fb.1.' + Date.now() + '.' + m[1];
-    return '';
-  }
-
-  function getFbp() {
-    var m = document.cookie.match(/_fbp=([^;]+)/);
-    return m ? m[1] : '';
-  }
+  function getUtms() { try { return JSON.parse(sessionStorage.getItem('_trk') || '{}'); } catch(e) { return {}; } }
+  function getFbc() { var m = document.cookie.match(/fbclid=([^;]+)/); return m ? 'fb.1.' + Date.now() + '.' + m[1] : ''; }
+  function getFbp() { var m = document.cookie.match(/_fbp=([^;]+)/); return m ? m[1] : ''; }
 
   document.getElementById('leadForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-
-    // Validação
     var ok = true;
     var nome  = document.getElementById('fNome');
     var email = document.getElementById('fEmail');
@@ -594,71 +536,37 @@
     var emp   = document.getElementById('fEmp');
     var func  = document.getElementById('selFunc');
 
-    if (!nome.value.trim()) { showError(nome, document.getElementById('errNome')); ok = false; }
-    if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showError(email, document.getElementById('errEmail')); ok = false; }
-    var telDigits = tel.value.replace(/\D/g,'');
-    if (telDigits.length < 10) { showError(tel, document.getElementById('errTel')); ok = false; }
-    if (!emp.value.trim()) { showError(emp, document.getElementById('errEmp')); ok = false; }
-    if (!func.value) { showError(func, document.getElementById('errFunc')); ok = false; }
-
+    if (!nome.value.trim())  { showErr(nome,  document.getElementById('errNome'));  ok = false; }
+    if (!emp.value.trim())   { showErr(emp,   document.getElementById('errEmp'));   ok = false; }
+    if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showErr(email, document.getElementById('errEmail')); ok = false; }
+    if (tel.value.replace(/\D/g,'').length < 10) { showErr(tel, document.getElementById('errTel')); ok = false; }
+    if (!func.value) { showErr(func, document.getElementById('errFunc')); ok = false; }
     if (!ok) return;
 
     var btn = document.getElementById('btnSubmit');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
+    btn.disabled = true; btn.textContent = 'Enviando...';
 
-    var fd = new FormData(this);
     var utms = getUtms();
-
     var payload = {
-      nome:        fd.get('nome'),
-      email:       fd.get('email'),
-      telefone:    fd.get('telefone'),
-      empresa:     fd.get('empresa'),
-      funcionarios: fd.get('funcionarios'),
-      evento:      'raio-x-caverna',
-      pagina:      window.location.href,
-      utm_source:  utms.utm_source  || '',
-      utm_medium:  utms.utm_medium  || '',
-      utm_campaign:utms.utm_campaign|| '',
-      utm_term:    utms.utm_term    || '',
-      utm_content: utms.utm_content || '',
-      fbclid:      utms.fbclid      || '',
-      gclid:       utms.gclid       || '',
-      fbp:         getFbp(),
-      fbc:         getFbc(),
-      referrer:    document.referrer,
-      landing:     window.location.href,
+      nome: nome.value.trim(), email: email.value.trim(),
+      telefone: tel.value, empresa: emp.value.trim(), funcionarios: func.value,
+      evento: 'raio-x-caverna', pagina: window.location.href,
+      utm_source: utms.utm_source||'', utm_medium: utms.utm_medium||'',
+      utm_campaign: utms.utm_campaign||'', utm_term: utms.utm_term||'',
+      utm_content: utms.utm_content||'', fbclid: utms.fbclid||'', gclid: utms.gclid||'',
+      fbp: getFbp(), fbc: getFbc(), referrer: document.referrer, landing: window.location.href,
     };
 
     try {
-      await fetch('https://templum.com.br/api/lead', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      var eventId = 'rxi-caverna-' + Date.now();
-      if (typeof fbq === 'function') {
-        fbq('track', 'Lead', { content_name: 'raio-x-caverna' }, { eventID: eventId });
-      }
-      fetch('https://templum.com.br/api/track', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          event_name:  'Lead',
-          event_id:    eventId,
-          email:       payload.email,
-          phone:       payload.telefone,
-          first_name:  payload.nome.split(' ')[0],
-          last_name:   payload.nome.split(' ').slice(1).join(' '),
-          page_url:    window.location.href,
-          fbp:         payload.fbp,
-          fbc:         payload.fbc,
-          properties:  { content_name: 'raio-x-caverna' },
-        }),
-      });
-    } catch(err) { /* silencioso */ }
+      await fetch('https://templum.com.br/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+      var eid = 'rx-caverna-' + Date.now();
+      if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'raio-x-caverna' }, { eventID: eid });
+      fetch('https://templum.com.br/api/track', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({
+        event_name:'Lead', event_id:eid, email:payload.email, phone:payload.telefone,
+        first_name:payload.nome.split(' ')[0], last_name:payload.nome.split(' ').slice(1).join(' '),
+        page_url:location.href, fbp:payload.fbp, fbc:payload.fbc, properties:{content_name:'raio-x-caverna'},
+      })});
+    } catch(err) {}
 
     document.getElementById('leadForm').style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
