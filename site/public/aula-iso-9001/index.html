@@ -248,6 +248,26 @@
       margin-top: 3px;
     }
 
+    /* ── BOTÃO URGÊNCIA VERMELHO ── */
+    .btn-urgency {
+      display: block;
+      background: linear-gradient(135deg, #cc0000, #990000);
+      color: #fff;
+      font-size: clamp(16px, 4vw, 20px);
+      font-weight: 900;
+      text-transform: uppercase;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      padding: 16px 20px;
+      border-radius: 10px;
+      line-height: 1.25;
+      text-align: center;
+      margin-bottom: 12px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-urgency:active { transform: scale(0.97); }
+    .btn-urgency-sub { font-size: 0.8em; opacity: 0.9; }
+
     /* ── BOTÃO WHATSAPP ── */
     .btn-wpp {
       display: block;
@@ -365,16 +385,17 @@
     <li>E o principal: como transformar a ISO 9001 em vantagem competitiva real para o seu negócio</li>
   </ul>
 
-  <!-- URGÊNCIA -->
-  <div class="urgency-box">
-    <span class="urgency-icon">📡</span>
-    <div class="urgency-text">
-      <p class="urgency-main">Aula ao vivo<br>para empresários</p>
-      <p class="urgency-sub">⏰ Toda segunda · 12h · Vagas limitadas<br>🚫 Não haverá replay</p>
-    </div>
-  </div>
+  <!-- BOTÃO URGÊNCIA VERMELHO → WPP -->
+  <a
+    class="btn-urgency"
+    href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
+    onclick="trackWpp(this)"
+  >
+    Aula ao Vivo · Segunda · 12h<br>
+    <span class="btn-urgency-sub">Limite de 100 pessoas</span>
+  </a>
 
-  <!-- BOTÃO PRINCIPAL -->
+  <!-- BOTÃO PRINCIPAL VERDE → WPP -->
   <a
     class="btn-wpp"
     href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
