@@ -214,6 +214,10 @@
         <span class="error-msg" id="errNome">Informe seu nome.</span>
       </div>
       <div class="field-wrap">
+        <input type="text" id="fEmpresa" name="empresa" placeholder="Nome da empresa *" autocomplete="organization" required />
+        <span class="error-msg" id="errEmpresa">Informe o nome da empresa.</span>
+      </div>
+      <div class="field-wrap">
         <input type="tel" id="fTel" name="telefone" placeholder="WhatsApp (ex.: (11) 99999-9999) *" autocomplete="tel" required />
         <span class="error-msg" id="errTel">Informe o WhatsApp com DDD.</span>
       </div>
@@ -251,9 +255,9 @@
   function showErr(el, msg) { el.classList.add('error'); msg.classList.add('show'); }
   function clearErr(el, msg) { el.classList.remove('error'); msg.classList.remove('show'); }
 
-  ['fNome','fTel','fEmail'].forEach(function(id) {
+  ['fNome','fEmpresa','fTel','fEmail'].forEach(function(id) {
     var el = document.getElementById(id);
-    var errId = { fNome:'errNome', fTel:'errTel', fEmail:'errEmail' }[id];
+    var errId = { fNome:'errNome', fEmpresa:'errEmpresa', fTel:'errTel', fEmail:'errEmail' }[id];
     el.addEventListener('input', function() { clearErr(el, document.getElementById(errId)); });
   });
 
@@ -275,11 +279,13 @@
   document.getElementById('leadForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     var ok = true;
-    var nome  = document.getElementById('fNome');
-    var tel   = document.getElementById('fTel');
-    var email = document.getElementById('fEmail');
+    var nome    = document.getElementById('fNome');
+    var empresa = document.getElementById('fEmpresa');
+    var tel     = document.getElementById('fTel');
+    var email   = document.getElementById('fEmail');
 
     if (!nome.value.trim()) { showErr(nome, document.getElementById('errNome')); ok = false; }
+    if (!empresa.value.trim()) { showErr(empresa, document.getElementById('errEmpresa')); ok = false; }
     if (tel.value.replace(/\D/g,'').length < 10) { showErr(tel, document.getElementById('errTel')); ok = false; }
     if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showErr(email, document.getElementById('errEmail')); ok = false; }
     if (!ok) return;
@@ -291,6 +297,7 @@
     var utms = getUtms();
     var payload = {
       nome: nome.value.trim(),
+      empresa: empresa.value.trim(),
       email: email.value.trim(),
       telefone: tel.value,
       evento: 'aula-iso-9001-form',
