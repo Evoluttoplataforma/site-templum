@@ -160,12 +160,12 @@
 
   <br>
 
-  <a class="btn-urgency" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+  <a class="btn-urgency" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn">
     Aula Ao Vivo · Segunda · 12h
     <span>Limite de 100 pessoas — não haverá replay</span>
   </a>
 
-  <a class="btn-wpp" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+  <a class="btn-wpp" href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn">
     Toque para Entrar no Grupo de WhatsApp >>
   </a>
 
@@ -174,20 +174,21 @@
 </div>
 
 <div class="sticky-cta">
-  <a href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn" onclick="trackWpp(this)">
+  <a href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn">
     📲 Entrar no Grupo do WhatsApp >>
   </a>
 </div>
 
 <script>
-  function trackWpp(el) {
-    if (typeof fbq === 'function') {
-      fbq('track', 'Lead', { content_name: 'aula-iso-9001-wpp' });
-    }
-    var href = el.getAttribute('href');
-    setTimeout(function() { window.location.href = href; }, 250);
-    return false;
-  }
+  // Dispara fbq sem bloquear o link — resolve problema no browser interno do Instagram (iOS)
+  document.querySelectorAll('.btn-urgency, .btn-wpp, .sticky-cta a').forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', { content_name: 'aula-iso-9001-wpp' });
+      }
+      // Não retorna false — deixa o link abrir normalmente
+    });
+  });
   (function() {
     var p = new URLSearchParams(window.location.search);
     var fbclid = p.get('fbclid');
