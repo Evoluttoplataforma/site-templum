@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula Ao Vivo Gratuita: ISO 9001 Para Crescer — Templum</title>
+  <meta name="description" content="Aula ao vivo gratuita para empresários: como usar a ISO 9001 para crescer com mais faturamento, clientes maiores e operação organizada." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet" />
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1265191353683807');
+    fbq('init', '4177249519256900');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1"/></noscript>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #FF5925; --orange-dark: #AF4022;
+      --navy: #222831; --navy-2: #2D343E;
+      --cream: #FFF4DD; --cream-2: #FFFAEB;
+      --surface: #fff; --bg: #FFFAEB;
+      --text: #18191B; --text-2: #3F424B; --text-mid: rgba(24,25,27,0.62);
+      --border: rgba(24,25,27,0.08); --border-onDark: rgba(255,244,221,0.14);
+      --shadow-card: 0 1px 2px rgba(24,25,27,0.04), 0 12px 32px rgba(24,25,27,0.08);
+      --shadow-cta: 0 15px 25px -10px rgba(255,89,37,0.55), inset 0 4px 8px rgba(253,221,138,0.55), inset 0 -4px 8px rgba(255,89,37,0.55);
+      --ease-soft: cubic-bezier(.22,1,.36,1);
+      --r-12:12px; --r-16:16px; --r-20:20px; --r-24:24px; --r-32:32px;
+    }
+    html, body { font-family:'Montserrat',sans-serif; font-size:16px; font-weight:500; line-height:1.6; color:var(--text); background:var(--navy); -webkit-font-smoothing:antialiased; overflow-x:clip; }
+    a { text-decoration:none; color:inherit; }
+    ul { list-style:none; }
+    img { max-width:100%; display:block; }
+
+    /* NAV */
+    .nav { background:rgba(34,40,49,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border-onDark); position:sticky; top:0; z-index:80; }
+    .nav-inner { max-width:1080px; margin:0 auto; padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+    .nav-logo { height:38px; filter:brightness(0) invert(1); }
+    .nav-cta { display:inline-flex; align-items:center; gap:7px; background:var(--orange); color:#fff; font-size:13px; font-weight:700; padding:9px 20px; border-radius:50px; transition:background .25s, transform .25s; }
+    .nav-cta:hover { background:var(--orange-dark); transform:translateY(-1px); }
+    @media (max-width:480px) { .nav-cta { display:none; } }
+
+    /* HERO */
+    .hero { background:linear-gradient(135deg, #1a0800 0%, var(--navy) 55%, #0c1220 100%); position:relative; overflow:hidden; padding:clamp(56px,8vw,96px) 0 clamp(48px,7vw,80px); }
+    .hero::before { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(600px 400px at 5% 0%, rgba(255,89,37,0.18), transparent 65%), radial-gradient(400px 300px at 95% 100%, rgba(255,89,37,0.08), transparent 65%); }
+    .hero-inner { max-width:780px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+    .tag-pill { display:inline-block; width:fit-content; background:rgba(255,89,37,0.16); border:1px solid var(--orange); box-shadow:0 0 0 1px rgba(255,89,37,0.45), 0 8px 26px -8px rgba(255,89,37,0.55); color:var(--orange); font-size:11px; font-weight:700; letter-spacing:0.16em; padding:5px 14px; border-radius:6px; text-transform:uppercase; margin-bottom:20px; }
+
+    .hero h1 { font-size:clamp(32px,5.5vw,58px); font-weight:900; line-height:1.06; letter-spacing:-0.03em; color:#fff; margin-bottom:20px; }
+    .hero h1 em { color:var(--orange); font-style:italic; }
+    .hero-sub { font-size:clamp(16px,2.2vw,18px); color:rgba(255,244,221,0.78); line-height:1.65; max-width:620px; margin-bottom:32px; }
+    .hero-cta-wrap { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+
+    .btn-hero { display:inline-flex; align-items:center; gap:8px; background:var(--orange); color:#fff; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:700; padding:16px 32px; border-radius:50px; border:none; cursor:pointer; box-shadow:var(--shadow-cta); transition:background .3s, transform .3s; text-decoration:none; }
+    .btn-hero:hover { background:var(--orange-dark); transform:translateY(-2px); }
+    .hero-note { font-size:13px; color:rgba(255,244,221,0.5); display:flex; align-items:center; gap:6px; }
+    .hero-note::before { content:'🔒'; font-size:12px; }
+
+    /* NÚMEROS */
+    .numbers-strip { background:var(--cream-2); padding:28px 24px; border-top:1px solid rgba(24,25,27,0.06); border-bottom:1px solid rgba(24,25,27,0.06); }
+    .numbers-inner { max-width:780px; margin:0 auto; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+    .num-item { text-align:center; flex:1; min-width:140px; padding:16px 12px; border-radius:var(--r-16); background:var(--surface); border:1px solid var(--border); box-shadow:var(--shadow-card); }
+    .num-value { display:block; font-size:clamp(22px,4vw,32px); font-weight:900; color:var(--text); letter-spacing:-0.03em; line-height:1; margin-bottom:6px; }
+    .num-value em { color:var(--orange); font-style:normal; }
+    .num-label { font-size:12px; color:var(--text-mid); font-weight:500; line-height:1.4; }
+
+    /* SEÇÕES */
+    .section-dark { background:var(--navy); padding:clamp(48px,6vw,72px) 0; }
+    .section-cream { background:var(--bg); padding:clamp(48px,6vw,72px) 0; }
+    .inner { max-width:780px; margin:0 auto; padding:0 24px; }
+    .section-tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--orange); margin-bottom:12px; }
+    .section-h2 { font-size:clamp(24px,3.5vw,36px); font-weight:800; letter-spacing:-0.025em; line-height:1.12; margin-bottom:10px; }
+    .section-h2.onDark { color:var(--cream); }
+    .section-sub { font-size:16px; color:var(--text-mid); line-height:1.6; margin-bottom:32px; max-width:580px; }
+    .section-sub.onDark { color:rgba(255,244,221,0.65); }
+
+    /* CHECKLIST */
+    .check-list { display:flex; flex-direction:column; gap:14px; }
+    .check-item { display:flex; align-items:flex-start; gap:14px; padding:16px 18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-16); transition:border-color .25s, box-shadow .25s; }
+    .check-item:hover { border-color:rgba(255,89,37,0.3); box-shadow:0 4px 20px rgba(255,89,37,0.08); }
+    .check-circle { width:28px; height:28px; min-width:28px; border-radius:999px; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:14px; flex-shrink:0; margin-top:1px; }
+    .check-text { font-size:15px; font-weight:600; color:var(--text); line-height:1.5; }
+
+    /* DEPOIMENTO */
+    .depo-card { background:var(--navy); border:1px solid var(--border-onDark); border-radius:var(--r-24); padding:32px 28px; position:relative; }
+    .depo-card::before { content:'"'; position:absolute; top:16px; left:22px; font-size:80px; font-weight:900; color:var(--orange); line-height:1; opacity:0.2; font-family:Georgia,serif; }
+    .depo-stars { color:#FFAD33; font-size:18px; letter-spacing:2px; margin-bottom:14px; }
+    .depo-text { font-size:16px; font-weight:500; color:rgba(255,244,221,0.88); line-height:1.7; margin-bottom:20px; font-style:italic; }
+    .depo-author { display:flex; align-items:center; gap:12px; }
+    .depo-avatar { width:44px; height:44px; border-radius:999px; background:linear-gradient(135deg,var(--orange),var(--orange-dark)); display:grid; place-items:center; font-weight:900; font-size:16px; color:#fff; flex-shrink:0; }
+    .depo-name { font-weight:700; font-size:15px; color:var(--cream); }
+    .depo-role { font-size:12.5px; color:rgba(255,244,221,0.5); margin-top:1px; }
+
+    /* FORM SECTION */
+    .form-section { background:var(--bg); padding:clamp(48px,6vw,80px) 0; }
+    .form-card { background:var(--surface); border-radius:var(--r-32); box-shadow:var(--shadow-card); border:1px solid var(--border); overflow:hidden; }
+    .form-card-header { background:var(--navy); padding:28px 32px; position:relative; overflow:hidden; }
+    .form-card-header::before { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(500px 300px at 100% 0%, rgba(255,89,37,0.2), transparent 65%); }
+    .form-card-header h2 { font-size:clamp(20px,3vw,28px); font-weight:900; color:#fff; letter-spacing:-0.025em; line-height:1.15; position:relative; z-index:1; }
+    .form-card-header h2 em { color:var(--orange); font-style:normal; }
+    .form-card-header p { font-size:14px; color:rgba(255,244,221,0.65); margin-top:8px; position:relative; z-index:1; }
+    .form-body { padding:28px 32px; }
+    @media (max-width:560px) { .form-body { padding:20px; } .form-card-header { padding:22px 20px; } }
+
+    .field-wrap { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+    .field-wrap label { font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-mid); }
+    .input { width:100%; padding:13px 16px; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r-12); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:500; color:var(--text); outline:none; transition:border-color .2s, box-shadow .2s; }
+    .input::placeholder { color:rgba(24,25,27,0.3); }
+    .input:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,89,37,0.12); }
+    .input.error { border-color:#DC2626; }
+    .error-msg { font-size:11.5px; color:#DC2626; font-weight:600; display:none; }
+    .error-msg.show { display:block; }
+
+    .btn-submit { width:100%; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px; background:var(--orange); color:#fff; font-family:'Montserrat',sans-serif; font-size:clamp(15px,3.5vw,17px); font-weight:800; padding:18px 24px; border-radius:50px; border:none; cursor:pointer; box-shadow:var(--shadow-cta); transition:background .3s, transform .3s; }
+    .btn-submit:hover { background:var(--orange-dark); transform:translateY(-2px); }
+    .btn-submit:active { transform:scale(0.97); }
+    .btn-submit:disabled { opacity:0.5; pointer-events:none; }
+    .btn-submit .arrow { font-size:18px; transition:transform .3s; }
+    .btn-submit:hover .arrow { transform:translateX(4px); }
+    .form-legal { font-size:11.5px; color:var(--text-mid); text-align:center; margin-top:12px; line-height:1.5; }
+
+    /* FOOTER */
+    .footer { background:var(--navy); color:rgba(255,244,221,0.4); padding:24px; text-align:center; font-size:12px; border-top:1px solid var(--border-onDark); }
+    .footer a { color:var(--orange); }
+
+    /* STICKY */
+    .sticky-cta { display:none; }
+    @media (max-width:640px) {
+      .sticky-cta { display:block; position:fixed; bottom:0; left:0; right:0; padding:12px 16px; z-index:999; background:var(--orange); box-shadow:0 -4px 24px rgba(255,89,37,0.4); }
+      .sticky-cta a { display:block; color:#fff; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; text-align:center; }
+      body { padding-bottom:68px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <img class="nav-logo" src="/assets/logo/templum.png" alt="Templum" />
+    <a class="nav-cta" href="#form">Garantir minha vaga →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="tag-pill">Aula Ao Vivo Gratuita · Toda Segunda · 12h</span>
+    <h1>Como Usar a ISO 9001<br>Para Crescer <em>Até 30%</em><br>— sem burocracia</h1>
+    <p class="hero-sub">Aula ao vivo no Google Meet para empresários que querem crescer com mais clientes, ticket maior e operação organizada. Gratuita. Sem replay.</p>
+    <div class="hero-cta-wrap">
+      <a class="btn-hero" href="#form">Garantir minha vaga gratuita →</a>
+      <span class="hero-note">Gratuito · Limite de 100 vagas</span>
+    </div>
+  </div>
+</section>
+
+<!-- NÚMEROS -->
+<div class="numbers-strip">
+  <div class="numbers-inner">
+    <div class="num-item">
+      <span class="num-value">+<em>2.000</em></span>
+      <span class="num-label">empresas certificadas</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value">+<em>30</em> anos</span>
+      <span class="num-label">de atuação</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value"><em>27</em>%</span>
+      <span class="num-label">mais faturamento médio</span>
+    </div>
+    <div class="num-item">
+      <span class="num-value"><em>90</em> dias</span>
+      <span class="num-label">para certificar</span>
+    </div>
+  </div>
+</div>
+
+<!-- O QUE VOCÊ VAI APRENDER -->
+<section class="section-cream">
+  <div class="inner">
+    <span class="section-tag">O que você vai aprender</span>
+    <h2 class="section-h2">Tudo que acontece na aula</h2>
+    <p class="section-sub">Em uma hora ao vivo, você entende como a ISO 9001 pode transformar sua empresa — sem juridiquês, sem teoria, só o que funciona na prática.</p>
+    <div class="check-list">
+      <div class="check-item">
+        <div class="check-circle">✓</div>
+        <p class="check-text">Como a ISO 9001 abre portas para contratos com grandes empresas e licitações públicas que sua concorrência ainda não consegue acessar</p>
+      </div>
+      <div class="check-item">
+        <div class="check-circle">✓</div>
+        <p class="check-text">Por que empresas certificadas faturam, em média, 27% mais — e o que muda na operação para isso acontecer</p>
+      </div>
+      <div class="check-item">
+        <div class="check-circle">✓</div>
+        <p class="check-text">O método que a Templum usa para certificar em até 90 dias, com garantia em contrato e sem parar a operação</p>
+      </div>
+      <div class="check-item">
+        <div class="check-circle">✓</div>
+        <p class="check-text">Os 3 erros que fazem a certificação travar — e como evitar cada um deles antes de começar</p>
+      </div>
+      <div class="check-item">
+        <div class="check-circle">✓</div>
+        <p class="check-text">Como transformar o certificado ISO 9001 em vantagem competitiva real: mais clientes, ticket maior e operação organizada</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTO -->
+<section class="section-dark">
+  <div class="inner">
+    <span class="section-tag">Quem já passou por aqui</span>
+    <h2 class="section-h2 onDark" style="margin-bottom:28px">O que nossos clientes dizem</h2>
+    <div class="depo-card">
+      <div class="depo-stars">★★★★★</div>
+      <p class="depo-text">"Excelente prestação de serviço, plataforma interativa e muito fácil de navegar. Mesmo sendo uma consultoria remota, não nos sentimos sozinhos na execução das tarefas. Tivemos o retorno esperado, com a certificação na norma 9001:2015 em 10 meses de projeto."</p>
+      <div class="depo-author">
+        <div class="depo-avatar">GN</div>
+        <div>
+          <div class="depo-name">Gleyse Nunes</div>
+          <div class="depo-role">ISO 9001 · Certificada em 10 meses</div>
+        </div>
+      </div>
+    </div>
+    <div class="depo-card" style="margin-top:16px">
+      <div class="depo-stars">★★★★★</div>
+      <p class="depo-text">"Os ganhos são imensuráveis quando temos processos mapeados e implementados. Os procedimentos organizaram tanto a Operação quanto a Administração, gerando maior confiabilidade — e melhorando a tomada de decisão."</p>
+      <div class="depo-author">
+        <div class="depo-avatar">JL</div>
+        <div>
+          <div class="depo-name">Jessica Mesquita Lapa</div>
+          <div class="depo-role">Agrimol Soluções Agrícolas · ISO 9001 + 14001</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULÁRIO -->
+<section class="form-section" id="form">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:28px">
+      <span class="section-tag">Vagas limitadas — toda segunda</span>
+      <h2 class="section-h2">Garantir minha vaga na aula</h2>
+      <p class="section-sub" style="margin:8px auto 0">Preencha abaixo e receba o link da aula toda segunda às 12h.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-card-header">
+        <h2>Aula ao vivo gratuita · <em>Toda segunda às 12h</em></h2>
+        <p>Google Meet · Sem replay · Limite de 100 vagas</p>
+      </div>
+      <div class="form-body">
+        <form id="leadForm" novalidate>
+          <div class="field-wrap">
+            <label for="fNome">Nome *</label>
+            <input class="input" type="text" id="fNome" name="nome" placeholder="Seu nome completo" autocomplete="name" required />
+            <span class="error-msg" id="errNome">Informe seu nome.</span>
+          </div>
+          <div class="field-wrap">
+            <label for="fTel">WhatsApp *</label>
+            <input class="input" type="tel" id="fTel" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel" required />
+            <span class="error-msg" id="errTel">Informe o WhatsApp com DDD.</span>
+          </div>
+          <div class="field-wrap">
+            <label for="fEmail">E-mail *</label>
+            <input class="input" type="email" id="fEmail" name="email" placeholder="voce@empresa.com" autocomplete="email" required />
+            <span class="error-msg" id="errEmail">Informe um e-mail válido.</span>
+          </div>
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            Garantir minha vaga gratuita <span class="arrow">→</span>
+          </button>
+          <p class="form-legal">Seus dados estão protegidos conforme a LGPD. Sem spam.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© Templum Consultoria · +30 anos · +2.000 empresas certificadas · <a href="/privacidade">Política de Privacidade</a></p>
+</footer>
+
+<div class="sticky-cta">
+  <a href="#form" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'}); return false;">
+    Garantir minha vaga na aula →
+  </a>
+</div>
+
+<script>
+  // Phone mask
+  document.getElementById('fTel').addEventListener('input', function() {
+    var v = this.value.replace(/\D/g,'').slice(0,11);
+    if (!v) { this.value=''; return; }
+    if (v.length<=2) this.value='('+v;
+    else if (v.length<=7) this.value='('+v.slice(0,2)+') '+v.slice(2);
+    else this.value='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+  });
+
+  function showErr(el,msg){ el.classList.add('error'); msg.classList.add('show'); }
+  function clearErr(el,msg){ el.classList.remove('error'); msg.classList.remove('show'); }
+  ['fNome','fTel','fEmail'].forEach(function(id){
+    var el=document.getElementById(id);
+    var errId={fNome:'errNome',fTel:'errTel',fEmail:'errEmail'}[id];
+    el.addEventListener('input',function(){ clearErr(el,document.getElementById(errId)); });
+  });
+
+  (function(){
+    var p=new URLSearchParams(window.location.search);
+    var keys=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid'];
+    var s={};
+    keys.forEach(function(k){ var v=p.get(k); if(v) s[k]=v; });
+    if(Object.keys(s).length) try{ sessionStorage.setItem('_trk',JSON.stringify(s)); }catch(e){}
+    var fbclid=p.get('fbclid');
+    if(fbclid) document.cookie='fbclid='+fbclid+'; path=/; max-age=7776000; SameSite=Lax';
+  })();
+
+  function getUtms(){ try{ return JSON.parse(sessionStorage.getItem('_trk')||'{}'); }catch(e){ return {}; } }
+  function getFbc(){ var m=document.cookie.match(/fbclid=([^;]+)/); return m?'fb.1.'+Date.now()+'.'+m[1]:''; }
+  function getFbp(){ var m=document.cookie.match(/_fbp=([^;]+)/); return m?m[1]:''; }
+
+  document.getElementById('leadForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var ok=true;
+    var nome=document.getElementById('fNome');
+    var tel=document.getElementById('fTel');
+    var email=document.getElementById('fEmail');
+
+    if(!nome.value.trim()){ showErr(nome,document.getElementById('errNome')); ok=false; }
+    if(tel.value.replace(/\D/g,'').length<10){ showErr(tel,document.getElementById('errTel')); ok=false; }
+    if(!email.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){ showErr(email,document.getElementById('errEmail')); ok=false; }
+    if(!ok) return;
+
+    var btn=document.getElementById('btnSubmit');
+    btn.disabled=true; btn.textContent='Enviando...';
+
+    var utms=getUtms();
+    var payload={
+      nome:nome.value.trim(), email:email.value.trim(), telefone:tel.value,
+      evento:'aula-iso-9001-d-form', pagina:window.location.href,
+      utm_source:utms.utm_source||'', utm_medium:utms.utm_medium||'',
+      utm_campaign:utms.utm_campaign||'', utm_term:utms.utm_term||'',
+      utm_content:utms.utm_content||'', fbclid:utms.fbclid||'', gclid:utms.gclid||'',
+      fbp:getFbp(), fbc:getFbc(), referrer:document.referrer, landing:window.location.href,
+    };
+
+    try {
+      await fetch('https://templum.com.br/api/lead',{ method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+      var eid='aula-d-'+Date.now();
+      if(typeof fbq==='function') fbq('track','Lead',{content_name:'aula-iso-9001-d-form'},{eventID:eid});
+      fetch('https://templum.com.br/api/track',{ method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({
+        event_name:'Lead', event_id:eid, email:payload.email, phone:payload.telefone,
+        first_name:payload.nome.split(' ')[0], last_name:payload.nome.split(' ').slice(1).join(' '),
+        page_url:location.href, fbp:payload.fbp, fbc:payload.fbc,
+        properties:{content_name:'aula-iso-9001-d-form'},
+      })});
+    } catch(err){}
+
+    window.location.href='/aula-iso-9001-b/obrigado/';
+  });
+</script>
+
+</body>
+</html>
