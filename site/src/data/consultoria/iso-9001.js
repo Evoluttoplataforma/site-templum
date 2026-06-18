@@ -5,7 +5,7 @@ export default {
   slug: "iso-9001",
   hero: {
     titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
-    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    sub: "Certificamos sua empresa com garantia em contrato.",
     preco: "",
   },
   paraQuem: setoresGerais,
