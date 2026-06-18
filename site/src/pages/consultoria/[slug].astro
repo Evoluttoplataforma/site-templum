@@ -73,7 +73,7 @@ if (faqItems.length) {
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
           <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
           <p class="cs-sub">{d.hero.sub}</p>
-          <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>
+          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-cta">
             <a href="#contato" class="btn btn--primary btn--lg">Fale com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>

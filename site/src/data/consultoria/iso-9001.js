@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "iso-9001",
   hero: {
-    titulo: ["Certificado na ", "ISO 9001", " ou receba 2x o investimento de volta"],
-    sub: "Certifique sua empresa na ISO 9001 em até 90 dias, com garantia em contrato.",
-    preco: "A partir de R$ 2.500/mês, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa na ISO 9001 em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: setoresGerais,
   detalhes: {
