@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "iso-37001",
   hero: {
-    titulo: ["Certificado na ", "ISO 37001", " ou receba 2x o investimento de volta"],
-    sub: "Implemente um sistema de gestão antissuborno e fortaleça a integridade da sua empresa.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:buildings-3-bold", t: "Órgãos públicos" },

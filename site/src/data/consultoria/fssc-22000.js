@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "fssc-22000",
   hero: {
-    titulo: ["Certificado na ", "FSSC 22000", " ou receba 2x o investimento de volta"],
-    sub: "Certifique a segurança de alimentos da sua empresa na FSSC 22000, com garantia em contrato.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:donut-bitten-bold", t: "Indústria de alimentos" },

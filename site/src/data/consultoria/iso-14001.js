@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "iso-14001",
   hero: {
-    titulo: ["Certificado na ", "ISO 14001", " ou receba 2x o investimento de volta"],
-    sub: "Implemente a gestão ambiental da sua empresa com método próprio e garantia em contrato.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:factory-bold", t: "Indústria e manufatura" },

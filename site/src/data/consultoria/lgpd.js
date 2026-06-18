@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "lgpd",
   hero: {
-    titulo: ["Adeque sua empresa à ", "LGPD", " com segurança jurídica"],
-    sub: "Implemente a conformidade com a Lei Geral de Proteção de Dados, com método próprio e suporte.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:code-square-bold", t: "Tecnologia e software" },

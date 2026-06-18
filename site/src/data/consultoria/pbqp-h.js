@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "pbqp-h",
   hero: {
-    titulo: ["Certificado no ", "PBQP-H", " ou receba 2x o investimento de volta"],
-    sub: "Certifique a qualidade da sua obra no PBQP-H, com método próprio e garantia em contrato.",
-    preco: "A partir de R$ 2.200/mês, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:buildings-2-bold", t: "Construtoras" },

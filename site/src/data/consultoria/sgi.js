@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "sgi",
   hero: {
-    titulo: ["Implemente o ", "SGI", " e integre suas normas num só sistema"],
-    sub: "Unifique ISO 9001, 14001, 45001 e outras num Sistema de Gestão Integrado, com método e garantia.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: setoresGerais,
   detalhes: {

@@ -4,9 +4,9 @@ export default {
   ...baseConsultoria,
   slug: "iso-27001",
   hero: {
-    titulo: ["Certificado na ", "ISO 27001", " ou receba 2x o investimento de volta"],
-    sub: "Proteja os dados da sua empresa com um sistema de gestão de segurança da informação certificado.",
-    preco: "Investimento sob diagnóstico, com acompanhamento completo do início ao fim.",
+    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    sub: "Certificamos sua empresa em até 90 dias. Com garantia em contrato.",
+    preco: "",
   },
   paraQuem: [
     { icon: "solar:code-square-bold", t: "Tecnologia e software" },
