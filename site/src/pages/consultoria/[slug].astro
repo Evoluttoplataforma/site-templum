@@ -75,16 +75,11 @@ if (faqItems.length) {
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
-          <div class="cs-cta">
-            <a href="#contato" class="btn btn--primary btn--lg">Fale com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-            <a href="#metodo" class="btn btn--onDark btn--lg">Ver o método</a>
-          </div>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
-        <div class="cs-hero-media">
-          <div class="cs-media-fallback"><iconify-icon icon={norma.icon}></iconify-icon></div>
-          <img class="cs-media-img" src={foto} alt={`Consultoria ${norma.nome}`} onerror="this.style.display='none'" />
-          <span class="cs-media-badge"><iconify-icon icon={norma.icon}></iconify-icon> {norma.nome}</span>
+        <div class="cs-hero-form">
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" />
         </div>
       </div>
     </section>
@@ -283,10 +278,9 @@ if (faqItems.length) {
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
 
-  .cs-hero-media { position: relative; aspect-ratio: 4/4.6; border-radius: var(--r-32); overflow: hidden; box-shadow: 0 30px 70px -22px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,244,221,0.1); }
-  .cs-media-fallback { position: absolute; inset: 0; display: grid; place-items: center; font-size: 160px; color: color-mix(in srgb, var(--accent) 38%, transparent); background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 55%, #1a1f26), #14181e 78%); }
-  .cs-media-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .cs-media-badge { position: absolute; left: 16px; bottom: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #fff; background: color-mix(in srgb, var(--accent) 80%, #000 10%); box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5); }
+  .cs-hero-form { align-self: start; }
+  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-ver-metodo:hover { color: var(--accent-lt); }
 
   .cs-stats { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } }
@@ -338,14 +332,10 @@ if (faqItems.length) {
 
   @media (max-width: 900px) {
     .cs-hero-grid { grid-template-columns: 1fr; }
-    .cs-hero-media { order: -1; aspect-ratio: 16/7; border-radius: var(--r-20); }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
-    /* hero: previne que chips extrapolem viewport */
     .cs-chips { gap: 12px; }
-    .cs-cta { flex-direction: column; }
-    .cs-cta .btn { width: 100%; justify-content: center; }
   }
 </style>
