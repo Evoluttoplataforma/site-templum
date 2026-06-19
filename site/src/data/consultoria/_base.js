@@ -24,7 +24,7 @@ export const baseConsultoria = {
     { icon: "solar:shield-check-bold", t: "Garantia real", d: "Devolvemos o dobro do investimento se a sua empresa não conquistar o certificado." },
     { icon: "solar:hand-heart-bold", t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
   ],
-  cobertura: "Nossa consultoria é 100% online, atendendo empresas em mais de 800 cidades no Brasil, Portugal e África.",
+  cobertura: "De onde você estiver, a Templum chega. Mais de 8.000 contratos em todo o Brasil, Portugal e África — sem deslocamento, sem custo extra.",
   incluso: [
     "Consultor dedicado, sem limite de horas",
     "Plataforma Templum OS para organizar toda a gestão",
