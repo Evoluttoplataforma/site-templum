@@ -26,8 +26,13 @@ export default {
     ],
   },
   motivos: [
-    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
-    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
-    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+    { t: "Acesso a grandes contratos e licitações", d: "Muitas empresas e órgãos públicos só aceitam fornecedores com ISO 9001. O certificado abre portas que antes estavam fechadas — e mantém sua empresa na lista curta dos qualificados." },
+    { t: "Diferencial competitivo real", d: "Com o certificado em mãos, sua empresa compete em outra categoria. Clientes percebem seriedade, reduzem o tempo de due diligence e fecham mais rápido." },
+    { t: "Processos padronizados, menos retrabalho", d: "A norma obriga a empresa a mapear e documentar como as coisas funcionam. O resultado: menos erro humano, menos retrabalho, menos custo operacional." },
+    { t: "Gestão baseada em evidências", d: "Indicadores, metas e análises críticas deixam de ser opcionais. As decisões passam a ser tomadas com dados — não com intuição — o que reduz riscos e aumenta previsibilidade." },
+    { t: "Satisfação e retenção de clientes", d: "A ISO 9001 coloca o cliente no centro da gestão. Empresas certificadas têm processos de escuta ativa, tratamento de reclamações e melhoria contínua — o que se traduz em menos churn e mais fidelidade." },
+    { t: "Escalabilidade sem caos", d: "Crescer sem processo é crescer no caos. A ISO 9001 cria a espinha dorsal operacional que permite contratar, treinar e expandir sem perder qualidade ou controle." },
+    { t: "Conformidade com requisitos de clientes globais", d: "Multinacionais, montadoras, grandes varejistas e players internacionais exigem ISO 9001 dos fornecedores. O certificado é passaporte para cadeias de suprimento mais exigentes e rentáveis." },
+    { t: "Cultura de melhoria contínua", d: "O ciclo PDCA da norma cria um ritmo de revisão periódica que mantém a empresa sempre evoluindo — identificando falhas antes que virem crises e oportunidades antes que a concorrência perceba." },
   ],
 };
