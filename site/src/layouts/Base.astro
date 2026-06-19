@@ -9,6 +9,7 @@ const {
   description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
   ogImage = "/assets/og/templum-og.jpg",
   noHeaderFooter = false,
+  hideWpp = false,
   schemas = [],
 } = Astro.props;
 
@@ -139,7 +140,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       <slot />
     </main>
     {!noHeaderFooter && <Footer />}
-    {!noHeaderFooter && (
+    {!noHeaderFooter && !hideWpp && (
       <a class="whatsapp-float" href="https://wa.me/5519993521270" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
         <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon>
       </a>
