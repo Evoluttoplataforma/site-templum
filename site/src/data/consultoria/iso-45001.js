@@ -34,8 +34,13 @@ export default {
     ],
   },
   motivos: [
-    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
-    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
-    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+    { t: "Redução de acidentes e afastamentos", d: "A norma força a empresa a identificar perigos, implementar controles e agir antes do acidente acontecer — o que reduz afastamentos, passivos trabalhistas e custos com seguros." },
+    { t: "Conformidade com NRs e exigências legais", d: "A ISO 45001 estrutura a gestão de SSO de forma que a conformidade com as Normas Regulamentadoras (NRs) deixa de ser reativa. Menos risco de autuação, embargo e processo." },
+    { t: "Exigência em contratos e licitações", d: "Grandes construtoras, montadoras, mineradoras e órgãos públicos exigem ISO 45001 dos prestadores de serviço. O certificado é pré-requisito para entrar em projetos de alto valor." },
+    { t: "Redução de custos com sinistros e indenizações", d: "Um único acidente grave pode custar centenas de milhares em indenizações, processos e danos à reputação. O custo da certificação é uma fração do custo médio de um sinistro não gerenciado." },
+    { t: "Mais produtividade e menos interrupções", d: "Ambientes seguros produzem mais. Com menos acidentes, menos paradas de linha, menos rotatividade por medo do risco — a operação ganha estabilidade e previsibilidade." },
+    { t: "Vantagem em empresas de alta periculosidade", d: "Indústria, construção, logística e energia operam com riscos elevados. A ISO 45001 é o padrão internacional que demonstra gestão responsável nesses setores — e isso pesa na decisão de compra." },
+    { t: "Integração com ISO 9001 e ISO 14001", d: "A norma usa a mesma estrutura de alto nível das outras ISOs, facilitando a integração num único sistema de gestão. Quem já tem 9001 tem o caminho pela metade para certificar na 45001." },
+    { t: "Cultura de segurança que atrai e retém talentos", d: "Profissionais qualificados preferem empresas que cuidam de quem trabalha nelas. ISO 45001 sinaliza comprometimento real com a segurança — e isso reduz turnover e atrai perfis melhores." },
   ],
 };

@@ -35,8 +35,13 @@ export default {
     ],
   },
   motivos: [
-    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
-    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
-    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+    { t: "Exigência de clientes e contratos", d: "Empresas de tecnologia, fintechs, operadoras de saúde e órgãos públicos já exigem ISO 27001 dos fornecedores. Sem o certificado, sua empresa simplesmente não entra na lista." },
+    { t: "Proteção real contra vazamentos", d: "A norma força a empresa a mapear todos os ativos de informação, identificar vulnerabilidades e implementar controles. Menos exposição, menos risco de incidente — e de multa." },
+    { t: "Conformidade com LGPD e regulações setoriais", d: "A ISO 27001 é o caminho mais direto para demonstrar conformidade com a LGPD, BACEN, ANS e outras regulações que exigem gestão formal de segurança da informação." },
+    { t: "Credibilidade e confiança do mercado", d: "O certificado sinaliza ao cliente que seus dados estão em boas mãos — reduz fricção em vendas consultivas, acelera a due diligence e fortalece a reputação da marca." },
+    { t: "Acesso a mercados internacionais", d: "Parceiros, clientes e investidores globais usam a ISO 27001 como critério mínimo de segurança. É o passaporte para negociar com empresas de Europa, EUA e Ásia sem barreiras." },
+    { t: "Redução de custos com incidentes", d: "Um único vazamento de dados pode custar centenas de milhares em multas, ações judiciais e perda de clientes. O custo da certificação é uma fração do custo de um incidente não gerenciado." },
+    { t: "Vantagem em licitações públicas e RFPs", d: "Editais de tecnologia e serviços de dados passaram a pontuar ou exigir ISO 27001. Ter o certificado diferencia sua proposta e elimina concorrentes que ainda não investiram em segurança." },
+    { t: "Cultura de segurança da informação", d: "A norma cria políticas, treinamentos e processos que tornam segurança um hábito — não uma reação a crises. Equipe treinada, menor risco humano, gestão mais madura." },
   ],
 };

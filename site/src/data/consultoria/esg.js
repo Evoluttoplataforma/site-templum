@@ -32,8 +32,13 @@ export default {
     ],
   },
   motivos: [
-    { t: "Experiência comprovada", d: "Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO." },
-    { t: "Garantia real", d: "Devolvemos o dobro do investimento se sua empresa não conquistar o certificado." },
-    { t: "Apoio total", d: "Do diagnóstico à auditoria externa, acompanhamos cada fase do processo." },
+    { t: "Acesso a capital e investimento responsável", d: "Fundos ESG movimentam trilhões globalmente. Empresas com gestão ESG estruturada atraem investidores que exigem evidências — não promessas — de sustentabilidade." },
+    { t: "Exigência crescente nas cadeias de fornecimento", d: "Grandes empresas e multinacionais já incluem critérios ESG na homologação de fornecedores. Sem gestão ambiental, social e de governança documentada, sua empresa perde contratos." },
+    { t: "Redução de riscos regulatórios e reputacionais", d: "Legislações ambientais e trabalhistas apertam a cada ano. Gestão ESG formalizada reduz exposição a multas, embargos e crises de imagem que custam muito mais que o investimento na implementação." },
+    { t: "Diferencial em licitações e RFPs", d: "Editais públicos e processos de compra de grandes empresas passaram a pontuar critérios de sustentabilidade. ESG estruturado coloca sua empresa à frente na disputa." },
+    { t: "Engajamento e retenção de talentos", d: "Profissionais de alta performance escolhem empresas com propósito real. Gestão ESG consistente fortalece o employer branding e reduz turnover — especialmente entre as gerações mais jovens." },
+    { t: "Acesso a crédito com taxas diferenciadas", d: "BNDES, bancos de desenvolvimento e fintechs oferecem crédito mais barato para empresas com práticas ESG verificáveis. A gestão correta do tema vira vantagem financeira direta." },
+    { t: "Transparência que gera confiança do mercado", d: "Relatório ESG bem estruturado comunica aos stakeholders — clientes, parceiros, comunidade — que a empresa opera com responsabilidade. Confiança é ativo estratégico." },
+    { t: "Preparação para exigências futuras obrigatórias", d: "A tendência global é tornar o reporte ESG obrigatório para empresas de médio e grande porte. Quem estrutura agora sai na frente — sem correria, sem custo de urgência." },
   ],
 };
