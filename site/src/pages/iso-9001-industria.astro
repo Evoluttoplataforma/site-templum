@@ -1,0 +1,480 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Testimonials from "../components/Testimonials.astro";
+
+const dores = [
+  { icon: "solar:hand-money-bold", t: "Perdendo contratos para concorrentes certificados", d: "Montadoras, sistemistas e grandes indústrias já exigem ISO 9001 dos fornecedores. Sem o certificado, sua empresa fica fora da lista — independente do preço ou da qualidade do produto." },
+  { icon: "solar:clipboard-check-bold", t: "Auditoria de segunda parte chegando", d: "Seu cliente vai auditar sua fábrica. Sem sistema de gestão documentado, a auditoria vira um risco real de perder o contrato que sustenta a operação." },
+  { icon: "solar:global-bold", t: "Exportação travada", d: "Compradores internacionais não negociam com fornecedores sem certificação ISO 9001. O certificado é o passaporte mínimo para entrar em cadeias de suprimento globais." },
+  { icon: "solar:users-group-rounded-bold", t: "Processos dependentes de pessoas-chave", d: "Se o supervisor sair, o processo vai junto. Sem documentação, o erro se repete, o retrabalho aumenta e a qualidade varia conforme quem está na linha." },
+  { icon: "solar:danger-triangle-bold", t: "Retrabalho e desperdício escondido", d: "Peças rejeitadas, matéria-prima desperdiçada, horas perdidas refazendo o que saiu errado. Sem processo padronizado, o custo real da não qualidade fica invisível — até sangrar no resultado." },
+  { icon: "solar:graph-new-bold", t: "Gestão no feeling, sem indicadores", d: "Decisões tomadas por intuição porque não há dados confiáveis. Sem indicadores de qualidade, é impossível saber onde a operação está perdendo dinheiro." },
+  { icon: "solar:buildings-2-bold", t: "Dificuldade para escalar sem perder controle", d: "Crescer sem processo é crescer no caos. Novas linhas, novos colaboradores, novas filiais — tudo fica mais difícil sem um sistema de gestão que sustente a expansão." },
+  { icon: "solar:document-text-bold", t: "Licitações e contratos públicos inacessíveis", d: "Editais industriais e contratos com órgãos públicos exigem cada vez mais certificação de qualidade. Sem ISO 9001, sua empresa nem chega à fase de habilitação." },
+];
+
+const beneficios = [
+  "Acesso a contratos com montadoras, sistemistas e grandes indústrias",
+  "Habilitação para exportar para mercados europeus, americanos e asiáticos",
+  "Aprovação em auditorias de segunda parte dos seus clientes",
+  "Redução do custo da não qualidade: menos retrabalho, menos refugo",
+  "Processos documentados que funcionam independente de quem opera",
+  "Indicadores de qualidade para tomar decisões com dados reais",
+  "Base para escalar a operação sem perder controle e consistência",
+  "Diferencial competitivo em licitações e homologações de fornecedores",
+];
+
+const numeros = [
+  { n: "+2.000", l: "indústrias certificadas" },
+  { n: "+30", l: "anos de experiência" },
+  { n: "200%", l: "de garantia em contrato" },
+  { n: "4,9", l: "de nota no Google" },
+];
+
+const diferenciais = [
+  { icon: "solar:factory-bold", t: "Especialistas em ambiente industrial", d: "Nossa equipe conhece a realidade do chão de fábrica. A implementação respeita turnos, sazonalidade e a rotina operacional — sem paralisar a produção." },
+  { icon: "solar:shield-check-bold", t: "Garantia de 200% em contrato", d: "Certificação garantida ou o dobro do investimento de volta. A única consultoria do Brasil que assume o risco junto com você." },
+  { icon: "solar:document-bold", t: "Documentos feitos por nós", d: "Não entregamos templates para você preencher. Nossa equipe elabora todos os documentos do sistema de gestão adaptados à realidade da sua indústria." },
+  { icon: "solar:user-check-rounded-bold", t: "Consultor dedicado à sua fábrica", d: "Um especialista exclusivo para o seu projeto, disponível todos os dias em horário comercial. Sem fila, sem transferências, sem resposta automática." },
+  { icon: "solar:medal-ribbons-star-bold", t: "+30 anos de prática industrial", d: "Mais de três décadas certificando indústrias de manufatura, autopeças, plásticos, metalurgia, alimentos e muito mais. Experiência que encurta o caminho." },
+  { icon: "solar:cpu-bolt-bold", t: "Tecnologia que acelera a implementação", d: "O Templum OS com a Olivia, nossa IA especializada em ISO, organiza documentos, gera instruções de trabalho e mantém o projeto no prazo." },
+];
+
+const passos = [
+  { n: "01", t: "Diagnóstico gratuito da sua fábrica", d: "Avaliamos a situação atual da sua indústria, mapeamos os gaps em relação à norma e definimos o caminho mais rápido até a certificação — sem impactar a operação." },
+  { n: "02", t: "Cronograma ajustado à sua realidade", d: "Nada de prazo impossível. Montamos um plano de implementação que respeita turnos, sazonalidade e a capacidade da sua equipe sem sobrecarregar ninguém." },
+  { n: "03", t: "Implementação guiada pela nossa equipe", d: "Documentos, procedimentos e registros são elaborados pelos nossos consultores. Sua equipe participa, mas não acumula trabalho extra." },
+  { n: "04", t: "Auditoria interna simulada", d: "Antes de chamar a certificadora, fazemos uma auditoria interna que identifica pontos de melhoria e prepara sua fábrica para ser aprovada na primeira tentativa." },
+  { n: "05", t: "Certificação com a certificadora", d: "Acompanhamos a auditoria externa do início ao fim. Se surgir alguma não-conformidade, tratamos juntos — coberto pela nossa garantia." },
+];
+
+const faqs = [
+  { q: "Minha fábrica precisa parar para implementar a ISO 9001?", a: "Não. A implementação é feita em paralelo com a operação. Nossa metodologia foi desenhada para o ambiente industrial — respeitamos turnos, sazonalidade e a rotina do chão de fábrica. Sua produção não para." },
+  { q: "Quanto tempo leva para uma indústria conseguir a ISO 9001?", a: "O prazo médio é de 6 a 12 meses, dependendo do porte da indústria, quantidade de processos e maturidade do sistema atual. Após o diagnóstico, apresentamos um cronograma realista para o seu caso específico." },
+  { q: "Minha equipe interna precisa se envolver muito?", a: "O envolvimento é estratégico, não operacional. Sua equipe participa nas validações e aprovações, mas quem elabora os documentos e conduz a implementação somos nós. O time de chão de fábrica continua focado na produção." },
+  { q: "A certificação é garantida?", a: "Sim. Se você concluir todas as etapas da nossa consultoria e ainda assim não obtiver a certificação, devolvemos 200% do valor investido. Essa garantia está registrada em contrato — não é promessa de marketing." },
+  { q: "Vale a pena certificar se meu cliente ainda não exigiu?", a: "Vale. O mercado está se movendo rápido. Quando seu cliente exigir, o processo leva meses. Quem certifica agora entra com vantagem: já está habilitado enquanto o concorrente ainda está começando." },
+  { q: "A certificação ISO 9001 serve para exportação?", a: "Sim. A ISO 9001 é reconhecida mundialmente e é o requisito mínimo para fornecedores de cadeias industriais na Europa, EUA e Ásia. Sem ela, sua empresa não passa pela triagem de compradores internacionais." },
+  { q: "Já tentei implementar antes e não funcionou. O que é diferente?", a: "A maioria das tentativas fracassa por falta de suporte contínuo — a consultoria entrega documentos e some. No nosso modelo, um consultor acompanha seu projeto do início ao fim, com suporte diário e cobrança de prazos. Além disso, nossa garantia de 200% mostra que assumimos o risco junto com você." },
+];
+
+const schemaService = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Consultoria ISO 9001 para Indústria",
+  description: "Implementação da ISO 9001 para indústrias de manufatura, autopeças, metalurgia e mais. Do diagnóstico à certificação com garantia de 200% em contrato.",
+  provider: {
+    "@type": "Organization",
+    name: "Templum Consultoria",
+    url: "https://templum.com.br"
+  },
+  areaServed: { "@type": "Country", name: "Brasil" },
+  serviceType: "Consultoria de certificação ISO 9001",
+  audience: {
+    "@type": "Audience",
+    audienceType: "Donos e diretores de indústrias de manufatura"
+  }
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a }
+  }))
+};
+---
+
+<Base
+  title="ISO 9001 para Indústria | Certificação com Garantia — Templum"
+  description="A Templum certifica indústrias na ISO 9001 sem paralisar a produção. Consultores especializados em ambiente industrial, documentos feitos por nós e garantia de 200% em contrato."
+  schemas={[schemaService, schemaFaq]}
+>
+
+  <!-- HERO -->
+  <PageHero
+    tag="ISO 9001 · Indústria"
+    sub="Montadoras, sistemistas e grandes compradores estão exigindo ISO 9001 dos fornecedores. A Templum certifica sua indústria com método próprio, consultores especializados e garantia de 200% registrada em contrato."
+    badge="ISO 9001 · Indústria"
+    icon="solar:factory-bold"
+    chips={["+2.000 certificados", "Garantia 200%", "+30 anos"]}
+  >
+    <Fragment slot="title">Seu cliente está exigindo ISO 9001. <em class="accent">Não perca mais contratos industriais.</em></Fragment>
+    <Fragment slot="cta">
+      <a href="#diagnostico" class="btn btn--primary btn--lg">Solicitar Diagnóstico Gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#como-funciona" class="btn btn--onDark btn--lg">Ver como funciona</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- SEÇÃO 2 — DORES -->
+  <section class="section section--navy dores-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Os desafios do setor</span>
+        <h2>Por que sua indústria está perdendo <em class="accent">contratos e oportunidades</em></h2>
+        <p>Muitas indústrias têm produto bom, equipe capaz e preço competitivo — mas ficam de fora de contratos porque não têm o certificado que o comprador exige.</p>
+      </div>
+      <div class="dores-grid">
+        {dores.map((d) => (
+          <div class="dor-card">
+            <span class="dor-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 — BENEFÍCIOS -->
+  <section class="section section--cream beneficios-sec">
+    <div class="container lg">
+      <div class="beneficios-wrap">
+        <div class="beneficios-text">
+          <span class="tag-pill">O que muda com a ISO 9001</span>
+          <h2>O que sua indústria conquista com <em class="accent">a certificação ISO 9001</em></h2>
+          <p>A ISO 9001 não é burocracia. É o certificado que abre a porta de clientes maiores, habilita sua empresa para exportar e reduz o custo oculto da não qualidade dentro da fábrica.</p>
+        </div>
+        <ul class="beneficios-list">
+          {beneficios.map((b) => (
+            <li>
+              <span class="check-icon"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
+              {b}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 — POR QUE TEMPLUM -->
+  <section class="section section--navy porque-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Por que a Templum</span>
+        <h2>A consultoria que <em class="accent">mais certifica indústrias</em> no Brasil</h2>
+      </div>
+
+      <div class="numeros-grid">
+        {numeros.map((n) => (
+          <div class="numero-card">
+            <span class="numero-n">{n.n}</span>
+            <span class="numero-l">{n.l}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="diferenciais-grid">
+        {diferenciais.map((d) => (
+          <div class="eco-card diff-card">
+            <span class="diff-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 — COMO FUNCIONA -->
+  <section id="como-funciona" class="section section--cream passos-sec">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O caminho até a certificação</span>
+        <h2>Certificação sem paralisar a <em class="accent">sua produção</em></h2>
+        <p>Nossa metodologia foi desenhada para o ambiente industrial. Cada etapa respeita a rotina do chão de fábrica — sua operação continua rodando enquanto implementamos o sistema.</p>
+      </div>
+      <div class="passos-list">
+        {passos.map((p) => (
+          <div class="passo-item">
+            <div class="passo-num">{p.n}</div>
+            <div class="passo-connector" aria-hidden="true"></div>
+            <div class="passo-body">
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6 — DEPOIMENTOS -->
+  <Testimonials nota="4.9" />
+
+  <!-- SEÇÃO 7 — FAQ -->
+  <section class="section faq-sec">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Dúvidas frequentes</span>
+        <h2>Perguntas sobre ISO 9001 <em class="accent">para indústrias</em></h2>
+      </div>
+      <dl class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">
+              {f.q}
+              <span class="faq-arrow">+</span>
+            </summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 8 — CTA FINAL + FORMULÁRIO -->
+  <section id="diagnostico" class="section section--navy form-sec">
+    <div class="container xl form-split">
+      <div class="form-copy">
+        <span class="tag-pill tag-pill--navy">Diagnóstico gratuito</span>
+        <h2>Descubra o caminho mais rápido para certificar sua indústria e <em class="accent">não perder mais contratos</em></h2>
+        <p>Fale com um especialista da Templum. Sem compromisso — só clareza sobre o que falta para sua fábrica conquistar a ISO 9001.</p>
+
+        <ul class="form-selos">
+          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200% em contrato</li>
+          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 indústrias certificadas</li>
+          <li><iconify-icon icon="solar:factory-bold"></iconify-icon> Sem paralisar a produção</li>
+          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
+        </ul>
+      </div>
+      <div class="form-col">
+        <LeadForm
+          norma="ISO 9001"
+          titulo="Quero meu diagnóstico gratuito"
+          sub="Preencha o formulário e um especialista entrará em contato."
+          cta="Quero Meu Diagnóstico"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY CTA -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="container sticky-cta-inner">
+      <p>ISO 9001 para indústria · diagnóstico gratuito sem compromisso</p>
+      <a href="#diagnostico" class="btn btn--primary btn--sm">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </div>
+
+  <!-- WHATSAPP FLUTUANTE -->
+  <a
+    class="whatsapp-fab"
+    href="https://wa.me/5511999999999?text=Olá! Tenho interesse em certificar minha indústria com a ISO 9001."
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Falar pelo WhatsApp"
+  >
+    <iconify-icon icon="mdi:whatsapp"></iconify-icon>
+  </a>
+
+</Base>
+
+<style>
+  /* ---- TAG PILL SOBRE NAVY ---- */
+  .tag-pill--navy {
+    background: rgba(255,89,37,0.18);
+    border-color: rgba(255,89,37,0.55);
+    color: var(--orange);
+  }
+
+  /* ============================
+     SEÇÃO 2 — DORES
+  ============================ */
+  .dores-sec { padding-bottom: 80px; }
+  .dores-sec .section-header h2 { color: var(--cream); }
+  .dores-sec .section-header p { color: rgba(255,244,221,0.7); }
+
+  .dores-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1100px) { .dores-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .dores-grid { grid-template-columns: 1fr; } }
+
+  .dor-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.1);
+    border-radius: var(--r-20);
+    padding: 26px 22px;
+    transition: background .3s, border-color .3s;
+  }
+  .dor-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .dor-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+  .dor-card h3 { font-size: 15px; font-weight: 800; color: var(--cream); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .dor-card p { font-size: 13.5px; color: rgba(255,244,221,0.65); line-height: 1.6; }
+
+  /* ============================
+     SEÇÃO 3 — BENEFÍCIOS
+  ============================ */
+  .beneficios-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 860px) { .beneficios-wrap { grid-template-columns: 1fr; } }
+
+  .beneficios-text .tag-pill { margin-bottom: 18px; }
+  .beneficios-text h2 { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
+  .beneficios-text p { font-size: 16px; color: var(--text-mid); line-height: 1.7; }
+
+  .beneficios-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .beneficios-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .check-icon { color: var(--orange); font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ============================
+     SEÇÃO 4 — POR QUE TEMPLUM
+  ============================ */
+  .porque-sec .section-header h2 { color: var(--cream); }
+
+  .numeros-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 860px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .numero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,244,221,0.12);
+    border-radius: var(--r-20);
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .numero-n { display: block; font-size: clamp(32px, 4vw, 52px); font-weight: 800; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
+  .numero-l { display: block; font-size: 13px; color: rgba(255,244,221,0.65); margin-top: 8px; font-weight: 500; }
+
+  .diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 960px) { .diferenciais-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .diferenciais-grid { grid-template-columns: 1fr; } }
+
+  .diff-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.1); }
+  .diff-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .diff-card h3 { color: var(--cream); }
+  .diff-card p { color: rgba(255,244,221,0.65); }
+  .diff-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+
+  /* ============================
+     SEÇÃO 5 — PASSOS
+  ============================ */
+  .passos-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .passo-item {
+    display: grid;
+    grid-template-columns: 72px 40px 1fr;
+    gap: 0 20px;
+    align-items: start;
+    padding: 10px 0;
+  }
+  .passo-num { font-size: 42px; font-weight: 800; color: var(--orange); letter-spacing: -0.04em; line-height: 1.1; text-align: right; }
+  .passo-connector { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+  .passo-connector::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+  .passo-connector::after { content: ""; width: 2px; flex: 1; background: linear-gradient(to bottom, var(--orange), rgba(255,89,37,0.1)); margin-top: 6px; min-height: 60px; }
+  .passo-item:last-child .passo-connector::after { display: none; }
+  .passo-body { padding: 8px 0 32px; }
+  .passo-body h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .passo-body p { font-size: 15px; color: var(--text-mid); line-height: 1.7; }
+
+  @media (max-width: 600px) {
+    .passo-item { grid-template-columns: 52px 28px 1fr; }
+    .passo-num { font-size: 32px; }
+  }
+
+  /* ============================
+     SEÇÃO 7 — FAQ
+  ============================ */
+  .faq-sec { background: var(--surface); }
+  .faq-sec .section-header h2 { color: var(--text); }
+
+  /* ============================
+     SEÇÃO 8 — FORM
+  ============================ */
+  .form-sec { padding-top: 80px; padding-bottom: 80px; }
+  .form-split {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+  @media (max-width: 960px) { .form-split { grid-template-columns: 1fr; } }
+
+  .form-copy .tag-pill { margin-bottom: 20px; }
+  .form-copy h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 16px; }
+  .form-copy p { font-size: 16px; color: rgba(255,244,221,0.72); line-height: 1.7; margin-bottom: 32px; }
+
+  .form-selos { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .form-selos li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: rgba(255,244,221,0.85); }
+  .form-selos iconify-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; }
+
+  /* ============================
+     STICKY CTA
+  ============================ */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 90;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,89,37,0.3);
+    padding: 14px 0;
+    transform: translateY(100%);
+    transition: transform .4s var(--ease-soft);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .sticky-cta p { font-size: 14px; color: rgba(255,244,221,0.8); font-weight: 500; margin: 0; }
+  @media (max-width: 600px) {
+    .sticky-cta p { display: none; }
+    .sticky-cta .btn { width: 100%; }
+  }
+
+  /* ============================
+     WHATSAPP FAB
+  ============================ */
+  .whatsapp-fab {
+    position: fixed;
+    bottom: 80px; right: 24px;
+    z-index: 95;
+    width: 58px; height: 58px;
+    border-radius: 999px;
+    background: #25D366;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    box-shadow: 0 8px 28px rgba(37,211,102,0.45);
+    transition: transform .3s var(--ease-soft), box-shadow .3s;
+  }
+  .whatsapp-fab:hover { transform: scale(1.1); box-shadow: 0 12px 36px rgba(37,211,102,0.55); }
+  @media (max-width: 600px) {
+    .whatsapp-fab { bottom: 76px; right: 16px; width: 52px; height: 52px; font-size: 26px; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const bar = document.getElementById("stickyCta");
+    if (!bar) return;
+    const toggle = () => bar.classList.toggle("visible", window.scrollY > 300);
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+  })();
+</script>
