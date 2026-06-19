@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Testimonials from "../components/Testimonials.astro";
 
@@ -96,21 +95,30 @@ const schemaFaq = {
   hideWpp={true}
 >
 
-  <!-- HERO -->
-  <PageHero
-    tag="ISO 9001 · Indústria"
-    sub="Montadoras, sistemistas e grandes compradores estão exigindo ISO 9001 dos fornecedores. A Templum certifica sua indústria com método próprio, consultores especializados e garantia de 200% registrada em contrato."
-    badge="ISO 9001 · Indústria"
-    icon="solar:factory-bold"
-    image="/assets/img/consultoria/iso9001_industria.webp"
-    chips={["+2.000 certificados", "Garantia 200%", "+30 anos"]}
-  >
-    <Fragment slot="title">Seu cliente está exigindo ISO 9001. <em class="accent">Não perca mais contratos industriais.</em></Fragment>
-    <Fragment slot="cta">
-      <a href="#diagnostico" class="btn btn--primary btn--lg">Solicitar Diagnóstico Gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="#como-funciona" class="btn btn--onDark btn--lg">Ver como funciona</a>
-    </Fragment>
-  </PageHero>
+  <!-- HERO — FORM -->
+  <section id="diagnostico" class="section section--navy form-sec hero-form-sec">
+    <div class="container xl form-split">
+      <div class="form-copy">
+        <span class="tag-pill tag-pill--navy">Agende uma visita</span>
+        <h1>Seu cliente está exigindo ISO 9001. <em class="accent">Não perca mais contratos industriais.</em></h1>
+        <p>Montadoras, sistemistas e grandes compradores estão cortando fornecedores sem certificação da lista. A Templum certifica sua indústria com garantia de 200% em contrato — sem paralisar a produção.</p>
+        <ul class="form-selos">
+          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200% em contrato</li>
+          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 indústrias certificadas</li>
+          <li><iconify-icon icon="solar:factory-bold"></iconify-icon> Sem paralisar a produção</li>
+          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
+        </ul>
+      </div>
+      <div class="form-col">
+        <LeadForm
+          norma="ISO 9001"
+          titulo="Agende agora uma reunião"
+          sub="Preencha o formulário e um especialista entrará em contato."
+          cta="Quero Meu Diagnóstico"
+        />
+      </div>
+    </div>
+  </section>
 
   <!-- SEÇÃO 2 — DORES -->
   <section class="section section--navy dores-sec">
@@ -229,37 +237,12 @@ const schemaFaq = {
     </div>
   </section>
 
-  <!-- SEÇÃO 8 — CTA FINAL + FORMULÁRIO -->
-  <section id="diagnostico" class="section section--navy form-sec">
-    <div class="container xl form-split">
-      <div class="form-copy">
-        <span class="tag-pill tag-pill--navy">Diagnóstico gratuito</span>
-        <h2>Descubra o caminho mais rápido para certificar sua indústria e <em class="accent">não perder mais contratos</em></h2>
-        <p>Fale com um especialista da Templum. Sem compromisso — só clareza sobre o que falta para sua fábrica conquistar a ISO 9001.</p>
-
-        <ul class="form-selos">
-          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200% em contrato</li>
-          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 indústrias certificadas</li>
-          <li><iconify-icon icon="solar:factory-bold"></iconify-icon> Sem paralisar a produção</li>
-          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
-        </ul>
-      </div>
-      <div class="form-col">
-        <LeadForm
-          norma="ISO 9001"
-          titulo="Quero meu diagnóstico gratuito"
-          sub="Preencha o formulário e um especialista entrará em contato."
-          cta="Quero Meu Diagnóstico"
-        />
-      </div>
-    </div>
-  </section>
 
   <!-- STICKY CTA -->
   <div class="sticky-cta" id="stickyCta">
     <div class="container sticky-cta-inner">
-      <p>ISO 9001 para indústria · diagnóstico gratuito sem compromisso</p>
-      <a href="#diagnostico" class="btn btn--primary btn--sm">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <p>ISO 9001 para indústria · sem paralisar a produção</p>
+      <a href="#diagnostico" class="btn btn--primary btn--sm">Agendar reunião <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </div>
 
@@ -397,9 +380,11 @@ const schemaFaq = {
   .faq-sec .section-header h2 { color: var(--text); }
 
   /* ============================
-     SEÇÃO 8 — FORM
+     SEÇÃO FORM / HERO
   ============================ */
   .form-sec { padding-top: 80px; padding-bottom: 80px; }
+  .hero-form-sec { padding-top: clamp(80px, 10vw, 130px); padding-bottom: clamp(80px, 10vw, 120px); }
+  .hero-form-sec .form-copy h1 { font-size: clamp(28px, 3.5vw, 46px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
   .form-split {
     display: grid;
     grid-template-columns: 1fr 480px;
