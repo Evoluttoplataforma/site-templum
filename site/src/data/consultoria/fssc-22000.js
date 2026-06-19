@@ -30,4 +30,14 @@ export default {
       { q: "Qual é a validade da certificação?", a: "3 anos, com auditorias de manutenção anuais." },
     ],
   },
+  motivos: [
+    { t: "Acesso a grandes redes e exportação", d: "Walmart, Carrefour, Nestlé e principais redes internacionais exigem FSSC 22000 dos fornecedores. Sem o certificado, sua empresa simplesmente não entra na gôndola." },
+    { t: "Reconhecimento global pela GFSI", d: "A FSSC 22000 é reconhecida pela Global Food Safety Initiative — o padrão que abre mercados na Europa, EUA, Ásia e toda cadeia global de alimentos." },
+    { t: "Prevenção de recalls e crises sanitárias", d: "Um recall custa em média milhões em retirada de produto, indenizações e dano à marca. A norma força controles preventivos que evitam que o problema chegue ao consumidor." },
+    { t: "Conformidade com ANVISA e legislação sanitária", d: "A implementação da FSSC 22000 organiza o sistema de gestão de forma que a conformidade com as exigências da ANVISA e da legislação de alimentos vira consequência natural — não uma corrida apagando incêndio." },
+    { t: "Diferencial competitivo em B2B alimentar", d: "No setor de alimentos, o certificado FSSC 22000 é o argumento definitivo em negociações com grandes compradores — demonstra controle de processo, rastreabilidade e responsabilidade." },
+    { t: "Redução de desperdício e retrabalho", d: "O sistema de gestão identifica pontos críticos e desvios antes que virem não-conformidades. Menos lote descartado, menos reprocesso, mais eficiência operacional." },
+    { t: "Acesso a financiamento e investimento no agro", d: "Bancos, fundos e programas de fomento ao agronegócio e à indústria alimentícia valorizam empresas com certificação reconhecida. O certificado fortalece o acesso a crédito e parcerias estratégicas." },
+    { t: "Proteção da marca e reputação", d: "Uma crise de segurança de alimentos pode destruir décadas de construção de marca em semanas. A FSSC 22000 é a blindagem que demonstra — com evidência auditada — que sua empresa trata o risco a sério." },
+  ],
 };

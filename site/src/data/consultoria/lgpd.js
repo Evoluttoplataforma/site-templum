@@ -29,4 +29,14 @@ export default {
       { q: "Quais são os benefícios da adequação?", a: "Segurança jurídica, proteção contra multas, mais confiança dos clientes e diferencial competitivo." },
     ],
   },
+  motivos: [
+    { t: "Obrigação legal com risco real de multa", d: "A LGPD é lei desde 2020 e a ANPD aplica sanções: advertências, multas de até 2% do faturamento (limitadas a R$ 50 mi por infração) e suspensão do tratamento de dados. Adequação não é opcional." },
+    { t: "Evitar vazamentos com custo altíssimo", d: "Um incidente de dados pode gerar multas, ações judiciais, perda de clientes e dano irreparável à reputação. A adequação à LGPD reduz a probabilidade — e a responsabilidade — caso algo aconteça." },
+    { t: "Diferencial em vendas B2B e processos de due diligence", d: "Empresas que tratam dados de clientes corporativos são cada vez mais avaliadas na sua conformidade com LGPD. Adequação bem documentada acelera fechamentos e elimina objeções jurídicas." },
+    { t: "Confiança do cliente como ativo de marca", d: "Consumidores e usuários preferem empresas que tratam seus dados com transparência. Política de privacidade clara e conformidade real constroem confiança — e reduzem churn." },
+    { t: "Exigência em contratos com grandes empresas", d: "Contratos com bancos, fintechs, operadoras de saúde e empresas de tecnologia já incluem cláusulas de conformidade com LGPD. Sem adequação, sua empresa não passa pela homologação jurídica." },
+    { t: "Proteção contra responsabilidade solidária", d: "Quem trata dados de terceiros responde solidariamente por incidentes causados pela cadeia. Adequação formalizada com contratos de dados protege sua empresa de pagar pelo erro do parceiro." },
+    { t: "Base para certificação ISO 27001", d: "A LGPD e a ISO 27001 se complementam: a norma fornece os controles de segurança que sustentam as exigências técnicas da lei. Adequar-se à LGPD é o primeiro passo natural para a certificação." },
+    { t: "Governança que organiza a empresa por dentro", d: "O processo de adequação mapeia todos os fluxos de dados, elimina redundâncias, cria políticas claras e define responsabilidades. O resultado vai além da conformidade: a empresa fica mais organizada." },
+  ],
 };

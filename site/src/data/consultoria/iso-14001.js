@@ -30,4 +30,14 @@ export default {
       { q: "Quem pode implementar a ISO 14001?", a: "Qualquer organização, de qualquer setor ou porte, que queira gerenciar melhor seus impactos ambientais." },
     ],
   },
+  motivos: [
+    { t: "Acesso a contratos e licitações com critérios ambientais", d: "Empresas públicas, montadoras, mineradoras e grandes redes já exigem ISO 14001 dos fornecedores. O certificado é a prova documentada de que a gestão ambiental é real — não marketing." },
+    { t: "Conformidade com licenças e legislação ambiental", d: "A norma força o mapeamento de todos os requisitos legais aplicáveis. Resultado: menos risco de multa, embargo e perda de licença de operação." },
+    { t: "Redução de custos com energia, água e resíduos", d: "Controlar impactos ambientais significa controlar consumo. Empresas certificadas identificam desperdícios escondidos e reduzem custos operacionais de forma mensurável." },
+    { t: "Diferencial em exportações e mercados internacionais", d: "Mercados europeus e americanos valorizam — e muitas vezes exigem — certificação ambiental. A ISO 14001 é o passaporte para cadeias de fornecimento mais exigentes e rentáveis." },
+    { t: "Critério essencial para agenda ESG", d: "ISO 14001 é o pilar ambiental de qualquer estratégia ESG séria. Sem ela, relatórios de sustentabilidade ficam sem evidência auditada — o que investidores e clientes percebem." },
+    { t: "Gestão de riscos ambientais antes que virem crises", d: "A norma exige identificação de aspectos e impactos ambientais significativos. Problemas são tratados preventivamente — antes de virar passivo, autuação ou manchete." },
+    { t: "Fortalecimento da imagem e reputação", d: "Consumidores, investidores e parceiros preferem empresas que comprovam responsabilidade ambiental. O certificado ISO 14001 transforma comprometimento em credencial verificável." },
+    { t: "Integração com ISO 9001 e ISO 45001", d: "As três normas usam a mesma estrutura de alto nível — o que facilita integrar qualidade, meio ambiente e segurança num único sistema de gestão. Quem tem 9001 tem o caminho mais curto para a 14001." },
+  ],
 };
