@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Testimonials from "../components/Testimonials.astro";
 
@@ -93,20 +92,30 @@ const schemaFaq = {
   schemas={[schemaService, schemaFaq]}
 >
 
-  <!-- HERO -->
-  <PageHero
-    tag="ISO 9001 · Laboratórios"
-    sub="A Templum já ajudou milhares de empresas a implementar sistemas de gestão da qualidade que reduzem falhas, aumentam a confiabilidade dos processos e aceleram a conquista da certificação ISO 9001."
-    badge="ISO 9001 · Laboratórios"
-    icon="solar:test-tube-bold"
-    chips={["+2.000 certificados", "Garantia 200%", "+30 anos"]}
-  >
-    <Fragment slot="title">Seu laboratório está preparado para <em class="accent">crescer com segurança</em> e conquistar novos contratos?</Fragment>
-    <Fragment slot="cta">
-      <a href="#diagnostico" class="btn btn--primary btn--lg">Solicitar Diagnóstico Gratuito <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="#como-funciona" class="btn btn--onDark btn--lg">Ver como funciona</a>
-    </Fragment>
-  </PageHero>
+  <!-- HERO — FORM -->
+  <section id="diagnostico" class="section section--navy form-sec hero-form-sec">
+    <div class="container xl form-split">
+      <div class="form-copy">
+        <span class="tag-pill tag-pill--navy">Agende uma visita</span>
+        <h1>Seu laboratório está preparado para <em class="accent">crescer com segurança</em> e conquistar novos contratos?</h1>
+        <p>A Templum já ajudou milhares de laboratórios a implementar sistemas de gestão da qualidade que reduzem falhas, aumentam a confiabilidade dos processos e aceleram a conquista da certificação ISO 9001.</p>
+        <ul class="form-selos">
+          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200% em contrato</li>
+          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 empresas certificadas</li>
+          <li><iconify-icon icon="solar:clock-circle-bold"></iconify-icon> Resposta em até 1 dia útil</li>
+          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
+        </ul>
+      </div>
+      <div class="form-col">
+        <LeadForm
+          norma="ISO 9001"
+          titulo="Agende agora uma reunião"
+          sub="Preencha o formulário e um especialista entrará em contato."
+          cta="Quero Meu Diagnóstico"
+        />
+      </div>
+    </div>
+  </section>
 
   <!-- SEÇÃO 2 — DORES -->
   <section class="section section--navy dores-sec">
@@ -225,50 +234,15 @@ const schemaFaq = {
     </div>
   </section>
 
-  <!-- SEÇÃO 8 — CTA FINAL + FORMULÁRIO -->
-  <section id="diagnostico" class="section section--navy form-sec">
-    <div class="container xl form-split">
-      <div class="form-copy">
-        <span class="tag-pill tag-pill--navy">Diagnóstico gratuito</span>
-        <h2>Descubra o caminho mais rápido para estruturar seu laboratório e <em class="accent">conquistar a ISO 9001</em></h2>
-        <p>Agende uma conversa com um especialista da Templum. Sem compromisso, sem burocracia — só clareza sobre o próximo passo.</p>
-
-        <ul class="form-selos">
-          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Garantia de 200%</li>
-          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> +2.000 empresas certificadas</li>
-          <li><iconify-icon icon="solar:clock-circle-bold"></iconify-icon> Resposta em até 1 dia útil</li>
-          <li><iconify-icon icon="solar:lock-bold"></iconify-icon> Seus dados protegidos pela LGPD</li>
-        </ul>
-      </div>
-      <div class="form-col">
-        <LeadForm
-          norma="ISO 9001"
-          titulo="Quero meu diagnóstico gratuito"
-          sub="Preencha o formulário e um especialista entrará em contato."
-          cta="Quero Meu Diagnóstico"
-        />
-      </div>
-    </div>
-  </section>
 
   <!-- STICKY CTA -->
   <div class="sticky-cta" id="stickyCta">
     <div class="container sticky-cta-inner">
-      <p>ISO 9001 para laboratórios · diagnóstico gratuito sem compromisso</p>
-      <a href="#diagnostico" class="btn btn--primary btn--sm">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <p>ISO 9001 para laboratórios · sem compromisso</p>
+      <a href="#diagnostico" class="btn btn--primary btn--sm">Agendar reunião <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </div>
 
-  <!-- WHATSAPP FLUTUANTE -->
-  <a
-    class="whatsapp-fab"
-    href="https://wa.me/5511999999999?text=Olá! Tenho interesse em certificar meu laboratório com a ISO 9001."
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Falar pelo WhatsApp"
-  >
-    <iconify-icon icon="mdi:whatsapp"></iconify-icon>
-  </a>
 
 </Base>
 
@@ -438,6 +412,8 @@ const schemaFaq = {
      SEÇÃO 8 — FORM
   ============================ */
   .form-sec { padding-top: 80px; padding-bottom: 80px; }
+  .hero-form-sec { padding-top: clamp(80px, 10vw, 130px); padding-bottom: clamp(80px, 10vw, 120px); }
+  .hero-form-sec .form-copy h1 { font-size: clamp(28px, 3.5vw, 46px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
   .form-split {
     display: grid;
     grid-template-columns: 1fr 480px;
