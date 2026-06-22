@@ -282,7 +282,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 
 /* card de captura de lead */
 .lead-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(24px, 3vw, 36px); box-shadow: var(--shadow-card); min-width: 0; }
-.lead-card .lead-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+.lead-card .lead-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; color: var(--text); }
 .lead-card .lead-sub { font-size: 14px; color: var(--text-mid); margin-bottom: 22px; line-height: 1.5; }
 
 /* feedback */
