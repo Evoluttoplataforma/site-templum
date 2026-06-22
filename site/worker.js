@@ -129,8 +129,11 @@ async function handleLead(request, env) {
   const tasks = [];
   let configured = false;
 
+  // Eventos de webinar vão SOMENTE para o Mailchimp (sem CRM nem webhook).
+  const isWebinar = lead.evento.startsWith("webinar");
+
   // 1) Webhook (n8n / Make / RDStation / Zapier / etc.) — recebe o lead completo.
-  if (env.LEAD_WEBHOOK_URL) {
+  if (!isWebinar && env.LEAD_WEBHOOK_URL) {
     configured = true;
     tasks.push(
       fetch(env.LEAD_WEBHOOK_URL, {
@@ -156,7 +159,11 @@ async function handleLead(request, env) {
           ORIGEM: lead.pagina || lead.evento || "site",
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
-        tags: [env.MAILCHIMP_TAG || "site-templum"],
+        tags: [
+          env.MAILCHIMP_TAG || "site-templum",
+          // Tag dinâmica por evento (ex.: "webinar-iso9001-2026", "aula-iso9001", etc.)
+          ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
+        ],
       };
       tasks.push(
         fetch(`https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members`, {
@@ -173,7 +180,10 @@ async function handleLead(request, env) {
     }
   }
 
-  // 3) CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
+  // 3) CRM Orbit/Evolutto — pulado para webinars (apenas Mailchimp).
+  if (isWebinar) { const results = await Promise.all(tasks); return json({ ok: true, configured, results }); }
+
+  // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
   //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
   //    server-side, mandamos o Origin de CRM_ORIGIN — esse domínio PRECISA estar
   //    na allowlist do webform no CRM, senão volta 403 "Domain not allowed".

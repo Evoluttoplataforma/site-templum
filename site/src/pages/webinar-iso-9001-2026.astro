@@ -551,11 +551,31 @@ const schemaEvent = {
   const form = document.getElementById("wb-form") as HTMLFormElement;
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
-    const nome  = (document.getElementById("wb-nome") as HTMLInputElement).value.trim();
-    const email = (document.getElementById("wb-email") as HTMLInputElement).value.trim();
+    const nome   = (document.getElementById("wb-nome") as HTMLInputElement).value.trim();
+    const email  = (document.getElementById("wb-email") as HTMLInputElement).value.trim();
+    const empresa = (document.getElementById("wb-empresa") as HTMLInputElement).value.trim();
+    const wpp    = (document.getElementById("wb-wpp") as HTMLInputElement).value.trim();
     if (!nome || !email) { alert("Por favor, preencha nome e e-mail."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("E-mail inválido."); return; }
 
+    // Envia para /api/lead → Mailchimp (tag: webinar-iso9001-2026) + webhook
+    try {
+      const attrib = (window as any).__tplAttrib ? (window as any).__tplAttrib() : {};
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          nome, email, telefone: wpp, empresa,
+          norma: "ISO 9001",
+          evento: "webinar-iso9001-2026",
+          pagina: location.pathname,
+          ...attrib,
+        }),
+      });
+    } catch (_) {}
+
+    // Exibe confirmação inline (sem redirect)
     const wrap = document.getElementById("wb-form-wrap");
     const confirm = document.getElementById("wb-confirm");
     if (wrap) wrap.hidden = true;
