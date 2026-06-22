@@ -1,0 +1,842 @@
+---
+import Base from "../layouts/Base.astro";
+
+const eventos = [
+  {
+    n: "01",
+    data: "01 de Julho",
+    dia: "Ter",
+    t: "A maior mudança da ISO 9001 em 10 anos",
+    d: "O que muda, o que permanece igual e como sua empresa deve se preparar.",
+  },
+  {
+    n: "02",
+    data: "09 de Julho",
+    dia: "Qua",
+    t: "O que empresas certificadas precisarão fazer até 2029",
+    d: "Impactos práticos da transição e adaptações necessárias.",
+  },
+  {
+    n: "03",
+    data: "15 de Julho",
+    dia: "Ter",
+    t: "IA e ISO 9001: como reduzir controles, planilhas e retrabalho",
+    d: "Como a Inteligência Artificial está entrando na gestão da qualidade.",
+  },
+  {
+    n: "04",
+    data: "22 de Julho",
+    dia: "Qua",
+    t: "Por que algumas empresas passam na auditoria e outras não",
+    d: "O que realmente pesa na avaliação de um auditor.",
+  },
+  {
+    n: "05",
+    data: "29 de Julho",
+    dia: "Qua",
+    t: "Como transformar riscos em oportunidades de crescimento",
+    d: "A nova abordagem da ISO para riscos e oportunidades.",
+  },
+];
+
+const aprendizados = [
+  "O que realmente muda na ISO 9001:2026",
+  "O impacto da IA nos Sistemas de Gestão",
+  "Como preparar sua empresa para a transição até 2029",
+  "O que auditores passarão a observar",
+  "Como transformar gestão em vantagem competitiva",
+  "Como reduzir planilhas, retrabalho e controles manuais",
+  "Tendências que vão moldar os próximos anos",
+  "Casos práticos e exemplos reais",
+];
+
+const numeros = [
+  { n: "+8.000", l: "empresas atendidas" },
+  { n: "+30", l: "anos de mercado" },
+  { n: "4,9 ★", l: "nota no Google" },
+  { n: "+800", l: "cidades atendidas" },
+];
+
+const schemaEvent = {
+  "@context": "https://schema.org",
+  "@type": "EventSeries",
+  name: "Webserie ISO 9001:2026 + IA — Templum Consultoria",
+  description: "Série exclusiva de 5 webinars ao vivo sobre a revisão da ISO 9001 versão 2026 e Inteligência Artificial nos sistemas de gestão.",
+  organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  isAccessibleForFree: true,
+  startDate: "2026-07-01",
+  endDate: "2026-07-29",
+};
+---
+
+<Base
+  title="Webserie Gratuita — ISO 9001:2026 + IA | Templum Consultoria"
+  description="Série exclusiva de 5 webinars ao vivo sobre a maior mudança da ISO 9001 em 10 anos e Inteligência Artificial na gestão. Gratuito. Julho 2026."
+  schemas={[schemaEvent]}
+  hideWpp={true}
+>
+
+  <!-- ── HERO ── -->
+  <section class="ws-hero">
+    <div class="ws-hero-bg"></div>
+    <div class="ws-hero-grid-bg"></div>
+    <div class="container xl ws-hero-inner">
+
+      <div class="ws-hero-copy">
+        <div class="ws-hero-badge">
+          <span class="ws-dot"></span>
+          SÉRIE ESPECIAL GRATUITA &nbsp;·&nbsp; JULHO 2026
+        </div>
+
+        <h1 class="ws-hero-h1">
+          A maior mudança na ISO 9001<br />
+          em mais de 10 anos<br />
+          <em>já começou.</em>
+        </h1>
+
+        <p class="ws-hero-sub">
+          E ela está acontecendo ao mesmo tempo que a Inteligência Artificial transforma a forma como empresas são geridas. Participe de uma série exclusiva de <strong>5 encontros ao vivo</strong> para entender o que muda, como a IA entra nos sistemas de gestão e como preparar sua empresa para os próximos anos.
+        </p>
+
+        <div class="ws-hero-ctas">
+          <a href="#inscricao" class="btn btn--primary btn--lg">
+            Quero participar gratuitamente <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </a>
+          <a href="#calendario" class="btn btn--onDark btn--lg">
+            Ver calendário completo
+          </a>
+        </div>
+
+        <div class="ws-provas">
+          {numeros.map((n) => (
+            <div class="ws-prova">
+              <strong>{n.n}</strong>
+              <span>{n.l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- CARD SÉRIE -->
+      <div class="ws-hero-card">
+        <div class="ws-serie-label">
+          <iconify-icon icon="solar:play-circle-bold"></iconify-icon>
+          5 encontros ao vivo
+        </div>
+        <div class="ws-serie-title">ISO 9001:2026<br />+ Inteligência Artificial</div>
+        <div class="ws-serie-eventos">
+          {eventos.map((e) => (
+            <div class="ws-serie-evento">
+              <div class="ws-serie-data">
+                <span class="ws-serie-n">{e.n}</span>
+                <span class="ws-serie-dt">{e.data}</span>
+              </div>
+              <div class="ws-serie-info">
+                <span>{e.t}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <a href="#inscricao" class="btn btn--primary btn--block" style="margin-top:24px;">
+          Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+        </a>
+        <p class="ws-card-legal">Gratuito. Online. Sem compromisso.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PROBLEMA ── -->
+  <section class="section section--cream">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">O cenário atual</span>
+        <h2>A maioria das empresas será <em class="accent">surpreendida.</em></h2>
+      </div>
+      <div class="ws-problema">
+        <p>A nova versão da ISO 9001 está em desenvolvimento. Mudanças relacionadas à tecnologia, inteligência artificial, cultura organizacional, riscos, oportunidades e gestão já estão sendo discutidas.</p>
+        <p>Nos próximos anos, empresas certificadas precisarão se adaptar.</p>
+        <p>Enquanto isso, <strong>uma segunda transformação acontece em paralelo.</strong></p>
+        <p>A Inteligência Artificial está mudando completamente a forma como processos, indicadores, auditorias, documentos e sistemas de gestão são conduzidos.</p>
+        <div class="ws-problema-destaque">
+          <div class="ws-pd-item ws-pd-green">
+            <iconify-icon icon="solar:graph-up-bold"></iconify-icon>
+            <span>Quem entender essas mudanças antes ganha <strong>vantagem competitiva.</strong></span>
+          </div>
+          <div class="ws-pd-item ws-pd-red">
+            <iconify-icon icon="solar:graph-down-bold"></iconify-icon>
+            <span>Quem ignorar ficará <strong>para trás.</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── O QUE VAI APRENDER ── -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Conteúdo da série</span>
+        <h2>O que você vai descobrir <em class="accent">nesta série</em></h2>
+      </div>
+      <div class="ws-aprend-grid">
+        {aprendizados.map((a, i) => (
+          <div class="ws-aprend-card reveal">
+            <span class="ws-aprend-n">{String(i + 1).padStart(2, "0")}</span>
+            <span class="ws-aprend-check"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
+            <p>{a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CALENDÁRIO ── -->
+  <section id="calendario" class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Agenda completa</span>
+        <h2>5 encontros ao vivo — <em class="accent">julho 2026</em></h2>
+        <p>Toda semana um novo encontro. Ao vivo, gratuito e com espaço para perguntas.</p>
+      </div>
+      <div class="ws-cal">
+        {eventos.map((e) => (
+          <div class="ws-cal-item reveal">
+            <div class="ws-cal-num">{e.n}</div>
+            <div class="ws-cal-data">
+              <span class="ws-cal-dia">{e.dia}</span>
+              <span class="ws-cal-dt">{e.data}</span>
+            </div>
+            <div class="ws-cal-divider"></div>
+            <div class="ws-cal-body">
+              <h3>{e.t}</h3>
+              <p>{e.d}</p>
+            </div>
+            <a href="#inscricao" class="ws-cal-cta">
+              Inscrever-se <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOBRE A TEMPLUM ── -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="ws-sobre">
+        <div class="ws-sobre-copy">
+          <span class="tag-pill tag-pill--glow">Quem vai conduzir</span>
+          <h2 style="margin-top:20px;color:var(--cream);">Há mais de 30 anos ajudando empresas a evoluir seus sistemas de gestão.</h2>
+          <p>A Templum é uma das maiores referências brasileiras em certificações ISO e sistemas de gestão. Já apoiou milhares de empresas em processos de certificação, melhoria contínua e crescimento sustentável.</p>
+          <p>Agora lidera também a discussão sobre o <strong>futuro da gestão empresarial</strong>, conectando processos, tecnologia, inteligência artificial e excelência operacional.</p>
+        </div>
+        <div class="ws-sobre-numeros">
+          {numeros.map((n) => (
+            <div class="ws-sobre-num">
+              <strong>{n.n}</strong>
+              <span>{n.l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FORMULÁRIO ── -->
+  <section id="inscricao" class="section section--cream">
+    <div class="container sm">
+      <div class="section-header">
+        <span class="tag-pill">Vagas limitadas</span>
+        <h2>Reserve sua vaga <em class="accent">gratuitamente</em></h2>
+        <p>Inscreva-se agora e receba acesso aos 5 encontros ao vivo. Mesmo que não possa participar ao vivo, você receberá os materiais e informações sobre os próximos eventos.</p>
+      </div>
+
+      <div class="ws-form-card">
+        <form class="ws-form" data-trk-event="webserie-iso9001-2026" novalidate>
+          <input type="hidden" name="norma" value="ISO 9001" />
+          <div class="form-row">
+            <div class="field">
+              <label>Nome completo</label>
+              <input class="input" type="text" name="nome" placeholder="Seu nome" required />
+            </div>
+            <div class="field">
+              <label>Empresa</label>
+              <input class="input" type="text" name="empresa" placeholder="Nome da empresa" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Cargo</label>
+              <select class="select" name="cargo">
+                <option value="">Selecione seu cargo</option>
+                <option>CEO / Proprietário</option>
+                <option>Diretor</option>
+                <option>Sócio</option>
+                <option>Gerente da Qualidade</option>
+                <option>Diretor Industrial</option>
+                <option>Consultor</option>
+                <option>Outro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>WhatsApp</label>
+              <input class="input" type="tel" name="telefone" placeholder="(00) 00000-0000" />
+            </div>
+          </div>
+          <div class="field">
+            <label>E-mail</label>
+            <input class="input" type="email" name="email" placeholder="voce@empresa.com" required />
+          </div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:8px;">
+            Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </button>
+        </form>
+        <p class="ws-form-legal">Gratuito. Online. Seus dados estão protegidos pela LGPD. Sem spam.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="ws-cta-final">
+    <div class="ws-cta-bg"></div>
+    <div class="container sm ws-cta-inner">
+      <h2>A gestão empresarial está mudando.</h2>
+      <p>A pergunta não é se sua empresa será impactada.<br />A pergunta é se você estará preparado.</p>
+      <a href="#inscricao" class="btn btn--primary btn--lg">
+        Quero participar da série <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* ── HERO ── */
+  .ws-hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: clamp(80px, 10vw, 130px) 0 clamp(80px, 10vw, 110px);
+  }
+  .ws-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 20%, rgba(255,89,37,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(255,89,37,0.07) 0%, transparent 45%);
+    pointer-events: none;
+  }
+  /* grade sutil de fundo */
+  .ws-hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .ws-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  /* BADGE */
+  .ws-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid rgba(255,89,37,0.35);
+    background: rgba(255,89,37,0.08);
+    padding: 7px 16px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .ws-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.8s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* H1 */
+  .ws-hero-h1 {
+    font-size: clamp(32px, 4.8vw, 56px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+  .ws-hero-h1 em {
+    font-style: normal;
+    color: var(--orange);
+  }
+
+  .ws-hero-sub {
+    font-size: 16px;
+    color: rgba(255,244,221,0.68);
+    line-height: 1.75;
+    margin-bottom: 36px;
+    max-width: 540px;
+  }
+  .ws-hero-sub strong { color: rgba(255,244,221,0.9); }
+
+  /* CTAs */
+  .ws-hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 44px;
+  }
+
+  /* PROVAS */
+  .ws-provas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,244,221,0.10);
+  }
+  .ws-prova {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ws-prova strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+  .ws-prova span {
+    font-size: 12px;
+    color: rgba(255,244,221,0.45);
+    font-weight: 500;
+  }
+
+  /* CARD SÉRIE */
+  .ws-hero-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.2);
+    align-self: start;
+  }
+  .ws-serie-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .ws-serie-label iconify-icon { font-size: 16px; }
+  .ws-serie-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ws-serie-eventos {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .ws-serie-evento {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ws-serie-evento:last-child { border-bottom: none; }
+  .ws-serie-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 44px;
+  }
+  .ws-serie-n {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: 1px;
+  }
+  .ws-serie-dt {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-mid);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .ws-serie-info {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .ws-card-legal {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  /* ── PROBLEMA ── */
+  .ws-problema {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .ws-problema p {
+    font-size: 17px;
+    color: var(--text-2);
+    line-height: 1.75;
+    margin-bottom: 18px;
+  }
+  .ws-problema strong { color: var(--text); font-weight: 700; }
+  .ws-problema-destaque {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 36px;
+  }
+  .ws-pd-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 22px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .ws-pd-item iconify-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .ws-pd-green { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: var(--text); }
+  .ws-pd-green iconify-icon { color: #22c55e; }
+  .ws-pd-red { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: var(--text); }
+  .ws-pd-red iconify-icon { color: #ef4444; }
+
+  /* ── APRENDIZADOS ── */
+  .ws-aprend-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .ws-aprend-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.10);
+    border-radius: 12px;
+    padding: 20px 22px;
+    transition: background .3s, border-color .3s;
+  }
+  .ws-aprend-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,89,37,0.3);
+  }
+  .ws-aprend-n {
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255,89,37,0.5);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .ws-aprend-check {
+    color: var(--orange);
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .ws-aprend-card p {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ── CALENDÁRIO ── */
+  .ws-cal {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ws-cal-item {
+    display: grid;
+    grid-template-columns: 44px 90px 1px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    transition: background .2s;
+  }
+  .ws-cal-item:last-child { border-bottom: none; }
+  .ws-cal-item:hover { background: var(--bg); }
+  .ws-cal-num {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: 1px;
+  }
+  .ws-cal-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ws-cal-dia {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ws-cal-dt {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .ws-cal-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border-2);
+    flex-shrink: 0;
+  }
+  .ws-cal-body h3 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .ws-cal-body p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .ws-cal-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    white-space: nowrap;
+    transition: gap .2s;
+    flex-shrink: 0;
+  }
+  .ws-cal-cta:hover { gap: 10px; }
+
+  /* ── SOBRE ── */
+  .ws-sobre {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 60px;
+    align-items: center;
+  }
+  .ws-sobre-copy p {
+    font-size: 16px;
+    color: rgba(255,244,221,0.65);
+    line-height: 1.75;
+    margin-top: 16px;
+  }
+  .ws-sobre-copy strong { color: var(--cream); }
+  .ws-sobre-numeros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .ws-sobre-num {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.10);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .ws-sobre-num strong {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: -0.02em;
+  }
+  .ws-sobre-num span {
+    font-size: 12px;
+    color: rgba(255,244,221,0.45);
+  }
+
+  /* ── FORM ── */
+  .ws-form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: clamp(28px, 4vw, 44px);
+    box-shadow: var(--shadow-card);
+  }
+  .ws-form { display: flex; flex-direction: column; gap: 16px; }
+  .ws-form-legal {
+    font-size: 11.5px;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* ── CTA FINAL ── */
+  .ws-cta-final {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: clamp(72px, 10vw, 110px) 0;
+    text-align: center;
+  }
+  .ws-cta-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,89,37,0.15) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ws-cta-inner {
+    position: relative;
+    z-index: 1;
+  }
+  .ws-cta-final h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: var(--cream);
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+  }
+  .ws-cta-final p {
+    font-size: 17px;
+    color: rgba(255,244,221,0.6);
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    .ws-hero-inner { grid-template-columns: 1fr; }
+    .ws-hero-card { display: none; }
+    .ws-sobre { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .ws-aprend-grid { grid-template-columns: 1fr; }
+    .ws-problema-destaque { grid-template-columns: 1fr; }
+    .ws-cal-item {
+      grid-template-columns: 44px 1fr;
+      grid-template-rows: auto auto;
+    }
+    .ws-cal-data { grid-column: 2; }
+    .ws-cal-divider { display: none; }
+    .ws-cal-body { grid-column: 1 / -1; }
+    .ws-cal-cta { grid-column: 1 / -1; }
+  }
+</style>
+
+<script>
+  // Máscara telefone
+  document.querySelectorAll('input[name="telefone"]').forEach((el) => {
+    el.addEventListener("input", function () {
+      const inp = this as HTMLInputElement;
+      let d = inp.value.replace(/\D/g, "").substring(0, 11);
+      const len = d.length;
+      if (len === 0) { inp.value = ""; return; }
+      if (len <= 2) inp.value = "(" + d;
+      else if (len <= 6) inp.value = "(" + d.slice(0,2) + ") " + d.slice(2);
+      else if (len <= 10) inp.value = "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6);
+      else inp.value = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7);
+    });
+  });
+
+  // Atribuição UTM
+  function getAttrib() {
+    const p = new URLSearchParams(location.search);
+    const keys = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"];
+    const o: Record<string, string> = {};
+    keys.forEach((k) => { if (p.get(k)) o[k] = p.get(k)!; });
+    return o;
+  }
+
+  // Submit do formulário
+  const form = document.querySelector<HTMLFormElement>(".ws-form");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+      btn.disabled = true;
+      btn.textContent = "Enviando…";
+
+      const fd = new FormData(form);
+      const nome = (fd.get("nome") as string || "").trim();
+      const email = (fd.get("email") as string || "").trim();
+      const telefone = (fd.get("telefone") as string || "").trim();
+      const empresa = (fd.get("empresa") as string || "").trim();
+      const cargo = (fd.get("cargo") as string || "").trim();
+
+      try {
+        await fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          keepalive: true,
+          body: JSON.stringify({
+            nome, email, telefone, empresa, cargo,
+            norma: "ISO 9001",
+            evento: "webserie-iso9001-2026",
+            pagina: location.pathname,
+            ...getAttrib(),
+          }),
+        });
+
+        // Confirmação inline
+        form.innerHTML = `
+          <div style="text-align:center;padding:24px 0;">
+            <div style="font-size:44px;margin-bottom:16px;">🎉</div>
+            <h3 style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;">Vaga garantida!</h3>
+            <p style="color:var(--text-2);line-height:1.7;margin-bottom:20px;">
+              Você receberá um e-mail de confirmação em breve.<br />
+              Fique de olho na sua caixa de entrada — os links de acesso a cada encontro serão enviados antes de cada evento.
+            </p>
+            <a href="#calendario" style="display:inline-flex;align-items:center;gap:8px;color:var(--orange);font-weight:700;font-size:14px;">
+              Ver calendário completo →
+            </a>
+          </div>
+        `;
+      } catch {
+        btn.disabled = false;
+        btn.textContent = "Tentar novamente";
+        alert("Erro ao enviar. Por favor, tente novamente.");
+      }
+    });
+  }
+</script>
