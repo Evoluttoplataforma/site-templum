@@ -100,7 +100,9 @@ const depoimentos = [
       }
       var n = 0, t = setInterval(function () {
         n++;
-        var ready = window.fbq && window.trk && typeof window.trk.lead === "function";
+        // dispara assim que o kit estiver pronto (não bloqueia no fbq, que pode
+        // não carregar). gtag já é estático no head; fbq é best-effort no fire().
+        var ready = window.trk && typeof window.trk.lead === "function";
         if (ready || n > 60) { clearInterval(t); fire(); }
       }, 100);
     })();
