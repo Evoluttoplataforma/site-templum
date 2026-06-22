@@ -1,59 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 
-const schemaEvent = {
-  "@context": "https://schema.org",
-  "@type": "Event",
-  name: "Entenda a revisão da ISO 9001 versão 2026",
-  startDate: "2026-07-01T16:00:00-03:00",
-  endDate: "2026-07-01T17:00:00-03:00",
-  eventStatus: "https://schema.org/EventScheduled",
-  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-  location: {
-    "@type": "VirtualLocation",
-    url: "https://meet.google.com/mcy-fzmg-jwt",
-  },
-  organizer: {
-    "@type": "Organization",
-    name: "Templum Consultoria",
-    url: "https://templum.com.br",
-  },
-  performer: {
-    "@type": "Person",
-    name: "Daniela Albuquerque",
-  },
-  isAccessibleForFree: true,
-  description:
-    "Webinar gratuito: entenda o que muda na ISO 9001 versão 2026 — novos requisitos de mudanças climáticas, IA e gestão do conhecimento. Com Daniela Albuquerque, Templum Consultoria.",
-};
-
-const topicos = [
-  {
-    n: "01",
-    icon: "solar:refresh-bold",
-    t: "O que muda na versão 2026",
-    d: "Mudanças climáticas, inteligência artificial e gestão do conhecimento entram como novos requisitos. Entenda o impacto real para o seu sistema de gestão.",
-  },
-  {
-    n: "02",
-    icon: "solar:check-square-bold",
-    t: "O que permanece — e o que precisa ser adaptado",
-    d: "Nem tudo muda. Veja exatamente quais cláusulas ficam intactas, quais são revisadas e onde sua empresa vai precisar agir.",
-  },
-  {
-    n: "03",
-    icon: "solar:calendar-bold",
-    t: "Prazo para adequação e por onde começar",
-    d: "Qual é o período de transição? Quando as auditorias vão exigir a nova versão? Um roteiro prático para empresas já certificadas.",
-  },
-  {
-    n: "04",
-    icon: "solar:buildings-2-bold",
-    t: "Como empresas reais estão se preparando",
-    d: "Casos práticos de organizações que já iniciaram a transição — o que fizeram primeiro, quanto tempo levou e quais erros evitar.",
-  },
-];
-
 // Google Calendar link — 01/07/2026 16h BRT = 19h UTC
 const calUrl =
   "https://calendar.google.com/calendar/render?action=TEMPLATE" +
@@ -62,110 +9,156 @@ const calUrl =
   "&details=Webinar+gratuito+com+Daniela+Albuquerque.+Acesse%3A+https%3A%2F%2Fmeet.google.com%2Fmcy-fzmg-jwt" +
   "&location=https%3A%2F%2Fmeet.google.com%2Fmcy-fzmg-jwt" +
   "&sf=true&output=xml";
+
+const topicos = [
+  {
+    icon: "solar:refresh-circle-bold",
+    t: "O que muda na versão 2026",
+    d: "Mudanças climáticas, inteligência artificial e gestão do conhecimento entram como novos requisitos. Entenda o impacto real.",
+  },
+  {
+    icon: "solar:check-square-bold",
+    t: "O que permanece e o que adaptar",
+    d: "Nem tudo muda. Veja quais cláusulas ficam intactas, quais são revisadas e onde sua empresa precisa agir.",
+  },
+  {
+    icon: "solar:calendar-mark-bold",
+    t: "Prazo de transição e por onde começar",
+    d: "Quando as auditorias exigirão a nova versão? Um roteiro prático de adequação para empresas já certificadas.",
+  },
+  {
+    icon: "solar:buildings-2-bold",
+    t: "Como empresas reais estão se preparando",
+    d: "Casos práticos de organizações que já iniciaram — o que fizeram primeiro e quais erros evitar.",
+  },
+];
+
+const schemaEvent = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: "Entenda a revisão da ISO 9001 versão 2026",
+  startDate: "2026-07-01T16:00:00-03:00",
+  endDate: "2026-07-01T17:00:00-03:00",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  location: { "@type": "VirtualLocation", url: "https://meet.google.com/mcy-fzmg-jwt" },
+  organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  performer: { "@type": "Person", name: "Daniela Albuquerque" },
+  isAccessibleForFree: true,
+};
 ---
 
 <Base
   title="Webinar Gratuito — Entenda a revisão da ISO 9001 versão 2026 | Templum"
-  description="Webinar gratuito: o que muda na ISO 9001 versão 2026. Quarta-feira, 01 de julho às 16h. Com Daniela Albuquerque — Templum Consultoria."
+  description="Webinar gratuito: o que muda na ISO 9001 versão 2026. Quarta, 01 de julho às 16h. Com Daniela Albuquerque — Templum Consultoria."
   schemas={[schemaEvent]}
   hideWpp={true}
 >
 
-  <!-- ── URGÊNCIA ── -->
-  <div class="urgency-strip">
+  <!-- ── HERO ── -->
+  <section class="wb-hero">
     <div class="container xl">
-      <iconify-icon icon="solar:alarm-bold"></iconify-icon>
-      Vagas limitadas — Webinar gratuito em <strong>01 de julho de 2026 às 16h</strong>
-    </div>
-  </div>
+      <div class="wb-hero-grid">
 
-  <!-- ── HERO + FORM ── -->
-  <section id="inscricao" class="section section--navy hero-form-sec">
-    <div class="container xl form-split">
-
-      <!-- COPY -->
-      <div class="form-copy">
-        <span class="tag-pill">Webinar gratuito</span>
-        <div class="wb-meta">
-          <span><iconify-icon icon="solar:calendar-bold"></iconify-icon> Quarta, 01 de julho de 2026</span>
-          <span><iconify-icon icon="solar:clock-circle-bold"></iconify-icon> 16h00 (Brasília)</span>
-          <span class="wb-free"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> 100% gratuito</span>
-        </div>
-        <h1>A maior revisão da ISO 9001 <em class="accent">desde 2015</em> está chegando.</h1>
-        <p>
-          A versão 2026 traz novos requisitos sobre mudanças climáticas, inteligência artificial e gestão do conhecimento. Descubra o que muda, o que fica e como se preparar — antes de ser pego de surpresa.
-        </p>
-        <ul class="form-selos">
-          <li><iconify-icon icon="solar:refresh-bold"></iconify-icon> Novos requisitos da versão 2026 explicados na prática</li>
-          <li><iconify-icon icon="solar:calendar-bold"></iconify-icon> Prazo de transição e por onde começar</li>
-          <li><iconify-icon icon="solar:buildings-2-bold"></iconify-icon> Casos reais de empresas que já iniciaram</li>
-          <li><iconify-icon icon="solar:medal-ribbons-star-bold"></iconify-icon> Com Daniela Albuquerque — especialista Templum</li>
-        </ul>
-      </div>
-
-      <!-- FORMULÁRIO -->
-      <div class="form-col">
-        <div class="lead-card" id="wb-card">
-
-          <!-- FORM -->
-          <div id="wb-form-wrap">
-            <div class="lead-title">Garantir minha vaga</div>
-            <p class="lead-sub">Preencha abaixo e acesse gratuitamente.</p>
-            <form id="wb-form" novalidate>
-              <div class="field">
-                <label for="wb-nome">Nome completo</label>
-                <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome" required />
-              </div>
-              <div class="field">
-                <label for="wb-email">E-mail</label>
-                <input class="input" type="email" id="wb-email" name="email" placeholder="voce@empresa.com" required />
-              </div>
-              <div class="field">
-                <label for="wb-wpp">WhatsApp <span style="font-weight:500;color:var(--text-soft);">(opcional)</span></label>
-                <input class="input" type="tel" id="wb-wpp" name="whatsapp" placeholder="(00) 00000-0000" />
-              </div>
-              <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:8px;">
-                Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
-              </button>
-            </form>
-            <p class="lead-legal">Participação gratuita. Sem spam. Seus dados estão protegidos pela LGPD.</p>
+        <!-- ESQUERDA: copy + speaker -->
+        <div class="wb-copy">
+          <div class="wb-badges">
+            <span class="wb-badge-free">
+              <iconify-icon icon="solar:gift-bold"></iconify-icon> Gratuito
+            </span>
+            <span class="wb-badge-date">
+              <iconify-icon icon="solar:calendar-bold"></iconify-icon> Quarta, 01 jul · 16h (Brasília)
+            </span>
           </div>
 
-          <!-- CONFIRMAÇÃO (aparece após submit) -->
-          <div id="wb-confirm" hidden>
-            <div class="wb-confirm-icon">
-              <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <h1>
+            A maior revisão da<br />
+            <em>ISO 9001</em> desde 2015<br />
+            <span class="wb-h1-sub">está chegando.</span>
+          </h1>
+
+          <p class="wb-desc">
+            A versão 2026 traz novos requisitos de mudanças climáticas, inteligência artificial e gestão do conhecimento. Descubra o que muda, o que fica e como adequar sua empresa — com quem certifica há mais de 30 anos.
+          </p>
+
+          <!-- SPEAKER STRIP -->
+          <div class="wb-speaker-strip">
+            <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-speaker-photo" />
+            <div>
+              <div class="wb-speaker-name">Daniela Albuquerque</div>
+              <div class="wb-speaker-role">Especialista ISO 9001 · Templum Consultoria</div>
             </div>
-            <div class="lead-title">Vaga garantida!</div>
-            <p class="lead-sub">Salve o link abaixo — ele estará disponível na data do evento:</p>
-            <a class="wb-meet-link" href="https://meet.google.com/mcy-fzmg-jwt" target="_blank" rel="noopener">
-              <iconify-icon icon="solar:videocamera-record-bold"></iconify-icon>
-              meet.google.com/mcy-fzmg-jwt
-            </a>
-            <a href={calUrl} target="_blank" rel="noopener" class="btn btn--dark btn--block" style="margin-top:14px;">
-              <iconify-icon icon="solar:calendar-add-bold"></iconify-icon> Adicionar à agenda
-            </a>
-            <p class="lead-legal" style="margin-top:12px;">Quarta, 01 de julho · 16h · Online · Gratuito</p>
           </div>
-
         </div>
-      </div>
 
+        <!-- DIREITA: formulário -->
+        <div class="wb-form-col">
+          <div class="wb-form-card" id="wb-card">
+
+            <!-- Formulário -->
+            <div id="wb-form-wrap">
+              <div class="wb-form-header">
+                <div class="wb-form-title">Garantir minha vaga</div>
+                <p class="wb-form-sub">Preencha abaixo para participar gratuitamente.</p>
+              </div>
+              <form id="wb-form" novalidate>
+                <div class="wb-field">
+                  <label for="wb-nome">Nome completo</label>
+                  <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome completo" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-email">E-mail</label>
+                  <input class="input" type="email" id="wb-email" name="email" placeholder="voce@empresa.com" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-wpp">WhatsApp <span class="wb-opt">(opcional)</span></label>
+                  <input class="input" type="tel" id="wb-wpp" name="whatsapp" placeholder="(00) 00000-0000" />
+                </div>
+                <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
+                  Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </form>
+              <p class="wb-legal">Gratuito. Sem spam. Dados protegidos pela LGPD.</p>
+            </div>
+
+            <!-- Confirmação (aparece após submit) -->
+            <div id="wb-confirm" hidden>
+              <div class="wb-confirm-check">
+                <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+              </div>
+              <div class="wb-form-title">Vaga garantida!</div>
+              <p class="wb-form-sub">Acesse o webinar pelo link abaixo na data do evento:</p>
+              <a class="wb-meet-link" href="https://meet.google.com/mcy-fzmg-jwt" target="_blank" rel="noopener">
+                <iconify-icon icon="solar:videocamera-record-bold"></iconify-icon>
+                meet.google.com/mcy-fzmg-jwt
+              </a>
+              <a href={calUrl} target="_blank" rel="noopener" class="btn btn--dark btn--block" style="margin-top:12px;">
+                <iconify-icon icon="solar:calendar-add-bold"></iconify-icon> Adicionar à agenda
+              </a>
+              <p class="wb-legal" style="margin-top:12px;">Quarta, 01 de julho · 16h · Online · Gratuito</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <!-- ── O QUE VOCÊ VAI APRENDER ── -->
+  <!-- ── TÓPICOS ── -->
   <section class="section section--cream">
-    <div class="container xl">
+    <div class="container lg">
       <div class="section-header">
-        <span class="tag-pill">Conteúdo do webinar</span>
-        <h2>O que você vai <em class="accent">aprender</em></h2>
-        <p>Em 1h de conteúdo direto ao ponto, você sai com um plano claro de adequação à nova versão.</p>
+        <span class="tag-pill">O que você vai aprender</span>
+        <h2>1 hora de conteúdo <em class="accent">direto ao ponto</em></h2>
+        <p>Você sai do webinar sabendo exatamente o que muda, quando muda e por onde começar a adequação.</p>
       </div>
-      <div class="step-grid">
-        {topicos.map((t) => (
-          <div class="step-card reveal">
-            <span class="step-num">{t.n}</span>
+      <div class="wb-topics-grid">
+        {topicos.map((t, i) => (
+          <div class="wb-topic-card reveal">
+            <div class="wb-topic-ico">
+              <iconify-icon icon={t.icon}></iconify-icon>
+            </div>
             <h3>{t.t}</h3>
             <p>{t.d}</p>
           </div>
@@ -179,31 +172,36 @@ const calUrl =
     <div class="container md">
       <div class="section-header">
         <span class="tag-pill tag-pill--glow">Quem apresenta</span>
-        <h2>Especialista que já certificou <em class="accent">mais de 2.000 empresas</em></h2>
+        <h2>Aprenda com quem já <em class="accent">certificou +2.000 empresas</em></h2>
       </div>
-      <div class="speaker-card reveal">
-        <div class="speaker-avatar">DA</div>
-        <div class="speaker-body">
-          <h3 class="speaker-name">Daniela Albuquerque</h3>
-          <span class="speaker-role">Especialista em Sistemas de Gestão ISO · Templum Consultoria</span>
+      <div class="wb-presenter-card reveal">
+        <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-presenter-photo" />
+        <div class="wb-presenter-body">
+          <h3>Daniela Albuquerque</h3>
+          <span class="wb-presenter-role">Especialista em Sistemas de Gestão · Templum Consultoria</span>
           <p>
-            Com mais de uma década dedicada à implementação e auditoria de sistemas de gestão, Daniela já conduziu centenas de empresas à certificação ISO 9001 em todo o Brasil. Referência em simplificar o complexo, ela transforma requisitos normativos em ação prática — sem burocracia desnecessária.
+            Com mais de uma década dedicada à implementação e auditoria de sistemas de gestão, Daniela já conduziu centenas de empresas à certificação ISO 9001 em todo o Brasil. Referência em simplificar o complexo, ela transforma requisitos normativos em ação prática — sem burocracia.
           </p>
+          <div class="wb-presenter-stats">
+            <div><strong>+10 anos</strong><span>de experiência</span></div>
+            <div><strong>+2.000</strong><span>empresas certificadas</span></div>
+            <div><strong>4,9 ★</strong><span>nota no Google</span></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ── CTA FINAL ── -->
-  <section class="section cta-strip">
+  <section class="section wb-cta-sec">
     <div class="container sm" style="text-align:center;">
-      <span class="tag-pill">Últimas vagas</span>
-      <h2 style="margin-top:16px;">Sua empresa vai ficar para trás?</h2>
-      <p class="paragraph" style="margin-top:12px;margin-bottom:32px;">
-        A ISO 9001:2026 já é realidade. Quem se preparar antes vai sair na frente nas auditorias — e nos contratos.
+      <span class="tag-pill">Vagas limitadas</span>
+      <h2 style="margin-top:20px;margin-bottom:14px;">Reserve seu lugar agora.</h2>
+      <p class="paragraph" style="margin-bottom:32px;">
+        Gratuito. Online. Dia 01 de julho às 16h. Basta se inscrever.
       </p>
-      <a href="#inscricao" class="btn btn--primary btn--lg">
-        Quero participar gratuitamente <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      <a href="#wb-card" class="btn btn--primary btn--lg">
+        Quero minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
       </a>
     </div>
   </section>
@@ -211,45 +209,169 @@ const calUrl =
 </Base>
 
 <style>
-  /* ── URGÊNCIA ── */
-  .urgency-strip {
-    background: var(--orange);
-    padding: 13px 0;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  /* ─── TOKENS WEBINAR ─── */
+  :root {
+    --wb-radius: 16px;
   }
-  .urgency-strip .container { display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .urgency-strip iconify-icon { font-size: 18px; }
 
-  /* ── META BADGES DO HERO ── */
-  .wb-meta {
+  /* ─── HERO ─── */
+  .wb-hero {
+    background: var(--navy);
+    padding: clamp(72px, 10vw, 120px) 0 clamp(72px, 10vw, 100px);
+    position: relative;
+    overflow: hidden;
+  }
+  .wb-hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,89,37,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .wb-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  /* COPY */
+  .wb-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 28px;
   }
-  .wb-meta span {
-    display: flex;
+  .wb-badge-free,
+  .wb-badge-date {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    font-weight: 600;
-    color: rgba(255, 244, 221, 0.7);
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 100px;
   }
-  .wb-meta iconify-icon { color: var(--orange); font-size: 15px; }
-  .wb-meta .wb-free { color: #4ade80; }
-  .wb-meta .wb-free iconify-icon { color: #4ade80; }
-
-  /* ── CONFIRMAÇÃO ── */
-  .wb-confirm-icon {
-    font-size: 48px;
+  .wb-badge-free {
+    background: rgba(74, 222, 128, 0.15);
     color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+  }
+  .wb-badge-date {
+    background: rgba(255, 89, 37, 0.12);
+    color: var(--orange);
+    border: 1px solid rgba(255, 89, 37, 0.3);
+  }
+
+  .wb-copy h1 {
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 22px;
+  }
+  .wb-copy h1 em {
+    font-style: normal;
+    color: var(--orange);
+  }
+  .wb-h1-sub {
+    color: rgba(255, 244, 221, 0.6);
+    font-size: 0.85em;
+  }
+
+  .wb-desc {
+    font-size: 16px;
+    color: rgba(255, 244, 221, 0.70);
+    line-height: 1.75;
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+
+  /* SPEAKER STRIP */
+  .wb-speaker-strip {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 244, 221, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    width: fit-content;
+  }
+  .wb-speaker-photo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--orange);
+    flex-shrink: 0;
+  }
+  .wb-speaker-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--cream);
+  }
+  .wb-speaker-role {
+    font-size: 12px;
+    color: rgba(255, 244, 221, 0.55);
+    margin-top: 2px;
+  }
+
+  /* FORM CARD */
+  .wb-form-col { align-self: start; }
+
+  .wb-form-card {
+    background: #fff;
+    border-radius: var(--wb-radius);
+    padding: clamp(24px, 3vw, 36px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  .wb-form-header { margin-bottom: 22px; }
+  .wb-form-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .wb-form-sub {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  .wb-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .wb-field label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .wb-opt {
+    font-weight: 500;
+    color: var(--text-soft);
+  }
+
+  .wb-legal {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* CONFIRMAÇÃO */
+  .wb-confirm-check {
+    font-size: 52px;
+    color: #22c55e;
     margin-bottom: 12px;
     display: block;
   }
@@ -259,7 +381,7 @@ const calUrl =
     gap: 10px;
     background: var(--bg);
     border: 1px solid var(--border-2);
-    border-radius: var(--r-16);
+    border-radius: 10px;
     padding: 14px 16px;
     font-size: 14px;
     font-weight: 700;
@@ -271,78 +393,143 @@ const calUrl =
   .wb-meet-link:hover { border-color: var(--orange); }
   .wb-meet-link iconify-icon { font-size: 20px; flex-shrink: 0; }
 
-  /* ── APRESENTADORA ── */
-  .speaker-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 36px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 244, 221, 0.12);
+  /* ─── TÓPICOS ─── */
+  .wb-topics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .wb-topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-20);
+    padding: 28px 24px;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .wb-topic-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--border-2);
+  }
+  .wb-topic-ico {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255,89,37,0.10);
+    color: var(--orange);
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .wb-topic-card h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .wb-topic-card p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+
+  /* ─── APRESENTADORA ─── */
+  .wb-presenter-card {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    align-items: start;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.10);
     border-radius: var(--r-24);
     padding: 40px;
-    max-width: 760px;
+    max-width: 800px;
     margin: 0 auto;
   }
-  .speaker-avatar {
-    width: 96px;
-    height: 96px;
-    min-width: 96px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--orange) 0%, #ff8c60 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    font-weight: 800;
-    color: #fff;
+  .wb-presenter-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 12px;
+    border: 3px solid rgba(255,89,37,0.4);
   }
-  .speaker-name {
-    font-size: 22px;
+  .wb-presenter-body h3 {
+    font-size: 26px;
     font-weight: 800;
     color: var(--cream);
     margin-bottom: 4px;
   }
-  .speaker-role {
+  .wb-presenter-role {
     display: block;
     font-size: 12px;
     font-weight: 700;
     color: var(--orange);
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
-  .speaker-body p {
+  .wb-presenter-body p {
     font-size: 15px;
-    color: rgba(255, 244, 221, 0.68);
-    line-height: 1.7;
+    color: rgba(255,244,221,0.65);
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+  .wb-presenter-stats {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .wb-presenter-stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wb-presenter-stats strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--cream);
+  }
+  .wb-presenter-stats span {
+    font-size: 12px;
+    color: rgba(255,244,221,0.5);
   }
 
-  /* ── LEAD-LEGAL ── */
-  .lead-legal {
-    font-size: 11.5px;
-    color: var(--text-soft);
-    line-height: 1.5;
-    margin-top: 10px;
-    text-align: center;
+  /* ─── CTA ─── */
+  .wb-cta-sec {
+    background: var(--cream);
   }
 
-  /* ── CTA STRIP ── */
-  .cta-strip { background: var(--cream); }
-
-  /* ── RESPONSIVO ── */
-  @media (max-width: 680px) {
-    .speaker-card {
-      flex-direction: column;
-      align-items: center;
+  /* ─── RESPONSIVO ─── */
+  @media (max-width: 960px) {
+    .wb-hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .wb-desc { max-width: 100%; }
+  }
+  @media (max-width: 768px) {
+    .wb-topics-grid { grid-template-columns: 1fr; }
+    .wb-presenter-card {
+      grid-template-columns: 1fr;
       text-align: center;
       padding: 32px 24px;
-      gap: 20px;
+      gap: 24px;
     }
+    .wb-presenter-photo {
+      width: 160px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+    .wb-presenter-stats { justify-content: center; }
+    .wb-speaker-strip { width: 100%; }
   }
 </style>
 
 <script>
-  // ── MÁSCARA TELEFONE ──
+  // Máscara WhatsApp
   const wppInput = document.getElementById("wb-wpp") as HTMLInputElement;
   if (wppInput) {
     wppInput.addEventListener("input", () => {
@@ -356,7 +543,7 @@ const calUrl =
     });
   }
 
-  // ── SUBMIT ──
+  // Submit
   const form = document.getElementById("wb-form") as HTMLFormElement;
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -365,13 +552,10 @@ const calUrl =
     if (!nome || !email) { alert("Por favor, preencha nome e e-mail."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("E-mail inválido."); return; }
 
-    // Troca form pela confirmação
     const wrap = document.getElementById("wb-form-wrap");
     const confirm = document.getElementById("wb-confirm");
     if (wrap) wrap.hidden = true;
     if (confirm) confirm.hidden = false;
-
-    // Scroll para o card
     document.getElementById("wb-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 </script>
