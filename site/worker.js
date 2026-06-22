@@ -129,8 +129,8 @@ async function handleLead(request, env) {
   const tasks = [];
   let configured = false;
 
-  // Eventos de webinar vão SOMENTE para o Mailchimp (sem CRM nem webhook).
-  const isWebinar = lead.evento.startsWith("webinar");
+  // Eventos de webinar/webserie vão SOMENTE para o Mailchimp (sem CRM nem webhook).
+  const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
 
   // 1) Webhook (n8n / Make / RDStation / Zapier / etc.) — recebe o lead completo.
   if (!isWebinar && env.LEAD_WEBHOOK_URL) {
