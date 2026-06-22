@@ -84,15 +84,29 @@ if (faqItems.length) {
       </div>
     </section>
 
-    <!-- STATS (claro) -->
-    <section class="section section--cream">
-      <div class="container xl">
-        <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
-        <div class="numbers-grid cs-stats">
-          {d.stats.map((s) => <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>)}
+    <!-- MOTIVOS + BENEFÍCIOS (claro) — renderiza só se houver dados na norma -->
+    {d.motivos && d.motivos.length > 0 && (
+      <section class="section section--cream">
+        <div class="container xl">
+          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Motivos para conquistar a <em class="accent">{norma.nome}</em></h2></div>
+          <div class="cs-motivos">
+            {d.motivos.map((m, i) => (
+              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+            ))}
+          </div>
+          {d.beneficios && d.beneficios.length > 0 && (
+            <div class="cs-benef">
+              <h3 class="cs-benef-h">Benefícios para a sua empresa</h3>
+              <ul class="check-list cs-benef-list">
+                {d.beneficios.map((b) => (
+                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     <!-- SELO (escuro) -->
     <SeloImplementando />
@@ -132,29 +146,15 @@ if (faqItems.length) {
       </div>
     </section>
 
-    <!-- 3 MOTIVOS + BENEFÍCIOS (claro) — renderiza só se houver dados na norma -->
-    {d.motivos && d.motivos.length > 0 && (
-      <section class="section section--cream">
-        <div class="container xl">
-          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Motivos para conquistar a <em class="accent">{norma.nome}</em></h2></div>
-          <div class="cs-motivos">
-            {d.motivos.map((m, i) => (
-              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
-            ))}
-          </div>
-          {d.beneficios && d.beneficios.length > 0 && (
-            <div class="cs-benef">
-              <h3 class="cs-benef-h">Benefícios para a sua empresa</h3>
-              <ul class="check-list cs-benef-list">
-                {d.beneficios.map((b) => (
-                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+    <!-- STATS (claro) -->
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
+        <div class="numbers-grid cs-stats">
+          {d.stats.map((s) => <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>)}
         </div>
-      </section>
-    )}
+      </div>
+    </section>
 
     <!-- COBERTURA + MAPA (escuro) -->
     <section class="cs-cover section--navy">
