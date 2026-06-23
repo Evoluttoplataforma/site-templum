@@ -311,3 +311,7 @@
 /nucleos/*                                 /solucoes-de-ia            301
 /setembro-especial/*                       /treinamento-fase-a-fase   301
 /ia/*                                      /solucoes-de-ia            301
+
+# Política de privacidade (linkada como /privacidade em alguns landers) → /page
+/privacidade                               /page                      301
+/privacidade/                              /page                      301
