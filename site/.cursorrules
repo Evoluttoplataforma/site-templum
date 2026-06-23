@@ -1,0 +1,10 @@
+# Cursor rules — repo do SITE (templum.com.br) · Worker site-templum
+Leia ARQUITETURA.md e CLAUDE.md deste repo antes de tudo.
+
+REGRAS DE GIT (não dar zika):
+- São 3 repos separados (site / blog / cms). Este é o SITE. Não commite mudança de outro projeto aqui.
+- `git push origin main` = DEPLOY EM PRODUÇÃO (Cloudflare Workers Builds). Só pushe pra publicar.
+- Antes de pushar: `npm run build` (se quebra local, quebra o deploy). Rode `git status` e confirme `git remote -v`.
+- Só commite/pushe quando o usuário pedir. Commit de IA termina com: Co-Authored-By: Claude <noreply@anthropic.com>
+- Nunca commitar: .env, secrets, service_role, node_modules, dist.
+- Dados ficam no Supabase (não vão por git).
