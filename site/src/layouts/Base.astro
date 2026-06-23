@@ -11,6 +11,7 @@ const {
   noHeaderFooter = false,
   hideWpp = false,
   schemas = [],
+  preloadImage = "",
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -67,28 +68,35 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Microsoft Clarity (heatmaps + gravações) -->
-    <script type="text/javascript" is:inline>
-      (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "sr5nwfj8jc");
-    </script>
-
-    <!-- Google tag (gtag.js) — estático no <head> p/ carregar cedo e ser detectável.
-         Configura as 2 propriedades GA4 + Google Ads. O tracking-kit dispara os
-         eventos (PageView, Lead, etc.) via este mesmo window.gtag/dataLayer.
-         send_page_view:false → o page_view vem do evento do kit (evita duplicar). -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5" is:inline></script>
+    <!-- Tracking (Clarity + GA4 x2 + Google Ads + tracking-kit) carregado SÓ na 1ª
+         interação do usuário (ou ocioso pós-load) → fora do caminho crítico de render. -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', 'G-2BW8QTYLB5', { send_page_view: false });
-      gtag('config', 'G-FV41GWD427', { send_page_view: false });
-      gtag('config', 'AW-17896226473');
+      window.gtag = function(){ dataLayer.push(arguments); };
+      (function () {
+        var done = false;
+        function boot() {
+          if (done) return; done = true;
+          // Microsoft Clarity
+          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","sr5nwfj8jc");
+          // Google gtag (GA4 x2 + Ads)
+          var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5";document.head.appendChild(g);
+          gtag("js", new Date());
+          gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+          gtag("config","G-FV41GWD427",{send_page_view:false});
+          gtag("config","AW-17896226473");
+          // tracking-kit (definido em TrackingKit.astro)
+          if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
+        }
+        var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
+        var opts = { once: true, passive: true, capture: true };
+        function once(){ evs.forEach(function(e){ window.removeEventListener(e, once, opts); }); boot(); }
+        evs.forEach(function(e){ window.addEventListener(e, once, opts); });
+        window.addEventListener("load", function(){
+          var idle = window.requestIdleCallback || function(cb){ return setTimeout(cb, 6000); };
+          idle(function(){ setTimeout(boot, 6000); });
+        });
+      })();
     </script>
 
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -124,7 +132,9 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <!-- Montserrat self-hosted: preload dos pesos-chave (corpo 500, título 800).
          @font-face em fonts.css. Sem CSS externo bloqueante, sem CLS. -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
 
     <!-- Ícones (Iconify) — defer p/ não bloquear o render -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" defer is:inline></script>

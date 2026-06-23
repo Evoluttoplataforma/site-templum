@@ -40,7 +40,10 @@ window.TRACKING_CONFIG = {
 window.TRACKING_KIT_VERSION = '1.0.0';
 </script>
 <script is:inline>
-(function () {
+// Loader do tracking-kit exposto como função; o bootstrap em Base.astro chama
+// __loadTrackingKit() só na 1ª interação (ou ocioso pós-load) → fora do render crítico.
+window.__loadTrackingKit = function () {
+  if (window.__trkLoaded) return; window.__trkLoaded = true;
   var BASE = 'https://cdn.jsdelivr.net/gh/rodrigoosouza/tracking-kit@v1.0.0/src/';
   function load(file, cb) {
     var s = document.createElement('script');
@@ -59,24 +62,16 @@ window.TRACKING_KIT_VERSION = '1.0.0';
       });
     });
   });
-})();
-</script>
-<script is:inline>
-// 2ª conta Meta: o kit inicia o pixel principal (TRACKING_CONFIG.meta.pixelId);
-// aqui adicionamos o 2º pixel. O fbq dispara para TODOS os pixels iniciados,
-// com o mesmo eventID → dedup com o CAPI de cada conta.
-(function () {
-  var SECOND_PIXEL = '4177249519256900'; // 2ª conta Meta ('' para desativar)
-  if (!SECOND_PIXEL) return;
-  var n = 0, t = setInterval(function () {
-    n++;
-    if (window.fbq) {
-      clearInterval(t);
-      try {
-        window.fbq('init', SECOND_PIXEL);
-        window.fbq('trackSingle', SECOND_PIXEL, 'PageView');
-      } catch (e) {}
-    } else if (n > 150) { clearInterval(t); }
-  }, 100);
-})();
+  // 2ª conta Meta (fbq dispara p/ todos os pixels iniciados, mesmo eventID → dedup com CAPI)
+  var SECOND_PIXEL = '4177249519256900'; // '' para desativar
+  if (SECOND_PIXEL) {
+    var n = 0, t = setInterval(function () {
+      n++;
+      if (window.fbq) {
+        clearInterval(t);
+        try { window.fbq('init', SECOND_PIXEL); window.fbq('trackSingle', SECOND_PIXEL, 'PageView'); } catch (e) {}
+      } else if (n > 150) { clearInterval(t); }
+    }, 100);
+  }
+};
 </script>

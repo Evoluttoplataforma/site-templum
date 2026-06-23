@@ -118,7 +118,10 @@ const trust = [
   .hero-slides { max-width: 600px; }
 
   .hero-slide { display: none; }
-  .hero-slide.active { display: block; animation: heroFade .55s var(--ease-soft); }
+  .hero-slide.active { display: block; }
+  /* o 1º slide (SSR) pinta SÓLIDO e estático → LCP estável (evita NO_LCP);
+     a animação só roda nas trocas (classe .anim adicionada via JS). */
+  .hero-slide.active.anim { animation: heroFade .55s var(--ease-soft); }
   @keyframes heroFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
   .tag-pill--glow { margin-bottom: 22px; }
@@ -148,10 +151,12 @@ const trust = [
   @media (max-width: 860px) {
     .hero { min-height: 480px; }
     .hero-bg { object-position: 68% top; opacity: 0; }
-    .hero-bg.active { opacity: 0.4; }
+    /* opacity alta (0.7) → a imagem qualifica como LCP estável no mobile; o overlay
+       mais forte embaixo garante contraste do texto. */
+    .hero-bg.active { opacity: 0.7; }
     .hero-overlay { background:
-      linear-gradient(to bottom, rgba(34,40,49,0.5), var(--navy) 60%),
-      radial-gradient(600px 360px at 50% 6%, rgba(255,89,37,0.22), transparent 60%); }
+      linear-gradient(to bottom, rgba(34,40,49,0.45) 0%, rgba(34,40,49,0.82) 48%, var(--navy) 66%),
+      radial-gradient(600px 360px at 50% 6%, rgba(255,89,37,0.20), transparent 60%); }
     .hero-inner { padding-top: 180px; padding-bottom: 48px; }
     .hero-slides, .hero-trust { max-width: 100%; }
     .hero-arrow--side { display: none; }
@@ -176,15 +181,16 @@ const trust = [
     let i = 0, timer;
     const show = (n) => {
       i = (n + slides.length) % slides.length;
-      slides.forEach((s, k) => s.classList.toggle("active", k === i));
+      slides.forEach((s, k) => { s.classList.toggle("active", k === i); if (k === i) s.classList.add("anim"); });
       bgs.forEach((b, k) => b.classList.toggle("active", k === i));
       dots.forEach((d, k) => d.classList.toggle("active", k === i));
     };
-    const start = () => { timer = setInterval(() => show(i + 1), 6500); };
+    const start = () => { if (slides.length > 1) timer = setInterval(() => show(i + 1), 6500); };
     const reset = () => { clearInterval(timer); start(); };
     root.querySelectorAll(".hero-arrow").forEach((b) =>
       b.addEventListener("click", () => { show(i + Number(b.dataset.dir)); reset(); }));
     dots.forEach((d) => d.addEventListener("click", () => { show(Number(d.dataset.dot)); reset(); }));
-    start();
+    // autoplay só após o load + ocioso → hero estático durante a medição (LCP estável, sem NO_LCP)
+    window.addEventListener("load", () => setTimeout(start, 4000));
   })();
 </script>
