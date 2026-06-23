@@ -123,6 +123,29 @@ const eventos = [
     </div>
   </section>
 
+  <!-- Conversão: dispara Lead (Meta Pixel + Google Ads + CAPI) -->
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var SECOND_PIXEL = "4177249519256900";
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+        try { if (window.fbq) window.fbq("trackSingle", SECOND_PIXEL, "Lead"); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
+
 </Base>
 
 <style>

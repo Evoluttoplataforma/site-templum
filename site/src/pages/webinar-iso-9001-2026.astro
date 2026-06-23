@@ -681,6 +681,13 @@ const schemaEvent = {
       });
     } catch (_) {}
 
+    // Salva dados para disparo de conversão na thank-you page
+    try {
+      sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+        email, phone: wpp, name: nome, norma: "ISO 9001",
+      }));
+    } catch (_) {}
+
     // Redireciona para página de obrigado da webserie
     window.location.href = "/obrigado-webserie";
   });
