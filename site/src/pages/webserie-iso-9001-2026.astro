@@ -789,20 +789,8 @@ const schemaEvent = {
           }),
         });
 
-        // Confirmação inline
-        form.innerHTML = `
-          <div style="text-align:center;padding:24px 0;">
-            <div style="font-size:44px;margin-bottom:16px;">🎉</div>
-            <h3 style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;">Vaga garantida!</h3>
-            <p style="color:var(--text-2);line-height:1.7;margin-bottom:20px;">
-              Você receberá um e-mail de confirmação em breve.<br />
-              Fique de olho na sua caixa de entrada — os links de acesso a cada encontro serão enviados antes de cada evento.
-            </p>
-            <a href="#calendario" style="display:inline-flex;align-items:center;gap:8px;color:var(--orange);font-weight:700;font-size:14px;">
-              Ver calendário completo →
-            </a>
-          </div>
-        `;
+        // Redireciona para página de obrigado
+        window.location.href = "/obrigado-webserie";
       } catch {
         btn.disabled = false;
         btn.textContent = "Tentar novamente";

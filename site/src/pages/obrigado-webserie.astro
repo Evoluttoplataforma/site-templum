@@ -1,0 +1,348 @@
+---
+import Base from "../layouts/Base.astro";
+
+const eventos = [
+  {
+    n: "01",
+    data: "01 de Julho",
+    dia: "Terça",
+    t: "Entenda a revisão da ISO 9001 versão 2026",
+    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+01&dates=20260701T190000Z/20260701T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+  },
+  {
+    n: "02",
+    data: "09 de Julho",
+    dia: "Quinta",
+    t: "Nigel Croft e a nova ISO 9001",
+    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+02&dates=20260709T190000Z/20260709T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+  },
+  {
+    n: "03",
+    data: "15 de Julho",
+    dia: "Terça",
+    t: "IA na ISO 9001 e 19011",
+    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+03&dates=20260715T190000Z/20260715T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+  },
+  {
+    n: "04",
+    data: "22 de Julho",
+    dia: "Quarta",
+    t: "Comportamento Ético e Cultura da Qualidade",
+    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+04&dates=20260722T190000Z/20260722T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+  },
+  {
+    n: "05",
+    data: "29 de Julho",
+    dia: "Quarta",
+    t: "Nova Abordagem de Riscos e Oportunidades",
+    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+05&dates=20260729T190000Z/20260729T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+  },
+];
+---
+
+<Base
+  title="Vaga confirmada — Webserie ISO 9001:2026 | Templum"
+  description="Sua inscrição na Webserie ISO 9001:2026 + IA está confirmada. Salve os eventos na agenda e entre no grupo exclusivo do WhatsApp."
+  hideWpp={true}
+  noindex={true}
+>
+
+  <!-- ── HERO CONFIRMAÇÃO ── -->
+  <section class="ob-hero">
+    <div class="ob-hero-glow"></div>
+    <div class="container sm ob-hero-inner">
+      <div class="ob-check">
+        <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+      </div>
+      <span class="ob-badge">Inscrição confirmada</span>
+      <h1>Vaga garantida!<br /><em>Boas-vindas à webserie.</em></h1>
+      <p>Você receberá um e-mail com os detalhes de acesso de cada encontro antes de cada aula. Fique de olho na sua caixa de entrada.</p>
+    </div>
+  </section>
+
+  <!-- ── WHATSAPP ── -->
+  <section class="section section--orange">
+    <div class="container sm ob-wpp">
+      <div class="ob-wpp-copy">
+        <iconify-icon icon="mdi:whatsapp" class="ob-wpp-icon"></iconify-icon>
+        <div>
+          <h2>Entre no grupo exclusivo</h2>
+          <p>Materiais, avisos de acesso e conversas entre os participantes ficam no grupo fechado da webserie no WhatsApp.</p>
+        </div>
+      </div>
+      <a
+        href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn--wpp btn--lg"
+      >
+        <iconify-icon icon="mdi:whatsapp"></iconify-icon>
+        Entrar no grupo do WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ── CALENDÁRIO ── -->
+  <section class="section section--cream">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Agenda da série</span>
+        <h2>Salve os <em class="accent">5 encontros</em> na sua agenda</h2>
+        <p>Todo encontro acontece às <strong>16h (horário de Brasília)</strong>. Clique em cada evento para salvar no Google Agenda.</p>
+      </div>
+
+      <div class="ob-cal">
+        {eventos.map((e) => (
+          <div class="ob-cal-item">
+            <div class="ob-cal-left">
+              <span class="ob-cal-n">{e.n}</span>
+              <div class="ob-cal-data">
+                <span class="ob-cal-dia">{e.dia}</span>
+                <span class="ob-cal-dt">{e.data} · 16h</span>
+              </div>
+            </div>
+            <div class="ob-cal-body">
+              <p>{e.t}</p>
+            </div>
+            <a
+              href={e.gcal}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ob-cal-btn"
+            >
+              <iconify-icon icon="solar:calendar-add-bold"></iconify-icon>
+              Adicionar à agenda
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA VOLTAR ── -->
+  <section class="section section--navy ob-footer-cta">
+    <div class="container sm" style="text-align:center;">
+      <p style="color:rgba(255,244,221,0.55);font-size:15px;margin-bottom:24px;">
+        Conhece alguém que deveria participar?
+      </p>
+      <a
+        href="/webserie-iso-9001-2026"
+        class="btn btn--onDark"
+      >
+        Compartilhar a página da webserie
+      </a>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* ── HERO ── */
+  .ob-hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: clamp(72px, 10vw, 110px) 0;
+    text-align: center;
+  }
+  .ob-hero-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,89,37,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ob-hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+  .ob-check {
+    font-size: 64px;
+    color: #22c55e;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .ob-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #22c55e;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .ob-hero h1 {
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .ob-hero h1 em {
+    font-style: normal;
+    color: var(--orange);
+  }
+  .ob-hero p {
+    font-size: 16px;
+    color: rgba(255,244,221,0.6);
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── WHATSAPP ── */
+  .section--orange {
+    background: var(--orange);
+  }
+  .ob-wpp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .ob-wpp-copy {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex: 1;
+    min-width: 240px;
+  }
+  .ob-wpp-icon {
+    font-size: 40px;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ob-wpp-copy h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .ob-wpp-copy p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .btn--wpp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    color: #128C7E;
+    font-weight: 800;
+    padding: 16px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: opacity .2s;
+    flex-shrink: 0;
+  }
+  .btn--wpp:hover { opacity: 0.9; }
+  .btn--wpp iconify-icon { font-size: 20px; }
+
+  /* ── CALENDÁRIO ── */
+  .ob-cal {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ob-cal-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    transition: background .2s;
+  }
+  .ob-cal-item:last-child { border-bottom: none; }
+  .ob-cal-item:hover { background: var(--bg); }
+  .ob-cal-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ob-cal-n {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: 1px;
+    min-width: 22px;
+  }
+  .ob-cal-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 150px;
+  }
+  .ob-cal-dia {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ob-cal-dt {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .ob-cal-body p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.4;
+  }
+  .ob-cal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    border: 1px solid rgba(255,89,37,0.3);
+    background: rgba(255,89,37,0.05);
+    padding: 9px 16px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background .2s, border-color .2s;
+    flex-shrink: 0;
+  }
+  .ob-cal-btn:hover {
+    background: rgba(255,89,37,0.12);
+    border-color: var(--orange);
+  }
+  .ob-cal-btn iconify-icon { font-size: 16px; }
+
+  /* ── FOOTER CTA ── */
+  .ob-footer-cta { padding-top: 48px; padding-bottom: 48px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .ob-wpp { flex-direction: column; align-items: flex-start; }
+    .ob-cal-item {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+    }
+    .ob-cal-left { grid-column: 1 / -1; }
+    .ob-cal-body { grid-column: 1; }
+    .ob-cal-btn { align-self: end; }
+  }
+  @media (max-width: 480px) {
+    .ob-cal-item { grid-template-columns: 1fr; }
+    .ob-cal-btn { width: 100%; justify-content: center; }
+  }
+</style>
