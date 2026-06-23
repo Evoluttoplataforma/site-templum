@@ -41,44 +41,31 @@ const trust = [
   { icon: "solar:medal-star-bold", v: "+30", l: "anos de mercado" },
   { icon: "solar:shield-check-bold", v: "200%", l: "de garantia" },
 ];
+const hero = slides[0]; // hero estático: mensagem principal (garantia 200%)
 ---
 
+<!-- Hero ESTÁTICO (imagem única) — LCP estável e rápido. -->
 <section class="hero" id="hero">
   <div class="hero-bgs" aria-hidden="true">
-    {slides.map((s, i) => (
-      <img class={`hero-bg ${i === 0 ? "active" : ""}`} data-bg={i} src={s.img} alt="" fetchpriority={i === 0 ? "high" : null} loading={i === 0 ? "eager" : "lazy"} />
-    ))}
+    <img class="hero-bg active" src={hero.img} alt="" fetchpriority="high" loading="eager" decoding="async" width="1600" height="900" />
     <div class="hero-overlay"></div>
   </div>
 
   <div class="container xl hero-inner">
     <div class="hero-slides">
-      {slides.map((s, i) => (
-        <div class={`hero-slide ${i === 0 ? "active" : ""}`} data-slide={i}>
-          <span class="tag-pill tag-pill--glow">{s.tag}</span>
-          {i === 0 ? (
-            <h1 class="hero-title">
-              {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
-            </h1>
-          ) : (
-            <h2 class="hero-title">
-              {s.title[0]}<em class="accent">{s.title[1]}</em>{s.title[2] || ""}
-            </h2>
-          )}
-          {s.checklist && (
-            <ul class="check-list hero-checklist">
-              {s.checklist.map((c) => (
-                <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{c}</li>
-              ))}
-            </ul>
-          )}
-          {s.text && <p class="hero-text">{s.text}</p>}
-          <div class="hero-cta-row">
-            <a href={s.cta.href} class="btn btn--primary btn--lg">{s.cta.label} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-            <a href="/case-de-sucesso/" class="btn btn--onDark btn--lg">Ver cases</a>
-          </div>
+      <div class="hero-slide active">
+        <span class="tag-pill tag-pill--glow">{hero.tag}</span>
+        <h1 class="hero-title">{hero.title[0]}<em class="accent">{hero.title[1]}</em>{hero.title[2] || ""}</h1>
+        <ul class="check-list hero-checklist">
+          {hero.checklist.map((c) => (
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{c}</li>
+          ))}
+        </ul>
+        <div class="hero-cta-row">
+          <a href={hero.cta.href} class="btn btn--primary btn--lg">{hero.cta.label} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="/case-de-sucesso/" class="btn btn--onDark btn--lg">Ver cases</a>
         </div>
-      ))}
+      </div>
 
       <div class="hero-trust">
         {trust.map((t) => (
@@ -88,20 +75,8 @@ const trust = [
           </div>
         ))}
       </div>
-
-      <div class="hero-controls">
-        <div class="hero-dots">
-          {slides.map((_, i) => (
-            <button class={`hero-dot ${i === 0 ? "active" : ""}`} data-dot={i} aria-label={`Slide ${i + 1}`}></button>
-          ))}
-        </div>
-      </div>
     </div>
   </div>
-
-  <!-- setas nas laterais -->
-  <button class="hero-arrow hero-arrow--side prev" data-dir="-1" aria-label="Anterior"><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
-  <button class="hero-arrow hero-arrow--side next" data-dir="1" aria-label="Próximo"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
 </section>
 
 <style>
@@ -170,27 +145,3 @@ const trust = [
     .hero-trust { gap: 16px; }
   }
 </style>
-
-<script is:inline>
-  (function () {
-    const root = document.getElementById("hero");
-    if (!root) return;
-    const slides = root.querySelectorAll("[data-slide]");
-    const bgs = root.querySelectorAll("[data-bg]");
-    const dots = root.querySelectorAll("[data-dot]");
-    let i = 0, timer;
-    const show = (n) => {
-      i = (n + slides.length) % slides.length;
-      slides.forEach((s, k) => { s.classList.toggle("active", k === i); if (k === i) s.classList.add("anim"); });
-      bgs.forEach((b, k) => b.classList.toggle("active", k === i));
-      dots.forEach((d, k) => d.classList.toggle("active", k === i));
-    };
-    const start = () => { if (slides.length > 1) timer = setInterval(() => show(i + 1), 6500); };
-    const reset = () => { clearInterval(timer); start(); };
-    root.querySelectorAll(".hero-arrow").forEach((b) =>
-      b.addEventListener("click", () => { show(i + Number(b.dataset.dir)); reset(); }));
-    dots.forEach((d) => d.addEventListener("click", () => { show(Number(d.dataset.dot)); reset(); }));
-    // autoplay só após o load + ocioso → hero estático durante a medição (LCP estável, sem NO_LCP)
-    window.addEventListener("load", () => setTimeout(start, 4000));
-  })();
-</script>
