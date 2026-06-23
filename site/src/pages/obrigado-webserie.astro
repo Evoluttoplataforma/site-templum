@@ -1,41 +1,53 @@
 ---
 import Base from "../layouts/Base.astro";
 
+const base = "https://calendar.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&location=Online+%E2%80%94+Templum+Consultoria";
+
 const eventos = [
   {
     n: "01",
     data: "01 de Julho",
     dia: "Terça",
     t: "Entenda a revisão da ISO 9001 versão 2026",
-    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+01&dates=20260701T190000Z/20260701T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Entenda+a+revis%C3%A3o+da+norma+%7C+Webserie+Templum" +
+      "&dates=20260701T190000Z/20260701T200000Z" +
+      "&details=A+maior+revis%C3%A3o+da+ISO+9001+desde+2015.+Descubra+o+que+muda%2C+o+que+permanece+e+como+sua+empresa+deve+se+preparar.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
   },
   {
     n: "02",
     data: "09 de Julho",
     dia: "Quinta",
     t: "Nigel Croft e a nova ISO 9001",
-    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+02&dates=20260709T190000Z/20260709T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Nigel+Croft+e+a+nova+norma+%7C+Webserie+Templum" +
+      "&dates=20260709T190000Z/20260709T200000Z" +
+      "&details=Um+dos+maiores+especialistas+mundiais+em+ISO+9001+explica+as+decis%C3%B5es+por+tr%C3%A1s+das+mudan%C3%A7as+da+vers%C3%A3o+2026.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
   },
   {
     n: "03",
     data: "15 de Julho",
     dia: "Terça",
     t: "IA na ISO 9001 e 19011",
-    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+03&dates=20260715T190000Z/20260715T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+IA+na+ISO+9001+e+19011+%7C+Webserie+Templum" +
+      "&dates=20260715T190000Z/20260715T200000Z" +
+      "&details=Como+a+Intelig%C3%AAncia+Artificial+est%C3%A1+sendo+incorporada+nos+sistemas+de+gest%C3%A3o+e+nas+auditorias+da+ISO+9001+e+19011.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
   },
   {
     n: "04",
     data: "22 de Julho",
     dia: "Quarta",
     t: "Comportamento Ético e Cultura da Qualidade",
-    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+04&dates=20260722T190000Z/20260722T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Comportamento+%C3%89tico+e+Cultura+da+Qualidade+%7C+Webserie+Templum" +
+      "&dates=20260722T190000Z/20260722T200000Z" +
+      "&details=A+dimens%C3%A3o+humana+da+qualidade%3A+%C3%A9tica%2C+valores+organizacionais+e+como+construir+uma+cultura+s%C3%B3lida+na+vers%C3%A3o+2026.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
   },
   {
     n: "05",
     data: "29 de Julho",
     dia: "Quarta",
     t: "Nova Abordagem de Riscos e Oportunidades",
-    gcal: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webserie+ISO+9001+%E2%80%94+Aula+05&dates=20260729T190000Z/20260729T200000Z&details=Acesse%3A+https%3A%2F%2Fmeet.google.com%2F&location=Online&sf=true&output=xml",
+    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Nova+Abordagem+de+Riscos+e+Oportunidades+%7C+Webserie+Templum" +
+      "&dates=20260729T190000Z/20260729T200000Z" +
+      "&details=Como+a+vers%C3%A3o+2026+redefine+a+gest%C3%A3o+de+riscos+e+transforma+amea%C3%A7as+em+vantagem+competitiva+real.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
   },
 ];
 ---
