@@ -10,28 +10,28 @@ const slides = [
       "Plataforma que organiza toda a gestão, do diagnóstico à auditoria",
       "Método próprio refinado em +30 anos de mercado",
     ],
-    cta: { label: "Falar com um especialista", href: "/form" },
+    cta: { label: "Falar com um especialista", href: "/form/" },
     img: "/assets/img/hero/templum-consultoria-industria.webp",
   },
   {
     tag: "Plataforma + consultoria",
     title: ["Toda a gestão da sua empresa ", "organizada", " num só lugar"],
     text: "Sem planilhas, sem documentos soltos, sem surpresas. Nossa plataforma centraliza processos, responsáveis e prazos até o dia da auditoria.",
-    cta: { label: "Conhecer o método", href: "/metodologia" },
+    cta: { label: "Conhecer o método", href: "/metodologia/" },
     img: "/assets/img/hero/templum-consultoria-construcao.webp",
   },
   {
     tag: "+30 anos de mercado",
     title: ["A maior consultoria de ", "certificações", " do Brasil"],
     text: "Mais de 8.000 contratos e +2.000 empresas certificadas. Empresas de todos os portes confiam na Templum para crescer com gestão de excelência.",
-    cta: { label: "Conhecer a Templum", href: "/quem-somos/sobre" },
+    cta: { label: "Conhecer a Templum", href: "/quem-somos/sobre/" },
     img: "/assets/img/hero/templum-consultoria-logistica.webp",
   },
   {
     tag: "Para o seu setor",
     title: ["A certificação certa para ", "cada setor"],
     text: "Indústria, construção, alimentos, tecnologia, logística e serviços. Seja qual for o seu segmento, temos o método e a norma certos para você.",
-    cta: { label: "Ver todas as normas", href: "/consultoria" },
+    cta: { label: "Ver todas as normas", href: "/consultoria/" },
     img: "/assets/img/hero/templum-consultoria-alimentos.webp",
   },
 ];
@@ -75,7 +75,7 @@ const trust = [
           {s.text && <p class="hero-text">{s.text}</p>}
           <div class="hero-cta-row">
             <a href={s.cta.href} class="btn btn--primary btn--lg">{s.cta.label} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-            <a href="/case-de-sucesso" class="btn btn--onDark btn--lg">Ver cases</a>
+            <a href="/case-de-sucesso/" class="btn btn--onDark btn--lg">Ver cases</a>
           </div>
         </div>
       ))}

@@ -3,28 +3,28 @@
 import { normas } from "../data/normas.js";
 
 const navLinks = [
-  { label: "Certificações", href: "/consultoria" },
-  { label: "Auditorias", href: "/auditoria" },
-  { label: "Premiações", href: "/drops" },
-  { label: "Soluções de IA", href: "/solucoes-de-ia", children: [
-    { label: "Templum OS & Norma", href: "/solucoes-de-ia" },
-    { label: "Agendar demonstração", href: "/form" },
+  { label: "Certificações", href: "/consultoria/" },
+  { label: "Auditorias", href: "/auditoria/" },
+  { label: "Premiações", href: "/drops/" },
+  { label: "Soluções de IA", href: "/solucoes-de-ia/", children: [
+    { label: "Templum OS & Norma", href: "/solucoes-de-ia/" },
+    { label: "Agendar demonstração", href: "/form/" },
   ] },
-  { label: "Presentes 🎁", href: "/presentes" },
-  { label: "Quem somos", href: "/quem-somos/sobre", children: [
-    { label: "Sobre a Templum", href: "/quem-somos/sobre" },
-    { label: "Nossos valores", href: "/quem-somos/valores" },
-    { label: "Trabalhe conosco", href: "/carreira" },
+  { label: "Presentes 🎁", href: "/presentes/" },
+  { label: "Quem somos", href: "/quem-somos/sobre/", children: [
+    { label: "Sobre a Templum", href: "/quem-somos/sobre/" },
+    { label: "Nossos valores", href: "/quem-somos/valores/" },
+    { label: "Trabalhe conosco", href: "/carreira/" },
   ] },
-  { label: "Treinamentos", href: "/treinamento-fase-a-fase" },
-  { label: "Cases", href: "/case-de-sucesso" },
-  { label: "Histórias", href: "/historias" },
+  { label: "Treinamentos", href: "/treinamento-fase-a-fase/" },
+  { label: "Cases", href: "/case-de-sucesso/" },
+  { label: "Histórias", href: "/historias/" },
   { label: "Blog", href: "https://certificacaoiso.com.br" },
 ];
 ---
 
 <!-- TOP BANNER -->
-<a href="/form" class="top-banner">
+<a href="/form/" class="top-banner">
   <iconify-icon icon="solar:fire-bold"></iconify-icon>
   <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
   <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
@@ -39,7 +39,7 @@ const navLinks = [
 
     <nav class="hd-nav" aria-label="Navegação principal">
       <div class="hd-item has-mega">
-        <a href="/consultoria" class="hd-link">Certificações <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
+        <a href="/consultoria/" class="hd-link">Certificações <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon></a>
         <div class="mega">
           <div class="mega-grid">
             {normas.map((n) => (
@@ -69,8 +69,8 @@ const navLinks = [
     </nav>
 
     <div class="hd-actions">
-      <a href="/contato" class="btn btn--outline btn--sm hd-ghost">Quero me inscrever</a>
-      <a href="/form" class="btn btn--dark btn--sm">Falar com especialista</a>
+      <a href="/contato/" class="btn btn--outline btn--sm hd-ghost">Quero me inscrever</a>
+      <a href="/form/" class="btn btn--dark btn--sm">Falar com especialista</a>
     </div>
 
     <button class="hd-burger" aria-label="Abrir menu" id="hdBurger">
@@ -85,8 +85,8 @@ const navLinks = [
         {l.children && l.children.map((c) => <a class="hd-mobile-sub" href={c.href}>{c.label}</a>)}
       </Fragment>
     ))}</nav>
-    <a href="/contato" class="btn btn--outline btn--block">Quero me inscrever</a>
-    <a href="/form" class="btn btn--primary btn--block">Falar com especialista</a>
+    <a href="/contato/" class="btn btn--outline btn--block">Quero me inscrever</a>
+    <a href="/form/" class="btn btn--primary btn--block">Falar com especialista</a>
   </div>
 </header>
 

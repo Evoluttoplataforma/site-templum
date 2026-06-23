@@ -24,6 +24,8 @@ const c = norma.color || "var(--orange)";
 const foto = `/assets/img/consultoria/${slug}.webp`;
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+// meta description ÚNICA por norma (evita duplicate meta description entre as consultorias)
+const metaDesc = `Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`;
 
 // --- JSON-LD: Service + BreadcrumbList + FAQPage (AIEO/GEO) ---
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -63,7 +65,7 @@ if (faqItems.length) {
 }
 ---
 
-<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={d.hero.sub} schemas={pageSchemas}>
+<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={metaDesc} schemas={pageSchemas}>
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
     <section class="cs-hero">

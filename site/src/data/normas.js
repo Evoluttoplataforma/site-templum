@@ -9,7 +9,7 @@ export const normas = [
     tagline: "Excelência construída em cada detalhe",
     color: "var(--norm-iso9001)",
     icon: "solar:medal-ribbon-star-bold",
-    href: "/consultoria/iso-9001",
+    href: "/consultoria/iso-9001/",
   },
   {
     slug: "iso-14001",
@@ -18,7 +18,7 @@ export const normas = [
     tagline: "Sustentabilidade que gera valor",
     color: "var(--norm-iso14001)",
     icon: "solar:leaf-bold",
-    href: "/consultoria/iso-14001",
+    href: "/consultoria/iso-14001/",
   },
   {
     slug: "iso-27001",
@@ -27,7 +27,7 @@ export const normas = [
     tagline: "Segurança que protege seus dados",
     color: "var(--norm-iso27001)",
     icon: "solar:shield-keyhole-bold",
-    href: "/consultoria/iso-27001",
+    href: "/consultoria/iso-27001/",
   },
   {
     slug: "iso-45001",
@@ -36,7 +36,7 @@ export const normas = [
     tagline: "Segurança que gera produtividade",
     color: "var(--norm-iso45001)",
     icon: "solar:health-bold",
-    href: "/consultoria/iso-45001",
+    href: "/consultoria/iso-45001/",
   },
   {
     slug: "iso-37001",
@@ -45,7 +45,7 @@ export const normas = [
     tagline: "Integridade e combate ao suborno",
     color: "var(--norm-iso37001)",
     icon: "solar:scale-bold",
-    href: "/consultoria/iso-37001",
+    href: "/consultoria/iso-37001/",
   },
   {
     slug: "pbqp-h",
@@ -54,7 +54,7 @@ export const normas = [
     tagline: "Excelência construída na obra",
     color: "var(--norm-pbqph)",
     icon: "solar:buildings-2-bold",
-    href: "/consultoria/pbqp-h",
+    href: "/consultoria/pbqp-h/",
   },
   {
     slug: "fssc-22000",
@@ -63,7 +63,7 @@ export const normas = [
     tagline: "Controle total na segurança dos alimentos",
     color: "var(--norm-fssc22000)",
     icon: "solar:donut-bitten-bold",
-    href: "/consultoria/fssc-22000",
+    href: "/consultoria/fssc-22000/",
   },
   {
     slug: "haccp",
@@ -72,7 +72,7 @@ export const normas = [
     tagline: "Excelência e segurança nos alimentos",
     color: "var(--norm-haccp)",
     icon: "solar:chef-hat-bold",
-    href: "/consultoria/haccp",
+    href: "/consultoria/haccp/",
   },
   {
     slug: "esg",
@@ -81,7 +81,7 @@ export const normas = [
     tagline: "Sustentabilidade e transparência",
     color: "var(--norm-esg)",
     icon: "solar:planet-bold",
-    href: "/consultoria/esg",
+    href: "/consultoria/esg/",
   },
   {
     slug: "sgi",
@@ -90,7 +90,7 @@ export const normas = [
     tagline: "Integração total para eficiência máxima",
     color: "var(--norm-sgi)",
     icon: "solar:layers-bold",
-    href: "/consultoria/sgi",
+    href: "/consultoria/sgi/",
   },
   {
     slug: "sassmaq",
@@ -99,7 +99,7 @@ export const normas = [
     tagline: "Segurança em cada operação logística",
     color: "var(--norm-sassmaq)",
     icon: "solar:delivery-bold",
-    href: "/consultoria/sassmaq",
+    href: "/consultoria/sassmaq/",
   },
   {
     slug: "lgpd",
@@ -108,6 +108,6 @@ export const normas = [
     tagline: "Conformidade com a lei de dados",
     color: "var(--norm-lgpd)",
     icon: "solar:lock-keyhole-bold",
-    href: "/consultoria/lgpd",
+    href: "/consultoria/lgpd/",
   },
 ];
