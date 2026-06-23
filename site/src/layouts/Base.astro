@@ -272,9 +272,11 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
 
         // Feedback imediato no botão e redireciona para a página de obrigado
         // (a conversão conta no pageview da /obrigado). keepalive garante o envio.
+        // data-obrigado="/<pagina>" sobrescreve o destino padrão.
         var btn = form.querySelector('[type="submit"]');
         if (btn) { btn.disabled = true; }
-        setTimeout(function () { window.location.href = "/obrigado"; }, 400);
+        var destino = form.getAttribute("data-obrigado") || "/obrigado";
+        setTimeout(function () { window.location.href = destino; }, 400);
       });
     </script>
 

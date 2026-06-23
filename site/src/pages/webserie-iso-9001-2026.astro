@@ -250,7 +250,7 @@ const schemaEvent = {
       </div>
 
       <div class="ws-form-card">
-        <form class="ws-form" data-trk-event="webserie-iso9001-2026" novalidate>
+        <form class="ws-form" data-trk-event="webserie-iso9001-2026" data-obrigado="/obrigado-webserie" novalidate>
           <input type="hidden" name="norma" value="ISO 9001" />
           <div class="form-row">
             <div class="field">
@@ -750,52 +750,6 @@ const schemaEvent = {
     });
   });
 
-  // Atribuição UTM
-  function getAttrib() {
-    const p = new URLSearchParams(location.search);
-    const keys = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"];
-    const o: Record<string, string> = {};
-    keys.forEach((k) => { if (p.get(k)) o[k] = p.get(k)!; });
-    return o;
-  }
-
-  // Submit do formulário
-  const form = document.querySelector<HTMLFormElement>(".ws-form");
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
-      btn.disabled = true;
-      btn.textContent = "Enviando…";
-
-      const fd = new FormData(form);
-      const nome = (fd.get("nome") as string || "").trim();
-      const email = (fd.get("email") as string || "").trim();
-      const telefone = (fd.get("telefone") as string || "").trim();
-      const empresa = (fd.get("empresa") as string || "").trim();
-      const cargo = (fd.get("cargo") as string || "").trim();
-
-      try {
-        await fetch("/api/lead", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          keepalive: true,
-          body: JSON.stringify({
-            nome, email, telefone, empresa, cargo,
-            norma: "ISO 9001",
-            evento: "webserie-iso9001-2026",
-            pagina: location.pathname,
-            ...getAttrib(),
-          }),
-        });
-
-        // Redireciona para página de obrigado
-        window.location.href = "/obrigado-webserie";
-      } catch {
-        btn.disabled = false;
-        btn.textContent = "Tentar novamente";
-        alert("Erro ao enviar. Por favor, tente novamente.");
-      }
-    });
-  }
+  // O submit é tratado pelo handler global do Base.astro.
+  // data-obrigado="/obrigado-webserie" no form garante o redirect correto.
 </script>
