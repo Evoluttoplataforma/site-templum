@@ -681,11 +681,7 @@ const schemaEvent = {
       });
     } catch (_) {}
 
-    // Exibe confirmação inline (sem redirect)
-    const wrap = document.getElementById("wb-form-wrap");
-    const confirm = document.getElementById("wb-confirm");
-    if (wrap) wrap.hidden = true;
-    if (confirm) confirm.hidden = false;
-    document.getElementById("wb-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Redireciona para página de obrigado da webserie
+    window.location.href = "/obrigado-webserie";
   });
 </script>
