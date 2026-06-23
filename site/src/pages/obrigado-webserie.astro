@@ -57,28 +57,17 @@ const eventos = [
       <span class="ob-badge">Inscrição confirmada</span>
       <h1>Vaga garantida!<br /><em>Boas-vindas à webserie.</em></h1>
       <p>Você receberá um e-mail com os detalhes de acesso de cada encontro antes de cada aula. Fique de olho na sua caixa de entrada.</p>
-    </div>
-  </section>
-
-  <!-- ── WHATSAPP ── -->
-  <section class="section section--orange">
-    <div class="container sm ob-wpp">
-      <div class="ob-wpp-copy">
-        <iconify-icon icon="mdi:whatsapp" class="ob-wpp-icon"></iconify-icon>
-        <div>
-          <h2>Entre no grupo exclusivo</h2>
-          <p>Materiais, avisos de acesso e conversas entre os participantes ficam no grupo fechado da webserie no WhatsApp.</p>
-        </div>
-      </div>
       <a
         href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
         target="_blank"
         rel="noopener noreferrer"
         class="btn btn--wpp btn--lg"
+        style="margin-top:32px;"
       >
         <iconify-icon icon="mdi:whatsapp"></iconify-icon>
-        Entrar no grupo do WhatsApp
+        Entrar no grupo exclusivo do WhatsApp
       </a>
+      <p class="ob-wpp-hint">Materiais, avisos e acesso aos encontros no grupo fechado da série.</p>
     </div>
   </section>
 
@@ -195,41 +184,12 @@ const eventos = [
     margin: 0 auto;
   }
 
-  /* ── WHATSAPP ── */
-  .section--orange {
-    background: var(--orange);
-  }
-  .ob-wpp {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
-  .ob-wpp-copy {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    flex: 1;
-    min-width: 240px;
-  }
-  .ob-wpp-icon {
-    font-size: 40px;
-    color: #fff;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .ob-wpp-copy h2 {
-    font-size: 20px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 6px;
-  }
-  .ob-wpp-copy p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.8);
-    line-height: 1.6;
-    margin: 0;
+  /* ── WHATSAPP HINT ── */
+  .ob-wpp-hint {
+    font-size: 13px;
+    color: rgba(255,244,221,0.45);
+    margin-top: 12px;
+    line-height: 1.5;
   }
   .btn--wpp {
     display: inline-flex;
@@ -332,7 +292,6 @@ const eventos = [
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .ob-wpp { flex-direction: column; align-items: flex-start; }
     .ob-cal-item {
       grid-template-columns: 1fr auto;
       grid-template-rows: auto auto;
