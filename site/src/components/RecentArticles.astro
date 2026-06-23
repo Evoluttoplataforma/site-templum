@@ -1,0 +1,64 @@
+---
+import { getRecentPosts, blogImg, blogUrl } from "../lib/blog.js";
+const posts = await getRecentPosts(6);
+const fmt = (d) => d ? new Date(d).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }) : "";
+---
+{posts.length > 0 && (
+  <section class="section section--cream ra">
+    <div class="container xl">
+      <div class="section-header ra-head">
+        <span class="tag-pill">Do nosso blog</span>
+        <h2>Conteúdo pra <em class="accent">não perder</em></h2>
+        <p>Guias práticos sobre certificação e gestão ISO, escritos por quem implementa.</p>
+      </div>
+
+      <div class="ra-grid">
+        {posts.map((p) => (
+          <a class="ra-card" href={blogUrl(p.slug)}>
+            <div class="ra-thumb">
+              {p.featured_image
+                ? <img src={blogImg(p.featured_image)} alt={p.title} loading="lazy" onerror="this.style.display='none'" />
+                : <span class="ra-fallback">Templum<em>!</em></span>}
+            </div>
+            <div class="ra-body">
+              {p.category_name && <span class="ra-cat">{p.category_name}</span>}
+              <h3>{p.title}</h3>
+              {p.excerpt && <p class="ra-exc">{p.excerpt}</p>}
+              <span class="ra-meta"><time>{fmt(p.published_at)}</time><span class="ra-read">Ler artigo <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span></span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="ra-cta">
+        <a href="https://certificacaoiso.com.br" class="btn btn--dark btn--lg">Ver todos os artigos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .ra-head { margin-bottom: 44px; }
+  .ra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 980px) { .ra-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .ra-grid { grid-template-columns: 1fr; } }
+
+  .ra-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); overflow: hidden; display: flex; flex-direction: column; transition: transform .3s var(--ease-soft), box-shadow .3s, border-color .3s; }
+  .ra-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card, 0 14px 36px rgba(0,0,0,0.08)); border-color: color-mix(in srgb, var(--orange) 40%, transparent); }
+  .ra-thumb { position: relative; aspect-ratio: 16/10; overflow: hidden; background: linear-gradient(135deg, var(--navy), var(--surface-deep, #1a1d23)); display: grid; place-items: center; }
+  .ra-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s var(--ease-soft); }
+  .ra-card:hover .ra-thumb img { transform: scale(1.05); }
+  .ra-fallback { font-size: 26px; font-weight: 800; color: rgba(255,244,221,0.5); letter-spacing: -0.02em; }
+  .ra-fallback em { color: var(--orange); font-style: normal; }
+
+  .ra-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .ra-cat { align-self: flex-start; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--orange-ink); background: rgba(178,60,12,0.10); padding: 4px 11px; border-radius: 999px; }
+  .ra-body h3 { font-size: 17px; font-weight: 800; line-height: 1.32; letter-spacing: -0.01em; color: var(--text); }
+  .ra-exc { font-size: 14px; line-height: 1.55; color: var(--text-mid); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ra-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
+  .ra-meta time { font-size: 12.5px; color: var(--text-soft); }
+  .ra-read { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--orange); }
+  .ra-card:hover .ra-read iconify-icon { transform: translateX(3px); }
+  .ra-read iconify-icon { transition: transform .2s var(--ease-soft); }
+  .ra-cta { text-align: center; margin-top: 44px; }
+</style>
