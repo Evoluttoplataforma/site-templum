@@ -31,7 +31,7 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
       <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
       <div class="field">
         <label>Nº de funcionários</label>
-        <select class="select" name="funcionarios">
+        <select class="select" name="funcionarios" aria-label="Nº de funcionários">
           <option value="">Selecione</option>
           {funcionarios.map((f) => <option value={f}>{f}</option>)}
         </select>
@@ -40,14 +40,14 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
     <div class="form-row">
       <div class="field">
         <label>Seu cargo</label>
-        <select class="select" name="cargo">
+        <select class="select" name="cargo" aria-label="Seu cargo">
           <option value="">Selecione</option>
           {cargos.map((c) => <option value={c}>{c}</option>)}
         </select>
       </div>
       <div class="field">
         <label>Qual sua urgência?</label>
-        <select class="select" name="urgencia">
+        <select class="select" name="urgencia" aria-label="Qual sua urgência?">
           <option value="">Selecione</option>
           {urgencias.map((u) => <option value={u}>{u}</option>)}
         </select>
@@ -56,7 +56,7 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
     {!norma && (
       <div class="field">
         <label>Qual norma você busca?</label>
-        <select class="select" name="norma">
+        <select class="select" name="norma" aria-label="Qual norma você busca?">
           <option value="">Selecione (ou não sei ainda)</option>
           {normas.map((n) => <option value={n.nome}>{n.nome} — {n.categoria}</option>)}
           <option value="Outra / não sei ainda">Outra / não sei ainda</option>

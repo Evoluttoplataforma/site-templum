@@ -121,15 +121,13 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     ))}
 
     <!-- Montserrat (Medium / SemiBold / Bold / Extrabold) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Montserrat self-hosted: preload dos pesos-chave (corpo 500, título 800).
+         @font-face em fonts.css. Sem CSS externo bloqueante, sem CLS. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
 
-    <!-- Ícones (Iconify) -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" is:inline></script>
+    <!-- Ícones (Iconify) — defer p/ não bloquear o render -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" defer is:inline></script>
 
     <!-- Tracking (tracking-kit) -->
     <TrackingKit />

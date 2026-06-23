@@ -5,6 +5,7 @@
    Fonte: Montserrat (Extrabold em títulos)
    ========================================================= */
 @import "./tokens.css";
+@import "./fonts.css";
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: clip; scroll-padding-top: 90px; }
@@ -48,8 +49,9 @@ strong, b { font-weight: 700; }
 .label-caps { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-mid); }
 
 /* tag/pill estilo G4 (acento) */
-.tag-pill { display: inline-block; align-self: flex-start; width: fit-content; background: rgba(255,89,37,0.12); border: 1px solid var(--orange); color: var(--orange); font-size: 12px; font-weight: 700; letter-spacing: 0.16em; padding: 5px 14px; border-radius: 6px; text-transform: uppercase; }
-.tag-pill--glow { background: rgba(255,89,37,0.16); box-shadow: 0 0 0 1px rgba(255,89,37,0.45), 0 8px 26px -8px rgba(255,89,37,0.55); }
+.tag-pill { display: inline-block; align-self: flex-start; width: fit-content; background: rgba(194,65,12,0.10); border: 1px solid var(--orange-ink); color: var(--orange-ink); font-size: 12px; font-weight: 700; letter-spacing: 0.16em; padding: 5px 14px; border-radius: 6px; text-transform: uppercase; }
+/* --glow vive sobre fundo escuro (hero): mantém o laranja vibrante (passa no contraste sobre navy). */
+.tag-pill--glow { background: linear-gradient(rgba(34,40,49,0.62), rgba(34,40,49,0.62)), rgba(255,89,37,0.16); color: var(--orange); border-color: var(--orange); box-shadow: 0 0 0 1px rgba(255,89,37,0.45), 0 8px 26px -8px rgba(255,89,37,0.55); }
 .grad-orange { color: var(--orange); font-style: normal; }
 /* destaque "palavra em itálico" estilo G4 */
 em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
@@ -70,7 +72,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 .btn iconify-icon { font-size: 16px; transition: transform .45s var(--ease-soft); }
 .btn:hover iconify-icon { transform: translateX(3px); }
-.btn--primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+.btn--primary { background: var(--orange-ink); color: #fff; border-color: var(--orange-ink); }
 .btn--primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); transform: translateY(-1px); }
 .btn--outline { background: transparent; color: var(--orange); border-color: var(--orange); }
 .btn--outline:hover { background: var(--orange); color: #fff; }
@@ -89,7 +91,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 /* ---------- Badges ---------- */
 .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; line-height: 1; text-transform: uppercase; white-space: nowrap; width: fit-content; }
 .badge--default { background: rgba(24,25,27,0.06); color: var(--text); }
-.badge--orange { background: rgba(255,89,37,0.12); color: var(--orange); }
+.badge--orange { background: rgba(194,65,12,0.10); color: var(--orange-ink); }
 .badge--orange-solid { background: var(--orange); color: #fff; }
 .badge--navy { background: var(--navy); color: var(--cream); }
 .badge--cream { background: var(--cream); color: var(--text); }
@@ -120,20 +122,20 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .person-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.09); }
 .person-photo { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: linear-gradient(135deg, var(--navy-2), var(--surface-deep)); }
 .person-body { padding: 18px; }
-.person-body h4 { font-size: 18px; font-weight: 800; color: var(--cream); }
+.person-body h4, .person-body h3 { font-size: 18px; font-weight: 800; color: var(--cream); }
 .person-divider { width: 40px; height: 3px; background: var(--orange); margin: 10px 0; border-radius: 2px; }
 .person-body p { font-size: 13px; color: rgba(255,244,221,0.6); line-height: 1.55; }
 /* variante clara (sobre creme/branco) */
 .person-card--light { background: var(--surface); border: 1px solid var(--border); }
 .person-card--light:hover { background: var(--surface); box-shadow: var(--shadow-card); }
-.person-card--light .person-body h4 { color: var(--text); }
+.person-card--light .person-body h4, .person-card--light .person-body h3 { color: var(--text); }
 .person-card--light .person-body p { color: var(--text-mid); }
 
 /* ---------- Step cards (método/processo numerado) ---------- */
 .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .step-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 28px 24px; transition: transform .35s var(--ease-soft), box-shadow .35s var(--ease-soft), border-color .35s var(--ease-soft); }
 .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-2); }
-.step-card .step-num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,89,37,0.12); color: var(--orange); font-weight: 800; font-size: 16px; margin-bottom: 16px; }
+.step-card .step-num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(194,65,12,0.10); color: var(--orange-ink); font-weight: 800; font-size: 16px; margin-bottom: 16px; }
 .step-card h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
 .step-card p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
 .section--navy .step-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
@@ -197,10 +199,10 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 36px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,244,221,0.10); }
 .footer-brand .templum-logo { margin-bottom: 16px; }
 .footer-brand p { font-size: 13px; color: rgba(255,244,221,0.6); line-height: 1.6; max-width: 320px; }
-.footer-col h5 { color: var(--cream); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+.footer-col h3 { color: var(--cream); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
 .footer-col a { display: block; font-size: 13px; color: rgba(255,244,221,0.62); padding: 5px 0; transition: color .3s; }
 .footer-col a:hover { color: var(--orange); }
-.footer-bottom { padding: 22px 0; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12px; color: rgba(255,244,221,0.42); }
+.footer-bottom { padding: 22px 0; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12px; color: rgba(255,244,221,0.66); }
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 1024px) {
@@ -235,7 +237,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 
 /* Grid de pessoas em 5 colunas + cargo */
 .people-grid.people-5 { grid-template-columns: repeat(5, 1fr); }
-.person-role { color: var(--orange); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.person-role { color: var(--orange-ink); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 @media (max-width: 1024px) { .people-grid.people-5 { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 620px) { .people-grid.people-5 { grid-template-columns: repeat(2, 1fr); } }
 

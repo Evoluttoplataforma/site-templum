@@ -24,6 +24,7 @@ const cols = [
   {
     title: "Recursos",
     links: [
+      { label: "Blog", href: "https://certificacaoiso.com.br" },
       { label: "Cases de sucesso", href: "/case-de-sucesso" },
       { label: "Presentes", href: "/presentes" },
       { label: "Drops", href: "/drops" },
@@ -74,7 +75,7 @@ const cols = [
 
       {cols.map((c) => (
         <div class="footer-col">
-          <h5>{c.title}</h5>
+          <h3>{c.title}</h3>
           {c.links.map((l) => <a href={l.href}>{l.label}</a>)}
         </div>
       ))}

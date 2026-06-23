@@ -42,3 +42,6 @@ orbit - olivia agentes de ia/
 
 # (os assets do site ficam em site/public/ e NÃO são ignorados)
 !site/public/**
+certificacaoiso/
+blog-certificacaoiso/
+cms-blog-templum-certificacaoiso/

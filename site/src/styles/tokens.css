@@ -6,6 +6,7 @@
   /* ---- Paleta principal (Manual da Marca) ---- */
   --orange-dark:   #AF4022;
   --orange:        #FF5925;   /* cor primária da marca */
+  --orange-ink:    #B23C0C;   /* laranja acessível p/ TEXTO/botão sobre fundo claro (≥4.5:1 mesmo em creme) */
   --peach:         #FDA47D;
   --peach-light:   #FDD88C;
   --cream:         #FFF4DD;
@@ -27,7 +28,7 @@
   --text:          #18191B;
   --text-2:        #3F424B;
   --text-mid:      rgba(24,25,27,0.62);
-  --text-soft:     rgba(24,25,27,0.42);
+  --text-soft:     rgba(24,25,27,0.6);  /* era 0.42 — legível (≥4.5:1) p/ acessibilidade */
   --text-faint:    rgba(24,25,27,0.18);
   --border:        rgba(24,25,27,0.08);
   --border-2:      rgba(24,25,27,0.14);

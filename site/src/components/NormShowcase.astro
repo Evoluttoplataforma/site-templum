@@ -98,8 +98,8 @@ import { normas } from "../data/normas.js";
   .ns-arrow:disabled { opacity: .3; pointer-events: none; }
 
   .ns-dots { display: flex; gap: 8px; justify-content: center; margin-top: 26px; }
-  .ns-dots button { width: 8px; height: 8px; border-radius: 999px; background: rgba(255,244,221,0.28); transition: all .3s var(--ease-soft); }
-  .ns-dots button.active { background: var(--orange); width: 26px; border-radius: 5px; }
+  .ns-dots button { width: 24px; height: 24px; padding: 8px; box-sizing: border-box; background-clip: content-box; border-radius: 999px; background-color: rgba(255,244,221,0.28); transition: all .3s var(--ease-soft); }
+  .ns-dots button.active { background-color: var(--orange); width: 42px; }
 
   .ns-cta { text-align: center; margin-top: 36px; }
 
@@ -125,6 +125,7 @@ import { normas } from "../data/normas.js";
         dotsBox.innerHTML = "";
         for (let i = 0; i < pages(); i++) {
           const b = document.createElement("button");
+          b.setAttribute("aria-label", "Ir para página " + (i + 1));
           b.addEventListener("click", () => track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" }));
           dotsBox.appendChild(b);
         }

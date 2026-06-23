@@ -1,0 +1,170 @@
+---
+import Base from "../layouts/Base.astro";
+import { getHistoriasPorSegmento, SEGMENTOS, SUPA_PUBLIC } from "../lib/historias.js";
+
+const grupos = await getHistoriasPorSegmento();
+const total = grupos.reduce((n, g) => n + g.itens.length, 0);
+const { url: SB_URL, anon: SB_ANON } = SUPA_PUBLIC;
+
+const schemas = [{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Histórias de quem certificou com a Templum",
+  description: "Empresas de todos os segmentos contam como foi certificar com a Templum.",
+}];
+---
+
+<Base
+  title="Histórias de clientes — Templum"
+  description="Empresas de todos os segmentos contam, na prática, como foi organizar a gestão e certificar com a Templum. Compartilhe a sua."
+  schemas={schemas}
+>
+  <!-- HERO -->
+  <section class="section section--navy hist-hero">
+    <div class="container md" style="text-align:center">
+      <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:chat-round-like-bold"></iconify-icon> Histórias de clientes</span>
+      <h1>Quem organiza a gestão com a Templum, <em>conta</em>.</h1>
+      <p class="hist-sub">De pequenas indústrias a grandes operações — empresas de todos os segmentos dividem aqui como foi sair do caos e certificar. A sua história pode inspirar a próxima.</p>
+      <a href="#enviar" class="btn btn--primary btn--lg">Compartilhar minha história <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+
+  <!-- HISTÓRIAS POR SEGMENTO -->
+  {total > 0 ? (
+    <section class="section">
+      <div class="container xl">
+        {grupos.map((g) => (
+          <div class="hist-seg">
+            <div class="hist-seg-head"><span class="tag-pill">{g.segmento}</span><span class="hist-seg-count">{g.itens.length} {g.itens.length === 1 ? "história" : "histórias"}</span></div>
+            <div class="hist-grid">
+              {g.itens.map((h) => (
+                <article class="hist-card">
+                  <iconify-icon icon="solar:quote-up-square-bold" class="hist-quote"></iconify-icon>
+                  <h3>{h.title}</h3>
+                  {h.description && <p>{h.description}</p>}
+                  <div class="hist-by">
+                    <span class="hist-av">{(h.author_name || h.company || "?").slice(0, 1).toUpperCase()}</span>
+                    <div>
+                      <strong>{h.author_name || "Cliente Templum"}</strong>
+                      <em>{[h.role, h.company].filter(Boolean).join(" · ")}</em>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <section class="section">
+      <div class="container sm hist-empty">
+        <iconify-icon icon="solar:figma-file-linear"></iconify-icon>
+        <h2>As primeiras histórias estão chegando</h2>
+        <p>Estamos reunindo os relatos de quem já certificou com a Templum. Quer ser um dos primeiros? Conte a sua abaixo.</p>
+        <a href="#enviar" class="btn btn--primary btn--lg">Compartilhar minha história</a>
+      </div>
+    </section>
+  )}
+
+  <!-- FORMULÁRIO -->
+  <section class="section section--cream" id="enviar">
+    <div class="container sm">
+      <div class="section-header"><span class="tag-pill">Sua vez</span><h2>Conte a sua <em class="accent">história</em></h2><p>Leva 2 minutos. Depois de uma revisão rápida do nosso time, ela entra nesta página.</p></div>
+
+      <div class="lead-card hist-form-card">
+        <form class="form" id="histForm" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="h-nome">Seu nome</label><input class="input" id="h-nome" name="nome" placeholder="Nome e sobrenome" required /></div>
+            <div class="field"><label for="h-cargo">Cargo</label><input class="input" id="h-cargo" name="cargo" placeholder="Ex.: Diretor de Qualidade" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="h-empresa">Empresa</label><input class="input" id="h-empresa" name="empresa" placeholder="Nome da empresa" required /></div>
+            <div class="field"><label for="h-seg">Segmento</label>
+              <select class="input" id="h-seg" name="segmento" required>
+                <option value="">Selecione…</option>
+                {SEGMENTOS.map((s) => <option value={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="field"><label for="h-titulo">Título da sua história</label><input class="input" id="h-titulo" name="titulo" placeholder="Ex.: Da papelada solta ao ISO 9001 em 6 meses" required /></div>
+          <div class="field"><label for="h-hist">Sua história</label><textarea class="input" id="h-hist" name="historia" rows="5" placeholder="Como era antes, o que mudou com a Templum e o resultado que vocês alcançaram." required></textarea></div>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">Enviar minha história <iconify-icon icon="solar:plain-bold"></iconify-icon></button>
+          <p class="hist-legal">Ao enviar, você autoriza a Templum a publicar sua história neste site. Seus dados são tratados conforme a LGPD.</p>
+        </form>
+        <div class="form-success" id="histSuccess" hidden>
+          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+          <div><h4>História recebida! 🎉</h4><p>Obrigado por compartilhar. Nosso time vai revisar e em breve ela aparece aqui.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Quer escrever a <em>sua</em> história?</h2>
+      <p>Fale com um especialista e descubra como a Templum leva a sua empresa até a certificação — com garantia de 200%.</p>
+      <a href="/form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hist-hero h1 { font-size: clamp(30px,4.4vw,52px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); margin: 18px auto 0; max-width: 760px; }
+  .hist-hero h1 em { font-style: normal; color: var(--orange); }
+  .hist-sub { font-size: 17px; line-height: 1.6; color: rgba(255,244,221,0.82); margin: 18px auto 26px; max-width: 600px; }
+
+  .hist-seg { margin-bottom: clamp(36px,5vw,56px); }
+  .hist-seg-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .hist-seg-count { font-size: 13px; color: var(--text-soft); font-weight: 600; }
+  .hist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  .hist-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 28px 26px; display: flex; flex-direction: column; }
+  .hist-quote { position: absolute; top: 20px; right: 22px; font-size: 26px; color: rgba(255,89,37,0.18); }
+  .hist-card h3 { font-size: 18px; font-weight: 800; line-height: 1.3; color: var(--text); margin-bottom: 10px; padding-right: 30px; }
+  .hist-card p { font-size: 15px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+  .hist-by { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .hist-av { width: 42px; height: 42px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--orange); color: #fff; font-weight: 800; font-size: 17px; }
+  .hist-by strong { display: block; font-size: 14.5px; font-weight: 800; color: var(--text); }
+  .hist-by em { font-style: normal; font-size: 13px; color: var(--text-soft); }
+
+  .hist-empty { text-align: center; }
+  .hist-empty > iconify-icon { font-size: 52px; color: var(--orange); }
+  .hist-empty h2 { font-size: clamp(24px,3vw,34px); font-weight: 800; margin: 14px 0 10px; }
+  .hist-empty p { font-size: 16px; color: var(--text-mid); line-height: 1.6; margin: 0 auto 24px; max-width: 480px; }
+
+  .hist-form-card { max-width: 640px; margin: 30px auto 0; }
+  .hist-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 4px; }
+  .form[hidden], .form-success[hidden] { display: none; }
+</style>
+
+<script is:inline define:vars={{ SB_URL, SB_ANON }}>
+  (function () {
+    var form = document.getElementById("histForm");
+    if (!form) return;
+    var ok = document.getElementById("histSuccess");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
+      var btn = form.querySelector("button[type=submit]");
+      if (btn) { btn.disabled = true; btn.style.opacity = "0.6"; }
+      fetch(SB_URL + "/rest/v1/blog_templum_historias", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SB_ANON, Authorization: "Bearer " + SB_ANON, Prefer: "return=minimal" },
+        body: JSON.stringify({
+          title: d.titulo || (d.empresa || "História"), description: d.historia || "",
+          author_name: d.nome || "", company: d.empresa || "", role: d.cargo || "",
+          segment: d.segmento || "Outro", status: "pending",
+        }),
+      }).then(function (r) {
+        if (!r.ok) throw new Error("falha");
+        form.hidden = true; if (ok) ok.hidden = false;
+      }).catch(function () {
+        if (btn) { btn.disabled = false; btn.style.opacity = "1"; }
+        alert("Não consegui enviar agora. Tente novamente em instantes.");
+      });
+    });
+  })();
+</script>
