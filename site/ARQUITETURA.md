@@ -2,6 +2,9 @@
 
 > Documentação para o time (Cursor / VS Code / Claude Code). Leia a seção
 > **“⚠️ GIT & DEPLOY”** antes de commitar — ela evita publicar no lugar errado.
+>
+> 👉 **Novo no projeto / não é muito de git?** Comece pelo **`COMO-TRABALHAR.md`**
+> (guia rápido do dia a dia, passo a passo no Cursor).
 
 ---
 
