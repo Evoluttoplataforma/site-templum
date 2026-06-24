@@ -205,7 +205,7 @@ async function handleLead(request, env) {
       const hash = md5hex(email);
       const mc = {
         email_address: email,
-        status: "subscribed",
+        status_if_new: "subscribed",
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
           NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
