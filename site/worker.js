@@ -236,7 +236,23 @@ async function handleLead(request, env) {
     }
   }
 
-  // 3) CRM Orbit/Evolutto — pulado para webinars (apenas Mailchimp).
+  // 3) Google Sheets (webinar/webserie) — envia para o Apps Script Web App.
+  if (isWebinar && env.WEBSERIE_SHEET_URL) {
+    configured = true;
+    tasks.push(
+      fetch(env.WEBSERIE_SHEET_URL, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          nome: lead.nome, email, telefone: lead.telefone,
+          pagina: lead.pagina, evento: lead.evento,
+          utm_source: lead.utm_source, utm_medium: lead.utm_medium, utm_campaign: lead.utm_campaign,
+        }),
+      }).then((r) => ({ sheet: r.ok })).catch(() => ({ sheet: false }))
+    );
+  }
+
+  // Pulado para webinars (sem CRM nem webhook genérico).
   if (isWebinar) { const results = await Promise.all(tasks); return json({ ok: true, configured, results }); }
 
   // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
