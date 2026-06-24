@@ -1,60 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
-
-const base = "https://calendar.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&location=Online+%E2%80%94+Templum+Consultoria";
-
-const eventos = [
-  {
-    n: "01",
-    data: "01 de Julho",
-    dia: "Terça",
-    t: "Entenda a revisão da ISO 9001 versão 2026",
-    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Entenda+a+revis%C3%A3o+da+norma+%7C+Webserie+Templum" +
-      "&dates=20260701T190000Z/20260701T200000Z" +
-      "&details=A+maior+revis%C3%A3o+da+ISO+9001+desde+2015.+Descubra+o+que+muda%2C+o+que+permanece+e+como+sua+empresa+deve+se+preparar.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
-  },
-  {
-    n: "02",
-    data: "09 de Julho",
-    dia: "Quinta",
-    t: "Nigel Croft e a nova ISO 9001",
-    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Nigel+Croft+e+a+nova+norma+%7C+Webserie+Templum" +
-      "&dates=20260709T190000Z/20260709T200000Z" +
-      "&details=Um+dos+maiores+especialistas+mundiais+em+ISO+9001+explica+as+decis%C3%B5es+por+tr%C3%A1s+das+mudan%C3%A7as+da+vers%C3%A3o+2026.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
-  },
-  {
-    n: "03",
-    data: "15 de Julho",
-    dia: "Terça",
-    t: "IA na ISO 9001 e 19011",
-    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+IA+na+ISO+9001+e+19011+%7C+Webserie+Templum" +
-      "&dates=20260715T190000Z/20260715T200000Z" +
-      "&details=Como+a+Intelig%C3%AAncia+Artificial+est%C3%A1+sendo+incorporada+nos+sistemas+de+gest%C3%A3o+e+nas+auditorias+da+ISO+9001+e+19011.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
-  },
-  {
-    n: "04",
-    data: "22 de Julho",
-    dia: "Quarta",
-    t: "Comportamento Ético e Cultura da Qualidade",
-    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Comportamento+%C3%89tico+e+Cultura+da+Qualidade+%7C+Webserie+Templum" +
-      "&dates=20260722T190000Z/20260722T200000Z" +
-      "&details=A+dimens%C3%A3o+humana+da+qualidade%3A+%C3%A9tica%2C+valores+organizacionais+e+como+construir+uma+cultura+s%C3%B3lida+na+vers%C3%A3o+2026.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
-  },
-  {
-    n: "05",
-    data: "29 de Julho",
-    dia: "Quarta",
-    t: "Nova Abordagem de Riscos e Oportunidades",
-    gcal: base + "&text=ISO+9001%3A2026+%E2%80%94+Nova+Abordagem+de+Riscos+e+Oportunidades+%7C+Webserie+Templum" +
-      "&dates=20260729T190000Z/20260729T200000Z" +
-      "&details=Como+a+vers%C3%A3o+2026+redefine+a+gest%C3%A3o+de+riscos+e+transforma+amea%C3%A7as+em+vantagem+competitiva+real.%0A%0AWebserie+gratuita+com+especialistas+da+Templum+Consultoria.%0A%0A%E2%9A%A0%EF%B8%8F+O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+antes+do+in%C3%ADcio.",
-  },
-];
 ---
 
 <Base
   title="Vaga confirmada — Webserie ISO 9001:2026 | Templum"
-  description="Sua inscrição na Webserie ISO 9001:2026 + IA está confirmada. Salve os eventos na agenda e entre no grupo exclusivo do WhatsApp."
+  description="Sua inscrição na Webserie ISO 9001:2026 + IA está confirmada. Entre no grupo do WhatsApp para receber o link de acesso e todos os avisos."
   hideWpp={true}
   noindex={true}
 >
@@ -67,71 +17,19 @@ const eventos = [
         <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
       </div>
       <span class="ob-badge">Inscrição confirmada</span>
-      <h1>Vaga garantida!<br /><em>Boas-vindas à webserie.</em></h1>
-      <p>Você receberá um e-mail com os detalhes de acesso de cada encontro antes de cada aula. Fique de olho na sua caixa de entrada.</p>
+      <h1>Vaga garantida!<br /><em>Agora entre no grupo.</em></h1>
+      <p class="ob-lead">Toda comunicação — link de acesso, avisos e materiais — acontece <strong>pelo grupo do WhatsApp</strong>. Entre agora para não perder nada.</p>
+
       <a
         href="https://chat.whatsapp.com/CdQVRjKLyeuAYBGa5hrOKn"
         target="_blank"
         rel="noopener noreferrer"
         class="btn btn--wpp btn--lg"
-        style="margin-top:32px;"
       >
         <iconify-icon icon="mdi:whatsapp"></iconify-icon>
-        Entrar no grupo exclusivo do WhatsApp
+        Entrar no grupo do WhatsApp
       </a>
-      <p class="ob-wpp-hint">Materiais, avisos e acesso aos encontros no grupo fechado da série.</p>
-    </div>
-  </section>
-
-  <!-- ── CALENDÁRIO ── -->
-  <section class="section section--cream">
-    <div class="container md">
-      <div class="section-header">
-        <span class="tag-pill">Agenda da série</span>
-        <h2>Salve os <em class="accent">5 encontros</em> na sua agenda</h2>
-        <p>Todo encontro acontece às <strong>16h (horário de Brasília)</strong>. Clique em cada evento para salvar no Google Agenda.</p>
-      </div>
-
-      <div class="ob-cal">
-        {eventos.map((e) => (
-          <div class="ob-cal-item">
-            <div class="ob-cal-left">
-              <span class="ob-cal-n">{e.n}</span>
-              <div class="ob-cal-data">
-                <span class="ob-cal-dia">{e.dia}</span>
-                <span class="ob-cal-dt">{e.data} · 16h</span>
-              </div>
-            </div>
-            <div class="ob-cal-body">
-              <p>{e.t}</p>
-            </div>
-            <a
-              href={e.gcal}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="ob-cal-btn"
-            >
-              <iconify-icon icon="solar:calendar-add-bold"></iconify-icon>
-              Adicionar à agenda
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CTA VOLTAR ── -->
-  <section class="section section--navy ob-footer-cta">
-    <div class="container sm" style="text-align:center;">
-      <p style="color:rgba(255,244,221,0.55);font-size:15px;margin-bottom:24px;">
-        Conhece alguém que deveria participar?
-      </p>
-      <a
-        href="/webserie-iso-9001-2026/"
-        class="btn btn--onDark"
-      >
-        Compartilhar a página da webserie
-      </a>
+      <p class="ob-wpp-hint">Grupo exclusivo · gratuito · saia quando quiser</p>
     </div>
   </section>
 
@@ -211,132 +109,36 @@ const eventos = [
     font-style: normal;
     color: var(--orange);
   }
-  .ob-hero p {
-    font-size: 16px;
-    color: rgba(255,244,221,0.6);
-    line-height: 1.75;
+  .ob-lead {
+    font-size: 17px;
+    color: rgba(255,244,221,0.75);
+    line-height: 1.7;
     max-width: 480px;
-    margin: 0 auto;
+    margin: 0 auto 36px;
   }
+  .ob-lead strong { color: var(--cream); }
 
-  /* ── WHATSAPP HINT ── */
+  /* ── WHATSAPP ── */
   .ob-wpp-hint {
     font-size: 13px;
-    color: rgba(255,244,221,0.45);
-    margin-top: 12px;
+    color: rgba(255,244,221,0.4);
+    margin-top: 14px;
     line-height: 1.5;
   }
   .btn--wpp {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: #fff;
-    color: #128C7E;
+    background: #25D366;
+    color: #fff;
     font-weight: 800;
-    padding: 16px 28px;
+    padding: 18px 36px;
     border-radius: 50px;
-    font-size: 15px;
+    font-size: 16px;
     white-space: nowrap;
-    transition: opacity .2s;
-    flex-shrink: 0;
+    transition: opacity .2s, transform .15s;
+    box-shadow: 0 4px 24px rgba(37,211,102,0.35);
   }
-  .btn--wpp:hover { opacity: 0.9; }
-  .btn--wpp iconify-icon { font-size: 20px; }
-
-  /* ── CALENDÁRIO ── */
-  .ob-cal {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-  .ob-cal-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    transition: background .2s;
-  }
-  .ob-cal-item:last-child { border-bottom: none; }
-  .ob-cal-item:hover { background: var(--bg); }
-  .ob-cal-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .ob-cal-n {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--orange);
-    letter-spacing: 1px;
-    min-width: 22px;
-  }
-  .ob-cal-data {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 150px;
-  }
-  .ob-cal-dia {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-mid);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .ob-cal-dt {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .ob-cal-body p {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    margin: 0;
-    line-height: 1.4;
-  }
-  .ob-cal-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--orange);
-    border: 1px solid rgba(255,89,37,0.3);
-    background: rgba(255,89,37,0.05);
-    padding: 9px 16px;
-    border-radius: 8px;
-    white-space: nowrap;
-    transition: background .2s, border-color .2s;
-    flex-shrink: 0;
-  }
-  .ob-cal-btn:hover {
-    background: rgba(255,89,37,0.12);
-    border-color: var(--orange);
-  }
-  .ob-cal-btn iconify-icon { font-size: 16px; }
-
-  /* ── FOOTER CTA ── */
-  .ob-footer-cta { padding-top: 48px; padding-bottom: 48px; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .ob-cal-item {
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-    }
-    .ob-cal-left { grid-column: 1 / -1; }
-    .ob-cal-body { grid-column: 1; }
-    .ob-cal-btn { align-self: end; }
-  }
-  @media (max-width: 480px) {
-    .ob-cal-item { grid-template-columns: 1fr; }
-    .ob-cal-btn { width: 100%; justify-content: center; }
-  }
+  .btn--wpp:hover { opacity: 0.92; transform: translateY(-1px); }
+  .btn--wpp iconify-icon { font-size: 22px; }
 </style>
