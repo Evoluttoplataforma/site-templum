@@ -60,11 +60,15 @@ import Base from "../layouts/Base.astro";
 </Base>
 
 <style>
+  /* ── PÁGINA INTEIRA NAVY ── */
+  html, body { background: var(--navy); min-height: 100%; }
+
   /* ── HERO ── */
   .ob-hero {
     background: var(--navy);
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
     padding: clamp(72px, 10vw, 110px) 0;
     text-align: center;
   }
