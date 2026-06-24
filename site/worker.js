@@ -200,15 +200,15 @@ async function handleLead(request, env) {
         // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
         ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
       ];
-      // Passo 1: PUT /members/{hash} — upsert do contato.
-      //   Tenta primeiro com todos os merge fields; se o Mailchimp rejeitar (400 —
-      //   campo não configurado na audience), tenta de novo só com FNAME + PHONE,
-      //   que existem em qualquer audience padrão.
-      // Passo 2: POST /members/{hash}/tags — adiciona tags (dispara automação).
+      // Estratégia:
+      //   POST /members com tags no body → funciona para contatos NOVOS (cria + tag em 1 call).
+      //   Se retornar "Member Exists" (409) → contato já existe:
+      //     PUT /members/{hash} para atualizar dados + POST /members/{hash}/tags para adicionar tag
+      //     (POST /tags é o que dispara a automação "contato marcado" no Mailchimp).
       const hash = md5hex(email);
-      const mcFull = {
+      const mcBody = {
         email_address: email,
-        status_if_new: "subscribed",
+        status: "subscribed",
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
           NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
@@ -216,31 +216,37 @@ async function handleLead(request, env) {
           ORIGEM: lead.pagina || lead.evento || "site",
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
+        tags: mcTags,
       };
-      const mcMin = { email_address: email, status_if_new: "subscribed", merge_fields: { FNAME: lead.nome, PHONE: lead.telefone } };
-      const putMember = async (body) =>
-        fetch(`${mcBase}/members/${hash}`, {
-          method: "PUT",
-          headers: { "content-type": "application/json", authorization: auth },
-          body: JSON.stringify(body),
-        });
       tasks.push(
-        putMember(mcFull).then(async (r) => {
-          if (!r.ok) {
-            // Fallback: tenta com apenas os campos básicos garantidos.
-            const r2 = await putMember(mcMin).catch(() => null);
-            if (!r2 || !r2.ok) {
-              const e = await r.json().catch(() => ({}));
-              return { mailchimp: false, error: e.title || "mailchimp_error" };
-            }
+        fetch(`${mcBase}/members`, {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: auth },
+          body: JSON.stringify(mcBody),
+        }).then(async (r) => {
+          if (r.ok) return { mailchimp: true };
+          const e = await r.json().catch(() => ({}));
+          // Contato já existe → atualiza dados e adiciona tag via endpoints separados.
+          if (e && e.title === "Member Exists") {
+            const [rPut, rTag] = await Promise.all([
+              fetch(`${mcBase}/members/${hash}`, {
+                method: "PUT",
+                headers: { "content-type": "application/json", authorization: auth },
+                body: JSON.stringify({ email_address: email, status_if_new: "subscribed",
+                  merge_fields: { FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
+                    NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
+                    FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
+                    ORIGEM: lead.pagina || lead.evento || "site" } }),
+              }).catch(() => null),
+              fetch(`${mcBase}/members/${hash}/tags`, {
+                method: "POST",
+                headers: { "content-type": "application/json", authorization: auth },
+                body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
+              }).catch(() => null),
+            ]);
+            return { mailchimp: true, existing: true, tags_ok: rTag?.ok ?? false };
           }
-          // Passo 2: adiciona tags separadamente (válido para contatos novos e existentes).
-          const tr = await fetch(`${mcBase}/members/${hash}/tags`, {
-            method: "POST",
-            headers: { "content-type": "application/json", authorization: auth },
-            body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
-          }).catch(() => null);
-          return { mailchimp: true, tags_ok: tr?.ok ?? false };
+          return { mailchimp: false, error: e.title || "mailchimp_error" };
         }).catch(() => ({ mailchimp: false }))
       );
     }
