@@ -200,6 +200,9 @@ async function handleLead(request, env) {
         // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
         ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
       ];
+      // PUT /members/{hash} = upsert: cria se novo, atualiza se existe.
+      // É o único endpoint que dispara automações de "tag adicionada" no Mailchimp.
+      const hash = md5hex(email);
       const mc = {
         email_address: email,
         status: "subscribed",
@@ -213,23 +216,13 @@ async function handleLead(request, env) {
         tags: mcTags,
       };
       tasks.push(
-        fetch(`${mcBase}/members`, {
-          method: "POST",
+        fetch(`${mcBase}/members/${hash}`, {
+          method: "PUT",
           headers: { "content-type": "application/json", authorization: auth },
           body: JSON.stringify(mc),
         }).then(async (r) => {
           if (r.ok) return { mailchimp: true };
           const e = await r.json().catch(() => ({}));
-          if (e && e.title === "Member Exists") {
-            // Contato já existe — adiciona as tags sem sobrescrever as existentes.
-            const hash = md5hex(email);
-            const tr = await fetch(`${mcBase}/members/${hash}/tags`, {
-              method: "POST",
-              headers: { "content-type": "application/json", authorization: auth },
-              body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
-            }).catch(() => null);
-            return { mailchimp: true, existing: true, tags_updated: tr?.ok ?? false };
-          }
           return { mailchimp: false, error: e.title || "mailchimp_error" };
         }).catch(() => ({ mailchimp: false }))
       );
