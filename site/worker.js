@@ -67,6 +67,50 @@ async function sha256(value) {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// MD5 puro (sem Web Crypto) — necessário para o subscriber hash do Mailchimp.
+function md5hex(str) {
+  function rl(n, c) { return (n << c) | (n >>> (32 - c)); }
+  function ad(a, b) { return (a + b) | 0; }
+  function cm(q, a, b, x, s, t) { return ad(rl(ad(ad(a, q), ad(x, t)), s), b); }
+  function ff(a, b, c, d, x, s, t) { return cm((b & c) | (~b & d), a, b, x, s, t); }
+  function gg(a, b, c, d, x, s, t) { return cm((b & d) | (c & ~d), a, b, x, s, t); }
+  function hh(a, b, c, d, x, s, t) { return cm(b ^ c ^ d, a, b, x, s, t); }
+  function ii(a, b, c, d, x, s, t) { return cm(c ^ (b | ~d), a, b, x, s, t); }
+  const bytes = new TextEncoder().encode(str);
+  const len = bytes.length;
+  const nblk = ((len + 8) >>> 6) + 1;
+  const blks = new Uint32Array(nblk * 16);
+  for (let i = 0; i < len; i++) blks[i >> 2] |= bytes[i] << ((i & 3) * 8);
+  blks[len >> 2] |= 0x80 << ((len & 3) * 8);
+  blks[nblk * 16 - 2] = len * 8;
+  let a = 0x67452301, b = 0xefcdab89, c = 0x98badcfe, d = 0x10325476;
+  for (let i = 0; i < nblk * 16; i += 16) {
+    const m = blks.slice(i, i + 16);
+    const [aa, bb, cc, dd] = [a, b, c, d];
+    a=ff(a,b,c,d,m[0],7,-680876936);d=ff(d,a,b,c,m[1],12,-389564586);c=ff(c,d,a,b,m[2],17,606105819);b=ff(b,c,d,a,m[3],22,-1044525330);
+    a=ff(a,b,c,d,m[4],7,-176418897);d=ff(d,a,b,c,m[5],12,1200080426);c=ff(c,d,a,b,m[6],17,-1473231341);b=ff(b,c,d,a,m[7],22,-45705983);
+    a=ff(a,b,c,d,m[8],7,1770035416);d=ff(d,a,b,c,m[9],12,-1958414417);c=ff(c,d,a,b,m[10],17,-42063);b=ff(b,c,d,a,m[11],22,-1990404162);
+    a=ff(a,b,c,d,m[12],7,1804603682);d=ff(d,a,b,c,m[13],12,-40341101);c=ff(c,d,a,b,m[14],17,-1502002290);b=ff(b,c,d,a,m[15],22,1236535329);
+    a=gg(a,b,c,d,m[1],5,-165796510);d=gg(d,a,b,c,m[6],9,-1069501632);c=gg(c,d,a,b,m[11],14,643717713);b=gg(b,c,d,a,m[0],20,-373897302);
+    a=gg(a,b,c,d,m[5],5,-701558691);d=gg(d,a,b,c,m[10],9,38016083);c=gg(c,d,a,b,m[15],14,-660478335);b=gg(b,c,d,a,m[4],20,-405537848);
+    a=gg(a,b,c,d,m[9],5,568446438);d=gg(d,a,b,c,m[14],9,-1019803690);c=gg(c,d,a,b,m[3],14,-187363961);b=gg(b,c,d,a,m[8],20,1163531501);
+    a=gg(a,b,c,d,m[13],5,-1444681467);d=gg(d,a,b,c,m[2],9,-51403784);c=gg(c,d,a,b,m[7],14,1735328473);b=gg(b,c,d,a,m[12],20,-1926607734);
+    a=hh(a,b,c,d,m[5],4,-378558);d=hh(d,a,b,c,m[8],11,-2022574463);c=hh(c,d,a,b,m[11],16,1839030562);b=hh(b,c,d,a,m[14],23,-35309556);
+    a=hh(a,b,c,d,m[1],4,-1530992060);d=hh(d,a,b,c,m[4],11,1272893353);c=hh(c,d,a,b,m[7],16,-155497632);b=hh(b,c,d,a,m[10],23,-1094730640);
+    a=hh(a,b,c,d,m[13],4,681279174);d=hh(d,a,b,c,m[0],11,-358537222);c=hh(c,d,a,b,m[3],16,-722521979);b=hh(b,c,d,a,m[6],23,76029189);
+    a=hh(a,b,c,d,m[9],4,-640364487);d=hh(d,a,b,c,m[12],11,-421815835);c=hh(c,d,a,b,m[15],16,530742520);b=hh(b,c,d,a,m[2],23,-995338651);
+    a=ii(a,b,c,d,m[0],6,-198630844);d=ii(d,a,b,c,m[7],10,1126891415);c=ii(c,d,a,b,m[14],15,-1416354905);b=ii(b,c,d,a,m[5],21,-57434055);
+    a=ii(a,b,c,d,m[12],6,1700485571);d=ii(d,a,b,c,m[3],10,-1894986606);c=ii(c,d,a,b,m[10],15,-1051523);b=ii(b,c,d,a,m[1],21,-2054922799);
+    a=ii(a,b,c,d,m[8],6,1873313359);d=ii(d,a,b,c,m[15],10,-30611744);c=ii(c,d,a,b,m[6],15,-1560198380);b=ii(b,c,d,a,m[13],21,1309151649);
+    a=ii(a,b,c,d,m[4],6,-145523070);d=ii(d,a,b,c,m[11],10,-1120210379);c=ii(c,d,a,b,m[2],15,718787259);b=ii(b,c,d,a,m[9],21,-343485551);
+    a=ad(a,aa);b=ad(b,bb);c=ad(c,cc);d=ad(d,dd);
+  }
+  return [a,b,c,d].map(n => {
+    const h = (n < 0 ? n + 0x100000000 : n).toString(16).padStart(8, "0");
+    return h[6]+h[7]+h[4]+h[5]+h[2]+h[3]+h[0]+h[1];
+  }).join("");
+}
+
 // ---------------------- Lead: Webhook + Mailchimp ----------------------
 async function handleLead(request, env) {
   let body = {};
@@ -149,6 +193,13 @@ async function handleLead(request, env) {
     configured = true;
     const dc = env.MAILCHIMP_API_KEY.split("-")[1];
     if (dc) {
+      const auth = "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY);
+      const mcBase = `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}`;
+      const mcTags = [
+        env.MAILCHIMP_TAG || "site-templum",
+        // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
+        ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
+      ];
       const mc = {
         email_address: email,
         status: "subscribed",
@@ -159,21 +210,26 @@ async function handleLead(request, env) {
           ORIGEM: lead.pagina || lead.evento || "site",
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
-        tags: [
-          env.MAILCHIMP_TAG || "site-templum",
-          // Tag dinâmica por evento (ex.: "webinar-iso9001-2026", "aula-iso9001", etc.)
-          ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
-        ],
+        tags: mcTags,
       };
       tasks.push(
-        fetch(`https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members`, {
+        fetch(`${mcBase}/members`, {
           method: "POST",
-          headers: { "content-type": "application/json", authorization: "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY) },
+          headers: { "content-type": "application/json", authorization: auth },
           body: JSON.stringify(mc),
         }).then(async (r) => {
           if (r.ok) return { mailchimp: true };
           const e = await r.json().catch(() => ({}));
-          if (e && e.title === "Member Exists") return { mailchimp: true, existing: true };
+          if (e && e.title === "Member Exists") {
+            // Contato já existe — adiciona as tags sem sobrescrever as existentes.
+            const hash = md5hex(email);
+            const tr = await fetch(`${mcBase}/members/${hash}/tags`, {
+              method: "POST",
+              headers: { "content-type": "application/json", authorization: auth },
+              body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
+            }).catch(() => null);
+            return { mailchimp: true, existing: true, tags_updated: tr?.ok ?? false };
+          }
           return { mailchimp: false, error: e.title || "mailchimp_error" };
         }).catch(() => ({ mailchimp: false }))
       );
