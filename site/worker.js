@@ -200,10 +200,13 @@ async function handleLead(request, env) {
         // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
         ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
       ];
-      // Passo 1: PUT /members/{hash} — upsert do contato (sem tags, pois tags não é campo válido no PUT).
-      // Passo 2: POST /members/{hash}/tags — adiciona tags (dispara automação "contato marcado").
+      // Passo 1: PUT /members/{hash} — upsert do contato.
+      //   Tenta primeiro com todos os merge fields; se o Mailchimp rejeitar (400 —
+      //   campo não configurado na audience), tenta de novo só com FNAME + PHONE,
+      //   que existem em qualquer audience padrão.
+      // Passo 2: POST /members/{hash}/tags — adiciona tags (dispara automação).
       const hash = md5hex(email);
-      const mc = {
+      const mcFull = {
         email_address: email,
         status_if_new: "subscribed",
         merge_fields: {
@@ -214,15 +217,22 @@ async function handleLead(request, env) {
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
       };
-      tasks.push(
+      const mcMin = { email_address: email, status_if_new: "subscribed", merge_fields: { FNAME: lead.nome, PHONE: lead.telefone } };
+      const putMember = async (body) =>
         fetch(`${mcBase}/members/${hash}`, {
           method: "PUT",
           headers: { "content-type": "application/json", authorization: auth },
-          body: JSON.stringify(mc),
-        }).then(async (r) => {
+          body: JSON.stringify(body),
+        });
+      tasks.push(
+        putMember(mcFull).then(async (r) => {
           if (!r.ok) {
-            const e = await r.json().catch(() => ({}));
-            return { mailchimp: false, error: e.title || "mailchimp_error" };
+            // Fallback: tenta com apenas os campos básicos garantidos.
+            const r2 = await putMember(mcMin).catch(() => null);
+            if (!r2 || !r2.ok) {
+              const e = await r.json().catch(() => ({}));
+              return { mailchimp: false, error: e.title || "mailchimp_error" };
+            }
           }
           // Passo 2: adiciona tags separadamente (válido para contatos novos e existentes).
           const tr = await fetch(`${mcBase}/members/${hash}/tags`, {
