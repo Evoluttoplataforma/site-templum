@@ -664,7 +664,7 @@ const schemaEvent = {
     if (!nome || !email) { alert("Por favor, preencha nome e e-mail."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("E-mail inválido."); return; }
 
-    // Envia para /api/lead → Mailchimp (tag: webinar-iso9001-2026) + webhook
+    // Envia para /api/lead → Mailchimp (tag: webserie-iso9001-2026) + webhook
     try {
       const attrib = (window as any).__tplAttrib ? (window as any).__tplAttrib() : {};
       fetch("/api/lead", {
@@ -674,7 +674,7 @@ const schemaEvent = {
         body: JSON.stringify({
           nome, email, telefone: wpp, empresa,
           norma: "ISO 9001",
-          evento: "webinar-iso9001-2026",
+          evento: "webserie-iso9001-2026",
           pagina: location.pathname,
           ...attrib,
         }),
