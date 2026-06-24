@@ -200,8 +200,8 @@ async function handleLead(request, env) {
         // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
         ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
       ];
-      // PUT /members/{hash} = upsert: cria se novo, atualiza se existe.
-      // É o único endpoint que dispara automações de "tag adicionada" no Mailchimp.
+      // Passo 1: PUT /members/{hash} — upsert do contato (sem tags, pois tags não é campo válido no PUT).
+      // Passo 2: POST /members/{hash}/tags — adiciona tags (dispara automação "contato marcado").
       const hash = md5hex(email);
       const mc = {
         email_address: email,
@@ -213,7 +213,6 @@ async function handleLead(request, env) {
           ORIGEM: lead.pagina || lead.evento || "site",
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
-        tags: mcTags,
       };
       tasks.push(
         fetch(`${mcBase}/members/${hash}`, {
@@ -221,9 +220,17 @@ async function handleLead(request, env) {
           headers: { "content-type": "application/json", authorization: auth },
           body: JSON.stringify(mc),
         }).then(async (r) => {
-          if (r.ok) return { mailchimp: true };
-          const e = await r.json().catch(() => ({}));
-          return { mailchimp: false, error: e.title || "mailchimp_error" };
+          if (!r.ok) {
+            const e = await r.json().catch(() => ({}));
+            return { mailchimp: false, error: e.title || "mailchimp_error" };
+          }
+          // Passo 2: adiciona tags separadamente (válido para contatos novos e existentes).
+          const tr = await fetch(`${mcBase}/members/${hash}/tags`, {
+            method: "POST",
+            headers: { "content-type": "application/json", authorization: auth },
+            body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
+          }).catch(() => null);
+          return { mailchimp: true, tags_ok: tr?.ok ?? false };
         }).catch(() => ({ mailchimp: false }))
       );
     }
