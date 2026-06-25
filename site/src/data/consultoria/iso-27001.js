@@ -4,7 +4,7 @@ export default {
   ...baseConsultoria,
   slug: "iso-27001",
   hero: {
-    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    titulo: ["Do diagnóstico à certificação ISO 27001 — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
     sub: "Certificamos sua empresa com garantia em contrato.",
     preco: "",
   },

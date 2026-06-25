@@ -4,7 +4,7 @@ export default {
   ...baseConsultoria,
   slug: "fssc-22000",
   hero: {
-    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    titulo: ["Do diagnóstico à certificação FSSC 22000 — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
     sub: "Certificamos sua empresa com garantia em contrato.",
     preco: "",
   },

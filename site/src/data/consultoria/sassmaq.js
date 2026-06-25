@@ -4,7 +4,7 @@ export default {
   ...baseConsultoria,
   slug: "sassmaq",
   hero: {
-    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    titulo: ["Do diagnóstico à certificação SASSMAQ — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
     sub: "Certificamos sua empresa com garantia em contrato.",
     preco: "",
   },

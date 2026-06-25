@@ -4,7 +4,7 @@ export default {
   ...baseConsultoria,
   slug: "esg",
   hero: {
-    titulo: ["Do diagnóstico à certificação — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
+    titulo: ["Do diagnóstico à certificação ESG — com consultores experientes e ", "tecnologia", " que acelera cada etapa."],
     sub: "Certificamos sua empresa com garantia em contrato.",
     preco: "",
   },
