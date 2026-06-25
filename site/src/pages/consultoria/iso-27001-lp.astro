@@ -1,0 +1,284 @@
+---
+import LpBase from "../../layouts/LpBase.astro";
+import SeloImplementando from "../../components/SeloImplementando.astro";
+import Especialistas from "../../components/Especialistas.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { normas } from "../../data/normas.js";
+import d from "../../data/consultoria/iso-27001.js";
+
+const slug = "iso-27001";
+const norma = normas.find((n) => n.slug === slug) || {};
+const c = norma.color || "var(--orange)";
+const heroGarantia = d.hero.garantia || d.garantiaPadrao;
+const heroChips = d.hero.chips || d.chipsPadrao || [];
+---
+
+<LpBase
+  title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`}
+  description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`}
+  formAnchor="#contato"
+>
+  <div class="cs-page" style={`--accent:${c}`}>
+    <!-- HERO (escuro, foto da norma) -->
+    <section class="cs-hero">
+      <div class="cs-hero-bg" aria-hidden="true"></div>
+      <div class="container xl cs-hero-grid">
+        <div class="cs-hero-text">
+          <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
+          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <p class="cs-sub">{d.hero.sub}</p>
+          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
+          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+        </div>
+        <div class="cs-hero-form">
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-27001-obrigado" simples={true} />
+        </div>
+      </div>
+    </section>
+
+    <!-- MOTIVOS + BENEFÍCIOS (claro) -->
+    {d.motivos && d.motivos.length > 0 && (
+      <section class="section section--cream">
+        <div class="container xl">
+          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Motivos para conquistar a <em class="accent">{norma.nome}</em></h2></div>
+          <div class="cs-motivos">
+            {d.motivos.map((m, i) => (
+              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+            ))}
+          </div>
+          {d.beneficios && d.beneficios.length > 0 && (
+            <div class="cs-benef">
+              <h3 class="cs-benef-h">Benefícios para a sua empresa</h3>
+              <ul class="check-list cs-benef-list">
+                {d.beneficios.map((b) => (
+                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- SELO (escuro) -->
+    <SeloImplementando />
+
+    <!-- MÉTODO 7 PASSOS (claro) -->
+    <section id="metodo" class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
+        <div class="step-grid">
+          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- POR QUE TEMPLUM (escuro) -->
+    <section class="section section--navy">
+      <div class="container lg">
+        <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
+        <div class="why-grid">
+          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- GARANTIA 200% (claro) -->
+    <section class="section">
+      <div class="container xl">
+        <div class="split">
+          <div class="split-text">
+            <span class="tag-pill">Garantia de 200%</span>
+            <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
+            <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
+            <a href="#contato" class="btn btn--primary btn--lg">Quero a garantia de 200% <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          </div>
+          <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS (claro) -->
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
+        <div class="numbers-grid cs-stats">
+          {d.stats.map((s) => <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- COBERTURA + MAPA (escuro) -->
+    <section class="cs-cover section--navy">
+      <div class="cs-cover-bg" aria-hidden="true"></div>
+      <div class="container md">
+        <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
+        <h2>De onde você estiver, <em class="accent">a Templum chega.</em></h2>
+        <p>{d.cobertura}</p>
+        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum — Brasil, Portugal e África" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS EM VÍDEO + NOTA GOOGLE (claro) -->
+    <Testimonials nota="4,9" ctaTexto="Quero Certificar minha empresa" ctaHref="#contato" />
+
+    <!-- DEPOIMENTOS EM TEXTO (cards laranja) -->
+    <DepoimentosTexto />
+
+    <!-- LOGOS DE CLIENTES (escuro) -->
+    <ClientLogos dark={true} titulo={`Empresas que certificaram a ${norma.nome} com a Templum`} />
+
+    <!-- PARA QUEM SERVE + O QUE ESTÁ INCLUSO (claro) -->
+    <section class="section section--cream">
+      <div class="container xl cs-pqi">
+        <div class="cs-pq">
+          <span class="tag-pill">Para quem serve</span>
+          <h2 class="h2">Para empresas de <em class="accent">qualquer setor</em></h2>
+          <p class="reg-l" style="margin:10px 0 22px">{d.detalhes.sub}</p>
+          <div class="cs-pq-grid">
+            {(d.paraQuem || []).map((s) => <div class="cs-pq-item"><iconify-icon icon={s.icon}></iconify-icon>{s.t}</div>)}
+          </div>
+        </div>
+        <div class="cs-incluso">
+          <span class="tag-pill">O que está incluso</span>
+          <ul class="check-list" style="margin-top:18px">
+            {(d.incluso || []).map((i) => <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESPECIALISTAS / SÓCIOS (escuro) -->
+    <Especialistas />
+
+    <!-- FAQ (claro) -->
+    <section class="section section--cream">
+      <div class="container md">
+        <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
+        <div class="faq-list">
+          {d.detalhes.faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULÁRIO (escuro) -->
+    <section id="contato" class="cs-form section--navy">
+      <div class="container lg cs-form-grid">
+        <div class="cs-form-pitch">
+          <span class="tag-pill tag-pill--glow">Comece agora</span>
+          <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <ul class="check-list">
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
+          </ul>
+        </div>
+        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-27001-obrigado" simples={true} />
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+      <div class="container md">
+        <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
+        <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
+        <a href="#contato" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+  </div>
+</LpBase>
+
+<style>
+  .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
+
+  .cs-page .cs-cover,
+  .cs-page .cs-form,
+  .cs-page .section--navy { background: color-mix(in srgb, var(--accent) 22%, #0f1216); }
+  .cs-page .cs-hero { background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 42%, #0c0e12) 0%, color-mix(in srgb, var(--accent) 20%, #0c0e12) 48%, #0c0e12 100%); }
+
+  .cs-page .section:not(.section--navy) .accent { color: var(--accent); font-style: italic; }
+  .cs-page .section:not(.section--navy) .tag-pill { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .cs-page .section:not(.section--navy) .number-card .value em { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .step-card .step-num { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .check-circle { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-question:hover { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
+
+  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
+  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .cs-hero-text { max-width: 600px; }
+  .cs-hero .tag-pill { margin-bottom: 20px; }
+  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .cs-hl { color: var(--accent-lt); }
+  .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
+  .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
+  .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
+  .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
+  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
+  .cs-hero-form { align-self: start; }
+  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-ver-metodo:hover { color: var(--accent-lt); }
+
+  .cs-stats { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .cs-stats { grid-template-columns: 1fr; } }
+
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .why-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 26px; }
+  .why-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 28px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 18px; }
+  .why-card h3 { font-size: 19px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
+  .why-card p { font-size: 14.5px; color: rgba(255,244,221,0.7); line-height: 1.6; }
+
+  .cs-motivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 12px; }
+  @media (max-width: 880px) { .cs-motivos { grid-template-columns: 1fr; } }
+  .cs-motivo { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
+  .cs-motivo-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 16px; }
+  .cs-motivo h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .cs-motivo p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+  .cs-benef { margin-top: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px clamp(24px,4vw,40px); }
+  .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
+  .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+  @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
+
+  .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
+  .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
+  .cs-cover .container { position: relative; z-index: 1; }
+  .cs-cover-ico { width: 64px; height: 64px; border-radius: var(--r-20); display: inline-grid; place-items: center; font-size: 32px; margin-bottom: 20px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+  .cs-cover h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; }
+  .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 600px; margin: 14px auto 0; line-height: 1.6; }
+  .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
+
+  .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cs-pq-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-12); padding: 14px 16px; font-size: 14.5px; font-weight: 600; color: var(--text); }
+  .cs-pq-item iconify-icon { font-size: 22px; }
+  .cs-incluso { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px; box-shadow: var(--shadow-card); }
+  @media (max-width: 880px) { .cs-pqi { grid-template-columns: 1fr; } .cs-pq-grid { grid-template-columns: 1fr; } }
+
+  .cs-form { padding: 88px 0; position: relative; overflow: hidden; }
+  .cs-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; position: relative; z-index: 1; }
+  .cs-form-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.12; }
+  .cs-form-pitch > p { font-size: 16px; color: rgba(255,244,221,0.75); line-height: 1.6; margin-bottom: 22px; max-width: 460px; }
+  .cs-form-pitch .check-item { color: var(--cream); }
+  @media (max-width: 880px) { .cs-form-grid { grid-template-columns: 1fr; } }
+
+  @media (max-width: 900px) {
+    .cs-hero-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .cs-chips { gap: 12px; }
+  }
+</style>
