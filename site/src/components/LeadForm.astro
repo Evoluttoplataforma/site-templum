@@ -11,6 +11,7 @@ const {
   titulo = "Fale com um especialista",
   sub = "Resposta em até 1 dia útil. Sem compromisso.",
   cta = "Quero meu diagnóstico gratuito",
+  obrigado = "",   // ex: "/consultoria/iso-9001-obrigado" — sobrescreve o /obrigado padrão
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
@@ -20,7 +21,7 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
 <div class="lead-card">
   <div class="lead-title">{titulo}</div>
   <p class="lead-sub">{sub}</p>
-  <form class="form" data-trk-event="lead" novalidate>
+  <form class="form" data-trk-event="lead" novalidate data-obrigado={obrigado || undefined}>
     {norma && <input type="hidden" name="norma" value={norma} />}
     <div class="form-row">
       <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>

@@ -1,487 +1,284 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
+import SeloImplementando from "../../components/SeloImplementando.astro";
+import Especialistas from "../../components/Especialistas.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
-import data from "../../data/consultoria/iso-9001.js";
+import { normas } from "../../data/normas.js";
+import d from "../../data/consultoria/iso-9001.js";
 
-const norma = "ISO 9001";
+const slug = "iso-9001";
+const norma = normas.find((n) => n.slug === slug) || {};
+const c = norma.color || "var(--orange)";
+const heroGarantia = d.hero.garantia || d.garantiaPadrao;
+const heroChips = d.hero.chips || d.chipsPadrao || [];
 ---
 
 <LpBase
-  title="Consultoria ISO 9001 com Garantia de 200% — Templum"
-  description="Certifique sua empresa na ISO 9001 com a Templum: método próprio, consultores dedicados e garantia em contrato — certifique ou receba o dobro de volta."
-  formAnchor="#form"
+  title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`}
+  description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`}
+  formAnchor="#contato"
 >
-
-  <!-- ══════════════════════════════════════════════
-       HERO (dark + gradiente laranja)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-hero">
-    <div class="lp-hero-glow" aria-hidden="true"></div>
-    <div class="lp-hero-inner">
-      <div class="lp-hero-text">
-        <span class="lp-badge">Consultoria · Gestão da Qualidade</span>
-        <h1>Certifique sua empresa na <em>ISO 9001</em> — com garantia em contrato</h1>
-        <p class="lp-hero-sub">Do diagnóstico à auditoria, a Templum conduz todo o processo. Você não precisa saber nada sobre a norma para começar.</p>
-        <ul class="lp-hero-checks">
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Consultor dedicado, sem limite de horas</li>
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Todos os documentos elaborados por nós</li>
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Garantia de 200%: certifique ou devolvemos o dobro</li>
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Atendimento 100% online, em todo o Brasil</li>
-        </ul>
-        <div class="lp-hero-trust">
-          <div class="lp-trust-item"><strong>+30</strong><span>anos de experiência</span></div>
-          <div class="lp-trust-sep"></div>
-          <div class="lp-trust-item"><strong>+2.000</strong><span>empresas certificadas</span></div>
-          <div class="lp-trust-sep"></div>
-          <div class="lp-trust-item"><strong>4,9 ★</strong><span>no Google</span></div>
+  <div class="cs-page" style={`--accent:${c}`}>
+    <!-- HERO (escuro, foto da norma) -->
+    <section class="cs-hero">
+      <div class="cs-hero-bg" aria-hidden="true"></div>
+      <div class="container xl cs-hero-grid">
+        <div class="cs-hero-text">
+          <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
+          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <p class="cs-sub">{d.hero.sub}</p>
+          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
+          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+        </div>
+        <div class="cs-hero-form">
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" />
         </div>
       </div>
-      <div id="form" class="lp-hero-form">
-        <LeadForm
-          norma={norma}
-          titulo="Receba um diagnóstico gratuito"
-          sub="Preencha e um especialista entra em contato em até 1 hora útil."
-          cta="Quero meu diagnóstico gratuito"
-        />
-        <!-- Sobrescreve destino do form via atributo -->
-        <script is:inline>
-          document.addEventListener("DOMContentLoaded", function () {
-            var forms = document.querySelectorAll(".lp-hero-form form[data-trk-event]");
-            forms.forEach(function (f) { f.setAttribute("data-obrigado", "/consultoria/iso-9001-obrigado"); });
-          });
-        </script>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ══════════════════════════════════════════════
-       BARRA DE NÚMEROS (escuro)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-stats">
-    <div class="lp-stats-inner">
-      {data.stats.map((s) => (
-        <div class="lp-stat-item">
-          <strong>{s.num}</strong>
-          <span>{s.label}</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       POR QUE CERTIFICAR (creme)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-section lp-section--cream">
-    <div class="lp-container">
-      <div class="lp-sec-header">
-        <span class="lp-tag">Por que certificar</span>
-        <h2>O que a ISO 9001 faz pela <em>sua empresa</em></h2>
-        <p>Mais do que um certificado na parede — é a base operacional que permite crescer sem perder qualidade.</p>
-      </div>
-      <div class="lp-motivos">
-        {data.motivos.slice(0, 6).map((m, i) => (
-          <div class="lp-motivo reveal">
-            <span class="lp-motivo-n">{String(i + 1).padStart(2, "0")}</span>
-            <h3>{m.t}</h3>
-            <p>{m.d}</p>
+    <!-- MOTIVOS + BENEFÍCIOS (claro) -->
+    {d.motivos && d.motivos.length > 0 && (
+      <section class="section section--cream">
+        <div class="container xl">
+          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Motivos para conquistar a <em class="accent">{norma.nome}</em></h2></div>
+          <div class="cs-motivos">
+            {d.motivos.map((m, i) => (
+              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       O QUE ESTÁ INCLUSO (escuro)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-section lp-section--navy">
-    <div class="lp-container lp-incluso-grid">
-      <div class="lp-incluso-text">
-        <span class="lp-tag lp-tag--glow">O que você recebe</span>
-        <h2>Tudo o que precisa para <em>certificar com segurança</em></h2>
-        <p>Sem surpresas, sem terceirizar decisões para você. A Templum entrega o processo completo.</p>
-        <a href="#form" class="btn btn--primary btn--lg lp-cta-scroll">
-          Quero começar agora <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
-        </a>
-      </div>
-      <ul class="lp-incluso-list">
-        {data.incluso.map((item) => (
-          <li class="lp-incluso-item reveal">
-            <span class="lp-check-ico"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       GARANTIA 200% (laranja)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-garantia">
-    <div class="lp-container lp-garantia-inner">
-      <div class="lp-garantia-badge">
-        <iconify-icon icon="solar:shield-check-bold"></iconify-icon>
-        <span>Garantia<br />200%</span>
-      </div>
-      <div class="lp-garantia-text">
-        <h2>Certificação garantida — ou o dobro do dinheiro de volta</h2>
-        <p>Somos a única consultoria no Brasil com essa garantia em contrato. Se você seguir o nosso método e ainda assim não certificar, devolvemos 200% do valor investido. Sem asteriscos.</p>
-        <a href="#form" class="btn btn--dark btn--lg">Quero a garantia em contrato <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       7 PASSOS (creme)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-section lp-section--cream">
-    <div class="lp-container">
-      <div class="lp-sec-header">
-        <span class="lp-tag">Como funciona</span>
-        <h2>7 passos até a sua <em>certificação ISO 9001</em></h2>
-        <p>Um método à prova de falhas, com checkpoints obrigatórios e consultor disponível todos os dias.</p>
-      </div>
-      <div class="lp-passos">
-        {data.passos.map((p, i) => (
-          <div class="lp-passo reveal">
-            <span class="lp-passo-n">{String(i + 1).padStart(2, "0")}</span>
-            <div>
-              <h3>{p.t}</h3>
-              <p>{p.d}</p>
+          {d.beneficios && d.beneficios.length > 0 && (
+            <div class="cs-benef">
+              <h3 class="cs-benef-h">Benefícios para a sua empresa</h3>
+              <ul class="check-list cs-benef-list">
+                {d.beneficios.map((b) => (
+                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
+                ))}
+              </ul>
             </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- SELO (escuro) -->
+    <SeloImplementando />
+
+    <!-- MÉTODO 7 PASSOS (claro) -->
+    <section id="metodo" class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
+        <div class="step-grid">
+          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- POR QUE TEMPLUM (escuro) -->
+    <section class="section section--navy">
+      <div class="container lg">
+        <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
+        <div class="why-grid">
+          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- GARANTIA 200% (claro) -->
+    <section class="section">
+      <div class="container xl">
+        <div class="split">
+          <div class="split-text">
+            <span class="tag-pill">Garantia de 200%</span>
+            <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
+            <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
+            <a href="#contato" class="btn btn--primary btn--lg">Quero a garantia de 200% <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           </div>
-        ))}
+          <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ══════════════════════════════════════════════
-       FAQ (branco)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-section">
-    <div class="lp-container lp-container--sm">
-      <div class="lp-sec-header">
-        <span class="lp-tag">Dúvidas frequentes</span>
-        <h2>Tudo sobre a <em>ISO 9001</em></h2>
+    <!-- STATS (claro) -->
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
+        <div class="numbers-grid cs-stats">
+          {d.stats.map((s) => <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>)}
+        </div>
       </div>
-      <div class="lp-faq">
-        {data.detalhes.faq.map((f) => (
-          <details class="lp-faq-item">
-            <summary class="lp-faq-q">{f.q}<span class="lp-faq-ico">+</span></summary>
-            <div class="lp-faq-a">{f.a}</div>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ══════════════════════════════════════════════
-       FORMULÁRIO FINAL (escuro)
-  ════════════════════════════════════════════════ -->
-  <section class="lp-section lp-section--navy lp-form-section">
-    <div class="lp-container lp-form-grid">
-      <div class="lp-form-pitch">
-        <span class="lp-tag lp-tag--glow">Comece hoje</span>
-        <h2>Receba um <em>diagnóstico gratuito</em> da sua certificação ISO 9001</h2>
-        <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
-        <ul class="lp-form-checks">
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Diagnóstico e cronograma sob medida</li>
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Resposta em até 1 hora útil</li>
-          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Sem compromisso</li>
-        </ul>
+    <!-- COBERTURA + MAPA (escuro) -->
+    <section class="cs-cover section--navy">
+      <div class="cs-cover-bg" aria-hidden="true"></div>
+      <div class="container md">
+        <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
+        <h2>De onde você estiver, <em class="accent">a Templum chega.</em></h2>
+        <p>{d.cobertura}</p>
+        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum — Brasil, Portugal e África" loading="lazy" />
       </div>
-      <div class="lp-form-wrap">
-        <LeadForm
-          norma={norma}
-          titulo="Fale com um especialista"
-          sub="Preencha e entramos em contato."
-          cta="Quero meu diagnóstico"
-        />
-        <script is:inline>
-          document.addEventListener("DOMContentLoaded", function () {
-            var forms = document.querySelectorAll(".lp-form-wrap form[data-trk-event]");
-            forms.forEach(function (f) { f.setAttribute("data-obrigado", "/consultoria/iso-9001-obrigado"); });
-          });
-        </script>
-      </div>
-    </div>
-  </section>
+    </section>
 
+    <!-- DEPOIMENTOS EM VÍDEO + NOTA GOOGLE (claro) -->
+    <Testimonials nota="4,9" />
+
+    <!-- DEPOIMENTOS EM TEXTO (cards laranja) -->
+    <DepoimentosTexto />
+
+    <!-- LOGOS DE CLIENTES (escuro) -->
+    <ClientLogos dark={true} titulo={`Empresas que certificaram a ${norma.nome} com a Templum`} />
+
+    <!-- PARA QUEM SERVE + O QUE ESTÁ INCLUSO (claro) -->
+    <section class="section section--cream">
+      <div class="container xl cs-pqi">
+        <div class="cs-pq">
+          <span class="tag-pill">Para quem serve</span>
+          <h2 class="h2">Para empresas de <em class="accent">qualquer setor</em></h2>
+          <p class="reg-l" style="margin:10px 0 22px">{d.detalhes.sub}</p>
+          <div class="cs-pq-grid">
+            {(d.paraQuem || []).map((s) => <div class="cs-pq-item"><iconify-icon icon={s.icon}></iconify-icon>{s.t}</div>)}
+          </div>
+        </div>
+        <div class="cs-incluso">
+          <span class="tag-pill">O que está incluso</span>
+          <ul class="check-list" style="margin-top:18px">
+            {(d.incluso || []).map((i) => <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESPECIALISTAS / SÓCIOS (escuro) -->
+    <Especialistas />
+
+    <!-- FAQ (claro) -->
+    <section class="section section--cream">
+      <div class="container md">
+        <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
+        <div class="faq-list">
+          {d.detalhes.faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULÁRIO (escuro) -->
+    <section id="contato" class="cs-form section--navy">
+      <div class="container lg cs-form-grid">
+        <div class="cs-form-pitch">
+          <span class="tag-pill tag-pill--glow">Comece agora</span>
+          <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <ul class="check-list">
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
+          </ul>
+        </div>
+        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" />
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+      <div class="container md">
+        <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
+        <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
+        <a href="#contato" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+  </div>
 </LpBase>
 
 <style>
-  /* ── TOKENS LP ── */
-  :root {
-    --lp-accent: var(--norm-iso9001, var(--orange));
-  }
+  .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
 
-  /* ── HERO ── */
-  .lp-hero {
-    position: relative;
-    background: var(--navy);
-    padding: clamp(48px, 7vw, 88px) clamp(16px, 4vw, 40px);
-    overflow: hidden;
-  }
-  .lp-hero-glow {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(720px 420px at 0% 0%, color-mix(in srgb, var(--lp-accent) 28%, transparent), transparent 65%),
-      radial-gradient(480px 320px at 100% 100%, color-mix(in srgb, var(--lp-accent) 14%, transparent), transparent 60%);
-  }
-  .lp-hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: clamp(32px, 5vw, 72px);
-    align-items: start;
-  }
-  .lp-badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--lp-accent);
-    background: color-mix(in srgb, var(--lp-accent) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--lp-accent) 35%, transparent);
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 20px;
-  }
-  .lp-hero-text h1 {
-    font-size: clamp(30px, 4vw, 52px);
-    font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    color: var(--cream);
-    margin-bottom: 18px;
-  }
-  .lp-hero-text h1 em { font-style: normal; color: var(--lp-accent); }
-  .lp-hero-sub {
-    font-size: 17px;
-    color: rgba(255,244,221,0.78);
-    line-height: 1.65;
-    max-width: 520px;
-    margin-bottom: 26px;
-  }
-  .lp-hero-checks {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .lp-hero-checks li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    color: rgba(255,244,221,0.88);
-  }
-  .lp-hero-checks iconify-icon { font-size: 20px; color: var(--lp-accent); flex-shrink: 0; }
+  .cs-page .cs-cover,
+  .cs-page .cs-form,
+  .cs-page .section--navy { background: color-mix(in srgb, var(--accent) 22%, #0f1216); }
+  .cs-page .cs-hero { background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 42%, #0c0e12) 0%, color-mix(in srgb, var(--accent) 20%, #0c0e12) 48%, #0c0e12 100%); }
 
-  .lp-hero-trust {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(255,244,221,0.12);
-    flex-wrap: wrap;
-  }
-  .lp-trust-item { display: flex; flex-direction: column; }
-  .lp-trust-item strong { font-size: 22px; font-weight: 800; color: var(--cream); line-height: 1.1; }
-  .lp-trust-item span { font-size: 12px; color: rgba(255,244,221,0.52); margin-top: 2px; }
-  .lp-trust-sep { width: 1px; height: 36px; background: rgba(255,244,221,0.15); }
+  .cs-page .section:not(.section--navy) .accent { color: var(--accent); font-style: italic; }
+  .cs-page .section:not(.section--navy) .tag-pill { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .cs-page .section:not(.section--navy) .number-card .value em { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .step-card .step-num { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .check-circle { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-question:hover { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
 
-  .lp-hero-form { align-self: start; position: sticky; top: 80px; }
+  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
+  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .cs-hero-text { max-width: 600px; }
+  .cs-hero .tag-pill { margin-bottom: 20px; }
+  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .cs-hl { color: var(--accent-lt); }
+  .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
+  .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
+  .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
+  .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
+  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
+  .cs-hero-form { align-self: start; }
+  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-ver-metodo:hover { color: var(--accent-lt); }
 
-  @media (max-width: 880px) {
-    .lp-hero-inner { grid-template-columns: 1fr; }
-    .lp-hero-form { position: static; }
-  }
+  .cs-stats { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .cs-stats { grid-template-columns: 1fr; } }
 
-  /* ── STATS BAR ── */
-  .lp-stats {
-    background: color-mix(in srgb, var(--lp-accent) 18%, #0c0e12);
-    padding: 28px clamp(16px, 4vw, 40px);
-  }
-  .lp-stats-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    flex-wrap: wrap;
-    text-align: center;
-  }
-  .lp-stat-item { display: flex; flex-direction: column; gap: 4px; }
-  .lp-stat-item strong { font-size: clamp(22px, 3vw, 32px); font-weight: 800; color: var(--cream); line-height: 1; }
-  .lp-stat-item span { font-size: 13px; color: rgba(255,244,221,0.6); }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .why-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 26px; }
+  .why-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 28px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 18px; }
+  .why-card h3 { font-size: 19px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
+  .why-card p { font-size: 14.5px; color: rgba(255,244,221,0.7); line-height: 1.6; }
 
-  /* ── SEÇÕES ── */
-  .lp-section { padding: clamp(56px, 8vw, 96px) clamp(16px, 4vw, 40px); }
-  .lp-section--cream { background: var(--cream, #FFFAEB); }
-  .lp-section--navy { background: var(--navy); }
-  .lp-container { max-width: 1200px; margin: 0 auto; }
-  .lp-container--sm { max-width: 780px; }
+  .cs-motivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 12px; }
+  @media (max-width: 880px) { .cs-motivos { grid-template-columns: 1fr; } }
+  .cs-motivo { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
+  .cs-motivo-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 16px; }
+  .cs-motivo h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .cs-motivo p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+  .cs-benef { margin-top: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px clamp(24px,4vw,40px); }
+  .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
+  .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+  @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
 
-  .lp-sec-header { text-align: center; max-width: 680px; margin: 0 auto 48px; }
-  .lp-tag {
-    display: inline-block;
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--lp-accent);
-    background: color-mix(in srgb, var(--lp-accent) 10%, transparent);
-    border: 1px solid color-mix(in srgb, var(--lp-accent) 30%, transparent);
-    padding: 4px 14px; border-radius: 100px; margin-bottom: 16px;
-  }
-  .lp-tag--glow { box-shadow: 0 0 12px color-mix(in srgb, var(--lp-accent) 30%, transparent); }
-  .lp-sec-header h2 {
-    font-size: clamp(26px, 3.4vw, 42px); font-weight: 800; line-height: 1.1;
-    letter-spacing: -0.025em; margin-bottom: 14px;
-  }
-  .lp-section--cream .lp-sec-header h2 { color: var(--navy); }
-  .lp-section--navy .lp-sec-header h2 { color: var(--cream); }
-  .lp-sec-header h2 em { font-style: normal; color: var(--lp-accent); }
-  .lp-sec-header p { font-size: 16px; line-height: 1.65; color: var(--text-mid, #555); }
-  .lp-section--navy .lp-sec-header p { color: rgba(255,244,221,0.65); }
+  .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
+  .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
+  .cs-cover .container { position: relative; z-index: 1; }
+  .cs-cover-ico { width: 64px; height: 64px; border-radius: var(--r-20); display: inline-grid; place-items: center; font-size: 32px; margin-bottom: 20px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+  .cs-cover h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; }
+  .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 600px; margin: 14px auto 0; line-height: 1.6; }
+  .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
 
-  /* ── MOTIVOS ── */
-  .lp-motivos {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  @media (max-width: 880px) { .lp-motivos { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .lp-motivos { grid-template-columns: 1fr; } }
-  .lp-motivo {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.07);
-    border-radius: 20px;
-    padding: 28px 26px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-  }
-  .lp-motivo-n {
-    display: inline-grid; place-items: center;
-    width: 40px; height: 40px; border-radius: 50%;
-    font-size: 16px; font-weight: 800;
-    color: var(--lp-accent);
-    background: color-mix(in srgb, var(--lp-accent) 12%, transparent);
-    margin-bottom: 14px;
-  }
-  .lp-motivo h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
-  .lp-motivo p { font-size: 14px; color: #555; line-height: 1.6; }
+  .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cs-pq-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-12); padding: 14px 16px; font-size: 14.5px; font-weight: 600; color: var(--text); }
+  .cs-pq-item iconify-icon { font-size: 22px; }
+  .cs-incluso { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px; box-shadow: var(--shadow-card); }
+  @media (max-width: 880px) { .cs-pqi { grid-template-columns: 1fr; } .cs-pq-grid { grid-template-columns: 1fr; } }
 
-  /* ── INCLUSO ── */
-  .lp-incluso-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(32px, 5vw, 72px);
-    align-items: center;
-  }
-  @media (max-width: 780px) { .lp-incluso-grid { grid-template-columns: 1fr; } }
-  .lp-incluso-text h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); line-height: 1.1; letter-spacing: -0.025em; margin: 14px 0 16px; }
-  .lp-incluso-text h2 em { font-style: normal; color: var(--lp-accent); }
-  .lp-incluso-text p { font-size: 16px; color: rgba(255,244,221,0.65); line-height: 1.6; margin-bottom: 28px; }
-  .lp-cta-scroll { display: inline-flex; align-items: center; gap: 8px; }
-  .lp-incluso-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
-  .lp-incluso-item {
-    display: flex; align-items: flex-start; gap: 14px;
-    font-size: 15px; font-weight: 500; color: rgba(255,244,221,0.9);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,244,221,0.10);
-    border-radius: 12px; padding: 14px 18px;
-  }
-  .lp-check-ico {
-    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-    display: grid; place-items: center;
-    font-size: 16px; color: var(--lp-accent);
-    background: color-mix(in srgb, var(--lp-accent) 15%, transparent);
-  }
+  .cs-form { padding: 88px 0; position: relative; overflow: hidden; }
+  .cs-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; position: relative; z-index: 1; }
+  .cs-form-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.12; }
+  .cs-form-pitch > p { font-size: 16px; color: rgba(255,244,221,0.75); line-height: 1.6; margin-bottom: 22px; max-width: 460px; }
+  .cs-form-pitch .check-item { color: var(--cream); }
+  @media (max-width: 880px) { .cs-form-grid { grid-template-columns: 1fr; } }
 
-  /* ── GARANTIA ── */
-  .lp-garantia {
-    background: var(--orange);
-    padding: clamp(48px, 7vw, 80px) clamp(16px, 4vw, 40px);
+  @media (max-width: 900px) {
+    .cs-hero-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  .lp-garantia-inner {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: clamp(28px, 4vw, 56px);
-    align-items: center;
+  @media (max-width: 600px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .cs-chips { gap: 12px; }
   }
-  @media (max-width: 680px) { .lp-garantia-inner { grid-template-columns: 1fr; text-align: center; } .lp-garantia-badge { margin: 0 auto; } }
-  .lp-garantia-badge {
-    width: 120px; height: 120px; border-radius: 50%;
-    background: rgba(0,0,0,0.18);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 4px; flex-shrink: 0;
-  }
-  .lp-garantia-badge iconify-icon { font-size: 36px; color: #fff; }
-  .lp-garantia-badge span { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; text-align: center; }
-  .lp-garantia-text h2 { font-size: clamp(24px, 3vw, 38px); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 14px; }
-  .lp-garantia-text p { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 24px; max-width: 580px; }
-  .btn--dark { background: #fff; color: var(--navy); }
-  .btn--dark:hover { background: var(--cream); }
-
-  /* ── PASSOS ── */
-  .lp-passos { display: flex; flex-direction: column; gap: 0; }
-  .lp-passo {
-    display: grid; grid-template-columns: 56px 1fr; gap: 20px; align-items: start;
-    padding: 22px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-  }
-  .lp-passo:last-child { border-bottom: none; }
-  .lp-passo-n {
-    display: grid; place-items: center;
-    width: 48px; height: 48px; border-radius: 50%;
-    font-size: 18px; font-weight: 800;
-    color: var(--lp-accent);
-    background: color-mix(in srgb, var(--lp-accent) 12%, transparent);
-    flex-shrink: 0; margin-top: 2px;
-  }
-  .lp-passo h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
-  .lp-passo p { font-size: 14.5px; color: #666; line-height: 1.6; }
-
-  /* ── FAQ ── */
-  .lp-faq { display: flex; flex-direction: column; gap: 0; }
-  .lp-faq-item {
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-  }
-  .lp-faq-q {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 20px 0; cursor: pointer;
-    font-size: 16px; font-weight: 700; color: var(--navy);
-    list-style: none;
-  }
-  .lp-faq-q::-webkit-details-marker { display: none; }
-  .lp-faq-ico {
-    font-size: 22px; font-weight: 300; color: var(--lp-accent); flex-shrink: 0;
-    transition: transform .2s;
-  }
-  .lp-faq-item[open] .lp-faq-ico { transform: rotate(45deg); }
-  .lp-faq-item[open] .lp-faq-q { color: var(--lp-accent); }
-  .lp-faq-a { font-size: 15px; color: #555; line-height: 1.7; padding-bottom: 20px; }
-
-  /* ── FORM FINAL ── */
-  .lp-form-section { padding-top: clamp(56px, 8vw, 96px); padding-bottom: clamp(56px, 8vw, 96px); }
-  .lp-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 0.95fr;
-    gap: clamp(32px, 5vw, 64px);
-    align-items: center;
-  }
-  @media (max-width: 880px) { .lp-form-grid { grid-template-columns: 1fr; } }
-  .lp-form-pitch h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; color: var(--cream); line-height: 1.1; letter-spacing: -0.025em; margin: 14px 0 14px; }
-  .lp-form-pitch h2 em { font-style: normal; color: var(--lp-accent); }
-  .lp-form-pitch > p { font-size: 16px; color: rgba(255,244,221,0.65); line-height: 1.6; margin-bottom: 22px; }
-  .lp-form-checks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
-  .lp-form-checks li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: rgba(255,244,221,0.85); }
-  .lp-form-checks iconify-icon { font-size: 20px; color: var(--lp-accent); flex-shrink: 0; }
 </style>
