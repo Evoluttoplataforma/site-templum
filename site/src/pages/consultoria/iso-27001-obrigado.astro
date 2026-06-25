@@ -65,10 +65,12 @@ import Base from "../../layouts/Base.astro";
       if (!raw) return;
       try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
       var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var PRODUCT = { content_name: 'ISO 27001', content_category: 'Segurança da Informação' };
       var done = false;
       function fire() {
         if (done) return; done = true;
-        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name, content_name: PRODUCT.content_name, content_category: PRODUCT.content_category }); } catch (_) {}
+        try { if (window.fbq) window.fbq('track', 'Lead', PRODUCT); } catch (_) {}
       }
       var n = 0, t = setInterval(function () {
         n++;
