@@ -252,7 +252,40 @@ async function handleLead(request, env) {
     }
   }
 
-  // 3) Google Sheets (webinar/webserie) — envia para o Apps Script Web App.
+  // 3) Supabase — grava todos os leads na tabela site_leads.
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_ANON_KEY;
+  if (sbKey) {
+    configured = true;
+    tasks.push(
+      fetch(`${sbUrl}/rest/v1/site_leads`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "apikey": sbKey,
+          "authorization": "Bearer " + sbKey,
+          "prefer": "return=minimal",
+        },
+        body: JSON.stringify({
+          nome: lead.nome, email, telefone: lead.telefone,
+          empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
+          funcionarios: lead.funcionarios, urgencia: lead.urgencia,
+          evento: lead.evento, pagina: lead.pagina,
+          utm_source: lead.utm_source, utm_medium: lead.utm_medium,
+          utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
+          utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
+          utm_campaign_ft: lead.utm_campaign_ft,
+          gclid: lead.gclid, fbclid: lead.fbclid,
+        }),
+      }).then(async (r) => {
+        if (r.ok) return { supabase: true };
+        const e = await r.text().catch(() => "");
+        return { supabase: false, error: e.slice(0, 120) };
+      }).catch(() => ({ supabase: false }))
+    );
+  }
+
+  // 4) Google Sheets (webinar/webserie) — envia para o Apps Script Web App.
   if (isWebinar && env.WEBSERIE_SHEET_URL) {
     configured = true;
     tasks.push(
