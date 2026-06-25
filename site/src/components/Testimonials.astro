@@ -1,7 +1,7 @@
 ---
 // Depoimentos em vídeo — carrossel + lightbox (Vimeo). Thumb automática do Vimeo.
 import { depoimentos } from "../data/depoimentos.js";
-const { nota } = Astro.props;
+const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso/" } = Astro.props;
 ---
 
 <section class="tm section--cream" data-carousel>
@@ -46,7 +46,7 @@ const { nota } = Astro.props;
   </div>
 
   <div class="tm-dots" data-dots></div>
-  <div class="tm-cta"><a href="/case-de-sucesso/" class="btn btn--dark btn--lg">Ver todos os depoimentos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+  <div class="tm-cta"><a href={ctaHref} class="btn btn--dark btn--lg">{ctaTexto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
 
   <!-- lightbox -->
   <div class="tm-lb" data-lightbox hidden>
