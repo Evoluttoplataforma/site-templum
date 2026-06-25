@@ -83,8 +83,7 @@ const allSchemas = schemas;
     <header class="lp-header">
       <div class="lp-header-inner">
         <span class="lp-logo">
-          <span class="lp-logo-t">Templum</span>
-          <span class="lp-logo-rest"> Consultoria</span>
+          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-logo-img" />
         </span>
         <div class="lp-header-right">
           <a href={formAnchor} class="btn btn--primary lp-cta-btn">
@@ -103,7 +102,7 @@ const allSchemas = schemas;
     <footer class="lp-footer">
       <div class="lp-footer-inner">
         <div class="lp-footer-brand">
-          <span class="lp-logo-t">Templum</span><span class="lp-logo-rest"> Consultoria</span>
+          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-footer-logo" />
           <p>Certificação ISO com garantia de 200%</p>
         </div>
         <div class="lp-footer-links">
@@ -264,9 +263,8 @@ const allSchemas = schemas;
     height: 64px;
     gap: 16px;
   }
-  .lp-logo { text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
-  .lp-logo-t { color: var(--orange); }
-  .lp-logo-rest { color: var(--cream); }
+  .lp-logo { display: flex; align-items: center; }
+  .lp-logo-img { height: 36px; width: auto; display: block; }
   .lp-header-right { display: flex; align-items: center; gap: 16px; }
   .lp-tel {
     display: inline-flex;
@@ -282,8 +280,7 @@ const allSchemas = schemas;
   .lp-tel:hover { color: var(--cream); }
   .lp-cta-btn { font-size: 14px; padding: 10px 20px; white-space: nowrap; }
   @media (max-width: 480px) {
-    .lp-logo { font-size: 17px; }
-    .lp-logo-rest { display: none; }
+    .lp-logo-img { height: 28px; }
     .lp-cta-btn { padding: 9px 14px; font-size: 13px; }
     .lp-cta-btn iconify-icon { display: none; }
   }
@@ -304,8 +301,7 @@ const allSchemas = schemas;
     flex-wrap: wrap;
   }
   .lp-footer-brand { display: flex; flex-direction: column; gap: 4px; }
-  .lp-footer-brand .lp-logo-t { font-size: 17px; font-weight: 800; }
-  .lp-footer-brand .lp-logo-rest { font-size: 17px; }
+  .lp-footer-logo { height: 28px; width: auto; display: block; }
   .lp-footer-brand p { font-size: 12px; color: rgba(255,244,221,0.45); margin: 2px 0 0; }
   .lp-footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
   .lp-footer-links a { font-size: 13px; color: rgba(255,244,221,0.5); text-decoration: none; transition: color .2s; }
