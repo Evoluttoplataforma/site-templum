@@ -12,6 +12,7 @@ const {
   sub = "Resposta em até 1 dia útil. Sem compromisso.",
   cta = "Quero meu diagnóstico gratuito",
   obrigado = "",   // ex: "/consultoria/iso-9001-obrigado" — sobrescreve o /obrigado padrão
+  simples = false, // true → oculta nº funcionários, cargo e urgência
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
@@ -30,30 +31,34 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
     <div class="form-row">
       <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
-      <div class="field">
-        <label>Nº de funcionários</label>
-        <select class="select" name="funcionarios" aria-label="Nº de funcionários">
-          <option value="">Selecione</option>
-          {funcionarios.map((f) => <option value={f}>{f}</option>)}
-        </select>
-      </div>
+      {!simples && (
+        <div class="field">
+          <label>Nº de funcionários</label>
+          <select class="select" name="funcionarios" aria-label="Nº de funcionários">
+            <option value="">Selecione</option>
+            {funcionarios.map((f) => <option value={f}>{f}</option>)}
+          </select>
+        </div>
+      )}
     </div>
-    <div class="form-row">
-      <div class="field">
-        <label>Seu cargo</label>
-        <select class="select" name="cargo" aria-label="Seu cargo">
-          <option value="">Selecione</option>
-          {cargos.map((c) => <option value={c}>{c}</option>)}
-        </select>
+    {!simples && (
+      <div class="form-row">
+        <div class="field">
+          <label>Seu cargo</label>
+          <select class="select" name="cargo" aria-label="Seu cargo">
+            <option value="">Selecione</option>
+            {cargos.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label>Qual sua urgência?</label>
+          <select class="select" name="urgencia" aria-label="Qual sua urgência?">
+            <option value="">Selecione</option>
+            {urgencias.map((u) => <option value={u}>{u}</option>)}
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label>Qual sua urgência?</label>
-        <select class="select" name="urgencia" aria-label="Qual sua urgência?">
-          <option value="">Selecione</option>
-          {urgencias.map((u) => <option value={u}>{u}</option>)}
-        </select>
-      </div>
-    </div>
+    )}
     {!norma && (
       <div class="field">
         <label>Qual norma você busca?</label>
