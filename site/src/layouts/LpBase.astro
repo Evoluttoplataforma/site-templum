@@ -1,66 +1,21 @@
 ---
 import "../styles/global.css";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
 import TrackingKit from "../components/TrackingKit.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
   description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
   ogImage = "/assets/og/templum-og.jpg",
-  noHeaderFooter = false,
-  hideWpp = false,
-  noindex = false,
+  noindex = true,
+  formAnchor = "#form",
   schemas = [],
-  preloadImage = "",
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-// og:image precisa ser URL ABSOLUTA (WhatsApp/Facebook ignoram caminho relativo).
 const ogImageUrl = new URL(ogImage, Astro.site).href;
 
-// --- JSON-LD (Schema.org) — entidade + site, em todas as páginas (AIEO/GEO) ---
-const orgSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${SITE}/#organization`,
-  name: "Templum Consultoria",
-  alternateName: "Templum",
-  url: `${SITE}/`,
-  logo: { "@type": "ImageObject", url: `${SITE}/assets/logo/templum.png` },
-  image: `${SITE}/assets/og/templum-og.jpg`,
-  description:
-    "Consultoria de certificações ISO com método próprio e garantia de 200%: há mais de 30 anos organiza a gestão de empresas do diagnóstico à auditoria, com atendimento 100% online em todo o Brasil.",
-  slogan: "Certificação ISO com garantia de 200%",
-  areaServed: { "@type": "Country", name: "Brasil" },
-  knowsAbout: [
-    "ISO 9001", "ISO 14001", "ISO 27001", "ISO 45001", "ISO 37001", "PBQP-H",
-    "FSSC 22000", "HACCP", "ESG", "SGI", "SASSMAQ", "LGPD",
-    "Certificação ISO", "Auditoria interna", "Sistema de gestão",
-  ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    telephone: "+55-19-99352-1270",
-    contactType: "customer service",
-    areaServed: "BR",
-    availableLanguage: ["Portuguese"],
-  },
-  sameAs: [
-    "https://www.instagram.com/templumconsultoriailimitada/",
-    "https://www.linkedin.com/company/3033783/",
-  ],
-};
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": `${SITE}/#website`,
-  url: `${SITE}/`,
-  name: "Templum Consultoria",
-  inLanguage: "pt-BR",
-  publisher: { "@id": `${SITE}/#organization` },
-};
-const allSchemas = [orgSchema, websiteSchema, ...schemas];
+const allSchemas = schemas;
 ---
 
 <!doctype html>
@@ -69,8 +24,6 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Tracking (Clarity + GA4 x2 + Google Ads + tracking-kit) carregado SÓ na 1ª
-         interação do usuário (ou ocioso pós-load) → fora do caminho crítico de render. -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       window.gtag = function(){ dataLayer.push(arguments); };
@@ -78,15 +31,12 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         var done = false;
         function boot() {
           if (done) return; done = true;
-          // Microsoft Clarity
           (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","sr5nwfj8jc");
-          // Google gtag (GA4 x2 + Ads)
           var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5";document.head.appendChild(g);
           gtag("js", new Date());
           gtag("config","G-2BW8QTYLB5",{send_page_view:false});
           gtag("config","G-FV41GWD427",{send_page_view:false});
           gtag("config","AW-17896226473");
-          // tracking-kit (definido em TrackingKit.astro)
           if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
         }
         var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
@@ -107,54 +57,66 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Templum Consultoria" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:secure_url" content={ogImageUrl} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Templum Consultoria — Certificação ISO com garantia de 200%" />
     <meta property="og:locale" content="pt_BR" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Schema.org JSON-LD (Organization + WebSite + schemas da página) -->
     {allSchemas.map((s) => (
       <script type="application/ld+json" set:html={JSON.stringify(s)} />
     ))}
 
-    <!-- Montserrat (Medium / SemiBold / Bold / Extrabold) -->
-    <!-- Montserrat self-hosted: preload dos pesos-chave (corpo 500, título 800).
-         @font-face em fonts.css. Sem CSS externo bloqueante, sem CLS. -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
-    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
 
-    <!-- Ícones (Iconify) — defer p/ não bloquear o render -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" defer is:inline></script>
 
-    <!-- Tracking (tracking-kit) -->
     <TrackingKit />
   </head>
   <body>
-    {!noHeaderFooter && <Header />}
+
+    <!-- ── HEADER LP ── -->
+    <header class="lp-header">
+      <div class="lp-header-inner">
+        <a href="https://templum.com.br" class="lp-logo" aria-label="Templum Consultoria">
+          <span class="lp-logo-t">Templum</span>
+          <span class="lp-logo-rest"> Consultoria</span>
+        </a>
+        <div class="lp-header-right">
+          <a href="tel:+551999352-1270" class="lp-tel">
+            <iconify-icon icon="solar:phone-calling-bold"></iconify-icon>
+            <span>(19) 99352-1270</span>
+          </a>
+          <a href={formAnchor} class="btn btn--primary lp-cta-btn">
+            Falar com especialista
+            <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </a>
+        </div>
+      </div>
+    </header>
+
     <main>
       <slot />
     </main>
-    {!noHeaderFooter && <Footer />}
-    {!noHeaderFooter && !hideWpp && (
-      <a class="whatsapp-float" href="https://wa.me/5519993521270" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
-        <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon>
-      </a>
-    )}
+
+    <!-- ── FOOTER LP ── -->
+    <footer class="lp-footer">
+      <div class="lp-footer-inner">
+        <div class="lp-footer-brand">
+          <span class="lp-logo-t">Templum</span><span class="lp-logo-rest"> Consultoria</span>
+          <p>Certificação ISO com garantia de 200%</p>
+        </div>
+        <div class="lp-footer-links">
+          <a href="https://templum.com.br">templum.com.br</a>
+          <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a>
+          <a href="tel:+5519993521270">(19) 99352-1270</a>
+        </div>
+      </div>
+    </footer>
 
     <!-- Reveal on scroll -->
     <script is:inline>
@@ -167,10 +129,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add("is-in");
-                io.unobserve(e.target);
-              }
+              if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
             });
           },
           { threshold: 0.12 }
@@ -179,8 +138,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       })();
     </script>
 
-    <!-- Atribuição: UTMs + click-ids (Google/Meta) first/last-touch, fbp/fbc,
-         client_id (visitante), session_id e session_attributes. window.__tplAttrib(). -->
+    <!-- Atribuição UTM + click-ids -->
     <script is:inline>
       (function () {
         var KEYS = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid","gad_source","gad_campaignid","msclkid","ttclid"];
@@ -201,8 +159,8 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           var f = {}, l = {};
           try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
           try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
-          function g(k) { return l[k] || f[k] || ""; } // last-touch (com fallback p/ first)
-          function ft(k) { return f[k] || ""; }          // first-touch (original)
+          function g(k) { return l[k] || f[k] || ""; }
+          function ft(k) { return f[k] || ""; }
           var sa = {
             device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop",
             language: navigator.language || "",
@@ -216,13 +174,11 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           return {
             client_id: localStorage.getItem("tpl_cid") || "",
             session_id: sessionStorage.getItem("tpl_sid") || "",
-            // last-touch
             utm_source: g("utm_source"), utm_medium: g("utm_medium"), utm_campaign: g("utm_campaign"),
             utm_term: g("utm_term"), utm_content: g("utm_content"),
             gclid: g("gclid"), fbclid: g("fbclid"), gbraid: g("gbraid"), wbraid: g("wbraid"),
             gad_source: g("gad_source"), gad_campaignid: g("gad_campaignid"),
             msclkid: g("msclkid"), ttclid: g("ttclid"),
-            // first-touch
             utm_source_ft: ft("utm_source"), utm_medium_ft: ft("utm_medium"), utm_campaign_ft: ft("utm_campaign"),
             utm_term_ft: ft("utm_term"), utm_content_ft: ft("utm_content"),
             gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"), gbraid_ft: ft("gbraid"), wbraid_ft: ft("wbraid"),
@@ -236,33 +192,16 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       })();
     </script>
 
-    <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
-         Mailchimp + webhook), dispara a conversão no tracking-kit e redireciona.
-         Vale para qualquer form[data-trk-event]. data-trk-event="denuncia"
-         não é enviado ao Mailchimp/webhook nem ao tracking (apenas UI). -->
+    <!-- Handler formulários (igual ao Base.astro) -->
     <script is:inline>
       document.addEventListener("submit", function (e) {
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
         if (!form) return;
         e.preventDefault();
         if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
-
         var evt = form.getAttribute("data-trk-event");
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
-
-        // Denúncia: confirmação na própria página (sensível) — sem envio/tracking.
-        if (evt === "denuncia") {
-          form.hidden = true;
-          var scopeD = form.parentElement || document;
-          var okD = scopeD.querySelector(".form-success");
-          if (okD) okD.hidden = false;
-          return;
-        }
-
-        // Conversão (evento Lead): guardamos os dados e disparamos na /obrigado.
-        // Fazer aqui correria com o redirect (400ms) e o Pixel Helper só veria o
-        // PageView da /obrigado. Disparar na thank-you page é confiável e visível.
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
@@ -281,10 +220,6 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
             }, (window.__tplAttrib && window.__tplAttrib()) || {})),
           });
         } catch (_) {}
-
-        // Feedback imediato no botão e redireciona para a página de obrigado
-        // (a conversão conta no pageview da /obrigado). keepalive garante o envio.
-        // data-obrigado="/<pagina>" sobrescreve o destino padrão.
         var btn = form.querySelector('[type="submit"]');
         if (btn) { btn.disabled = true; }
         var destino = form.getAttribute("data-obrigado") || "/obrigado";
@@ -292,6 +227,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       });
     </script>
 
+    <!-- Máscara telefone -->
     <script is:inline>
       document.addEventListener("input", function (e) {
         var el = e.target;
@@ -307,5 +243,74 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         el.value = mask;
       });
     </script>
+
   </body>
 </html>
+
+<style is:global>
+  html, body { scroll-behavior: smooth; }
+
+  /* ── HEADER LP ── */
+  .lp-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--navy);
+    border-bottom: 1px solid rgba(255,244,221,0.10);
+    padding: 0 clamp(16px, 4vw, 40px);
+  }
+  .lp-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+  }
+  .lp-logo { text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+  .lp-logo-t { color: var(--orange); }
+  .lp-logo-rest { color: var(--cream); }
+  .lp-header-right { display: flex; align-items: center; gap: 16px; }
+  .lp-tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,244,221,0.75);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .lp-tel iconify-icon { font-size: 18px; color: var(--orange); }
+  .lp-tel:hover { color: var(--cream); }
+  .lp-cta-btn { font-size: 14px; padding: 10px 20px; white-space: nowrap; }
+  @media (max-width: 560px) {
+    .lp-tel span { display: none; }
+    .lp-tel iconify-icon { display: flex; }
+    .lp-cta-btn { padding: 9px 14px; font-size: 13px; }
+  }
+
+  /* ── FOOTER LP ── */
+  .lp-footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,244,221,0.10);
+    padding: 28px clamp(16px, 4vw, 40px);
+  }
+  .lp-footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .lp-footer-brand { display: flex; flex-direction: column; gap: 4px; }
+  .lp-footer-brand .lp-logo-t { font-size: 17px; font-weight: 800; }
+  .lp-footer-brand .lp-logo-rest { font-size: 17px; }
+  .lp-footer-brand p { font-size: 12px; color: rgba(255,244,221,0.45); margin: 2px 0 0; }
+  .lp-footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .lp-footer-links a { font-size: 13px; color: rgba(255,244,221,0.5); text-decoration: none; transition: color .2s; }
+  .lp-footer-links a:hover { color: var(--cream); }
+</style>
