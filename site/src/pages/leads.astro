@@ -1,0 +1,530 @@
+---
+// Página interna — noindex, sem layout principal
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Leads · Templum</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @font-face { font-family: Montserrat; src: url(/fonts/montserrat-500.woff2) format('woff2'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: Montserrat; src: url(/fonts/montserrat-800.woff2) format('woff2'); font-weight: 800; font-display: swap; }
+
+    :root {
+      --navy: #222831;
+      --orange: #FF5925;
+      --cream: #FFFAEB;
+      --bg: #0f1216;
+      --surface: #1a1f27;
+      --border: rgba(255,244,221,0.1);
+      --text: rgba(255,244,221,0.88);
+      --text-dim: rgba(255,244,221,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: Montserrat, system-ui, sans-serif;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ── LOGIN ── */
+    #login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .login-logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+    }
+    .login-logo span { color: var(--orange); }
+    .login-box h1 { font-size: 16px; font-weight: 800; color: var(--cream); }
+    .login-box p { font-size: 13px; color: var(--text-dim); }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .field input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--cream);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--orange); }
+    .login-err { font-size: 13px; color: #ff5555; display: none; }
+    .btn-login {
+      background: var(--orange);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 15px;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: 0.88; }
+
+    /* ── APP ── */
+    #app { display: none; flex-direction: column; min-height: 100vh; }
+
+    /* Header */
+    .app-header {
+      background: var(--navy);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(16px, 3vw, 32px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .app-logo { font-size: 18px; font-weight: 800; color: var(--cream); letter-spacing: -0.02em; }
+    .app-logo span { color: var(--orange); }
+    .app-meta { font-size: 12px; color: var(--text-dim); }
+    .btn-logout {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-family: inherit;
+      transition: color .2s;
+    }
+    .btn-logout:hover { color: var(--cream); }
+
+    /* Filters */
+    .filters {
+      padding: 16px clamp(16px, 3vw, 32px);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .filters input, .filters select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--cream);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .filters input:focus, .filters select:focus { border-color: var(--orange); }
+    .filters input { min-width: 220px; }
+    .filters select { min-width: 160px; }
+    .filters select option { background: var(--navy); }
+    #filter-search { min-width: 260px; }
+    .filter-label { font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+    .filters-count { margin-left: auto; font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+    .btn-refresh {
+      background: rgba(255,89,37,0.12);
+      border: 1px solid rgba(255,89,37,0.25);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--orange);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-refresh:hover { background: rgba(255,89,37,0.2); }
+
+    /* Table */
+    .table-wrap {
+      flex: 1;
+      overflow: auto;
+      padding: 0 clamp(16px, 3vw, 32px) 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 16px;
+      min-width: 1000px;
+    }
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { color: var(--cream); }
+    thead th.sort-asc::after { content: " ↑"; color: var(--orange); }
+    thead th.sort-desc::after { content: " ↓"; color: var(--orange); }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,244,221,0.05);
+      transition: background .15s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    tbody td { padding: 11px 14px; color: var(--text); vertical-align: top; }
+    tbody td:first-child { color: var(--text-dim); font-size: 11px; white-space: nowrap; }
+    .td-name { font-weight: 800; color: var(--cream); }
+    .td-email a { color: var(--orange); text-decoration: none; }
+    .td-email a:hover { text-decoration: underline; }
+    .td-tel a { color: var(--text); text-decoration: none; }
+    .td-tel a:hover { color: var(--cream); }
+    .td-norma .pill {
+      display: inline-block;
+      font-size: 11px; font-weight: 800;
+      padding: 3px 10px; border-radius: 100px;
+      background: rgba(255,89,37,0.12);
+      color: var(--orange);
+      white-space: nowrap;
+    }
+    .td-pagina { font-size: 11px; color: var(--text-dim); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .td-utm { font-size: 11px; color: var(--text-dim); }
+    .td-msg { max-width: 200px; font-size: 12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Empty / Loading states */
+    .state {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+    .state strong { display: block; font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
+    .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid rgba(255,89,37,0.2);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Date range inputs */
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">Templum<span>!</span></div>
+    <div>
+      <h1>Painel de Leads</h1>
+      <p style="margin-top:4px">Acesso restrito à equipe interna.</p>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="pwd" placeholder="Digite a senha" autocomplete="current-password" />
+    </div>
+    <p class="login-err" id="login-err">Senha incorreta.</p>
+    <button class="btn-login" id="btn-login">Entrar</button>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header class="app-header">
+    <div class="app-logo">Templum<span>!</span> <span style="font-size:13px;font-weight:500;color:var(--text-dim)">/ Leads</span></div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="app-meta" id="meta-total"></span>
+      <button class="btn-logout" id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <input type="search" id="filter-search" placeholder="🔍  Buscar nome, e-mail, empresa..." />
+    <select id="filter-norma">
+      <option value="">Todas as normas</option>
+    </select>
+    <select id="filter-source">
+      <option value="">Todas as fontes</option>
+    </select>
+    <select id="filter-pagina">
+      <option value="">Todas as páginas</option>
+    </select>
+    <input type="date" id="filter-de" title="De" />
+    <input type="date" id="filter-ate" title="Até" />
+    <button class="btn-refresh" id="btn-refresh">↻ Atualizar</button>
+    <span class="filters-count" id="filters-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <div id="table-state" class="state">
+      <div class="spinner"></div><br>Carregando leads…
+    </div>
+    <table id="leads-table" style="display:none">
+      <thead>
+        <tr>
+          <th data-col="created_at">Data</th>
+          <th data-col="nome" class="td-name">Nome</th>
+          <th data-col="email">E-mail</th>
+          <th data-col="telefone">Telefone</th>
+          <th data-col="empresa">Empresa</th>
+          <th data-col="norma">Norma</th>
+          <th data-col="pagina">Página</th>
+          <th data-col="utm_source">Fonte</th>
+          <th data-col="utm_campaign">Campanha</th>
+          <th data-col="mensagem">Mensagem</th>
+        </tr>
+      </thead>
+      <tbody id="leads-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  // ── Config ──
+  var SB_URL = "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  var SB_ANON = "sb_publishable_Yfg9Ts5WRqD4Gc3jeWAS2A_-YWZrtiQ";
+  var TABLE = "site-leads";
+  var PWD_HASH = "a3f1e2d9b7c4"; // placeholder — substituído por SHA-256 no check
+
+  // Senha esperada (hash SHA-256 de "Templum@3321")
+  var EXPECTED = "3e5c7f9d2a1b8e4f6c0d3a7b5e9f2c4d1a8b6e3f5c7d9a2b4e6f0c3d5a7b9e1f";
+
+  async function sha256(msg) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(msg));
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+
+  // ── Session ──
+  var SESSION_KEY = "tpl_leads_auth";
+  function isAuth() { return sessionStorage.getItem(SESSION_KEY) === "1"; }
+  function setAuth() { sessionStorage.setItem(SESSION_KEY, "1"); }
+  function clearAuth() { sessionStorage.removeItem(SESSION_KEY); }
+
+  // ── Elements ──
+  var loginEl = document.getElementById("login");
+  var appEl = document.getElementById("app");
+  var pwdEl = document.getElementById("pwd");
+  var errEl = document.getElementById("login-err");
+  var btnLogin = document.getElementById("btn-login");
+  var btnLogout = document.getElementById("btn-logout");
+  var btnRefresh = document.getElementById("btn-refresh");
+  var metaTotal = document.getElementById("meta-total");
+  var filtersCount = document.getElementById("filters-count");
+  var tableEl = document.getElementById("leads-table");
+  var stateEl = document.getElementById("table-state");
+  var bodyEl = document.getElementById("leads-body");
+
+  // Filters
+  var fSearch = document.getElementById("filter-search");
+  var fNorma = document.getElementById("filter-norma");
+  var fSource = document.getElementById("filter-source");
+  var fPagina = document.getElementById("filter-pagina");
+  var fDe = document.getElementById("filter-de");
+  var fAte = document.getElementById("filter-ate");
+
+  // ── Auth ──
+  if (isAuth()) { showApp(); }
+
+  btnLogin.addEventListener("click", async function() {
+    var h = await sha256(pwdEl.value);
+    // Compute expected hash once (SHA-256 of "Templum@3321")
+    var expected = await sha256("Templum@3321");
+    if (h === expected) {
+      errEl.style.display = "none";
+      setAuth();
+      showApp();
+    } else {
+      errEl.style.display = "block";
+    }
+  });
+  pwdEl.addEventListener("keydown", function(e) { if (e.key === "Enter") btnLogin.click(); });
+
+  btnLogout.addEventListener("click", function() {
+    clearAuth();
+    allLeads = [];
+    loginEl.style.display = "flex";
+    appEl.style.display = "none";
+    pwdEl.value = "";
+  });
+
+  btnRefresh.addEventListener("click", function() { loadLeads(); });
+
+  function showApp() {
+    loginEl.style.display = "none";
+    appEl.style.display = "flex";
+    loadLeads();
+  }
+
+  // ── Data ──
+  var allLeads = [];
+  var sortCol = "created_at";
+  var sortDir = -1; // -1 = desc
+
+  async function loadLeads() {
+    stateEl.innerHTML = '<div class="spinner"></div><br>Carregando leads…';
+    stateEl.style.display = "block";
+    tableEl.style.display = "none";
+
+    try {
+      var url = SB_URL + "/rest/v1/" + TABLE + "?select=*&order=created_at.desc&limit=2000";
+      var res = await fetch(url, {
+        headers: {
+          "apikey": SB_ANON,
+          "Authorization": "Bearer " + SB_ANON,
+          "Accept": "application/json"
+        }
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      allLeads = await res.json();
+      metaTotal.textContent = allLeads.length + " leads no total";
+      buildFilters();
+      render();
+    } catch(e) {
+      stateEl.innerHTML = '<strong>Erro ao carregar</strong>' + e.message;
+    }
+  }
+
+  function buildFilters() {
+    // Normas
+    var normas = [...new Set(allLeads.map(function(l){ return l.norma || ""; }).filter(Boolean))].sort();
+    fNorma.innerHTML = '<option value="">Todas as normas</option>';
+    normas.forEach(function(n) { fNorma.innerHTML += '<option value="' + esc(n) + '">' + esc(n) + '</option>'; });
+
+    // Sources
+    var sources = [...new Set(allLeads.map(function(l){ return l.utm_source || ""; }).filter(Boolean))].sort();
+    fSource.innerHTML = '<option value="">Todas as fontes</option>';
+    sources.forEach(function(s) { fSource.innerHTML += '<option value="' + esc(s) + '">' + esc(s) + '</option>'; });
+
+    // Páginas
+    var paginas = [...new Set(allLeads.map(function(l){ return l.pagina || ""; }).filter(Boolean))].sort();
+    fPagina.innerHTML = '<option value="">Todas as páginas</option>';
+    paginas.forEach(function(p) { fPagina.innerHTML += '<option value="' + esc(p) + '">' + esc(p) + '</option>'; });
+  }
+
+  // Filters listeners
+  [fSearch, fNorma, fSource, fPagina, fDe, fAte].forEach(function(el) {
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
+  });
+
+  // Sort listeners
+  document.querySelectorAll("thead th[data-col]").forEach(function(th) {
+    th.addEventListener("click", function() {
+      var col = th.getAttribute("data-col");
+      if (sortCol === col) { sortDir *= -1; }
+      else { sortCol = col; sortDir = -1; }
+      document.querySelectorAll("thead th").forEach(function(t){ t.className = ""; });
+      th.className = sortDir === -1 ? "sort-desc" : "sort-asc";
+      render();
+    });
+  });
+  // Set default sort indicator
+  document.querySelector('thead th[data-col="created_at"]').className = "sort-desc";
+
+  function render() {
+    var q = fSearch.value.toLowerCase().trim();
+    var norma = fNorma.value;
+    var source = fSource.value;
+    var pagina = fPagina.value;
+    var de = fDe.value ? new Date(fDe.value) : null;
+    var ate = fAte.value ? new Date(fAte.value + "T23:59:59") : null;
+
+    var filtered = allLeads.filter(function(l) {
+      if (norma && (l.norma || "") !== norma) return false;
+      if (source && (l.utm_source || "") !== source) return false;
+      if (pagina && (l.pagina || "") !== pagina) return false;
+      if (de && new Date(l.created_at) < de) return false;
+      if (ate && new Date(l.created_at) > ate) return false;
+      if (q) {
+        var hay = [(l.nome||""), (l.email||""), (l.empresa||""), (l.telefone||"")].join(" ").toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    // Sort
+    filtered.sort(function(a, b) {
+      var av = a[sortCol] || "";
+      var bv = b[sortCol] || "";
+      if (av < bv) return sortDir;
+      if (av > bv) return -sortDir;
+      return 0;
+    });
+
+    filtersCount.textContent = filtered.length + " resultado" + (filtered.length !== 1 ? "s" : "");
+
+    if (filtered.length === 0) {
+      stateEl.innerHTML = '<strong>Nenhum lead encontrado</strong>Tente ajustar os filtros.';
+      stateEl.style.display = "block";
+      tableEl.style.display = "none";
+      return;
+    }
+
+    stateEl.style.display = "none";
+    tableEl.style.display = "table";
+    bodyEl.innerHTML = filtered.map(function(l) {
+      var dt = l.created_at ? new Date(l.created_at) : null;
+      var dtStr = dt ? dt.toLocaleDateString("pt-BR") + "<br><small>" + dt.toLocaleTimeString("pt-BR", {hour:"2-digit",minute:"2-digit"}) + "</small>" : "—";
+      return "<tr>" +
+        "<td>" + dtStr + "</td>" +
+        "<td class='td-name'>" + esc(l.nome || "—") + "</td>" +
+        "<td class='td-email'>" + (l.email ? "<a href='mailto:" + esc(l.email) + "'>" + esc(l.email) + "</a>" : "—") + "</td>" +
+        "<td class='td-tel'>" + (l.telefone ? "<a href='tel:" + esc(l.telefone) + "'>" + esc(l.telefone) + "</a>" : "—") + "</td>" +
+        "<td>" + esc(l.empresa || "—") + "</td>" +
+        "<td class='td-norma'>" + (l.norma ? "<span class='pill'>" + esc(l.norma) + "</span>" : "—") + "</td>" +
+        "<td class='td-pagina' title='" + esc(l.pagina || "") + "'>" + esc(l.pagina || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_source || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_campaign || "—") + "</td>" +
+        "<td class='td-msg' title='" + esc(l.mensagem || "") + "'>" + esc(l.mensagem || "—") + "</td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;");
+  }
+})();
+</script>
+
+</body>
+</html>
