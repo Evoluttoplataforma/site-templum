@@ -317,24 +317,15 @@
 <script is:inline>
 (function () {
   // ── Config ──
-  var SB_URL = "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  var SB_ANON = "sb_publishable_Yfg9Ts5WRqD4Gc3jeWAS2A_-YWZrtiQ";
-  var TABLE = "site_leads";
-  var PWD_HASH = "a3f1e2d9b7c4"; // placeholder — substituído por SHA-256 no check
-
-  // Senha esperada (hash SHA-256 de "Templum@3321")
-  var EXPECTED = "3e5c7f9d2a1b8e4f6c0d3a7b5e9f2c4d1a8b6e3f5c7d9a2b4e6f0c3d5a7b9e1f";
-
-  async function sha256(msg) {
-    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(msg));
-    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
-  }
+  var API = "/api/leads"; // Worker verifica a senha server-side
 
   // ── Session ──
   var SESSION_KEY = "tpl_leads_auth";
+  var SESSION_PWD = "tpl_leads_pwd";
   function isAuth() { return sessionStorage.getItem(SESSION_KEY) === "1"; }
-  function setAuth() { sessionStorage.setItem(SESSION_KEY, "1"); }
-  function clearAuth() { sessionStorage.removeItem(SESSION_KEY); }
+  function setAuth(pwd) { sessionStorage.setItem(SESSION_KEY, "1"); sessionStorage.setItem(SESSION_PWD, pwd); }
+  function clearAuth() { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_PWD); }
+  function savedPwd() { return sessionStorage.getItem(SESSION_PWD) || ""; }
 
   // ── Elements ──
   var loginEl = document.getElementById("login");
@@ -362,16 +353,21 @@
   if (isAuth()) { showApp(); }
 
   btnLogin.addEventListener("click", async function() {
-    var h = await sha256(pwdEl.value);
-    // Compute expected hash once (SHA-256 of "Templum@3321")
-    var expected = await sha256("Templum@3321");
-    if (h === expected) {
-      errEl.style.display = "none";
-      setAuth();
-      showApp();
-    } else {
-      errEl.style.display = "block";
-    }
+    btnLogin.disabled = true;
+    btnLogin.textContent = "Verificando…";
+    var pwd = pwdEl.value;
+    try {
+      var res = await fetch(API + "?token=" + encodeURIComponent(pwd) + "&limit=1");
+      if (res.ok) {
+        errEl.style.display = "none";
+        setAuth(pwd);
+        showApp();
+      } else {
+        errEl.style.display = "block";
+      }
+    } catch(_) { errEl.textContent = "Erro de conexão."; errEl.style.display = "block"; }
+    btnLogin.disabled = false;
+    btnLogin.textContent = "Entrar";
   });
   pwdEl.addEventListener("keydown", function(e) { if (e.key === "Enter") btnLogin.click(); });
 
@@ -402,17 +398,14 @@
     tableEl.style.display = "none";
 
     try {
-      var url = SB_URL + "/rest/v1/" + TABLE + "?select=*&order=created_at.desc&limit=2000";
-      var res = await fetch(url, {
-        headers: {
-          "apikey": SB_ANON,
-          "Authorization": "Bearer " + SB_ANON,
-          "Accept": "application/json"
-        }
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      allLeads = await res.json();
-      metaTotal.textContent = allLeads.length + " leads no total";
+      var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()));
+      if (!res.ok) {
+        var e = await res.json().catch(function(){ return {}; });
+        throw new Error("HTTP " + res.status + (e.detail ? " — " + e.detail : ""));
+      }
+      var body = await res.json();
+      allLeads = body.data || [];
+      metaTotal.textContent = (body.total || allLeads.length) + " leads no total";
       buildFilters();
       render();
     } catch(e) {

@@ -46,6 +46,10 @@ export default {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleTrack(request, env);
     }
+    if (url.pathname === "/api/leads") {
+      if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleLeadsRead(request, env);
+    }
 
     // tudo o mais = arquivos estáticos (Astro build em ./dist)
     return env.ASSETS.fetch(request);
@@ -405,4 +409,79 @@ async function handleTrack(request, env) {
   }));
   // Sempre 2xx para o kit (ele só checa r.ok).
   return json({ ok: true, configured: true, results });
+}
+
+// ---------------------- Leads Read (GET /api/leads) ----------------------
+async function handleLeadsRead(request, env) {
+  // Verifica token na query: /api/leads?token=<senha>
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+
+  if (token !== expected) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+  }
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  // Para leitura usa service key se disponível, senão tenta anon
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
+
+  if (!sbKey) {
+    return new Response(JSON.stringify({ ok: false, error: "no_supabase_key" }), {
+      status: 500,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  const page = parseInt(url.searchParams.get("page") || "0", 10);
+  const limit = 1000;
+  const offset = page * limit;
+
+  try {
+    const res = await fetch(
+      `${sbUrl}/rest/v1/site_leads?select=id,created_at,nome,email,telefone,empresa,norma,cargo,pagina,evento,utm_source,utm_medium,utm_campaign,utm_content,utm_source_ft,utm_campaign_ft,gclid,fbclid&order=created_at.desc&limit=${limit}&offset=${offset}`,
+      {
+        headers: {
+          "apikey": sbKey,
+          "Authorization": "Bearer " + sbKey,
+          "Accept": "application/json",
+          "Range-Unit": "items",
+          "Prefer": "count=exact",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text().catch(() => "");
+      return new Response(JSON.stringify({ ok: false, error: "supabase_" + res.status, detail: err.slice(0, 200) }), {
+        status: 502,
+        headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+
+    const data = await res.json();
+    const total = res.headers.get("Content-Range")
+      ? parseInt((res.headers.get("Content-Range") || "").split("/")[1] || "0", 10)
+      : data.length;
+
+    return new Response(JSON.stringify({ ok: true, data, total }), {
+      status: 200,
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store",
+      },
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ ok: false, error: "fetch_failed", detail: e.message }), {
+      status: 502,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
 }
