@@ -399,6 +399,15 @@
 
     try {
       var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()));
+      if (res.status === 401) {
+        // Sessão inválida — força novo login
+        clearAuth();
+        appEl.style.display = "none";
+        loginEl.style.display = "flex";
+        errEl.textContent = "Sessão expirada. Entre novamente.";
+        errEl.style.display = "block";
+        return;
+      }
       if (!res.ok) {
         var e = await res.json().catch(function(){ return {}; });
         throw new Error("HTTP " + res.status + (e.detail ? " — " + e.detail : ""));
