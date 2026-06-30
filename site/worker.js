@@ -27,12 +27,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
-    if (url.hostname.startsWith("www.")) {
-      url.hostname = url.hostname.slice(4);
-      return Response.redirect(url.toString(), 301);
-    }
-
+    // Rotas de API têm prioridade — ANTES do redirect www, para não perder POST body.
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleLead(request, env, ctx);
@@ -44,6 +39,12 @@ export default {
     if (url.pathname === "/api/leads") {
       if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleLeadsRead(request, env);
+    }
+
+    // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
+    if (url.hostname.startsWith("www.")) {
+      url.hostname = url.hostname.slice(4);
+      return Response.redirect(url.toString(), 301);
     }
 
     // tudo o mais = arquivos estáticos (Astro build em ./dist)
