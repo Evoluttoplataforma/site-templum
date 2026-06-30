@@ -1,30 +1,25 @@
-// Worker da Templum: serve os arquivos estáticos (dist) e expõe:
-//   POST /api/lead   → cadastra o lead no Mailchimp
+// Worker da Templum — serve arquivos estáticos (dist) e expõe:
+//   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive (em paralelo)
 //   POST /api/track  → envia eventos ao Meta Conversions API (CAPI), server-side
-// Sem as secrets configuradas, ambos respondem ok sem efeito (não quebram a UX).
+//   GET  /api/leads  → leitura interna de leads (senha protegida)
 //
-// Secrets/vars (Settings → Variables and Secrets do Worker):
-//   LEAD_WEBHOOK_URL       URL do webhook (n8n/Make/RD/Zapier) que recebe o lead
-//                          completo: { nome,email,telefone,empresa,norma,mensagem,
-//                          evento,pagina }. Opcional — pode usar só Mailchimp, só
-//                          webhook, ou os dois.
-//   MAILCHIMP_API_KEY      ex.: abc123...-us21   (o datacenter vem após o "-")
-//   MAILCHIMP_LIST_ID      ex.: 1a2b3c4d5e       (Audience ID)
-//   MAILCHIMP_TAG          (opcional) ex.: site-templum
-//   META_PIXEL_ID          ex.: 4177249519256900 (público) — conta 1
-//   META_CAPI_TOKEN        (SECRETO) token da Conversions API — conta 1
-//   META_TEST_EVENT_CODE   (opcional) ex.: TEST5322 — só p/ testes — conta 1
-//   META_PIXEL_ID_2        (opcional) 2ª conta Meta — ex.: 4177249519256900
+// Secrets/vars (Cloudflare → Worker → Settings → Variables and Secrets):
+//   SUPABASE_URL           (opcional) default já no código
+//   SUPABASE_ANON_KEY      (SECRETO) chave anon do Supabase
+//   SUPABASE_SERVICE_KEY   (SECRETO) chave service role — necessária para GET /api/leads
+//   MAILCHIMP_API_KEY      ex.: abc123...-us21
+//   MAILCHIMP_LIST_ID      ex.: 1a2b3c4d5e
+//   MAILCHIMP_TAG          (opcional) default: site-templum
+//   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
+//   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
+//   META_PIXEL_ID          ex.: 4177249519256900 — conta 1
+//   META_CAPI_TOKEN        (SECRETO) token CAPI — conta 1
+//   META_TEST_EVENT_CODE   (opcional) só para testes
+//   META_PIXEL_ID_2        (opcional) 2ª conta Meta
 //   META_CAPI_TOKEN_2      (opcional, SECRETO) token CAPI da 2ª conta
-//   META_TEST_EVENT_CODE_2 (opcional) ex.: TEST5239 — 2ª conta
-//   CRM_ORIGIN             domínio enviado no header Origin p/ o CRM Orbit —
-//                          PRECISA estar na allowlist do webform (ex.: https://templum.com.br)
-//   CRM_FORM_ID            (opcional) id do webform — default já no código
-//   CRM_WEBFORM_URL        (opcional) URL da edge function — default já no código
-//   CRM_API_KEY            (opcional, SECRETO) api key do CRM (auth server-side)
+//   META_TEST_EVENT_CODE_2 (opcional) 2ª conta
 //
-// O GA4 e o Google Ads são tratados no navegador (gtag via tracking-kit); fazer
-// GA4 server-side aqui duplicaria os eventos, por isso não é feito.
+// GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 
 const META_API_VERSION = "v21.0";
 
@@ -124,7 +119,10 @@ function timed(promise, ms) {
   ]);
 }
 
-// ---------------------- Lead: Webhook + Mailchimp ----------------------
+// =====================================================================
+// LEAD: 3 destinos independentes — Supabase, Mailchimp, Pipedrive
+// =====================================================================
+
 async function handleLead(request, env) {
   let body = {};
   try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
@@ -132,7 +130,6 @@ async function handleLead(request, env) {
   const email = (body.email || "").trim().toLowerCase();
   if (!email || !email.includes("@")) return json({ ok: false, error: "invalid_email" }, 422);
 
-  // Lead normalizado (vai pro webhook e alimenta os merge fields do Mailchimp).
   const lead = {
     nome: body.nome || "",
     email,
@@ -145,11 +142,7 @@ async function handleLead(request, env) {
     mensagem: body.mensagem || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
-    // IDs de sessão/visitante
-    client_id: body.client_id || "",
     session_id: body.session_id || "",
-    session_attributes: body.session_attributes || {},
-    // Atribuição / tracking — last-touch
     utm_source: body.utm_source || "",
     utm_medium: body.utm_medium || "",
     utm_campaign: body.utm_campaign || "",
@@ -163,65 +156,91 @@ async function handleLead(request, env) {
     gad_campaignid: body.gad_campaignid || "",
     msclkid: body.msclkid || "",
     ttclid: body.ttclid || "",
-    // Atribuição / tracking — first-touch (originais)
     utm_source_ft: body.utm_source_ft || "",
     utm_medium_ft: body.utm_medium_ft || "",
     utm_campaign_ft: body.utm_campaign_ft || "",
     utm_term_ft: body.utm_term_ft || "",
     utm_content_ft: body.utm_content_ft || "",
-    gclid_ft: body.gclid_ft || "",
-    fbclid_ft: body.fbclid_ft || "",
-    gbraid_ft: body.gbraid_ft || "",
-    wbraid_ft: body.wbraid_ft || "",
-    gad_source_ft: body.gad_source_ft || "",
-    gad_campaignid_ft: body.gad_campaignid_ft || "",
-    msclkid_ft: body.msclkid_ft || "",
-    ttclid_ft: body.ttclid_ft || "",
     fbp: body.fbp || "",
     fbc: body.fbc || "",
-    referrer: body.referrer || "",
     landing: body.landing || "",
   };
 
-  const tasks = [];
-  let configured = false;
-
-  // Eventos de webinar/webserie vão SOMENTE para o Mailchimp (sem CRM nem webhook).
+  // Webinars/webseries → só Supabase + Mailchimp (não geram Deal no Pipedrive).
   const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
 
-  // 1) Webhook (n8n / Make / RDStation / Zapier / etc.) — recebe o lead completo.
-  if (!isWebinar && env.LEAD_WEBHOOK_URL) {
-    configured = true;
-    tasks.push(timed(
-      fetch(env.LEAD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(lead),
-      }).then((r) => ({ webhook: r.ok })).catch(() => ({ webhook: false })),
-      4000
-    ));
+  if (isWebinar) {
+    const [supabase, mailchimp] = await Promise.all([
+      timed(saveToSupabase(lead, env), 4000),
+      timed(saveToMailchimp(lead, env), 4000),
+    ]);
+    return json({ ok: true, supabase, mailchimp });
   }
 
-  // 2) Mailchimp (opcional) — cadastra/atualiza o contato.
-  if (env.MAILCHIMP_API_KEY && env.MAILCHIMP_LIST_ID) {
-    configured = true;
-    const dc = env.MAILCHIMP_API_KEY.split("-")[1];
-    if (dc) {
-      const auth = "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY);
-      const mcBase = `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}`;
-      const mcTags = [
-        env.MAILCHIMP_TAG || "site-templum",
-        // Tag dinâmica por evento (ex.: "webserie-iso9001-2026", "aula-iso9001", etc.)
-        ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
-      ];
-      // Estratégia:
-      //   POST /members com tags no body → funciona para contatos NOVOS (cria + tag em 1 call).
-      //   Se retornar "Member Exists" (409) → contato já existe:
-      //     PUT /members/{hash} para atualizar dados + POST /members/{hash}/tags para adicionar tag
-      //     (POST /tags é o que dispara a automação "contato marcado" no Mailchimp).
-      const hash = md5hex(email);
-      const mcBody = {
-        email_address: email,
+  // Leads de consultoria → os 3 destinos em paralelo.
+  const [supabase, mailchimp, pipedrive] = await Promise.all([
+    timed(saveToSupabase(lead, env), 4000),
+    timed(saveToMailchimp(lead, env), 4000),
+    timed(saveToPipedrive(lead, env), 4000),
+  ]);
+  return json({ ok: true, supabase, mailchimp, pipedrive });
+}
+
+// ---- 1) Supabase -------------------------------------------------------
+async function saveToSupabase(lead, env) {
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_ANON_KEY;
+  if (!sbKey) return { ok: false, reason: "not_configured" };
+
+  try {
+    const r = await fetch(`${sbUrl}/rest/v1/site_leads`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "apikey": sbKey,
+        "authorization": "Bearer " + sbKey,
+        "prefer": "return=minimal",
+      },
+      body: JSON.stringify({
+        nome: lead.nome, email: lead.email, telefone: lead.telefone,
+        empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
+        funcionarios: lead.funcionarios, urgencia: lead.urgencia,
+        evento: lead.evento, pagina: lead.pagina,
+        utm_source: lead.utm_source, utm_medium: lead.utm_medium,
+        utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
+        utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
+        utm_campaign_ft: lead.utm_campaign_ft,
+        gclid: lead.gclid, fbclid: lead.fbclid,
+      }),
+    });
+    if (r.ok) return { ok: true };
+    const e = await r.text().catch(() => "");
+    return { ok: false, error: e.slice(0, 120) };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+// ---- 2) Mailchimp -------------------------------------------------------
+async function saveToMailchimp(lead, env) {
+  if (!env.MAILCHIMP_API_KEY || !env.MAILCHIMP_LIST_ID) return { ok: false, reason: "not_configured" };
+  const dc = env.MAILCHIMP_API_KEY.split("-")[1];
+  if (!dc) return { ok: false, reason: "invalid_key" };
+
+  const auth = "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY);
+  const mcBase = `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}`;
+  const hash = md5hex(lead.email);
+  const mcTags = [
+    env.MAILCHIMP_TAG || "site-templum",
+    ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
+  ];
+
+  try {
+    const r = await fetch(`${mcBase}/members`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: auth },
+      body: JSON.stringify({
+        email_address: lead.email,
         status: "subscribed",
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
@@ -231,140 +250,140 @@ async function handleLead(request, env) {
           UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
         },
         tags: mcTags,
-      };
-      tasks.push(timed(
-        fetch(`${mcBase}/members`, {
+      }),
+    });
+    if (r.ok) return { ok: true };
+
+    const e = await r.json().catch(() => ({}));
+    if (e && e.title === "Member Exists") {
+      // Contato já existe → atualiza dados + adiciona tag (dispara automações).
+      await Promise.all([
+        fetch(`${mcBase}/members/${hash}`, {
+          method: "PUT",
+          headers: { "content-type": "application/json", authorization: auth },
+          body: JSON.stringify({
+            email_address: lead.email, status_if_new: "subscribed",
+            merge_fields: {
+              FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
+              NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
+              FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
+              ORIGEM: lead.pagina || lead.evento || "site",
+            },
+          }),
+        }).catch(() => null),
+        fetch(`${mcBase}/members/${hash}/tags`, {
           method: "POST",
           headers: { "content-type": "application/json", authorization: auth },
-          body: JSON.stringify(mcBody),
-        }).then(async (r) => {
-          if (r.ok) return { mailchimp: true };
-          const e = await r.json().catch(() => ({}));
-          // Contato já existe → atualiza dados e adiciona tag via endpoints separados.
-          if (e && e.title === "Member Exists") {
-            const [rPut, rTag] = await Promise.all([
-              fetch(`${mcBase}/members/${hash}`, {
-                method: "PUT",
-                headers: { "content-type": "application/json", authorization: auth },
-                body: JSON.stringify({ email_address: email, status_if_new: "subscribed",
-                  merge_fields: { FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
-                    NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
-                    FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
-                    ORIGEM: lead.pagina || lead.evento || "site" } }),
-              }).catch(() => null),
-              fetch(`${mcBase}/members/${hash}/tags`, {
-                method: "POST",
-                headers: { "content-type": "application/json", authorization: auth },
-                body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
-              }).catch(() => null),
-            ]);
-            return { mailchimp: true, existing: true, tags_ok: rTag?.ok ?? false };
-          }
-          return { mailchimp: false, error: e.title || "mailchimp_error" };
-        }).catch(() => ({ mailchimp: false })),
-        4000
-      ));
+          body: JSON.stringify({ tags: mcTags.map(name => ({ name, status: "active" })) }),
+        }).catch(() => null),
+      ]);
+      return { ok: true, existing: true };
     }
+    return { ok: false, error: e.title || "mailchimp_error" };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
   }
+}
 
-  // 3) Supabase — grava todos os leads na tabela site_leads.
-  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  const sbKey = env.SUPABASE_ANON_KEY;
-  if (sbKey) {
-    configured = true;
-    tasks.push(timed(
-      fetch(`${sbUrl}/rest/v1/site_leads`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "apikey": sbKey,
-          "authorization": "Bearer " + sbKey,
-          "prefer": "return=minimal",
-        },
-        body: JSON.stringify({
-          nome: lead.nome, email, telefone: lead.telefone,
-          empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
-          funcionarios: lead.funcionarios, urgencia: lead.urgencia,
-          evento: lead.evento, pagina: lead.pagina,
-          utm_source: lead.utm_source, utm_medium: lead.utm_medium,
-          utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
-          utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
-          utm_campaign_ft: lead.utm_campaign_ft,
-          gclid: lead.gclid, fbclid: lead.fbclid,
-        }),
-      }).then(async (r) => {
-        if (r.ok) return { supabase: true };
-        const e = await r.text().catch(() => "");
-        return { supabase: false, error: e.slice(0, 120) };
-      }).catch(() => ({ supabase: false })),
-      4000
-    ));
-  }
+// ---- 3) Pipedrive -------------------------------------------------------
+// Pipeline INBOUND (id=1) → Stage NOVO LEAD (id=218)
+const PD_BASE = "https://api.pipedrive.com/v1";
+const PD_PIPELINE = 1;
+const PD_STAGE = 218;
+// Chaves dos campos customizados (obtidas via /v1/dealFields)
+const PD_FIELDS = {
+  utm_source:      "92f5fbfb2cfdcbe4d46a72b5acf06ca15f29ac14",
+  utm_medium:      "15bdeb9558dc89ed77d92cbfa0d04a4ee26d4d1f",
+  utm_campaign:    "6b578f95362c28ee95473982525671ff43435b38",
+  utm_term:        "5c22fd65ac5f7dbfbef6c07347fde9154bcdc385",
+  utm_content:     "921482eae8dae5a8b2c830100038a17801df8b45",
+  utm_source_ft:   "06754c74401e609e506d01d3a928f8d3025ad43e",
+  utm_medium_ft:   "a335961b5cded844362e09480b5ca68048e33404",
+  utm_campaign_ft: "6bc82d18de3ae4574c4f8b8185a1dfa7e43cd5d0",
+  utm_term_ft:     "3ba67d7950d346b4b6dd0d4bbb8974a007a53aee",
+  utm_content_ft:  "ba178b2651759509012cfad3beac506f51d12a27",
+  norma:           "88b449e175d73d74792f6f1b54f7724c5d4ae2c9",
+  cargo:           "def95ff43857bf5b0306029dde8531907148a09e",
+  urgencia:        "16c22c632d4aed9dfce0949287ac750729765ab1",
+  funcionarios:    "fbf8ddfc6cdea3ac8571999d49d507fd40575c74",
+  necessidade:     "1ad267ed98d0ae5286cb5f0189186ecb5d41f865",
+  pagina:          "79a54756633069b9f0a508f6869780c6c2b52be2",
+  gclid:           "9aeff85ea6f6fe1bedbe6e67cfd5eb612a7257ab",
+  fbclid:          "143f49947826ce1d1b3e995baa842e96de518e74",
+  fbp:             "87df328012b737dcd7cb6c95c3e5284f23e20748",
+  fbc:             "63a82ccf1e419bdf8aef5680c70e074104dafb0e",
+  gad_source:      "16cadd6acb21432129c344bfc2b4f34dbd7deec9",
+  gad_campaignid:  "9a4fcacaff9851ca9ccf83980210b1644a0d1e04",
+  session_id:      "43091e3081136004843998d26c80abe6a7cb78b0",
+};
 
-  // 4) Google Sheets (webinar/webserie) — envia para o Apps Script Web App.
-  if (isWebinar && env.WEBSERIE_SHEET_URL) {
-    configured = true;
-    tasks.push(timed(
-      fetch(env.WEBSERIE_SHEET_URL, {
+async function saveToPipedrive(lead, env) {
+  const token = env.PIPEDRIVE_API_TOKEN;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  try {
+    // 1) Organização (empresa)
+    let org_id = null;
+    if (lead.empresa) {
+      const r = await fetch(`${PD_BASE}/organizations?api_token=${token}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          nome: lead.nome, email, telefone: lead.telefone,
-          pagina: lead.pagina, evento: lead.evento,
-          utm_source: lead.utm_source, utm_medium: lead.utm_medium, utm_campaign: lead.utm_campaign,
-        }),
-      }).then((r) => ({ sheet: r.ok })).catch(() => ({ sheet: false })),
-      4000
-    ));
+        body: JSON.stringify({ name: lead.empresa }),
+      }).catch(() => null);
+      if (r && r.ok) {
+        const d = await r.json().catch(() => ({}));
+        org_id = d.data?.id || null;
+      }
+    }
+
+    // 2) Pessoa
+    const personBody = {
+      name: lead.nome || lead.email,
+      email: [{ value: lead.email, primary: true, label: "work" }],
+    };
+    if (lead.telefone) personBody.phone = [{ value: lead.telefone, primary: true, label: "work" }];
+    if (org_id) personBody.org_id = org_id;
+
+    const rp = await fetch(`${PD_BASE}/persons?api_token=${token}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(personBody),
+    }).catch(() => null);
+
+    let person_id = null;
+    if (rp && rp.ok) {
+      const d = await rp.json().catch(() => ({}));
+      person_id = d.data?.id || null;
+    }
+
+    // 3) Deal
+    const title = [lead.nome || lead.email, lead.norma, lead.pagina].filter(Boolean).join(" — ");
+    const dealBody = { title, pipeline_id: PD_PIPELINE, stage_id: PD_STAGE };
+    if (person_id) dealBody.person_id = person_id;
+    if (org_id) dealBody.org_id = org_id;
+
+    // Campos customizados — só preenche se tiver valor
+    for (const [field, key] of Object.entries(PD_FIELDS)) {
+      const val = lead[field] || (field === "necessidade" ? lead.mensagem : "");
+      if (val) dealBody[key] = val;
+    }
+
+    const rd = await fetch(`${PD_BASE}/deals?api_token=${token}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(dealBody),
+    }).catch(() => null);
+
+    if (rd && rd.ok) {
+      const d = await rd.json().catch(() => ({}));
+      return { ok: true, deal_id: d.data?.id };
+    }
+    const e = rd ? await rd.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(e).slice(0, 140) };
+
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
   }
-
-  // Pulado para webinars (sem CRM nem webhook genérico).
-  if (isWebinar) { const results = await Promise.all(tasks); return json({ ok: true, configured, results }); }
-
-  // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
-  //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
-  //    server-side, mandamos o Origin de CRM_ORIGIN — esse domínio PRECISA estar
-  //    na allowlist do webform no CRM, senão volta 403 "Domain not allowed".
-  //    CRM_API_KEY (secret, opcional) é enviado junto p/ o caso de auth por chave.
-  const crmUrl = env.CRM_WEBFORM_URL || "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-webform-submit";
-  const crmFormId = env.CRM_FORM_ID || "933f0ed2-a158-41d0-bcdf-6377e342f826";
-  const crmOrigin = env.CRM_ORIGIN || "https://templum.com.br";
-  if (crmUrl && (crmFormId || env.CRM_API_KEY)) {
-    configured = true;
-    const cf = {};
-    const put = (k, v) => { if (v) cf[k] = v; };
-    put("cf_utm_source", lead.utm_source); put("cf_utm_medium", lead.utm_medium);
-    put("cf_utm_campaign", lead.utm_campaign); put("cf_utm_term", lead.utm_term);
-    put("cf_utm_content", lead.utm_content);
-    put("cf_first_touch_utm_source", lead.utm_source_ft); put("cf_first_touch_utm_medium", lead.utm_medium_ft);
-    put("cf_first_touch_utm_campaign", lead.utm_campaign_ft); put("cf_first_touch_utm_term", lead.utm_term_ft);
-    put("cf_first_touch_utm_content", lead.utm_content_ft);
-    put("cf_fbclid", lead.fbclid); put("cf_facebook_browser_id_fbp", lead.fbp); put("cf_facebook_click_id_fbc", lead.fbc);
-    put("cf_gclid", lead.gclid); put("cf_gad_source", lead.gad_source); put("cf_gad_campaignid", lead.gad_campaignid);
-    put("cf_gbraid", lead.gbraid); put("cf_msclkid", lead.msclkid); put("cf_ttclid", lead.ttclid);
-    put("cf_id_da_sess_o", lead.session_id); put("cf_landing_page", lead.landing);
-    put("cf_faixa_de_funcion_rios", lead.funcionarios); put("cf_cargo", lead.cargo);
-    const crmBody = { name: lead.nome, email, phone: lead.telefone, company: lead.empresa, custom_fields: cf };
-    if (crmFormId) crmBody.form_id = crmFormId;
-    if (env.CRM_API_KEY) crmBody.api_key = env.CRM_API_KEY;
-    tasks.push(timed(
-      fetch(crmUrl, {
-        method: "POST",
-        headers: { "content-type": "application/json", origin: crmOrigin, referer: crmOrigin + "/" },
-        body: JSON.stringify(crmBody),
-      }).then(async (r) => {
-        if (r.ok) return { crm: true };
-        const e = await r.text().catch(() => "");
-        return { crm: false, status: r.status, error: e.slice(0, 140) };
-      }).catch(() => ({ crm: false })),
-      4000
-    ));
-  }
-
-  // Todas as tasks têm timeout de 4s (via timed()), então Promise.all retorna em ≤4s.
-  // O cliente espera a resposta antes de redirecionar (max 5s) — sem perda de leads.
-  const results = await Promise.all(tasks);
-  return json({ ok: true, configured, results });
 }
 
 // ---------------------- Meta Conversions API ----------------------
