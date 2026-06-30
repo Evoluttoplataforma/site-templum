@@ -29,7 +29,7 @@
 const META_API_VERSION = "v21.0";
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -40,7 +40,7 @@ export default {
 
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
-      return handleLead(request, env);
+      return handleLead(request, env, ctx);
     }
     if (url.pathname === "/api/track") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
@@ -116,7 +116,7 @@ function md5hex(str) {
 }
 
 // ---------------------- Lead: Webhook + Mailchimp ----------------------
-async function handleLead(request, env) {
+async function handleLead(request, env, ctx) {
   let body = {};
   try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
 
@@ -306,7 +306,7 @@ async function handleLead(request, env) {
   }
 
   // Pulado para webinars (sem CRM nem webhook genérico).
-  if (isWebinar) { const results = await Promise.all(tasks); return json({ ok: true, configured, results }); }
+  if (isWebinar) { ctx.waitUntil(Promise.all(tasks)); return json({ ok: true, configured }); }
 
   // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
   //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
@@ -347,8 +347,11 @@ async function handleLead(request, env) {
     );
   }
 
-  const results = await Promise.all(tasks);
-  return json({ ok: true, configured, results });
+  // Responde imediatamente ao browser e processa as APIs em background.
+  // ctx.waitUntil garante que o Worker continua rodando mesmo após a resposta —
+  // elimina a oscilação causada pelo cliente navegar antes do fetch completar.
+  ctx.waitUntil(Promise.all(tasks));
+  return json({ ok: true, configured });
 }
 
 // ---------------------- Meta Conversions API ----------------------

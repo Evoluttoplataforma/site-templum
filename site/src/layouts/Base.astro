@@ -268,6 +268,14 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
           }));
         } catch (_) {}
+        // Aguarda o fetch completar antes de redirecionar (max 5s).
+        // Evita que iOS Safari / mobile cancele o request na navegação.
+        var btn = form.querySelector('[type="submit"]');
+        if (btn) { btn.disabled = true; }
+        var destino = form.getAttribute("data-obrigado") || "/obrigado";
+        var _rDone = false;
+        function _go() { if (!_rDone) { _rDone = true; window.location.href = destino; } }
+        var _t = setTimeout(_go, 5000); // fallback: redireciona em no máximo 5s
         try {
           fetch("/api/lead", {
             method: "POST",
@@ -279,16 +287,8 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               evento: evt, pagina: location.pathname,
             }, (window.__tplAttrib && window.__tplAttrib()) || {})),
-          });
-        } catch (_) {}
-
-        // Feedback imediato no botão e redireciona para a página de obrigado
-        // (a conversão conta no pageview da /obrigado). keepalive garante o envio.
-        // data-obrigado="/<pagina>" sobrescreve o destino padrão.
-        var btn = form.querySelector('[type="submit"]');
-        if (btn) { btn.disabled = true; }
-        var destino = form.getAttribute("data-obrigado") || "/obrigado";
-        setTimeout(function () { window.location.href = destino; }, 400);
+          }).then(function() { clearTimeout(_t); _go(); }).catch(function() { clearTimeout(_t); _go(); });
+        } catch (_) { clearTimeout(_t); _go(); }
       });
     </script>
 
