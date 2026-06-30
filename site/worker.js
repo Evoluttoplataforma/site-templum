@@ -170,17 +170,16 @@ async function handleLead(request, env, ctx) {
   const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
-  // Mailchimp + Pipedrive rodam em background via ctx.waitUntil — não bloqueiam o redirect.
-  // Isso elimina perda de leads por timeout no mobile/iOS Safari.
+  // Mailchimp + Pipedrive + Meta CAPI rodam em background via ctx.waitUntil.
   const supabase = await timed(saveToSupabase(lead, env), 3000);
 
-  if (isWebinar) {
-    ctx.waitUntil(saveToMailchimp(lead, env).catch(() => {}));
-  } else {
-    ctx.waitUntil(
-      Promise.all([saveToMailchimp(lead, env), saveToPipedrive(lead, env)]).catch(() => {})
-    );
-  }
+  const bgTasks = [
+    saveToMailchimp(lead, env).catch(() => {}),
+    sendMetaLead(lead, env, request).catch(() => {}),
+  ];
+  if (!isWebinar) bgTasks.push(saveToPipedrive(lead, env).catch(() => {}));
+
+  ctx.waitUntil(Promise.all(bgTasks));
 
   return json({ ok: true, supabase });
 }
@@ -383,6 +382,53 @@ async function saveToPipedrive(lead, env) {
   } catch (e) {
     return { ok: false, error: "fetch_failed" };
   }
+}
+
+// ---- 4) Meta CAPI — evento Lead server-side --------------------------------
+async function sendMetaLead(lead, env, request) {
+  const accounts = [
+    { pixel: env.META_PIXEL_ID, token: env.META_CAPI_TOKEN, test: env.META_TEST_EVENT_CODE },
+    { pixel: env.META_PIXEL_ID_2, token: env.META_CAPI_TOKEN_2, test: env.META_TEST_EVENT_CODE_2 },
+  ].filter((a) => a.pixel && a.token);
+  if (!accounts.length) return;
+
+  const phoneDigits = lead.telefone ? String(lead.telefone).replace(/\D/g, "") : "";
+  const nameParts = lead.nome.trim().split(" ");
+  const user_data = {};
+  const em = await sha256(lead.email);
+  const ph = phoneDigits ? await sha256(phoneDigits) : undefined;
+  const fn = await sha256(nameParts[0] || "");
+  const ln = nameParts.length > 1 ? await sha256(nameParts.slice(1).join(" ")) : undefined;
+  if (em) user_data.em = [em];
+  if (ph) user_data.ph = [ph];
+  if (fn) user_data.fn = [fn];
+  if (ln) user_data.ln = [ln];
+  if (lead.fbp) user_data.fbp = lead.fbp;
+  if (lead.fbc) user_data.fbc = lead.fbc;
+  user_data.client_ip_address = request.headers.get("cf-connecting-ip") || "";
+  user_data.client_user_agent = request.headers.get("user-agent") || "";
+
+  const event = {
+    event_name: "Lead",
+    event_time: Math.floor(Date.now() / 1000),
+    event_id: `lead-${lead.email}-${Date.now()}`,
+    action_source: "website",
+    event_source_url: lead.pagina ? `https://templum.com.br${lead.pagina}` : "https://templum.com.br",
+    user_data,
+    custom_data: {
+      norma: lead.norma || "",
+      evento: lead.evento || "",
+    },
+  };
+
+  await Promise.all(accounts.map(async (a) => {
+    const body = { data: [event] };
+    if (a.test) body.test_event_code = a.test;
+    await fetch(
+      `https://graph.facebook.com/${META_API_VERSION}/${a.pixel}/events?access_token=${encodeURIComponent(a.token)}`,
+      { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }
+    );
+  }));
 }
 
 // ---------------------- Meta Conversions API ----------------------
