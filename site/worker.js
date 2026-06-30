@@ -29,7 +29,7 @@
 const META_API_VERSION = "v21.0";
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -40,7 +40,7 @@ export default {
 
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
-      return handleLead(request, env, ctx);
+      return handleLead(request, env);
     }
     if (url.pathname === "/api/track") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
@@ -115,8 +115,17 @@ function md5hex(str) {
   }).join("");
 }
 
+// Helper: limita o tempo de espera de cada task externa (ms).
+// Garante que Promise.all retorna em no máximo `ms` mesmo se uma API travar.
+function timed(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise(function(resolve) { setTimeout(function() { resolve({ timeout: true }); }, ms); }),
+  ]);
+}
+
 // ---------------------- Lead: Webhook + Mailchimp ----------------------
-async function handleLead(request, env, ctx) {
+async function handleLead(request, env) {
   let body = {};
   try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
 
@@ -183,13 +192,14 @@ async function handleLead(request, env, ctx) {
   // 1) Webhook (n8n / Make / RDStation / Zapier / etc.) — recebe o lead completo.
   if (!isWebinar && env.LEAD_WEBHOOK_URL) {
     configured = true;
-    tasks.push(
+    tasks.push(timed(
       fetch(env.LEAD_WEBHOOK_URL, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(lead),
-      }).then((r) => ({ webhook: r.ok })).catch(() => ({ webhook: false }))
-    );
+      }).then((r) => ({ webhook: r.ok })).catch(() => ({ webhook: false })),
+      4000
+    ));
   }
 
   // 2) Mailchimp (opcional) — cadastra/atualiza o contato.
@@ -222,7 +232,7 @@ async function handleLead(request, env, ctx) {
         },
         tags: mcTags,
       };
-      tasks.push(
+      tasks.push(timed(
         fetch(`${mcBase}/members`, {
           method: "POST",
           headers: { "content-type": "application/json", authorization: auth },
@@ -251,8 +261,9 @@ async function handleLead(request, env, ctx) {
             return { mailchimp: true, existing: true, tags_ok: rTag?.ok ?? false };
           }
           return { mailchimp: false, error: e.title || "mailchimp_error" };
-        }).catch(() => ({ mailchimp: false }))
-      );
+        }).catch(() => ({ mailchimp: false })),
+        4000
+      ));
     }
   }
 
@@ -261,7 +272,7 @@ async function handleLead(request, env, ctx) {
   const sbKey = env.SUPABASE_ANON_KEY;
   if (sbKey) {
     configured = true;
-    tasks.push(
+    tasks.push(timed(
       fetch(`${sbUrl}/rest/v1/site_leads`, {
         method: "POST",
         headers: {
@@ -285,14 +296,15 @@ async function handleLead(request, env, ctx) {
         if (r.ok) return { supabase: true };
         const e = await r.text().catch(() => "");
         return { supabase: false, error: e.slice(0, 120) };
-      }).catch(() => ({ supabase: false }))
-    );
+      }).catch(() => ({ supabase: false })),
+      4000
+    ));
   }
 
   // 4) Google Sheets (webinar/webserie) — envia para o Apps Script Web App.
   if (isWebinar && env.WEBSERIE_SHEET_URL) {
     configured = true;
-    tasks.push(
+    tasks.push(timed(
       fetch(env.WEBSERIE_SHEET_URL, {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -301,16 +313,13 @@ async function handleLead(request, env, ctx) {
           pagina: lead.pagina, evento: lead.evento,
           utm_source: lead.utm_source, utm_medium: lead.utm_medium, utm_campaign: lead.utm_campaign,
         }),
-      }).then((r) => ({ sheet: r.ok })).catch(() => ({ sheet: false }))
-    );
+      }).then((r) => ({ sheet: r.ok })).catch(() => ({ sheet: false })),
+      4000
+    ));
   }
 
   // Pulado para webinars (sem CRM nem webhook genérico).
-  if (isWebinar) {
-    const allTasks = Promise.all(tasks);
-    if (ctx && ctx.waitUntil) { ctx.waitUntil(allTasks); return json({ ok: true, configured }); }
-    await allTasks; return json({ ok: true, configured });
-  }
+  if (isWebinar) { const results = await Promise.all(tasks); return json({ ok: true, configured, results }); }
 
   // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
   //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
@@ -338,7 +347,7 @@ async function handleLead(request, env, ctx) {
     const crmBody = { name: lead.nome, email, phone: lead.telefone, company: lead.empresa, custom_fields: cf };
     if (crmFormId) crmBody.form_id = crmFormId;
     if (env.CRM_API_KEY) crmBody.api_key = env.CRM_API_KEY;
-    tasks.push(
+    tasks.push(timed(
       fetch(crmUrl, {
         method: "POST",
         headers: { "content-type": "application/json", origin: crmOrigin, referer: crmOrigin + "/" },
@@ -347,15 +356,14 @@ async function handleLead(request, env, ctx) {
         if (r.ok) return { crm: true };
         const e = await r.text().catch(() => "");
         return { crm: false, status: r.status, error: e.slice(0, 140) };
-      }).catch(() => ({ crm: false }))
-    );
+      }).catch(() => ({ crm: false })),
+      4000
+    ));
   }
 
-  // ctx.waitUntil: responde imediatamente e processa APIs em background.
-  // Fallback para await (comportamento original) caso ctx não esteja disponível.
-  const allTasks = Promise.all(tasks);
-  if (ctx && ctx.waitUntil) { ctx.waitUntil(allTasks); return json({ ok: true, configured }); }
-  const results = await allTasks;
+  // Todas as tasks têm timeout de 4s (via timed()), então Promise.all retorna em ≤4s.
+  // O cliente espera a resposta antes de redirecionar (max 5s) — sem perda de leads.
+  const results = await Promise.all(tasks);
   return json({ ok: true, configured, results });
 }
 
