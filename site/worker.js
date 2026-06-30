@@ -306,7 +306,11 @@ async function handleLead(request, env, ctx) {
   }
 
   // Pulado para webinars (sem CRM nem webhook genérico).
-  if (isWebinar) { ctx.waitUntil(Promise.all(tasks)); return json({ ok: true, configured }); }
+  if (isWebinar) {
+    const allTasks = Promise.all(tasks);
+    if (ctx && ctx.waitUntil) { ctx.waitUntil(allTasks); return json({ ok: true, configured }); }
+    await allTasks; return json({ ok: true, configured });
+  }
 
   // CRM Orbit/Evolutto (Supabase Edge Function "crm-webform-submit").
   //    O webform é travado por DOMÍNIO (checa Origin/Referer). Como o envio é
@@ -347,11 +351,12 @@ async function handleLead(request, env, ctx) {
     );
   }
 
-  // Responde imediatamente ao browser e processa as APIs em background.
-  // ctx.waitUntil garante que o Worker continua rodando mesmo após a resposta —
-  // elimina a oscilação causada pelo cliente navegar antes do fetch completar.
-  ctx.waitUntil(Promise.all(tasks));
-  return json({ ok: true, configured });
+  // ctx.waitUntil: responde imediatamente e processa APIs em background.
+  // Fallback para await (comportamento original) caso ctx não esteja disponível.
+  const allTasks = Promise.all(tasks);
+  if (ctx && ctx.waitUntil) { ctx.waitUntil(allTasks); return json({ ok: true, configured }); }
+  const results = await allTasks;
+  return json({ ok: true, configured, results });
 }
 
 // ---------------------- Meta Conversions API ----------------------
