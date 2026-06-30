@@ -24,7 +24,7 @@
 const META_API_VERSION = "v21.0";
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -35,7 +35,7 @@ export default {
 
     if (url.pathname === "/api/lead") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
-      return handleLead(request, env);
+      return handleLead(request, env, ctx);
     }
     if (url.pathname === "/api/track") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
@@ -123,7 +123,7 @@ function timed(promise, ms) {
 // LEAD: 3 destinos independentes — Supabase, Mailchimp, Pipedrive
 // =====================================================================
 
-async function handleLead(request, env) {
+async function handleLead(request, env, ctx) {
   let body = {};
   try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
 
@@ -166,24 +166,22 @@ async function handleLead(request, env) {
     landing: body.landing || "",
   };
 
-  // Webinars/webseries → só Supabase + Mailchimp (não geram Deal no Pipedrive).
   const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
 
+  // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
+  // Mailchimp + Pipedrive rodam em background via ctx.waitUntil — não bloqueiam o redirect.
+  // Isso elimina perda de leads por timeout no mobile/iOS Safari.
+  const supabase = await timed(saveToSupabase(lead, env), 3000);
+
   if (isWebinar) {
-    const [supabase, mailchimp] = await Promise.all([
-      timed(saveToSupabase(lead, env), 4000),
-      timed(saveToMailchimp(lead, env), 4000),
-    ]);
-    return json({ ok: true, supabase, mailchimp });
+    ctx.waitUntil(saveToMailchimp(lead, env).catch(() => {}));
+  } else {
+    ctx.waitUntil(
+      Promise.all([saveToMailchimp(lead, env), saveToPipedrive(lead, env)]).catch(() => {})
+    );
   }
 
-  // Leads de consultoria → os 3 destinos em paralelo.
-  const [supabase, mailchimp, pipedrive] = await Promise.all([
-    timed(saveToSupabase(lead, env), 4000),
-    timed(saveToMailchimp(lead, env), 4000),
-    timed(saveToPipedrive(lead, env), 4000),
-  ]);
-  return json({ ok: true, supabase, mailchimp, pipedrive });
+  return json({ ok: true, supabase });
 }
 
 // ---- 1) Supabase -------------------------------------------------------
