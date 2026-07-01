@@ -60,7 +60,10 @@ const navLinks = [
             </div>
           </div>
         ) : (
-          <a class="hd-link" href={l.href}>{l.label}</a>
+          <a class={`hd-link${l.href === '/solucoes-de-ia/' ? ' hd-link--os' : ''}`} href={l.href}>
+            {l.href === '/solucoes-de-ia/' ? <span class="os-dot"></span> : null}
+            {l.label}
+          </a>
         )
       ))}
     </nav>
@@ -123,6 +126,38 @@ const navLinks = [
   .has-drop:hover .drop { opacity: 1; visibility: visible; transform: none; }
   .drop-link { display: block; padding: 10px 14px; border-radius: var(--r-12); font-size: 14px; font-weight: 600; color: var(--text); transition: background .2s var(--ease-soft), color .2s var(--ease-soft); }
   .drop-link:hover { background: var(--bg); color: var(--orange); }
+
+  /* ── Templum OS — shimmer + dot ── */
+  .hd-link--os {
+    background: linear-gradient(90deg, #FF5925 0%, #ffb347 40%, #FF5925 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: os-shimmer 2.8s linear infinite;
+    padding-left: 5px;
+  }
+  .hd-link--os:hover {
+    filter: brightness(1.15);
+  }
+  @keyframes os-shimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+  .os-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #FF5925;
+    margin-right: 5px;
+    flex-shrink: 0;
+    animation: os-pulse 2s ease-in-out infinite;
+  }
+  @keyframes os-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,89,37,.7); transform: scale(1); }
+    50%       { box-shadow: 0 0 0 5px rgba(255,89,37,0); transform: scale(1.25); }
+  }
 
   .hd-burger { display: none; margin-left: auto; font-size: 26px; color: var(--text); padding: 6px; }
   .hd-mobile { display: none; flex-direction: column; gap: 14px; padding: 20px 24px 28px; background: var(--surface); border-bottom: 1px solid var(--border); max-height: calc(100dvh - var(--nav-h, 64px)); overflow-y: auto; }
