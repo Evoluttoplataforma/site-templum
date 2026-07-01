@@ -40,6 +40,15 @@ export default {
       if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleLeadsRead(request, env);
     }
+    if (url.pathname === "/api/raffle") {
+      if (request.method === "POST") return handleRaffleInsert(request, env);
+      if (request.method === "GET")  return handleRaffleRead(request, env);
+      return json({ ok: false, error: "method_not_allowed" }, 405);
+    }
+    if (url.pathname === "/api/raffle/draw") {
+      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleRaffleDraw(request, env);
+    }
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
     if (url.hostname.startsWith("www.")) {
@@ -574,5 +583,147 @@ async function handleLeadsRead(request, env) {
       status: 502,
       headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
+  }
+}
+
+// =====================================================================
+// RAFFLE — sorteio ao vivo webinar
+// =====================================================================
+
+async function handleRaffleInsert(request, env) {
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_ANON_KEY;
+  if (!sbKey) return json({ ok: false, error: "not_configured" }, 500);
+
+  let body = {};
+  try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
+
+  const email = (body.email || "").trim().toLowerCase();
+  if (!email || !email.includes("@")) return json({ ok: false, error: "invalid_email" }, 422);
+
+  const webinar_slug = body.webinar_slug || "nigel-croft-0907";
+
+  // Gera número do sorteio: conta inscritos + 1001 (começa em 1001)
+  let raffle_number = 1001;
+  try {
+    const countRes = await fetch(
+      `${sbUrl}/rest/v1/webinar_raffle_entries?select=id&webinar_slug=eq.${encodeURIComponent(webinar_slug)}`,
+      { headers: { "apikey": sbKey, "Authorization": "Bearer " + sbKey, "Prefer": "count=exact" } }
+    );
+    const cr = countRes.headers.get("Content-Range") || "";
+    const total = parseInt(cr.split("/")[1] || "0", 10);
+    raffle_number = 1001 + total;
+  } catch (_) {}
+
+  try {
+    const r = await fetch(`${sbUrl}/rest/v1/webinar_raffle_entries`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "apikey": sbKey,
+        "Authorization": "Bearer " + sbKey,
+        "Prefer": "return=representation",
+      },
+      body: JSON.stringify({
+        webinar_slug,
+        nome: body.nome || "",
+        email,
+        telefone: body.telefone || "",
+        empresa: body.empresa || "",
+        nps: body.nps != null ? parseInt(body.nps, 10) : null,
+        raffle_number,
+      }),
+    });
+
+    if (r.ok) {
+      const data = await r.json().catch(() => [{}]);
+      return json({ ok: true, raffle_number: (data[0] || {}).raffle_number || raffle_number });
+    }
+
+    const err = await r.text().catch(() => "");
+    // Email duplicado → retorna número já cadastrado
+    if (err.includes("raffle_email_webinar_idx") || err.includes("duplicate")) {
+      // Busca número existente
+      const existing = await fetch(
+        `${sbUrl}/rest/v1/webinar_raffle_entries?select=raffle_number&email=eq.${encodeURIComponent(email)}&webinar_slug=eq.${encodeURIComponent(webinar_slug)}&limit=1`,
+        { headers: { "apikey": sbKey, "Authorization": "Bearer " + sbKey } }
+      );
+      const ex = await existing.json().catch(() => []);
+      return json({ ok: true, raffle_number: (ex[0] || {}).raffle_number || raffle_number, duplicate: true });
+    }
+
+    return json({ ok: false, error: err.slice(0, 120) }, 500);
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed" }, 500);
+  }
+}
+
+async function handleRaffleRead(request, env) {
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "service_key_required" }, 401);
+
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const webinar_slug = url.searchParams.get("webinar") || "nigel-croft-0907";
+
+  try {
+    const res = await fetch(
+      `${sbUrl}/rest/v1/webinar_raffle_entries?select=*&webinar_slug=eq.${encodeURIComponent(webinar_slug)}&order=raffle_number.asc`,
+      { headers: { "apikey": sbKey, "Authorization": "Bearer " + sbKey, "Prefer": "count=exact" } }
+    );
+    const data = await res.json();
+    const total = parseInt((res.headers.get("Content-Range") || "").split("/")[1] || "0", 10);
+    return json({ ok: true, data, total });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed" }, 500);
+  }
+}
+
+async function handleRaffleDraw(request, env) {
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "service_key_required" }, 401);
+
+  let body = {};
+  try { body = await request.json(); } catch (_) {}
+  const token = body.token || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const webinar_slug = body.webinar_slug || "nigel-croft-0907";
+
+  try {
+    // Busca todos os participantes
+    const res = await fetch(
+      `${sbUrl}/rest/v1/webinar_raffle_entries?select=id,nome,email,raffle_number&webinar_slug=eq.${encodeURIComponent(webinar_slug)}&order=raffle_number.asc`,
+      { headers: { "apikey": sbKey, "Authorization": "Bearer " + sbKey } }
+    );
+    const entries = await res.json();
+    if (!entries.length) return json({ ok: false, error: "no_entries" }, 400);
+
+    // Sorteia aleatoriamente
+    const winner = entries[Math.floor(Math.random() * entries.length)];
+
+    // Marca como vencedor no banco
+    await fetch(
+      `${sbUrl}/rest/v1/webinar_raffle_entries?id=eq.${winner.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          "apikey": sbKey,
+          "Authorization": "Bearer " + sbKey,
+        },
+        body: JSON.stringify({ winner: true }),
+      }
+    );
+
+    return json({ ok: true, winner });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed" }, 500);
   }
 }

@@ -32,3 +32,15 @@ Reescrita do site da Templum (consultoria de certificações ISO), saindo do **F
 - Alinhar antes de construir páginas (o cliente valida copy/escopo).
 - Ao criar página: usar skill `criar-pagina`; ao mexer em URLs: skill `anti-404`.
 - Após mudanças, `npm run build` e screenshot via headless Chrome para validar.
+
+## Arquitetura — 3 repositórios separados
+
+| Projeto | Domínio | Repositório |
+|---|---|---|
+| **Site institucional** | `templum.com.br` | `Evoluttoplataforma/site-templum` ← este repo |
+| **Blog** (1.015 posts + iscas) | `certificacaoiso.com.br` | `Evoluttoplataforma/certificacaoiso---Blog-templum` |
+| **CMS** (painel admin) | `certificacaoiso.com.br/acesso` | `Evoluttoplataforma/cms-blog-templum-certificacaoiso` |
+
+> `site/src/content/blog/` é o mini-blog do site institucional — diferente do blog principal em `certificacaoiso.com.br`.
+> Conteúdo (posts, iscas, comentários) fica no **Supabase**, editado pelo CMS. Não é código — não vai pro git.
+> Guia de trabalho: `COMO-TRABALHAR.md` na raiz do projeto.

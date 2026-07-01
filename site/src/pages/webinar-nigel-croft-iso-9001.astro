@@ -1,0 +1,525 @@
+---
+import Base from "../layouts/Base.astro";
+
+// Google Calendar — 09/07/2026 16h BRT = 19h UTC
+const calUrl =
+  "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+  "&text=Webinar+Nigel+Croft+%E2%80%94+A+nova+ISO+9001+%7C+Templum" +
+  "&dates=20260709T190000Z/20260709T200000Z" +
+  "&details=Webinar+gratuito+com+Nigel+Croft%2C+Daniela+Albuquerque+e+Igor+Furniel.+Acesse%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" +
+  "&location=https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" +
+  "&sf=true&output=xml";
+
+const topicos = [
+  {
+    icon: "solar:question-circle-bold",
+    t: "Por que a ISO 9001 está sendo revisada agora?",
+    d: "O que motivou a revisão, por que 2026 e não antes — e o que o mundo da qualidade estava pedindo ao comitê.",
+  },
+  {
+    icon: "solar:tuning-2-bold",
+    t: "As decisões por trás das mudanças",
+    d: "IA, clima e gestão do conhecimento entram como requisitos — mas por quê? Nigel explica o raciocínio do TC 176 e o que ficou de fora.",
+  },
+  {
+    icon: "solar:danger-triangle-bold",
+    t: "O que as empresas estão errando na leitura da norma",
+    d: "Os mal-entendidos mais comuns sobre a versão 2026, na visão de quem a escreveu.",
+  },
+  {
+    icon: "solar:calendar-mark-bold",
+    t: "Como será a transição na prática",
+    d: "Prazos, auditorias e o que os organismos certificadores já sabem — que a maioria das empresas ainda não sabe.",
+  },
+];
+
+const schemaEvent = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: "Nigel Croft e a nova ISO 9001 — As decisões por trás das mudanças",
+  startDate: "2026-07-09T16:00:00-03:00",
+  endDate: "2026-07-09T17:00:00-03:00",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  location: { "@type": "VirtualLocation", url: "https://meet.google.com/LINK-AQUI" },
+  organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  performer: [
+    { "@type": "Person", name: "Nigel Croft" },
+    { "@type": "Person", name: "Daniela Albuquerque" },
+    { "@type": "Person", name: "Igor Furniel" },
+  ],
+  isAccessibleForFree: true,
+};
+---
+
+<Base
+  title="Webinar Gratuito — Nigel Croft e a nova ISO 9001 | Templum"
+  description="Com um dos maiores especialistas mundiais na norma, entenda as decisões por trás das mudanças. Quinta, 09 de julho às 16h. Com Nigel Croft, Daniela Albuquerque e Igor Furniel."
+  schemas={[schemaEvent]}
+  hideWpp={true}
+>
+
+  <!-- ── HERO ── -->
+  <section class="wb-hero">
+    <div class="container xl">
+      <div class="wb-hero-grid">
+
+        <!-- ESQUERDA: copy + speakers -->
+        <div class="wb-copy">
+          <div class="wb-badges">
+            <span class="wb-badge-free">
+              <iconify-icon icon="solar:gift-bold"></iconify-icon> Gratuito
+            </span>
+            <span class="wb-badge-live">
+              <span class="wb-dot"></span> Ao vivo
+            </span>
+            <span class="wb-badge-exclusive">
+              <iconify-icon icon="solar:star-bold"></iconify-icon> Evento exclusivo
+            </span>
+          </div>
+
+          <h1>
+            <em>Nigel Croft</em><br />
+            e a nova ISO 9001<br />
+            <span class="wb-h1-sub">As decisões por trás das mudanças.</span>
+          </h1>
+
+          <div class="wb-date-bar">
+            <div class="wb-date-item">
+              <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Data</span>
+                <span class="wb-date-val">Quinta, 09 de Julho de 2026</span>
+              </div>
+            </div>
+            <div class="wb-date-divider"></div>
+            <div class="wb-date-item">
+              <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Horário</span>
+                <span class="wb-date-val">16h00 (Brasília)</span>
+              </div>
+            </div>
+            <div class="wb-date-divider"></div>
+            <div class="wb-date-item">
+              <iconify-icon icon="solar:laptop-bold"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Formato</span>
+                <span class="wb-date-val">Online · Gratuito</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="wb-desc">
+            Com um dos maiores especialistas mundiais na norma, entenda as decisões por trás das mudanças da ISO 9001:2026. Uma conversa única — com quem liderou a revisão e quem aplica a norma há +30 anos no Brasil.
+          </p>
+
+          <!-- SPEAKERS STRIP -->
+          <div class="wb-speakers-strip">
+            <div class="wb-speaker-item">
+              <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-speaker-photo" />
+              <div>
+                <div class="wb-speaker-name">Daniela Albuquerque</div>
+                <div class="wb-speaker-role">Sócia Diretora · Templum</div>
+              </div>
+            </div>
+            <div class="wb-speaker-sep">+</div>
+            <div class="wb-speaker-item">
+              <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="wb-speaker-photo" />
+              <div>
+                <div class="wb-speaker-name">Igor Furniel</div>
+                <div class="wb-speaker-role">Sócio · Templum</div>
+              </div>
+            </div>
+            <div class="wb-speaker-sep">+</div>
+            <div class="wb-speaker-item wb-speaker-item--star">
+              <div class="wb-speaker-photo wb-speaker-initials">NC</div>
+              <div>
+                <div class="wb-speaker-name">Nigel Croft</div>
+                <div class="wb-speaker-role">Ex-chairman TC 176 · ISO 9001</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIREITA: formulário -->
+        <div class="wb-form-col">
+          <div class="wb-form-card" id="wb-card">
+
+            <!-- Formulário -->
+            <div id="wb-form-wrap">
+              <div class="wb-form-event-bar">
+                <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+                <span><strong>Quinta, 09 de Julho</strong> · 16h · Online · Gratuito</span>
+              </div>
+              <div class="wb-form-header">
+                <div class="wb-form-title">Garantir minha vaga</div>
+                <p class="wb-form-sub">Preencha abaixo para participar gratuitamente.</p>
+              </div>
+              <form
+                data-trk-event="webinar-nigel-croft-0907"
+                data-obrigado="/obrigado-webinar-nigel"
+                novalidate
+              >
+                <div class="wb-field">
+                  <label for="wb-nome">Nome completo</label>
+                  <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome completo" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-email">E-mail</label>
+                  <input class="input" type="email" id="wb-email" name="email" placeholder="voce@empresa.com" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-empresa">Empresa</label>
+                  <input class="input" type="text" id="wb-empresa" name="empresa" placeholder="Nome da empresa" />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-wpp">WhatsApp <span class="wb-opt">(opcional)</span></label>
+                  <input class="input" type="tel" id="wb-wpp" name="telefone" placeholder="(00) 00000-0000" />
+                </div>
+                <input type="hidden" name="norma" value="ISO 9001" />
+                <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
+                  Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </form>
+              <p class="wb-legal">Gratuito. Sem spam. Dados protegidos pela LGPD.</p>
+            </div>
+
+            <!-- Confirmação (aparece após submit via JS) -->
+            <div id="wb-confirm" hidden>
+              <div class="wb-confirm-check">
+                <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+              </div>
+              <div class="wb-form-title">Vaga garantida!</div>
+              <p class="wb-form-sub">Acesse o webinar pelo link abaixo na data do evento:</p>
+              <a class="wb-meet-link" href="https://meet.google.com/LINK-AQUI" target="_blank" rel="noopener">
+                <iconify-icon icon="solar:videocamera-record-bold"></iconify-icon>
+                meet.google.com/LINK-AQUI
+              </a>
+              <a href={calUrl} target="_blank" rel="noopener" class="btn btn--dark btn--block" style="margin-top:12px;">
+                <iconify-icon icon="solar:calendar-add-bold"></iconify-icon> Adicionar à agenda
+              </a>
+              <p class="wb-legal" style="margin-top:12px;">Quinta, 09 de julho · 16h · Online · Gratuito</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TÓPICOS ── -->
+  <section class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O que você vai aprender</span>
+        <h2>1 hora de conteúdo <em class="accent">com quem escreveu a norma</em></h2>
+        <p>Uma conversa direta com o especialista que liderou a revisão — e quem aplica há décadas no Brasil.</p>
+      </div>
+      <div class="wb-topics-grid">
+        {topicos.map((t) => (
+          <div class="wb-topic-card reveal">
+            <div class="wb-topic-ico">
+              <iconify-icon icon={t.icon}></iconify-icon>
+            </div>
+            <h3>{t.t}</h3>
+            <p>{t.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PALESTRANTES ── -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Quem apresenta</span>
+        <h2>Três perspectivas. <em class="accent">Uma norma.</em></h2>
+        <p style="color:rgba(255,244,221,0.6);">Quem a criou. Quem a ensina. Quem a implementa.</p>
+      </div>
+
+      <!-- Foto trio -->
+      <div class="wb-trio-photo reveal">
+        <img src="/assets/img/socios/nigel-trio.jpg" alt="Daniela Albuquerque, Nigel Croft e Igor Furniel" />
+      </div>
+
+      <!-- Cards palestrantes -->
+      <div class="wb-presenters-grid">
+        <div class="wb-presenter-mini reveal">
+          <img src="/assets/img/socios/nigel-croft.jpg" alt="Nigel Croft" class="wb-presenter-mini-photo" />
+          <div class="wb-presenter-mini-badge">Convidado especial</div>
+          <h3>Nigel Croft</h3>
+          <span class="wb-presenter-role">Ex-chairman do TC 176 · Autor da ISO 9001</span>
+          <p>Um dos maiores especialistas mundiais em sistemas de gestão da qualidade. Ex-presidente do comitê técnico da ISO responsável pela norma, Nigel participou diretamente da revisão 2026 — e vem ao Brasil para contar como foram as decisões.</p>
+        </div>
+        <div class="wb-presenter-mini reveal">
+          <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-presenter-mini-photo" />
+          <h3>Daniela Albuquerque</h3>
+          <span class="wb-presenter-role">Sócia Diretora · Templum Consultoria</span>
+          <p>Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil.</p>
+          <div class="wb-presenter-stats">
+            <div><strong>+15 anos</strong><span>de experiência</span></div>
+            <div><strong>+2.000</strong><span>empresas certificadas</span></div>
+          </div>
+        </div>
+        <div class="wb-presenter-mini reveal">
+          <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="wb-presenter-mini-photo" />
+          <h3>Igor Furniel</h3>
+          <span class="wb-presenter-role">Sócio · Templum Consultoria</span>
+          <p>Especialista em implementação de sistemas de gestão e certificações ISO. Referência em transformar os requisitos da norma em processos práticos para empresas de todos os portes.</p>
+          <div class="wb-presenter-stats">
+            <div><strong>+30 anos</strong><span>Templum no mercado</span></div>
+            <div><strong>+2.000</strong><span>clientes certificados</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="section wb-cta-sec">
+    <div class="container sm" style="text-align:center;">
+      <span class="tag-pill">Vagas limitadas</span>
+      <h2 style="margin-top:20px;margin-bottom:14px;">Reserve seu lugar agora.</h2>
+      <p class="paragraph" style="margin-bottom:32px;">
+        Gratuito. Online. Dia 09 de julho às 16h. Uma oportunidade única de ouvir Nigel Croft ao vivo.
+      </p>
+      <a href="#wb-card" class="btn btn--primary btn--lg">
+        Quero minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  :root { --wb-radius: 16px; }
+
+  /* ─── HERO ─── */
+  .wb-hero {
+    background: var(--navy);
+    padding: clamp(72px, 10vw, 120px) 0 clamp(72px, 10vw, 100px);
+    position: relative;
+    overflow: hidden;
+  }
+  .wb-hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,89,37,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .wb-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  /* BADGES */
+  .wb-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+  .wb-badge-free, .wb-badge-live, .wb-badge-exclusive {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 100px;
+  }
+  .wb-badge-free { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .wb-badge-live { background: rgba(255,89,37,0.12); color: var(--orange); border: 1px solid rgba(255,89,37,0.3); }
+  .wb-badge-exclusive { background: rgba(250,204,21,0.12); color: #facc15; border: 1px solid rgba(250,204,21,0.3); }
+  .wb-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+  /* COPY */
+  .wb-copy h1 {
+    font-size: clamp(32px, 4.5vw, 52px); font-weight: 800;
+    color: var(--cream); line-height: 1.1;
+    letter-spacing: -0.03em; margin-bottom: 22px;
+  }
+  .wb-copy h1 em { font-style: normal; color: var(--orange); }
+  .wb-h1-sub { color: rgba(255,244,221,0.6); font-size: 0.85em; }
+  .wb-desc { font-size: 16px; color: rgba(255,244,221,0.70); line-height: 1.75; margin-bottom: 36px; max-width: 520px; }
+
+  /* DATE BAR */
+  .wb-date-bar {
+    display: flex; align-items: center; gap: 0;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 12px; padding: 16px 20px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .wb-date-item { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 120px; }
+  .wb-date-item iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+  .wb-date-item div { display: flex; flex-direction: column; gap: 1px; }
+  .wb-date-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,244,221,0.4); }
+  .wb-date-val { font-size: 13px; font-weight: 700; color: var(--cream); }
+  .wb-date-divider { width: 1px; height: 32px; background: rgba(255,244,221,0.12); margin: 0 16px; flex-shrink: 0; }
+
+  /* SPEAKERS STRIP */
+  .wb-speakers-strip {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 12px; padding: 18px 20px;
+    border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 14px; background: rgba(255,255,255,0.04);
+  }
+  .wb-speaker-item { display: flex; align-items: center; gap: 10px; }
+  .wb-speaker-item--star .wb-speaker-name { color: #facc15; }
+  .wb-speaker-sep { color: rgba(255,244,221,0.3); font-size: 20px; font-weight: 300; padding: 0 4px; }
+  .wb-speaker-photo {
+    width: 44px; height: 44px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0;
+  }
+  .wb-speaker-initials {
+    display: grid; place-items: center;
+    background: rgba(250,204,21,0.2); border-color: #facc15;
+    font-size: 14px; font-weight: 800; color: #facc15;
+  }
+  .wb-speaker-name { font-size: 13px; font-weight: 800; color: var(--cream); }
+  .wb-speaker-role { font-size: 11px; color: rgba(255,244,221,0.5); margin-top: 1px; }
+
+  /* FORM */
+  .wb-form-col { align-self: start; }
+  .wb-form-card {
+    background: #fff; border-radius: var(--wb-radius);
+    padding: clamp(24px,3vw,36px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .wb-form-event-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,89,37,0.08); border: 1px solid rgba(255,89,37,0.2);
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 18px;
+    font-size: 13px; color: var(--orange); font-weight: 600;
+  }
+  .wb-form-event-bar iconify-icon { font-size: 16px; flex-shrink: 0; }
+  .wb-form-event-bar strong { font-weight: 800; }
+  .wb-form-header { margin-bottom: 22px; }
+  .wb-form-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
+  .wb-form-sub { font-size: 13.5px; color: var(--text-mid); line-height: 1.5; }
+  .wb-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .wb-field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .wb-opt { font-weight: 500; color: var(--text-soft); }
+  .wb-legal { font-size: 11px; color: var(--text-soft); text-align: center; margin-top: 10px; line-height: 1.5; }
+  .wb-confirm-check { font-size: 52px; color: #22c55e; margin-bottom: 12px; display: block; }
+  .wb-meet-link {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg); border: 1px solid var(--border-2);
+    border-radius: 10px; padding: 14px 16px;
+    font-size: 14px; font-weight: 700; color: var(--orange);
+    margin-top: 16px; transition: border-color .2s; word-break: break-all;
+  }
+  .wb-meet-link:hover { border-color: var(--orange); }
+  .wb-meet-link iconify-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* ─── TÓPICOS ─── */
+  .wb-topics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .wb-topic-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-20); padding: 28px 24px;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .wb-topic-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-2); }
+  .wb-topic-ico {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(255,89,37,0.10); color: var(--orange);
+    display: grid; place-items: center; font-size: 24px; margin-bottom: 16px;
+  }
+  .wb-topic-card h3 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .wb-topic-card p { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
+
+  /* ─── TRIO FOTO ─── */
+  .wb-trio-photo {
+    max-width: 560px; margin: 0 auto 56px;
+    border-radius: 20px; overflow: hidden;
+    border: 3px solid rgba(255,89,37,0.3);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  }
+  .wb-trio-photo img { width: 100%; display: block; object-fit: cover; }
+
+  /* ─── PALESTRANTES GRID ─── */
+  .wb-presenters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .wb-presenter-mini {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.10);
+    border-radius: 20px; padding: 28px 24px; text-align: center;
+  }
+  .wb-presenter-mini-photo {
+    width: 100px; height: 100px; border-radius: 50%;
+    object-fit: cover; object-position: top;
+    border: 3px solid rgba(255,89,37,0.5);
+    margin: 0 auto 12px; display: block;
+  }
+  .wb-presenter-mini-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #facc15; background: rgba(250,204,21,0.12);
+    border: 1px solid rgba(250,204,21,0.3);
+    border-radius: 100px; padding: 4px 12px; margin-bottom: 10px;
+  }
+  .wb-presenter-mini h3 { font-size: 20px; font-weight: 800; color: var(--cream); margin-bottom: 4px; }
+  .wb-presenter-role {
+    display: block; font-size: 11px; font-weight: 700; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;
+  }
+  .wb-presenter-mini p { font-size: 14px; color: rgba(255,244,221,0.6); line-height: 1.7; margin-bottom: 16px; }
+  .wb-presenter-stats { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .wb-presenter-stats div { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+  .wb-presenter-stats strong { font-size: 18px; font-weight: 800; color: var(--cream); }
+  .wb-presenter-stats span { font-size: 11px; color: rgba(255,244,221,0.5); }
+
+  /* ─── CTA ─── */
+  .wb-cta-sec { background: var(--cream); }
+
+  /* ─── RESPONSIVO ─── */
+  @media (max-width: 960px) {
+    .wb-hero-grid { grid-template-columns: 1fr; }
+    .wb-presenters-grid { grid-template-columns: 1fr; }
+    .wb-topics-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .wb-speakers-strip { flex-direction: column; align-items: flex-start; }
+    .wb-speaker-sep { display: none; }
+    .wb-date-bar { flex-direction: column; gap: 12px; }
+    .wb-date-divider { width: 100%; height: 1px; margin: 0; }
+  }
+</style>
+
+<script is:inline>
+  // Form webinar — submit → salva lead + mostra confirmação (sem redirect)
+  (function () {
+    var form = document.querySelector("form[data-trk-event]");
+    var wrap = document.getElementById("wb-form-wrap");
+    var confirm = document.getElementById("wb-confirm");
+    if (!form || !wrap || !confirm) return;
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      var btn = form.querySelector('[type="submit"]');
+      if (btn) btn.disabled = true;
+
+      var d = {};
+      new FormData(form).forEach(function (v, k) { d[k] = v; });
+
+      var attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
+      var urlP = new URLSearchParams(location.search);
+      ["utm_source","utm_medium","utm_campaign","utm_term","utm_content",
+       "gclid","fbclid","gad_source","gad_campaignid"].forEach(function(k) {
+        if (!attrib[k] && urlP.get(k)) attrib[k] = urlP.get(k);
+      });
+
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify(Object.assign({
+          nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
+          empresa: d.empresa || "", norma: "ISO 9001", mensagem: "",
+          evento: "webinar-nigel-croft-0907", pagina: location.pathname,
+        }, attrib)),
+      }).catch(function () {});
+
+      // Mostra confirmação na página (sem redirect)
+      wrap.hidden = true;
+      confirm.hidden = false;
+    });
+  })();
+</script>

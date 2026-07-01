@@ -1,0 +1,302 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+---
+
+<LpBase
+  title="Sorteio — Webinar Nigel Croft | Templum"
+  description="Preencha o NPS e concorra a 1h de mentoria com Daniela Albuquerque."
+  noindex={true}
+>
+
+<section class="sorteio-hero">
+  <div class="sorteio-inner">
+    <div class="tag-pill tag-pill--yellow">🎁 Sorteio exclusivo</div>
+    <h1>Avalie o webinar e concorra a<br/><span class="destaque">1h de mentoria com Dani</span></h1>
+    <p class="sub">Preencha o formulário abaixo. Você receberá um número de sorteio e a Dani vai sortear ao vivo!</p>
+  </div>
+</section>
+
+<section class="sorteio-form-sec">
+  <div class="sorteio-inner">
+
+    <!-- Estado: formulário -->
+    <div id="state-form">
+      <form id="raffle-form" class="raffle-form">
+        <div class="field-group">
+          <label for="r-nome">Nome completo *</label>
+          <input id="r-nome" name="nome" type="text" required placeholder="Seu nome" />
+        </div>
+        <div class="field-group">
+          <label for="r-email">E-mail *</label>
+          <input id="r-email" name="email" type="email" required placeholder="seu@email.com" />
+        </div>
+        <div class="field-group">
+          <label for="r-telefone">WhatsApp *</label>
+          <input id="r-telefone" name="telefone" type="tel" required placeholder="(11) 99999-9999" />
+        </div>
+        <div class="field-group">
+          <label for="r-empresa">Empresa</label>
+          <input id="r-empresa" name="empresa" type="text" placeholder="Nome da empresa" />
+        </div>
+
+        <div class="nps-block">
+          <label class="nps-label">De 0 a 10, quanto você recomendaria este webinar? *</label>
+          <div class="nps-scale">
+            {[0,1,2,3,4,5,6,7,8,9,10].map((n) => (
+              <label class="nps-opt">
+                <input type="radio" name="nps" value={String(n)} required />
+                <span>{n}</span>
+              </label>
+            ))}
+          </div>
+          <div class="nps-labels-row">
+            <span>Não recomendaria</span>
+            <span>Recomendaria muito</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full" id="raffle-btn">
+          Participar do sorteio
+          <iconify-icon icon="solar:gift-linear"></iconify-icon>
+        </button>
+      </form>
+    </div>
+
+    <!-- Estado: sucesso -->
+    <div id="state-success" style="display:none" class="success-card">
+      <div class="success-icon">🎟️</div>
+      <h2>Você está participando!</h2>
+      <p>Seu número do sorteio é:</p>
+      <div class="raffle-number" id="raffle-number-display">—</div>
+      <p class="success-hint">Aguarde o sorteio ao vivo.<br/>Boa sorte! 🍀</p>
+    </div>
+
+    <!-- Estado: erro -->
+    <div id="state-error" style="display:none" class="error-card">
+      <p id="error-msg">Ocorreu um erro. Tente novamente.</p>
+      <button class="btn btn--outline" onclick="document.getElementById('state-error').style.display='none';document.getElementById('state-form').style.display=''">
+        Tentar novamente
+      </button>
+    </div>
+
+  </div>
+</section>
+
+</LpBase>
+
+<script is:inline>
+  // Máscara telefone
+  document.getElementById('r-telefone').addEventListener('input', function(e) {
+    var d = e.target.value.replace(/\D/g,'').substring(0,11);
+    var len = d.length;
+    if (len === 0) { e.target.value = ''; return; }
+    if (len <= 2) e.target.value = '(' + d;
+    else if (len <= 6) e.target.value = '(' + d.slice(0,2) + ') ' + d.slice(2);
+    else if (len <= 10) e.target.value = '(' + d.slice(0,2) + ') ' + d.slice(2,6) + '-' + d.slice(6);
+    else e.target.value = '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+  });
+
+  document.getElementById('raffle-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('raffle-btn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    var fd = new FormData(e.target);
+    var payload = {
+      webinar_slug: 'nigel-croft-0907',
+      nome: fd.get('nome'),
+      email: fd.get('email'),
+      telefone: fd.get('telefone'),
+      empresa: fd.get('empresa') || '',
+      nps: parseInt(fd.get('nps'), 10),
+    };
+
+    try {
+      var res = await fetch('/api/raffle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+
+      if (data.ok) {
+        document.getElementById('raffle-number-display').textContent = String(data.raffle_number);
+        document.getElementById('state-form').style.display = 'none';
+        document.getElementById('state-success').style.display = '';
+      } else {
+        document.getElementById('error-msg').textContent = data.error || 'Erro ao salvar. Tente novamente.';
+        document.getElementById('state-form').style.display = 'none';
+        document.getElementById('state-error').style.display = '';
+        btn.disabled = false;
+        btn.innerHTML = 'Participar do sorteio <iconify-icon icon="solar:gift-linear"></iconify-icon>';
+      }
+    } catch(err) {
+      document.getElementById('error-msg').textContent = 'Erro de rede. Verifique sua conexão.';
+      document.getElementById('state-form').style.display = 'none';
+      document.getElementById('state-error').style.display = '';
+      btn.disabled = false;
+      btn.innerHTML = 'Participar do sorteio <iconify-icon icon="solar:gift-linear"></iconify-icon>';
+    }
+  });
+</script>
+
+<style>
+  .sorteio-hero {
+    background: var(--navy);
+    color: var(--cream);
+    padding: clamp(48px, 8vw, 80px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 64px);
+    text-align: center;
+  }
+  .sorteio-inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .tag-pill--yellow {
+    background: #FFD600;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 99px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .sorteio-hero h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    color: var(--cream);
+  }
+  .destaque { color: #FFD600; }
+  .sub {
+    font-size: 16px;
+    color: rgba(255,244,221,0.7);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .sorteio-form-sec {
+    background: var(--cream);
+    padding: clamp(40px, 6vw, 64px) clamp(16px, 4vw, 40px);
+  }
+
+  .raffle-form {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 24px rgba(34,40,49,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .field-group input {
+    padding: 11px 14px;
+    border: 1.5px solid #dde2e9;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--navy);
+    background: #fafafa;
+    transition: border-color .2s;
+    outline: none;
+  }
+  .field-group input:focus { border-color: var(--orange); background: #fff; }
+
+  .nps-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .nps-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .nps-scale {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .nps-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .nps-opt input[type="radio"] { display: none; }
+  .nps-opt span {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #dde2e9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .nps-opt input[type="radio"]:checked + span {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+  }
+  .nps-opt span:hover { border-color: var(--orange); }
+  .nps-labels-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+  }
+
+  .btn--full { width: 100%; justify-content: center; }
+
+  /* Sucesso */
+  .success-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 32px;
+    box-shadow: 0 2px 24px rgba(34,40,49,0.08);
+    text-align: center;
+  }
+  .success-icon { font-size: 56px; margin-bottom: 16px; }
+  .success-card h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 8px;
+  }
+  .success-card p { font-size: 16px; color: #555; margin: 0 0 8px; }
+  .raffle-number {
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+    margin: 16px 0;
+  }
+  .success-hint { font-size: 15px; color: #888; margin-top: 0; }
+
+  /* Erro */
+  .error-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 2px 24px rgba(34,40,49,0.08);
+    text-align: center;
+  }
+  .error-card p { font-size: 16px; color: #c00; margin-bottom: 20px; }
+</style>

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(/usr/local/bin/npm run *)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//Users/rodrigofurniel/.nvm/versions/**)",
+      "Read(//Users/rodrigofurniel/.bun/bin/**)",
+      "Read(//Users/rodrigofurniel/.volta/bin/**)",
+      "Bash(zsh -i -c \"which npm && npm --version\")",
+      "Read(//Users/rodrigofurniel/**)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum stash)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum pull --rebase origin main)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum stash pop)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum push origin main)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum add site/src/data/consultoria/pbqp-h.js)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum commit -m ' *)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum add site/src/pages/form.astro)",
+      "Bash(git -C /Users/rodrigofurniel/Documents/site-templum add site/src/pages/iso-9001-campinas.astro)"
+    ]
+  }
+}

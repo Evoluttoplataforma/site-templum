@@ -1,0 +1,481 @@
+---
+// Página admin — acesso só com senha (verificado no lado cliente + worker)
+// URL: /webinar-nigel-croft-admin
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin Sorteio — Webinar Nigel Croft</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
+  <style>
+    @font-face { font-family: 'Montserrat'; src: url('/fonts/montserrat-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: 'Montserrat'; src: url('/fonts/montserrat-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #f4f6fa;
+      color: #222831;
+      min-height: 100vh;
+    }
+
+    /* Login */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 36px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-card h1 { font-size: 22px; font-weight: 800; margin: 0 0 6px; }
+    .login-card p { font-size: 14px; color: #777; margin: 0 0 24px; }
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #dde2e9;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    .login-card input:focus { border-color: #FF5925; }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: #FF5925;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: .85; }
+    .login-err { color: #c00; font-size: 13px; margin-top: 8px; display: none; }
+
+    /* App */
+    .app { display: none; }
+    .app-header {
+      background: #222831;
+      color: #FFFAEB;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .app-header h2 { font-size: 17px; font-weight: 800; margin: 0; }
+    .app-header .meta { font-size: 13px; color: rgba(255,244,221,0.55); }
+
+    .app-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 16px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      flex: 1;
+      min-width: 140px;
+    }
+    .stat-label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+    .stat-value { font-size: 36px; font-weight: 800; color: #222831; }
+    .stat-value.orange { color: #FF5925; }
+
+    .nps-avg { font-size: 36px; font-weight: 800; }
+    .nps-dist { display: flex; gap: 4px; align-items: flex-end; height: 40px; margin-top: 8px; }
+    .nps-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+    .nps-bar { width: 100%; background: #FF5925; border-radius: 3px 3px 0 0; min-height: 2px; }
+    .nps-bar-label { font-size: 9px; color: #aaa; }
+
+    .draw-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .draw-section h3 { font-size: 20px; font-weight: 800; margin: 0 0 8px; }
+    .draw-section p { font-size: 14px; color: #666; margin: 0 0 20px; }
+
+    .btn-draw {
+      padding: 14px 36px;
+      background: #FF5925;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .1s, opacity .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-draw:hover { opacity: .88; }
+    .btn-draw:active { transform: scale(.97); }
+    .btn-draw:disabled { opacity: .5; cursor: not-allowed; }
+
+    .winner-card {
+      display: none;
+      background: linear-gradient(135deg, #FF5925 0%, #ff8c5a 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .winner-card.show { display: block; }
+    .winner-emoji { font-size: 48px; margin-bottom: 8px; }
+    .winner-card h4 { font-size: 14px; font-weight: 600; opacity: .8; margin: 0 0 4px; text-transform: uppercase; }
+    .winner-num { font-size: 56px; font-weight: 800; margin: 0; line-height: 1; }
+    .winner-name { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
+    .winner-email { font-size: 14px; opacity: .8; margin: 0; }
+
+    /* Tabela */
+    .table-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    }
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .table-header h3 { font-size: 17px; font-weight: 800; margin: 0; }
+    .search-input {
+      padding: 8px 12px;
+      border: 1.5px solid #dde2e9;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      width: 200px;
+    }
+    .search-input:focus { border-color: #FF5925; }
+
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      text-align: left;
+      font-weight: 700;
+      color: #888;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 8px 12px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f4f6fa;
+      color: #333;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .winner-row td { background: #fff8f5; font-weight: 700; }
+    .winner-badge {
+      display: inline-block;
+      background: #FF5925;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-left: 6px;
+    }
+    .nps-chip {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 28px;
+      text-align: center;
+      color: #fff;
+    }
+    .nps-0,.nps-1,.nps-2,.nps-3,.nps-4,.nps-5,.nps-6 { background: #c00; }
+    .nps-7,.nps-8 { background: #e67e00; }
+    .nps-9,.nps-10 { background: #1a7a00; }
+
+    .loading { text-align: center; padding: 40px; color: #aaa; font-size: 15px; }
+    .btn-refresh {
+      padding: 8px 16px;
+      border: 1.5px solid #dde2e9;
+      border-radius: 8px;
+      background: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh:hover { border-color: #FF5925; color: #FF5925; }
+  </style>
+</head>
+<body>
+
+<!-- Tela de login -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <h1>🔐 Admin Sorteio</h1>
+    <p>Webinar Nigel Croft — 09/07</p>
+    <input type="password" id="login-pwd" placeholder="Senha de acesso" />
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="login-err">Senha incorreta.</div>
+  </div>
+</div>
+
+<!-- App principal -->
+<div class="app" id="app">
+
+  <div class="app-header">
+    <div>
+      <h2>🎟️ Sorteio — Webinar Nigel Croft</h2>
+      <div class="meta">09/07/2026 • Prêmio: 1h mentoria com Dani</div>
+    </div>
+    <button class="btn-refresh" onclick="loadData()">
+      <iconify-icon icon="solar:refresh-linear"></iconify-icon> Atualizar
+    </button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Participantes</div>
+        <div class="stat-value" id="stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">NPS médio</div>
+        <div class="stat-value orange" id="stat-nps">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Promotores (9-10)</div>
+        <div class="stat-value" id="stat-promo">—</div>
+      </div>
+    </div>
+
+    <!-- Sorteio -->
+    <div class="draw-section">
+      <h3>🎲 Realizar sorteio</h3>
+      <p>Clique para sortear um participante aleatório. O resultado será salvo no banco.</p>
+      <button class="btn-draw" id="btn-draw" onclick="doDraw()">
+        <iconify-icon icon="solar:gift-linear"></iconify-icon>
+        Sortear agora!
+      </button>
+      <div class="winner-card" id="winner-card">
+        <div class="winner-emoji">🏆</div>
+        <h4>Vencedor(a) sorteado(a)!</h4>
+        <div class="winner-num" id="w-num">—</div>
+        <div class="winner-name" id="w-name">—</div>
+        <div class="winner-email" id="w-email">—</div>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-section">
+      <div class="table-header">
+        <h3>Lista de participantes</h3>
+        <input class="search-input" type="text" placeholder="Buscar…" id="search-input" oninput="filterTable()" />
+      </div>
+      <div class="table-wrap">
+        <table id="entries-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>WhatsApp</th>
+              <th>Empresa</th>
+              <th>NPS</th>
+              <th>Horário</th>
+            </tr>
+          </thead>
+          <tbody id="entries-body">
+            <tr><td colspan="7" class="loading">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  var TOKEN = '';
+  var allEntries = [];
+
+  function doLogin() {
+    var pwd = document.getElementById('login-pwd').value;
+    if (!pwd) return;
+    TOKEN = pwd;
+    loadData();
+  }
+
+  document.getElementById('login-pwd').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  async function loadData() {
+    try {
+      var res = await fetch('/api/raffle?token=' + encodeURIComponent(TOKEN) + '&webinar=nigel-croft-0907');
+      if (res.status === 401) {
+        document.getElementById('login-err').style.display = 'block';
+        return;
+      }
+      var data = await res.json();
+      if (!data.ok) {
+        alert('Erro: ' + (data.error || 'desconhecido'));
+        return;
+      }
+
+      // Mostrar app
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+
+      allEntries = data.data || [];
+      renderStats(allEntries);
+      renderTable(allEntries);
+
+      // Verifica se já tem vencedor
+      var winner = allEntries.find(function(e) { return e.winner; });
+      if (winner) showWinner(winner);
+    } catch(e) {
+      alert('Erro de rede: ' + e.message);
+    }
+  }
+
+  function renderStats(entries) {
+    document.getElementById('stat-total').textContent = entries.length;
+    var npsVals = entries.map(function(e) { return e.nps; }).filter(function(n) { return n != null; });
+    var avg = npsVals.length ? (npsVals.reduce(function(a,b){return a+b;}, 0) / npsVals.length).toFixed(1) : '—';
+    document.getElementById('stat-nps').textContent = avg;
+    var promo = npsVals.filter(function(n) { return n >= 9; }).length;
+    document.getElementById('stat-promo').textContent = promo;
+  }
+
+  function renderTable(entries) {
+    var tbody = document.getElementById('entries-body');
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="loading">Nenhum participante ainda.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = entries.map(function(e) {
+      var dt = e.created_at ? new Date(e.created_at).toLocaleString('pt-BR') : '—';
+      var winBadge = e.winner ? '<span class="winner-badge">VENCEDOR</span>' : '';
+      var npsChip = e.nps != null ? '<span class="nps-chip nps-'+e.nps+'">'+e.nps+'</span>' : '—';
+      var rowCls = e.winner ? 'winner-row' : '';
+      return '<tr class="' + rowCls + '">'
+        + '<td><strong>' + e.raffle_number + '</strong>' + winBadge + '</td>'
+        + '<td>' + esc(e.nome) + '</td>'
+        + '<td>' + esc(e.email) + '</td>'
+        + '<td>' + esc(e.telefone) + '</td>'
+        + '<td>' + esc(e.empresa || '—') + '</td>'
+        + '<td>' + npsChip + '</td>'
+        + '<td>' + dt + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  function filterTable() {
+    var q = document.getElementById('search-input').value.toLowerCase();
+    var filtered = q ? allEntries.filter(function(e) {
+      return (e.nome||'').toLowerCase().includes(q)
+          || (e.email||'').toLowerCase().includes(q)
+          || (e.empresa||'').toLowerCase().includes(q)
+          || String(e.raffle_number).includes(q);
+    }) : allEntries;
+    renderTable(filtered);
+  }
+
+  async function doDraw() {
+    if (!confirm('Confirmar sorteio? Esta ação não pode ser desfeita.')) return;
+    var btn = document.getElementById('btn-draw');
+    btn.disabled = true;
+    btn.innerHTML = '<iconify-icon icon="solar:refresh-linear"></iconify-icon> Sorteando…';
+
+    try {
+      var res = await fetch('/api/raffle/draw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: TOKEN, webinar_slug: 'nigel-croft-0907' }),
+      });
+      var data = await res.json();
+      if (data.ok && data.winner) {
+        showWinner(data.winner);
+        await loadData();
+      } else {
+        alert('Erro: ' + (data.error || 'desconhecido'));
+        btn.disabled = false;
+        btn.innerHTML = '<iconify-icon icon="solar:gift-linear"></iconify-icon> Sortear novamente';
+      }
+    } catch(e) {
+      alert('Erro de rede');
+      btn.disabled = false;
+    }
+  }
+
+  function showWinner(w) {
+    document.getElementById('w-num').textContent = w.raffle_number;
+    document.getElementById('w-name').textContent = w.nome;
+    document.getElementById('w-email').textContent = w.email;
+    document.getElementById('winner-card').classList.add('show');
+    document.getElementById('btn-draw').innerHTML = '<iconify-icon icon="solar:gift-linear"></iconify-icon> Sortear novamente';
+    document.getElementById('btn-draw').disabled = false;
+  }
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+
+</body>
+</html>
