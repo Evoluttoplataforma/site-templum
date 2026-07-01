@@ -266,6 +266,7 @@ async function saveToMailchimp(lead, env) {
               NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
               FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
               ORIGEM: lead.pagina || lead.evento || "site",
+              UTM_SOURCE: lead.utm_source, UTM_MEDIUM: lead.utm_medium, UTM_CAMP: lead.utm_campaign,
             },
           }),
         }).catch(() => null),
