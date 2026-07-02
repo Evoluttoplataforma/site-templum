@@ -309,7 +309,11 @@
           <th data-col="empresa">Empresa</th>
           <th data-col="norma">Norma</th>
           <th data-col="pagina">Página</th>
-          <th data-col="utm_source">UTMs</th>
+          <th data-col="utm_source">Fonte</th>
+          <th data-col="utm_medium">Meio</th>
+          <th data-col="utm_campaign">Campanha</th>
+          <th data-col="utm_content">Conteúdo</th>
+          <th data-col="utm_term">Termo</th>
           <th data-col="mensagem">Mensagem</th>
         </tr>
       </thead>
@@ -515,25 +519,14 @@
         "<td>" + esc(l.empresa || "—") + "</td>" +
         "<td class='td-norma'>" + (l.norma ? "<span class='pill'>" + esc(l.norma) + "</span>" : "—") + "</td>" +
         "<td class='td-pagina' title='" + esc(l.pagina || "") + "'>" + esc(l.pagina || "—") + "</td>" +
-        "<td class='td-utm'>" + utmBlock(l) + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_source   || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_medium   || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_campaign || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_content  || "—") + "</td>" +
+        "<td class='td-utm'>" + esc(l.utm_term     || "—") + "</td>" +
         "<td class='td-msg' title='" + esc(l.mensagem || "") + "'>" + esc(l.mensagem || "—") + "</td>" +
         "</tr>";
     }).join("");
-  }
-
-  function utmBlock(l) {
-    var fields = [
-      { key: "src",  val: l.utm_source   },
-      { key: "med",  val: l.utm_medium   },
-      { key: "cmp",  val: l.utm_campaign },
-      { key: "cnt",  val: l.utm_content  },
-      { key: "trm",  val: l.utm_term     },
-    ];
-    var rows = fields.filter(function(f) { return f.val; });
-    if (!rows.length) return "<span style='color:var(--text-dim)'>—</span>";
-    return "<div class='utm-block'>" + rows.map(function(f) {
-      return "<div class='utm-row'><span class='utm-key'>" + f.key + "</span><span class='utm-val' title='" + esc(f.val) + "'>" + esc(f.val) + "</span></div>";
-    }).join("") + "</div>";
   }
 
   function esc(s) {
