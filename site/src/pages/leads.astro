@@ -219,6 +219,10 @@
     }
     .td-pagina { font-size: 11px; color: var(--text-dim); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .td-utm { font-size: 11px; color: var(--text-dim); }
+    .utm-block { display: flex; flex-direction: column; gap: 3px; }
+    .utm-row { display: flex; gap: 5px; align-items: baseline; white-space: nowrap; }
+    .utm-key { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; min-width: 28px; }
+    .utm-val { font-size: 11px; color: var(--cream); overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
     .td-msg { max-width: 200px; font-size: 12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Empty / Loading states */
@@ -304,8 +308,7 @@
           <th data-col="empresa">Empresa</th>
           <th data-col="norma">Norma</th>
           <th data-col="pagina">Página</th>
-          <th data-col="utm_source">Fonte</th>
-          <th data-col="utm_campaign">Campanha</th>
+          <th data-col="utm_source">UTMs</th>
           <th data-col="mensagem">Mensagem</th>
         </tr>
       </thead>
@@ -511,11 +514,25 @@
         "<td>" + esc(l.empresa || "—") + "</td>" +
         "<td class='td-norma'>" + (l.norma ? "<span class='pill'>" + esc(l.norma) + "</span>" : "—") + "</td>" +
         "<td class='td-pagina' title='" + esc(l.pagina || "") + "'>" + esc(l.pagina || "—") + "</td>" +
-        "<td class='td-utm'>" + esc(l.utm_source || "—") + "</td>" +
-        "<td class='td-utm'>" + esc(l.utm_campaign || "—") + "</td>" +
+        "<td class='td-utm'>" + utmBlock(l) + "</td>" +
         "<td class='td-msg' title='" + esc(l.mensagem || "") + "'>" + esc(l.mensagem || "—") + "</td>" +
         "</tr>";
     }).join("");
+  }
+
+  function utmBlock(l) {
+    var fields = [
+      { key: "src",  val: l.utm_source   },
+      { key: "med",  val: l.utm_medium   },
+      { key: "cmp",  val: l.utm_campaign },
+      { key: "cnt",  val: l.utm_content  },
+      { key: "trm",  val: l.utm_term     },
+    ];
+    var rows = fields.filter(function(f) { return f.val; });
+    if (!rows.length) return "<span style='color:var(--text-dim)'>—</span>";
+    return "<div class='utm-block'>" + rows.map(function(f) {
+      return "<div class='utm-row'><span class='utm-key'>" + f.key + "</span><span class='utm-val' title='" + esc(f.val) + "'>" + esc(f.val) + "</span></div>";
+    }).join("") + "</div>";
   }
 
   function esc(s) {
