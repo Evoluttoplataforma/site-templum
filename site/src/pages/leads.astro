@@ -225,6 +225,42 @@
     .utm-val { font-size: 11px; color: var(--navy); font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
     .td-msg { max-width: 200px; font-size: 12px; color: var(--text-mid); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+    /* Pipedrive CRM */
+    .crm-val { color: var(--navy); font-weight: 700; font-size: 12px; }
+    .crm-val.status-open   { color: #1a56db; }
+    .crm-val.status-won    { color: #059669; }
+    .crm-val.status-lost   { color: #dc2626; }
+    .crm-none { font-size: 11px; color: var(--text-dim); }
+    .crm-loading { font-size: 11px; color: var(--text-dim); }
+
+    /* Paginação */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 20px 0 8px;
+      flex-wrap: wrap;
+    }
+    .pg-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .pg-btn:hover:not(:disabled) { border-color: var(--orange); color: var(--orange); }
+    .pg-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .pg-btn:disabled { opacity: .35; cursor: default; }
+    .pg-info { font-size: 12px; color: var(--text-mid); font-weight: 600; padding: 0 8px; }
+
     /* Empty / Loading states */
     .state {
       text-align: center;
@@ -314,11 +350,15 @@
           <th data-col="utm_campaign">Campanha</th>
           <th data-col="utm_content">Conteúdo</th>
           <th data-col="utm_term">Termo</th>
+          <th>Status CRM</th>
+          <th>Etapa CRM</th>
+          <th>Motivo Arq.</th>
           <th data-col="mensagem">Mensagem</th>
         </tr>
       </thead>
       <tbody id="leads-body"></tbody>
     </table>
+    <div class="pagination" id="pagination"></div>
   </div>
 </div>
 
@@ -447,12 +487,6 @@
     paginas.forEach(function(p) { fPagina.innerHTML += '<option value="' + esc(p) + '">' + esc(p) + '</option>'; });
   }
 
-  // Filters listeners
-  [fSearch, fNorma, fSource, fPagina, fDe, fAte].forEach(function(el) {
-    el.addEventListener("input", render);
-    el.addEventListener("change", render);
-  });
-
   // Sort listeners
   document.querySelectorAll("thead th[data-col]").forEach(function(th) {
     th.addEventListener("click", function() {
@@ -466,6 +500,16 @@
   });
   // Set default sort indicator
   document.querySelector('thead th[data-col="created_at"]').className = "sort-desc";
+
+  var PAGE_SIZE = 25;
+  var currentPage = 1;
+  var lastFiltered = [];
+
+  // Ao mudar filtro, volta pra página 1
+  [fSearch, fNorma, fSource, fPagina, fDe, fAte].forEach(function(el) {
+    el.addEventListener("input",  function() { currentPage = 1; render(); });
+    el.addEventListener("change", function() { currentPage = 1; render(); });
+  });
 
   function render() {
     var q = fSearch.value.toLowerCase().trim();
@@ -488,14 +532,14 @@
       return true;
     });
 
-    // Sort
     filtered.sort(function(a, b) {
-      var av = a[sortCol] || "";
-      var bv = b[sortCol] || "";
-      if (av < bv) return sortDir;
-      if (av > bv) return -sortDir;
-      return 0;
+      var av = a[sortCol] || "", bv = b[sortCol] || "";
+      if (av < bv) return sortDir; if (av > bv) return -sortDir; return 0;
     });
+
+    lastFiltered = filtered;
+    var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    currentPage = Math.min(currentPage, totalPages);
 
     filtersCount.textContent = filtered.length + " resultado" + (filtered.length !== 1 ? "s" : "");
 
@@ -503,15 +547,20 @@
       stateEl.innerHTML = '<strong>Nenhum lead encontrado</strong>Tente ajustar os filtros.';
       stateEl.style.display = "block";
       tableEl.style.display = "none";
+      document.getElementById("pagination").innerHTML = "";
       return;
     }
 
+    var pageData = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
     stateEl.style.display = "none";
     tableEl.style.display = "table";
-    bodyEl.innerHTML = filtered.map(function(l) {
+
+    bodyEl.innerHTML = pageData.map(function(l) {
       var dt = l.created_at ? new Date(l.created_at) : null;
       var dtStr = dt ? dt.toLocaleDateString("pt-BR") + "<br><small>" + dt.toLocaleTimeString("pt-BR", {hour:"2-digit",minute:"2-digit"}) + "</small>" : "—";
-      return "<tr>" +
+      var emailAttr = l.email ? " data-email='" + esc(l.email) + "'" : "";
+      return "<tr" + emailAttr + ">" +
         "<td>" + dtStr + "</td>" +
         "<td class='td-name'>" + esc(l.nome || "—") + "</td>" +
         "<td class='td-email'>" + (l.email ? "<a href='mailto:" + esc(l.email) + "'>" + esc(l.email) + "</a>" : "—") + "</td>" +
@@ -524,9 +573,105 @@
         "<td class='td-utm'>" + esc(l.utm_campaign || "—") + "</td>" +
         "<td class='td-utm'>" + esc(l.utm_content  || "—") + "</td>" +
         "<td class='td-utm'>" + esc(l.utm_term     || "—") + "</td>" +
+        "<td class='td-crm-status'><span class='crm-loading'>…</span></td>" +
+        "<td class='td-crm-stage'><span class='crm-loading'>…</span></td>" +
+        "<td class='td-crm-motivo'><span class='crm-loading'>…</span></td>" +
         "<td class='td-msg' title='" + esc(l.mensagem || "") + "'>" + esc(l.mensagem || "—") + "</td>" +
         "</tr>";
     }).join("");
+
+    renderPagination(currentPage, totalPages, filtered.length);
+    loadCrmForPage(pageData);
+  }
+
+  function renderPagination(page, total, count) {
+    var pg = document.getElementById("pagination");
+    if (total <= 1) { pg.innerHTML = ""; return; }
+    var html = "";
+    html += "<button class='pg-btn' " + (page <= 1 ? "disabled" : "") + " onclick='goPage(" + (page-1) + ")'>&#8592;</button>";
+
+    // Janela de páginas
+    var start = Math.max(1, page - 2);
+    var end   = Math.min(total, page + 2);
+    if (start > 1) html += "<button class='pg-btn' onclick='goPage(1)'>1</button>" + (start > 2 ? "<span class='pg-info'>…</span>" : "");
+    for (var i = start; i <= end; i++) {
+      html += "<button class='pg-btn" + (i === page ? " active" : "") + "' onclick='goPage(" + i + ")'>" + i + "</button>";
+    }
+    if (end < total) html += (end < total - 1 ? "<span class='pg-info'>…</span>" : "") + "<button class='pg-btn' onclick='goPage(" + total + ")'>" + total + "</button>";
+
+    html += "<button class='pg-btn' " + (page >= total ? "disabled" : "") + " onclick='goPage(" + (page+1) + ")'>&#8594;</button>";
+    html += "<span class='pg-info'>" + count + " registros</span>";
+    pg.innerHTML = html;
+  }
+
+  window.goPage = function(p) {
+    currentPage = p;
+    render();
+    document.getElementById("leads-table").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // ── Carrega dados CRM do Pipedrive para a página atual ──
+  async function loadCrmForPage(pageData) {
+    var emails = pageData.map(function(l) { return l.email; }).filter(Boolean);
+    if (!emails.length) {
+      pageData.forEach(function() { /* sem email, limpa loading */ });
+      document.querySelectorAll(".td-crm-status, .td-crm-stage, .td-crm-motivo").forEach(function(td) {
+        td.innerHTML = "<span class='crm-none'>—</span>";
+      });
+      return;
+    }
+
+    try {
+      var res = await fetch("/api/pipedrive-batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: savedPwd(), emails: emails })
+      });
+      var data = await res.json();
+
+      var statusClass = { "Em andamento": "status-open", "Ganho": "status-won", "Perdido": "status-lost" };
+
+      // Atualiza linhas sem email
+      document.querySelectorAll("tr:not([data-email])").forEach(function(tr) {
+        var s = tr.querySelector(".td-crm-status");
+        var e = tr.querySelector(".td-crm-stage");
+        var m = tr.querySelector(".td-crm-motivo");
+        if (s) s.innerHTML = "<span class='crm-none'>—</span>";
+        if (e) e.innerHTML = "<span class='crm-none'>—</span>";
+        if (m) m.innerHTML = "<span class='crm-none'>—</span>";
+      });
+
+      if (!data.ok) {
+        document.querySelectorAll(".td-crm-status").forEach(function(td) { td.innerHTML = "<span class='crm-none'>erro</span>"; });
+        document.querySelectorAll(".td-crm-stage, .td-crm-motivo").forEach(function(td) { td.innerHTML = "<span class='crm-none'>—</span>"; });
+        return;
+      }
+
+      emails.forEach(function(email) {
+        var row = document.querySelector("tr[data-email='" + email.replace(/'/g, "\\'") + "']");
+        if (!row) return;
+        var crm = (data.results || {})[email];
+        var sCell = row.querySelector(".td-crm-status");
+        var eCell = row.querySelector(".td-crm-stage");
+        var mCell = row.querySelector(".td-crm-motivo");
+
+        if (!crm || !crm.found || crm.no_deals) {
+          if (sCell) sCell.innerHTML = "<span class='crm-none'>—</span>";
+          if (eCell) eCell.innerHTML = "<span class='crm-none'>—</span>";
+          if (mCell) mCell.innerHTML = "<span class='crm-none'>—</span>";
+          return;
+        }
+
+        var cls = statusClass[crm.status] || "";
+        if (sCell) sCell.innerHTML = "<span class='crm-val " + cls + "'>" + esc(crm.status || "—") + "</span>";
+        if (eCell) eCell.innerHTML = "<span class='crm-val'>" + esc(crm.stage || "—") + "</span>";
+        if (mCell) mCell.innerHTML = "<span class='crm-val'>" + esc(crm.lost_reason || "—") + "</span>";
+      });
+    } catch(_) {
+      document.querySelectorAll(".td-crm-status, .td-crm-stage, .td-crm-motivo").forEach(function(td) {
+        td.innerHTML = "<span class='crm-none'>—</span>";
+      });
+    }
   }
 
   function esc(s) {

@@ -49,6 +49,14 @@ export default {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleRaffleDraw(request, env);
     }
+    if (url.pathname === "/api/pipedrive") {
+      if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handlePipedriveSearch(request, env);
+    }
+    if (url.pathname === "/api/pipedrive-batch") {
+      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handlePipedriveBatch(request, env);
+    }
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
     if (url.hostname.startsWith("www.")) {
@@ -725,5 +733,143 @@ async function handleRaffleDraw(request, env) {
     return json({ ok: true, winner });
   } catch (e) {
     return json({ ok: false, error: "fetch_failed" }, 500);
+  }
+}
+
+// =====================================================================
+// PIPEDRIVE — busca por email (Status, Etapa, Motivo de Arquivamento)
+// =====================================================================
+
+async function handlePipedriveSearch(request, env) {
+  const url = new URL(request.url);
+
+  // Protege com a mesma senha da página de leads
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const email = (url.searchParams.get("email") || "").trim().toLowerCase();
+  if (!email) return json({ ok: false, error: "email_required" }, 400);
+
+  const PD_TOKEN = env.PIPEDRIVE_API_TOKEN;
+  if (!PD_TOKEN) return json({ ok: false, error: "pipedrive_not_configured" }, 500);
+
+  const BASE = "https://api.pipedrive.com/v1";
+
+  try {
+    // 1. Busca pessoa por email (exact_match)
+    const searchRes = await fetch(
+      `${BASE}/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true&api_token=${PD_TOKEN}`
+    );
+    const searchData = await searchRes.json();
+
+    if (!searchData.data?.items?.length) {
+      return json({ ok: true, found: false });
+    }
+
+    const personId = searchData.data.items[0].item.id;
+
+    // 2. Busca negócios da pessoa (mais recente primeiro)
+    const dealsRes = await fetch(
+      `${BASE}/persons/${personId}/deals?sort=update_time+DESC&limit=10&api_token=${PD_TOKEN}`
+    );
+    const dealsData = await dealsRes.json();
+
+    if (!dealsData.data?.length) {
+      return json({ ok: true, found: true, person_id: personId, deals: [] });
+    }
+
+    // 3. Busca etapas para mapear stage_id → nome
+    const stagesRes = await fetch(`${BASE}/stages?api_token=${PD_TOKEN}`);
+    const stagesData = await stagesRes.json();
+    const stageMap = {};
+    (stagesData.data || []).forEach(s => { stageMap[s.id] = s.name; });
+
+    const statusLabel = { open: "Em andamento", won: "Ganho", lost: "Perdido", deleted: "Deletado" };
+
+    const deals = dealsData.data.map(d => ({
+      id: d.id,
+      title: d.title || "",
+      status: statusLabel[d.status] || d.status,
+      stage: stageMap[d.stage_id] || `Etapa ${d.stage_id}`,
+      lost_reason: d.lost_reason || null,
+      update_time: d.update_time,
+    }));
+
+    return json({ ok: true, found: true, person_id: personId, deals });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed", detail: e.message }, 500);
+  }
+}
+
+// =====================================================================
+// PIPEDRIVE BATCH — busca múltiplos emails de uma vez (paginação /leads)
+// =====================================================================
+
+async function handlePipedriveBatch(request, env) {
+  let body = {};
+  try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
+
+  const token = body.token || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const emails = (body.emails || []).filter(Boolean).slice(0, 50); // máx 50 por batch
+  if (!emails.length) return json({ ok: true, results: {} });
+
+  const PD_TOKEN = env.PIPEDRIVE_API_TOKEN;
+  if (!PD_TOKEN) return json({ ok: false, error: "pipedrive_not_configured" }, 500);
+
+  const BASE = "https://api.pipedrive.com/v1";
+  const statusLabel = { open: "Em andamento", won: "Ganho", lost: "Perdido", deleted: "Deletado" };
+
+  try {
+    // Busca estágios 1x — compartilhado por todos os emails
+    const stagesRes = await fetch(`${BASE}/stages?api_token=${PD_TOKEN}`);
+    const stagesData = await stagesRes.json();
+    const stageMap = {};
+    (stagesData.data || []).forEach(s => { stageMap[s.id] = s.name; });
+
+    // Processa todos os emails em paralelo
+    const results = {};
+    await Promise.all(emails.map(async (email) => {
+      try {
+        const searchRes = await fetch(
+          `${BASE}/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true&api_token=${PD_TOKEN}`
+        );
+        const searchData = await searchRes.json();
+
+        if (!searchData.data?.items?.length) {
+          results[email] = { found: false };
+          return;
+        }
+
+        const personId = searchData.data.items[0].item.id;
+
+        const dealsRes = await fetch(
+          `${BASE}/persons/${personId}/deals?sort=update_time+DESC&limit=1&api_token=${PD_TOKEN}`
+        );
+        const dealsData = await dealsRes.json();
+
+        if (!dealsData.data?.length) {
+          results[email] = { found: true, no_deals: true };
+          return;
+        }
+
+        const d = dealsData.data[0];
+        results[email] = {
+          found: true,
+          status: statusLabel[d.status] || d.status,
+          stage: stageMap[d.stage_id] || "",
+          lost_reason: d.lost_reason || null,
+        };
+      } catch (_) {
+        results[email] = { found: false, error: true };
+      }
+    }));
+
+    return json({ ok: true, results });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed", detail: e.message }, 500);
   }
 }
