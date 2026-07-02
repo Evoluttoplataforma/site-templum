@@ -353,7 +353,6 @@
           <th>Status CRM</th>
           <th>Etapa CRM</th>
           <th>Motivo Arq.</th>
-          <th data-col="mensagem">Mensagem</th>
         </tr>
       </thead>
       <tbody id="leads-body"></tbody>
@@ -438,7 +437,7 @@
   // ── Data ──
   var allLeads = [];
   var sortCol = "created_at";
-  var sortDir = -1; // -1 = desc
+  var sortDir = -1; // -1 = desc (mais novos primeiro — padrão)
 
   async function loadLeads() {
     stateEl.innerHTML = '<div class="spinner"></div><br>Carregando leads…';
@@ -498,8 +497,7 @@
       render();
     });
   });
-  // Set default sort indicator
-  document.querySelector('thead th[data-col="created_at"]').className = "sort-desc";
+  // Indicador de ordenação aplicado na primeira renderização via render()
 
   var PAGE_SIZE = 25;
   var currentPage = 1;
@@ -538,6 +536,12 @@
     });
 
     lastFiltered = filtered;
+
+    // Atualiza indicador visual do th ativo
+    document.querySelectorAll("thead th").forEach(function(t){ t.className = ""; });
+    var activeTh = document.querySelector('thead th[data-col="' + sortCol + '"]');
+    if (activeTh) activeTh.className = sortDir === -1 ? "sort-desc" : "sort-asc";
+
     var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     currentPage = Math.min(currentPage, totalPages);
 
@@ -576,7 +580,6 @@
         "<td class='td-crm-status'><span class='crm-loading'>…</span></td>" +
         "<td class='td-crm-stage'><span class='crm-loading'>…</span></td>" +
         "<td class='td-crm-motivo'><span class='crm-loading'>…</span></td>" +
-        "<td class='td-msg' title='" + esc(l.mensagem || "") + "'>" + esc(l.mensagem || "—") + "</td>" +
         "</tr>";
     }).join("");
 
