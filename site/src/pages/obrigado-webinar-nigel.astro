@@ -1,0 +1,235 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Inscrição confirmada — Webinar com Nigel Croft | Templum"
+  description="Sua inscrição no webinar ISO 9001:2026 com Nigel Croft está confirmada."
+  hideWpp={true}
+  noindex={true}
+  noHeaderFooter={true}
+>
+
+  <section class="ob-hero">
+    <div class="ob-glow"></div>
+    <div class="container sm ob-inner">
+
+      <div class="ob-check">
+        <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+      </div>
+      <span class="ob-badge">Inscrição confirmada</span>
+
+      <h1>Você está dentro!<br /><em>Salve a data.</em></h1>
+
+      <p class="ob-lead">
+        No dia <strong>09/07/2026</strong> você tem um encontro exclusivo com
+        <strong>Nigel Croft</strong> — ex-presidente do comitê global da ISO 9001.
+        Acesse o evento pelo link abaixo.
+      </p>
+
+      <div class="ob-event-card">
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+          <span><strong>09 de julho de 2026</strong></span>
+        </div>
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+          <span><strong>19h (horário de Brasília)</strong></span>
+        </div>
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
+          <span>Google Meet — link abaixo</span>
+        </div>
+      </div>
+
+      <a
+        href="https://meet.google.com/LINK-AQUI"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-meet"
+        id="meetLink"
+      >
+        <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
+        Acessar o Webinar
+      </a>
+      <p class="ob-hint">O link ficará ativo no dia do evento · gratuito</p>
+
+      <div class="ob-divider"></div>
+
+      <p class="ob-share">Vai entrar no dia? Adicione ao calendário:</p>
+      <div class="ob-cal-btns">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webinar+ISO+9001+com+Nigel+Croft+%7C+Templum&dates=20260709T220000Z/20260709T230000Z&details=Acesse+o+webinar+em%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI&location=Google+Meet" target="_blank" rel="noopener" class="btn-cal">
+          <iconify-icon icon="mdi:google"></iconify-icon> Google
+        </a>
+        <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=Webinar+ISO+9001+com+Nigel+Croft&startdt=2026-07-09T19:00:00-03:00&enddt=2026-07-09T20:00:00-03:00&body=Link%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" target="_blank" rel="noopener" class="btn-cal">
+          <iconify-icon icon="mdi:microsoft-outlook"></iconify-icon> Outlook
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
+
+</Base>
+
+<style>
+  html, body { background: var(--navy); min-height: 100%; }
+
+  .ob-hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    padding: clamp(72px, 10vw, 110px) 0 clamp(48px, 6vw, 80px);
+    text-align: center;
+  }
+  .ob-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(255,89,37,0.13) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .ob-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ob-check {
+    font-size: 68px;
+    color: #22c55e;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .ob-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #22c55e;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .ob-inner h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .ob-inner h1 em {
+    font-style: normal;
+    color: var(--orange);
+  }
+  .ob-lead {
+    font-size: 17px;
+    color: rgba(255,244,221,0.75);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+  .ob-lead strong { color: var(--cream); }
+
+  .ob-event-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .ob-event-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255,244,221,0.8);
+  }
+  .ob-event-row iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+  .ob-event-row strong { color: var(--cream); }
+
+  .btn-meet {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+    padding: 18px 40px;
+    border-radius: 50px;
+    white-space: nowrap;
+    transition: opacity .2s, transform .15s;
+    box-shadow: 0 4px 24px rgba(255,89,37,0.35);
+    text-decoration: none;
+  }
+  .btn-meet:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-meet iconify-icon { font-size: 22px; }
+
+  .ob-hint {
+    font-size: 13px;
+    color: rgba(255,244,221,0.35);
+    margin-top: 14px;
+  }
+
+  .ob-divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 36px auto 24px;
+  }
+  .ob-share {
+    font-size: 14px;
+    color: rgba(255,244,221,0.5);
+    margin-bottom: 14px;
+  }
+  .ob-cal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-cal {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,244,221,0.7);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 9px 18px;
+    transition: background .2s, color .2s;
+    text-decoration: none;
+  }
+  .btn-cal:hover { background: rgba(255,255,255,0.12); color: var(--cream); }
+  .btn-cal iconify-icon { font-size: 16px; }
+</style>
