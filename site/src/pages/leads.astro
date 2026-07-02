@@ -197,8 +197,8 @@
       user-select: none;
     }
     thead th:hover { color: var(--navy); }
-    thead th.sort-asc::after  { content: " ↑"; color: var(--orange); }
-    thead th.sort-desc::after { content: " ↓"; color: var(--orange); }
+    thead th.sort-asc::after  { content: " ↓"; color: var(--orange); }
+    thead th.sort-desc::after { content: " ↑"; color: var(--orange); }
     tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #fff8f5; }
@@ -437,7 +437,7 @@
   // ── Data ──
   var allLeads = [];
   var sortCol = "created_at";
-  var sortDir = -1; // -1 = desc (mais novos primeiro — padrão)
+  var sortDir = 1; // 1 = desc (mais novos primeiro — padrão)
 
   async function loadLeads() {
     stateEl.innerHTML = '<div class="spinner"></div><br>Carregando leads…';
@@ -502,7 +502,7 @@
       if (sortCol === col) { sortDir *= -1; }
       else { sortCol = col; sortDir = -1; }
       document.querySelectorAll("thead th").forEach(function(t){ t.className = ""; });
-      th.className = sortDir === -1 ? "sort-desc" : "sort-asc";
+      th.className = sortDir === 1 ? "sort-desc" : "sort-asc";
       render();
     });
   });
