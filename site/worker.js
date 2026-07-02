@@ -1,4 +1,4 @@
-// Worker da Templum v2 — serve arquivos estáticos (dist) e expõe:
+// Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive (em paralelo)
 //   POST /api/track  → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET  /api/leads  → leitura interna de leads (senha protegida)
