@@ -59,14 +59,12 @@ const objetivos = [
               <div class="pt-row"><span class="pt-k">Palestrante:</span><span>{t.palestrante}</span></div>
               <div class="pt-row"><span class="pt-k">Data e hora:</span><span>{t.dataLabel} às {t.hora}</span></div>
             </div>
-            <button
-              type="button"
+            <a
+              href={t.zoom}
+              target="_blank"
+              rel="noopener noreferrer"
               class="btn btn--primary pt-cta"
-              data-treino-open
-              data-treino={`${t.categoria} — ${t.tema}`}
-              data-zoom={t.zoom}
-              data-quando={`${t.dataLabel} às ${t.hora}`}
-            >Garanta sua vaga</button>
+            >Garanta sua vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           </article>
         ))}
       </div>
