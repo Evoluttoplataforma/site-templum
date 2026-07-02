@@ -22,9 +22,9 @@ import Base from "../layouts/Base.astro";
       <h1>Você está dentro!<br /><em>Salve a data.</em></h1>
 
       <p class="ob-lead">
-        No dia <strong>09/07/2026</strong> você tem um encontro exclusivo com
+        No dia <strong>09/07/2026 às 14h</strong> você tem um encontro exclusivo com
         <strong>Nigel Croft</strong> — ex-presidente do comitê global da ISO 9001.
-        Acesse o evento pelo link abaixo.
+        Bloqueie sua agenda agora.
       </p>
 
       <div class="ob-event-card">
@@ -34,34 +34,24 @@ import Base from "../layouts/Base.astro";
         </div>
         <div class="ob-event-row">
           <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
-          <span><strong>19h (horário de Brasília)</strong></span>
+          <span><strong>14h (horário de Brasília)</strong></span>
         </div>
         <div class="ob-event-row">
           <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
-          <span>Google Meet — link abaixo</span>
+          <span>Online — enviaremos o link por e-mail</span>
         </div>
       </div>
 
-      <a
-        href="https://meet.google.com/LINK-AQUI"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-meet"
-        id="meetLink"
-      >
-        <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
-        Acessar o Webinar
-      </a>
-      <p class="ob-hint">O link ficará ativo no dia do evento · gratuito</p>
+      <p class="ob-hint">O link de acesso será enviado para o seu e-mail antes do evento.</p>
 
       <div class="ob-divider"></div>
 
-      <p class="ob-share">Vai entrar no dia? Adicione ao calendário:</p>
+      <p class="ob-share">Bloqueie sua agenda:</p>
       <div class="ob-cal-btns">
-        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webinar+ISO+9001+com+Nigel+Croft+%7C+Templum&dates=20260709T220000Z/20260709T230000Z&details=Acesse+o+webinar+em%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI&location=Google+Meet" target="_blank" rel="noopener" class="btn-cal">
-          <iconify-icon icon="mdi:google"></iconify-icon> Google
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Webinar+ISO+9001+com+Nigel+Croft+%7C+Templum&dates=20260709T170000Z/20260709T180000Z&details=O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+pela+Templum.&location=Online" target="_blank" rel="noopener" class="btn-cal">
+          <iconify-icon icon="mdi:google"></iconify-icon> Google Calendar
         </a>
-        <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=Webinar+ISO+9001+com+Nigel+Croft&startdt=2026-07-09T19:00:00-03:00&enddt=2026-07-09T20:00:00-03:00&body=Link%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" target="_blank" rel="noopener" class="btn-cal">
+        <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=Webinar+ISO+9001+com+Nigel+Croft+%7C+Templum&startdt=2026-07-09T14:00:00-03:00&enddt=2026-07-09T15:00:00-03:00&body=O+link+de+acesso+ser%C3%A1+enviado+por+e-mail+pela+Templum." target="_blank" rel="noopener" class="btn-cal">
           <iconify-icon icon="mdi:microsoft-outlook"></iconify-icon> Outlook
         </a>
       </div>
@@ -174,24 +164,6 @@ import Base from "../layouts/Base.astro";
   }
   .ob-event-row iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
   .ob-event-row strong { color: var(--cream); }
-
-  .btn-meet {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--orange);
-    color: #fff;
-    font-weight: 800;
-    font-size: 16px;
-    padding: 18px 40px;
-    border-radius: 50px;
-    white-space: nowrap;
-    transition: opacity .2s, transform .15s;
-    box-shadow: 0 4px 24px rgba(255,89,37,0.35);
-    text-decoration: none;
-  }
-  .btn-meet:hover { opacity: 0.9; transform: translateY(-1px); }
-  .btn-meet iconify-icon { font-size: 22px; }
 
   .ob-hint {
     font-size: 13px;
