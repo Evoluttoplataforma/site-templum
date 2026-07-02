@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
 import { proximosTreinamentos } from "../data/treinamentos.js";
 
 const temas = [
@@ -27,21 +26,6 @@ const objetivos = [
   title="Treinamentos Templum — Capacitação em gestão e certificação"
   description="Treinamentos ministrados por especialistas para capacitar seu time em gestão, normas e certificação. Potencialize o seu negócio com vantagem competitiva real."
 >
-  <PageHero
-    tag="Treinamentos Templum"
-    sub="Descubra como os treinamentos da Templum impulsionam o sucesso empresarial, capacitando e desenvolvendo profissionais para alcançar uma vantagem competitiva do seu negócio."
-    image="/assets/img/paginas/cursos-hero.webp"
-    badge="Treinamentos"
-    icon="solar:square-academic-cap-bold"
-    chips={["Ministrados por especialistas", "Presencial e online", "Para todo o time"]}
-  >
-    <Fragment slot="title">Potencialize o seu negócio <em class="accent">com conhecimento</em></Fragment>
-    <Fragment slot="cta">
-      <a href="https://wa.me/5519993521270?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20pr%C3%B3ximos%20treinamentos%20da%20Templum." target="_blank" rel="noopener" class="btn btn--primary btn--lg">Quero garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="/consultoria/" class="btn btn--onDark btn--lg">Ver normas</a>
-    </Fragment>
-  </PageHero>
-
   <!-- PRÓXIMOS TREINAMENTOS (cards de inscrição → Zoom) -->
   <section class="section section--cream">
     <div class="container">
