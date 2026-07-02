@@ -463,11 +463,16 @@
       allLeads = body.data || [];
       metaTotal.textContent = (body.total || allLeads.length) + " leads no total";
       buildFilters();
+      fSource.value = "facebook"; // padrão: Meta (facebook + fb + ig)
       render();
     } catch(e) {
       stateEl.innerHTML = '<strong>Erro ao carregar</strong>' + e.message;
     }
   }
+
+  // Normaliza fontes Meta: fb → facebook, ig → facebook
+  var SOURCE_MAP = { fb: "facebook", ig: "facebook" };
+  function normSource(s) { return SOURCE_MAP[s] || s; }
 
   function buildFilters() {
     // Normas
@@ -475,8 +480,12 @@
     fNorma.innerHTML = '<option value="">Todas as normas</option>';
     normas.forEach(function(n) { fNorma.innerHTML += '<option value="' + esc(n) + '">' + esc(n) + '</option>'; });
 
-    // Sources
-    var sources = [...new Set(allLeads.map(function(l){ return l.utm_source || ""; }).filter(Boolean))].sort();
+    // Sources — normaliza fb/ig → facebook, ignora variáveis não resolvidas ({{...}})
+    var sources = [...new Set(
+      allLeads
+        .map(function(l){ return normSource(l.utm_source || ""); })
+        .filter(function(s){ return s && !s.startsWith("{{"); })
+    )].sort();
     fSource.innerHTML = '<option value="">Todas as fontes</option>';
     sources.forEach(function(s) { fSource.innerHTML += '<option value="' + esc(s) + '">' + esc(s) + '</option>'; });
 
@@ -519,7 +528,7 @@
 
     var filtered = allLeads.filter(function(l) {
       if (norma && (l.norma || "") !== norma) return false;
-      if (source && (l.utm_source || "") !== source) return false;
+      if (source && normSource(l.utm_source || "") !== source) return false;
       if (pagina && (l.pagina || "") !== pagina) return false;
       if (de && new Date(l.created_at) < de) return false;
       if (ate && new Date(l.created_at) > ate) return false;
