@@ -156,11 +156,7 @@ const schemaEvent = {
                 <div class="wb-form-title">Garantir minha vaga</div>
                 <p class="wb-form-sub">Preencha abaixo para participar gratuitamente.</p>
               </div>
-              <form
-                data-trk-event="webinar-nigel-croft-0907"
-                data-obrigado="/obrigado-webinar-nigel"
-                novalidate
-              >
+              <form novalidate>
                 <div class="wb-field">
                   <label for="wb-nome">Nome completo</label>
                   <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome completo" required />
@@ -479,7 +475,7 @@ const schemaEvent = {
 <script is:inline>
   // Form webinar — submit → salva lead + mostra confirmação (sem redirect)
   (function () {
-    var form = document.querySelector("form[data-trk-event]");
+    var form = document.querySelector("#wb-form-wrap form");
     var wrap = document.getElementById("wb-form-wrap");
     var confirm = document.getElementById("wb-confirm");
     if (!form || !wrap || !confirm) return;
