@@ -1,7 +1,8 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive (em paralelo)
 //   POST /api/track  → envia eventos ao Meta Conversions API (CAPI), server-side
-//   GET  /api/leads  → leitura interna de leads (senha protegida)
+//   GET    /api/leads → leitura interna de leads (senha protegida)
+//   DELETE /api/leads → exclui um lead no Supabase por id (senha protegida)
 //
 // Secrets/vars (Cloudflare → Worker → Settings → Variables and Secrets):
 //   SUPABASE_URL           (opcional) default já no código
@@ -37,8 +38,9 @@ export default {
       return handleTrack(request, env);
     }
     if (url.pathname === "/api/leads") {
-      if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
-      return handleLeadsRead(request, env);
+      if (request.method === "GET") return handleLeadsRead(request, env);
+      if (request.method === "DELETE") return handleLeadDelete(request, env);
+      return json({ ok: false, error: "method_not_allowed" }, 405);
     }
     if (url.pathname === "/api/raffle") {
       if (request.method === "POST") return handleRaffleInsert(request, env);
@@ -585,6 +587,66 @@ async function handleLeadsRead(request, env) {
         "Access-Control-Allow-Origin": "*",
         "Cache-Control": "no-store",
       },
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ ok: false, error: "fetch_failed", detail: e.message }), {
+      status: 502,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+}
+
+// ---------------------- Leads Delete (DELETE /api/leads) ----------------------
+async function handleLeadDelete(request, env) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  const id = url.searchParams.get("id") || "";
+  if (!id) {
+    return new Response(JSON.stringify({ ok: false, error: "id_required" }), {
+      status: 400,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  // Delete exige a service key (RLS normalmente só libera insert pra anon key).
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
+  if (!sbKey) {
+    return new Response(JSON.stringify({ ok: false, error: "no_supabase_key" }), {
+      status: 500,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/site_leads?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: {
+        "apikey": sbKey,
+        "Authorization": "Bearer " + sbKey,
+        "Prefer": "return=minimal",
+      },
+    });
+
+    if (!res.ok) {
+      const err = await res.text().catch(() => "");
+      return new Response(JSON.stringify({ ok: false, error: "supabase_" + res.status, detail: err.slice(0, 200) }), {
+        status: 502,
+        headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: "fetch_failed", detail: e.message }), {

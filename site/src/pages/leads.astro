@@ -225,6 +225,24 @@
     .utm-val { font-size: 11px; color: var(--navy); font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
     .td-msg { max-width: 200px; font-size: 12px; color: var(--text-mid); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+    /* Ações */
+    .td-actions { white-space: nowrap; }
+    .btn-delete {
+      background: rgba(220,38,38,0.08);
+      border: 1.5px solid rgba(220,38,38,0.25);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #dc2626;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .btn-delete:hover:not(:disabled) { background: rgba(220,38,38,0.16); }
+    .btn-delete:disabled { opacity: .5; cursor: default; }
+
     /* Pipedrive CRM */
     .crm-val { color: var(--navy); font-weight: 700; font-size: 12px; }
     .crm-val.status-open   { color: #1a56db; }
@@ -353,6 +371,7 @@
           <th>Status CRM</th>
           <th>Etapa CRM</th>
           <th>Motivo Arq.</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody id="leads-body"></tbody>
@@ -589,6 +608,7 @@
         "<td class='td-crm-status'><span class='crm-loading'>…</span></td>" +
         "<td class='td-crm-stage'><span class='crm-loading'>…</span></td>" +
         "<td class='td-crm-motivo'><span class='crm-loading'>…</span></td>" +
+        "<td class='td-actions'><button class='btn-delete' data-id='" + esc(l.id) + "' data-email='" + esc(l.email || "") + "' title='Excluir lead'>🗑️ Excluir</button></td>" +
         "</tr>";
     }).join("");
 
@@ -621,6 +641,40 @@
     render();
     document.getElementById("leads-table").scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // ── Excluir lead (Supabase) ──
+  bodyEl.addEventListener("click", function(e) {
+    var btn = e.target.closest(".btn-delete");
+    if (!btn) return;
+    var id = btn.getAttribute("data-id");
+    var email = btn.getAttribute("data-email");
+    deleteLead(id, email, btn);
+  });
+
+  async function deleteLead(id, email, btn) {
+    if (!id) return;
+    var msg = "Excluir definitivamente o lead" + (email ? " de " + email : "") + "?\n\nIsso remove o registro do Supabase e não pode ser desfeito.";
+    if (!window.confirm(msg)) return;
+
+    if (btn) { btn.disabled = true; btn.textContent = "Excluindo…"; }
+    try {
+      var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()) + "&id=" + encodeURIComponent(id), {
+        method: "DELETE",
+      });
+      var data = await res.json().catch(function() { return {}; });
+      if (!res.ok || !data.ok) {
+        alert("Erro ao excluir: " + (data.error || ("HTTP " + res.status)));
+        if (btn) { btn.disabled = false; btn.textContent = "🗑️ Excluir"; }
+        return;
+      }
+      allLeads = allLeads.filter(function(l) { return String(l.id) !== String(id); });
+      metaTotal.textContent = allLeads.length + " leads no total";
+      render();
+    } catch (e) {
+      alert("Erro de conexão ao excluir.");
+      if (btn) { btn.disabled = false; btn.textContent = "🗑️ Excluir"; }
+    }
+  }
 
   // ── Carrega dados CRM do Pipedrive para a página atual ──
   async function loadCrmForPage(pageData) {
