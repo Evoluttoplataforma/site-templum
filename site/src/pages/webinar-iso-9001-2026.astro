@@ -82,7 +82,10 @@ const schemaEvent = {
               <iconify-icon icon="solar:calendar-bold"></iconify-icon>
               <div>
                 <span class="wb-date-label">Data</span>
-                <span class="wb-date-val">Quarta, 01 de Julho de 2026</span>
+                <span class="wb-date-val">
+                  <span class="wb-date-val-full">Quarta, 01 de Julho de 2026</span>
+                  <span class="wb-date-val-short">01 Jul 2026</span>
+                </span>
               </div>
             </div>
             <div class="wb-date-divider"></div>
@@ -90,7 +93,10 @@ const schemaEvent = {
               <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
               <div>
                 <span class="wb-date-label">Horário</span>
-                <span class="wb-date-val">16h00 (Brasília)</span>
+                <span class="wb-date-val">
+                  <span class="wb-date-val-full">16h00 (Brasília)</span>
+                  <span class="wb-date-val-short">16h00</span>
+                </span>
               </div>
             </div>
             <div class="wb-date-divider"></div>
@@ -350,6 +356,7 @@ const schemaEvent = {
     font-weight: 700;
     color: var(--cream);
   }
+  .wb-date-val-short { display: none; }
   .wb-date-divider {
     width: 1px;
     height: 32px;
@@ -618,6 +625,26 @@ const schemaEvent = {
       grid-template-columns: 1fr;
     }
     .wb-desc { max-width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .wb-date-bar {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px 6px; padding: 14px 10px;
+    }
+    .wb-date-divider { display: none; }
+    .wb-date-item {
+      flex-direction: column; align-items: flex-start; gap: 6px;
+      min-width: 0; flex: none;
+    }
+    .wb-date-item:not(:first-child) {
+      border-left: 1px solid rgba(255,244,221,0.12);
+      padding-left: 10px;
+    }
+    .wb-date-item iconify-icon { font-size: 17px; }
+    .wb-date-label { font-size: 9px; }
+    .wb-date-val { font-size: 11.5px; line-height: 1.25; }
+    .wb-date-val-full { display: none; }
+    .wb-date-val-short { display: inline; }
   }
   @media (max-width: 768px) {
     .wb-topics-grid { grid-template-columns: 1fr; }
