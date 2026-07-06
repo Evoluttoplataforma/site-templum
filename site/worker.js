@@ -385,7 +385,7 @@ async function saveToPipedrive(lead, env) {
     }
 
     // 3) Deal
-    const title = [lead.nome || lead.email, lead.norma, lead.pagina].filter(Boolean).join(" — ");
+    const title = [lead.empresa || lead.nome || lead.email, lead.norma].filter(Boolean).join(" - ");
     const dealBody = { title, pipeline_id: PD_PIPELINE, stage_id: PD_STAGE };
     if (person_id) dealBody.person_id = person_id;
     if (org_id) dealBody.org_id = org_id;
