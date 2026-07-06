@@ -1,15 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 
-// Google Calendar — 09/07/2026 14h BRT = 17h UTC
-const calUrl =
-  "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-  "&text=Webinar+Nigel+Croft+%E2%80%94+A+nova+ISO+9001+%7C+Templum" +
-  "&dates=20260709T190000Z/20260709T200000Z" +
-  "&details=Webinar+gratuito+com+Nigel+Croft%2C+Daniela+Albuquerque+e+Igor+Furniel.+Acesse%3A+https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" +
-  "&location=https%3A%2F%2Fmeet.google.com%2FLINK-AQUI" +
-  "&sf=true&output=xml";
-
 const topicos = [
   {
     icon: "solar:question-circle-bold",
@@ -162,7 +153,7 @@ const schemaEvent = {
                 <div class="wb-form-title">Garantir minha vaga</div>
                 <p class="wb-form-sub">Preencha abaixo para participar gratuitamente.</p>
               </div>
-              <form novalidate>
+              <form novalidate data-trk-event="webinar-nigel-croft-0907" data-obrigado="/obrigado-webinar-nigel">
                 <div class="wb-field">
                   <label for="wb-nome">Nome completo</label>
                   <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome completo" required />
@@ -185,23 +176,6 @@ const schemaEvent = {
                 </button>
               </form>
               <p class="wb-legal">Gratuito. Sem spam. Dados protegidos pela LGPD.</p>
-            </div>
-
-            <!-- Confirmação (aparece após submit via JS) -->
-            <div id="wb-confirm" hidden>
-              <div class="wb-confirm-check">
-                <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-              </div>
-              <div class="wb-form-title">Vaga garantida!</div>
-              <p class="wb-form-sub">Acesse o webinar pelo link abaixo na data do evento:</p>
-              <a class="wb-meet-link" href="https://meet.google.com/LINK-AQUI" target="_blank" rel="noopener">
-                <iconify-icon icon="solar:videocamera-record-bold"></iconify-icon>
-                meet.google.com/LINK-AQUI
-              </a>
-              <a href={calUrl} target="_blank" rel="noopener" class="btn btn--dark btn--block" style="margin-top:12px;">
-                <iconify-icon icon="solar:calendar-add-bold"></iconify-icon> Adicionar à agenda
-              </a>
-              <p class="wb-legal" style="margin-top:12px;">Quinta, 09 de julho · 14h · Online · Gratuito</p>
             </div>
 
           </div>
@@ -396,16 +370,6 @@ const schemaEvent = {
   .wb-field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
   .wb-opt { font-weight: 500; color: var(--text-soft); }
   .wb-legal { font-size: 11px; color: var(--text-soft); text-align: center; margin-top: 10px; line-height: 1.5; }
-  .wb-confirm-check { font-size: 52px; color: #22c55e; margin-bottom: 12px; display: block; }
-  .wb-meet-link {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--bg); border: 1px solid var(--border-2);
-    border-radius: 10px; padding: 14px 16px;
-    font-size: 14px; font-weight: 700; color: var(--orange);
-    margin-top: 16px; transition: border-color .2s; word-break: break-all;
-  }
-  .wb-meet-link:hover { border-color: var(--orange); }
-  .wb-meet-link iconify-icon { font-size: 20px; flex-shrink: 0; }
 
   /* ─── TÓPICOS ─── */
   .wb-topics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -494,46 +458,3 @@ const schemaEvent = {
     .wb-date-val-short { display: inline; }
   }
 </style>
-
-<script is:inline>
-  // Form webinar — submit → salva lead + mostra confirmação (sem redirect)
-  (function () {
-    var form = document.querySelector("#wb-form-wrap form");
-    var wrap = document.getElementById("wb-form-wrap");
-    var confirm = document.getElementById("wb-confirm");
-    if (!form || !wrap || !confirm) return;
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-
-      var btn = form.querySelector('[type="submit"]');
-      if (btn) btn.disabled = true;
-
-      var d = {};
-      new FormData(form).forEach(function (v, k) { d[k] = v; });
-
-      var attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
-      var urlP = new URLSearchParams(location.search);
-      ["utm_source","utm_medium","utm_campaign","utm_term","utm_content",
-       "gclid","fbclid","gad_source","gad_campaignid"].forEach(function(k) {
-        if (!attrib[k] && urlP.get(k)) attrib[k] = urlP.get(k);
-      });
-
-      fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        keepalive: true,
-        body: JSON.stringify(Object.assign({
-          nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
-          empresa: d.empresa || "", norma: "ISO 9001", mensagem: "",
-          evento: "webinar-nigel-croft-0907", pagina: location.pathname,
-        }, attrib)),
-      }).catch(function () {});
-
-      // Mostra confirmação na página (sem redirect)
-      wrap.hidden = true;
-      confirm.hidden = false;
-    });
-  })();
-</script>
