@@ -336,7 +336,9 @@ const PD_FIELDS = {
   cargo:           "def95ff43857bf5b0306029dde8531907148a09e",
   urgencia:        "16c22c632d4aed9dfce0949287ac750729765ab1",
   funcionarios:    "fbf8ddfc6cdea3ac8571999d49d507fd40575c74",
-  faturamento:     "cd0037cbf15798ee21aab9acbee125609bf25351",
+  // faturamento: key inválida — quebrava a criação do deal inteiro no Pipedrive
+  // (lead ficava só com a pessoa criada, sem negócio). Removido até confirmar a
+  // key certa em /v1/dealFields. Ver saveToPipedrive().
   necessidade:     "1ad267ed98d0ae5286cb5f0189186ecb5d41f865",
   pagina:          "79a54756633069b9f0a508f6869780c6c2b52be2",
   gclid:           "9aeff85ea6f6fe1bedbe6e67cfd5eb612a7257ab",
@@ -399,7 +401,7 @@ async function saveToPipedrive(lead, env) {
       if (val) dealBody[key] = val;
     }
 
-    const rd = await fetch(`${PD_BASE}/deals?api_token=${token}`, {
+    let rd = await fetch(`${PD_BASE}/deals?api_token=${token}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(dealBody),
@@ -408,6 +410,22 @@ async function saveToPipedrive(lead, env) {
     if (rd && rd.ok) {
       const d = await rd.json().catch(() => ({}));
       return { ok: true, deal_id: d.data?.id };
+    }
+
+    // Fallback: se falhou (ex.: key de campo customizado inválida), tenta de
+    // novo só com os campos essenciais — não perder o deal por causa de 1 campo.
+    const basicBody = { title, pipeline_id: PD_PIPELINE, stage_id: PD_STAGE };
+    if (person_id) basicBody.person_id = person_id;
+    if (org_id) basicBody.org_id = org_id;
+    rd = await fetch(`${PD_BASE}/deals?api_token=${token}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(basicBody),
+    }).catch(() => null);
+
+    if (rd && rd.ok) {
+      const d = await rd.json().catch(() => ({}));
+      return { ok: true, deal_id: d.data?.id, fields_dropped: true };
     }
     const e = rd ? await rd.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
