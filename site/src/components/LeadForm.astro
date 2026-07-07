@@ -13,10 +13,12 @@ const {
   cta = "Quero meu diagnóstico gratuito",
   obrigado = "",   // ex: "/consultoria/iso-9001-obrigado" — sobrescreve o /obrigado padrão
   simples = false, // true → oculta nº funcionários, cargo e urgência
+  faturamento = false, // true → mostra faturamento mensal (qualificação p/ PCI, mín. R$ 100 mil/mês)
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
 const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
+const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 ---
 
 <div class="lead-card">
@@ -37,6 +39,15 @@ const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500",
           <select class="select" name="funcionarios" aria-label="Nº de funcionários">
             <option value="">Selecione</option>
             {funcionarios.map((f) => <option value={f}>{f}</option>)}
+          </select>
+        </div>
+      )}
+      {faturamento && (
+        <div class="field">
+          <label>Faturamento mensal</label>
+          <select class="select" name="faturamento" aria-label="Faturamento mensal">
+            <option value="">Selecione</option>
+            {faturamentos.map((f) => <option value={f}>{f}</option>)}
           </select>
         </div>
       )}
