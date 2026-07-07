@@ -291,6 +291,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
               empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
+              faturamento: d.faturamento || "",
               evento: evt, pagina: location.pathname,
             }, _attrib)),
           }).then(function() { clearTimeout(_t); _go(); }).catch(function() { clearTimeout(_t); _go(); });
