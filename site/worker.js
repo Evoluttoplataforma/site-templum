@@ -336,9 +336,6 @@ const PD_FIELDS = {
   cargo:           "def95ff43857bf5b0306029dde8531907148a09e",
   urgencia:        "16c22c632d4aed9dfce0949287ac750729765ab1",
   funcionarios:    "fbf8ddfc6cdea3ac8571999d49d507fd40575c74",
-  // faturamento: key inválida — quebrava a criação do deal inteiro no Pipedrive
-  // (lead ficava só com a pessoa criada, sem negócio). Removido até confirmar a
-  // key certa em /v1/dealFields. Ver saveToPipedrive().
   necessidade:     "1ad267ed98d0ae5286cb5f0189186ecb5d41f865",
   pagina:          "79a54756633069b9f0a508f6869780c6c2b52be2",
   gclid:           "9aeff85ea6f6fe1bedbe6e67cfd5eb612a7257ab",
@@ -349,6 +346,10 @@ const PD_FIELDS = {
   gad_campaignid:  "9a4fcacaff9851ca9ccf83980210b1644a0d1e04",
   session_id:      "43091e3081136004843998d26c80abe6a7cb78b0",
 };
+// Campos customizados da Organização (obtidas via /v1/organizationFields) — escopo separado do deal.
+const PD_ORG_FIELDS = {
+  faturamento: "d05e9330fb1c1e577799c536f41d800627fbc917",
+};
 
 async function saveToPipedrive(lead, env) {
   const token = env.PIPEDRIVE_API_TOKEN;
@@ -358,11 +359,28 @@ async function saveToPipedrive(lead, env) {
     // 1) Organização (empresa)
     let org_id = null;
     if (lead.empresa) {
-      const r = await fetch(`${PD_BASE}/organizations?api_token=${token}`, {
+      const orgBody = { name: lead.empresa };
+      for (const [field, key] of Object.entries(PD_ORG_FIELDS)) {
+        const val = lead[field];
+        if (val) orgBody[key] = val;
+      }
+
+      let r = await fetch(`${PD_BASE}/organizations?api_token=${token}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: lead.empresa }),
+        body: JSON.stringify(orgBody),
       }).catch(() => null);
+
+      // Fallback: se falhou (ex.: key de campo customizado inválida), tenta de
+      // novo só com o nome — não perder a organização por causa de 1 campo.
+      if (!r || !r.ok) {
+        r = await fetch(`${PD_BASE}/organizations?api_token=${token}`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name: lead.empresa }),
+        }).catch(() => null);
+      }
+
       if (r && r.ok) {
         const d = await r.json().catch(() => ({}));
         org_id = d.data?.id || null;
