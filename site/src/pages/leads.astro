@@ -243,6 +243,31 @@
     .btn-delete:hover:not(:disabled) { background: rgba(220,38,38,0.16); }
     .btn-delete:disabled { opacity: .5; cursor: default; }
 
+    /* Seleção em massa */
+    .checkbox-cell { width: 36px; text-align: center; }
+    .checkbox-cell input { width: 15px; height: 15px; accent-color: var(--orange); cursor: pointer; }
+    .bulk-bar {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 10px clamp(16px, 3vw, 32px);
+      background: rgba(220,38,38,0.06);
+      border-bottom: 1px solid rgba(220,38,38,0.15);
+    }
+    .bulk-bar.show { display: flex; }
+    .bulk-count { font-size: 13px; font-weight: 800; color: var(--navy); }
+    .btn-bulk-clear {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-mid);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .btn-bulk-clear:hover { color: var(--navy); }
+
     /* Pipedrive CRM */
     .crm-val { color: var(--navy); font-weight: 700; font-size: 12px; }
     .crm-val.status-open   { color: #1a56db; }
@@ -349,6 +374,12 @@
     <span class="filters-count" id="filters-count"></span>
   </div>
 
+  <div class="bulk-bar" id="bulk-bar">
+    <span class="bulk-count" id="bulk-count"></span>
+    <button class="btn-delete" id="btn-bulk-delete">🗑️ Excluir selecionados</button>
+    <button class="btn-bulk-clear" id="btn-bulk-clear">Limpar seleção</button>
+  </div>
+
   <div class="table-wrap">
     <div id="table-state" class="state">
       <div class="spinner"></div><br>Carregando leads…
@@ -356,6 +387,7 @@
     <table id="leads-table" style="display:none">
       <thead>
         <tr>
+          <th class="checkbox-cell"><input type="checkbox" id="select-all" title="Selecionar todos desta página" /></th>
           <th data-col="created_at">Data</th>
           <th data-col="nome" class="td-name">Nome</th>
           <th data-col="email">E-mail</th>
@@ -406,6 +438,11 @@
   var tableEl = document.getElementById("leads-table");
   var stateEl = document.getElementById("table-state");
   var bodyEl = document.getElementById("leads-body");
+  var selectAllEl = document.getElementById("select-all");
+  var bulkBarEl = document.getElementById("bulk-bar");
+  var bulkCountEl = document.getElementById("bulk-count");
+  var btnBulkDelete = document.getElementById("btn-bulk-delete");
+  var btnBulkClear = document.getElementById("btn-bulk-clear");
 
   // Filters
   var fSearch = document.getElementById("filter-search");
@@ -457,11 +494,15 @@
   var allLeads = [];
   var sortCol = "created_at";
   var sortDir = 1; // 1 = desc (mais novos primeiro — padrão)
+  var selectedIds = new Set(); // seleção persiste entre páginas/filtros até "Limpar seleção"
+  var lastPageData = [];
 
   async function loadLeads() {
     stateEl.innerHTML = '<div class="spinner"></div><br>Carregando leads…';
     stateEl.style.display = "block";
     tableEl.style.display = "none";
+    selectedIds.clear();
+    updateBulkBar();
 
     try {
       var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()));
@@ -580,10 +621,13 @@
       stateEl.style.display = "block";
       tableEl.style.display = "none";
       document.getElementById("pagination").innerHTML = "";
+      lastPageData = [];
+      updateSelectAllState();
       return;
     }
 
     var pageData = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+    lastPageData = pageData;
 
     stateEl.style.display = "none";
     tableEl.style.display = "table";
@@ -592,7 +636,9 @@
       var dt = l.created_at ? new Date(l.created_at) : null;
       var dtStr = dt ? dt.toLocaleDateString("pt-BR") + "<br><small>" + dt.toLocaleTimeString("pt-BR", {hour:"2-digit",minute:"2-digit"}) + "</small>" : "—";
       var emailAttr = l.email ? " data-email='" + esc(l.email) + "'" : "";
+      var checked = selectedIds.has(String(l.id)) ? " checked" : "";
       return "<tr" + emailAttr + ">" +
+        "<td class='checkbox-cell'><input type='checkbox' class='row-check' data-id='" + esc(l.id) + "'" + checked + "></td>" +
         "<td>" + dtStr + "</td>" +
         "<td class='td-name'>" + esc(l.nome || "—") + "</td>" +
         "<td class='td-email'>" + (l.email ? "<a href='mailto:" + esc(l.email) + "'>" + esc(l.email) + "</a>" : "—") + "</td>" +
@@ -613,8 +659,88 @@
     }).join("");
 
     renderPagination(currentPage, totalPages, filtered.length);
+    updateSelectAllState();
     loadCrmForPage(pageData);
   }
+
+  // ── Seleção em massa ──
+  function updateBulkBar() {
+    if (selectedIds.size > 0) {
+      bulkBarEl.classList.add("show");
+      bulkCountEl.textContent = selectedIds.size + " selecionado" + (selectedIds.size !== 1 ? "s" : "");
+    } else {
+      bulkBarEl.classList.remove("show");
+    }
+  }
+
+  function updateSelectAllState() {
+    if (!lastPageData.length) {
+      selectAllEl.checked = false;
+      selectAllEl.indeterminate = false;
+      return;
+    }
+    var selectedOnPage = lastPageData.filter(function(l) { return selectedIds.has(String(l.id)); }).length;
+    selectAllEl.checked = selectedOnPage === lastPageData.length;
+    selectAllEl.indeterminate = selectedOnPage > 0 && selectedOnPage < lastPageData.length;
+  }
+
+  bodyEl.addEventListener("change", function(e) {
+    var chk = e.target.closest(".row-check");
+    if (!chk) return;
+    var id = chk.getAttribute("data-id");
+    if (chk.checked) selectedIds.add(id); else selectedIds.delete(id);
+    updateSelectAllState();
+    updateBulkBar();
+  });
+
+  selectAllEl.addEventListener("change", function() {
+    lastPageData.forEach(function(l) {
+      if (selectAllEl.checked) selectedIds.add(String(l.id)); else selectedIds.delete(String(l.id));
+    });
+    render();
+    updateBulkBar();
+  });
+
+  btnBulkClear.addEventListener("click", function() {
+    selectedIds.clear();
+    render();
+    updateBulkBar();
+  });
+
+  btnBulkDelete.addEventListener("click", async function() {
+    var ids = Array.from(selectedIds);
+    if (!ids.length) return;
+    var msg = "Excluir definitivamente " + ids.length + " lead" + (ids.length !== 1 ? "s" : "") + "?\n\nIsso remove os registros do Supabase e não pode ser desfeito.";
+    if (!window.confirm(msg)) return;
+
+    btnBulkDelete.disabled = true;
+    btnBulkDelete.textContent = "Excluindo…";
+    try {
+      var results = await Promise.all(ids.map(async function(id) {
+        try {
+          var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()) + "&id=" + encodeURIComponent(id), { method: "DELETE" });
+          var data = await res.json().catch(function() { return {}; });
+          return { id: id, ok: res.ok && data.ok };
+        } catch (_) {
+          return { id: id, ok: false };
+        }
+      }));
+
+      var okIds = results.filter(function(r) { return r.ok; }).map(function(r) { return r.id; });
+      var failCount = results.length - okIds.length;
+
+      allLeads = allLeads.filter(function(l) { return okIds.indexOf(String(l.id)) === -1; });
+      okIds.forEach(function(id) { selectedIds.delete(id); });
+      metaTotal.textContent = allLeads.length + " leads no total";
+      render();
+
+      if (failCount > 0) alert(failCount + " lead(s) não puderam ser excluídos. Tente novamente.");
+    } finally {
+      btnBulkDelete.disabled = false;
+      btnBulkDelete.textContent = "🗑️ Excluir selecionados";
+      updateBulkBar();
+    }
+  });
 
   function renderPagination(page, total, count) {
     var pg = document.getElementById("pagination");
@@ -668,8 +794,10 @@
         return;
       }
       allLeads = allLeads.filter(function(l) { return String(l.id) !== String(id); });
+      selectedIds.delete(String(id));
       metaTotal.textContent = allLeads.length + " leads no total";
       render();
+      updateBulkBar();
     } catch (e) {
       alert("Erro de conexão ao excluir.");
       if (btn) { btn.disabled = false; btn.textContent = "🗑️ Excluir"; }

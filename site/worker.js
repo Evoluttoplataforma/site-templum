@@ -195,13 +195,19 @@ async function handleLead(request, env, ctx) {
   const supabase = await timed(saveToSupabase(lead, env), 3000);
 
   const bgTasks = [
-    saveToMailchimp(lead, env).catch(() => {}),
-    sendMetaLead(lead, env, request).catch(() => {}),
-    saveToManyChat(lead, env).catch(() => {}),
+    ["mailchimp", saveToMailchimp(lead, env)],
+    ["meta", sendMetaLead(lead, env, request)],
+    ["manychat", saveToManyChat(lead, env)],
   ];
-  if (!isWebinar) bgTasks.push(saveToPipedrive(lead, env).catch(() => {}));
+  if (!isWebinar) bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
 
-  ctx.waitUntil(Promise.all(bgTasks));
+  // Loga falhas (ok:false ou exceção) de cada tarefa em background — sem isso,
+  // erros ficam completamente invisíveis (ctx.waitUntil não expõe o resultado).
+  ctx.waitUntil(Promise.all(bgTasks.map(([name, task]) =>
+    task
+      .then((r) => { if (r && r.ok === false) console.error(`[lead:${name}]`, JSON.stringify(r)); })
+      .catch((e) => console.error(`[lead:${name}] exception`, e && e.message))
+  )));
 
   return json({ ok: true, supabase });
 }
