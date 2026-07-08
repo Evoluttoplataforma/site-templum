@@ -1,5 +1,5 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
-//   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive (em paralelo)
+//   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
 //   POST /api/track  → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET    /api/leads → leitura interna de leads (senha protegida)
 //   DELETE /api/leads → exclui um lead no Supabase por id (senha protegida)
@@ -12,6 +12,7 @@
 //   MAILCHIMP_LIST_ID      ex.: 1a2b3c4d5e
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
+//   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
 //   META_PIXEL_ID          ex.: 4177249519256900 — conta 1
 //   META_CAPI_TOKEN        (SECRETO) token CAPI — conta 1
@@ -196,6 +197,7 @@ async function handleLead(request, env, ctx) {
   const bgTasks = [
     saveToMailchimp(lead, env).catch(() => {}),
     sendMetaLead(lead, env, request).catch(() => {}),
+    saveToManyChat(lead, env).catch(() => {}),
   ];
   if (!isWebinar) bgTasks.push(saveToPipedrive(lead, env).catch(() => {}));
 
@@ -453,7 +455,129 @@ async function saveToPipedrive(lead, env) {
   }
 }
 
-// ---- 4) Meta CAPI — evento Lead server-side --------------------------------
+// ---- 4) ManyChat ---------------------------------------------------------
+// Cria/atualiza o subscriber do WhatsApp no ManyChat e aplica etiquetas por
+// produto (norma) e por série de webinar. Reaproveita os custom fields que já
+// existem na conta (Settings → Custom Fields) em vez de criar campos novos.
+const MC_BASE = "https://api.manychat.com";
+
+// Mapa norma → etiqueta de produto (etiquetas já criadas no ManyChat).
+const MC_NORMA_TAGS = {
+  "ISO 9001": "lp9001",
+  "ISO 14001": "lp14001",
+  "ISO 27001": "lp27001",
+  "ISO 45001": "lp45001",
+  "ISO 37001": "lp37001",
+  "PBQP-H": "lppbqph",
+  "FSSC 22000": "lpfssc22000",
+  "HACCP": "lphaccp",
+  "ESG": "lpesg",
+  "SGI": "lpsgi",
+  "SASSMAQ": "lpsassmaq",
+  "LGPD": "lplgpd",
+};
+
+// Converte telefone BR em qualquer formato p/ E.164 (+55...) — exigido pelo whatsapp_phone.
+function toE164BR(raw) {
+  const digits = String(raw || "").replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("55") && digits.length >= 12) return "+" + digits;
+  return "+55" + digits;
+}
+
+function manyChatTagsFor(lead) {
+  const tags = [];
+  if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) tags.push("webserie_ISO9001");
+  const produto = MC_NORMA_TAGS[lead.norma];
+  if (produto) tags.push(produto);
+  return tags;
+}
+
+function manyChatFieldsFor(lead) {
+  return [
+    ["cargo", lead.cargo],
+    ["Empresa", lead.empresa],
+    ["n_funcionarios", lead.funcionarios],
+    ["faturamento_mensal", lead.faturamento],
+    ["necessidade", lead.mensagem],
+    ["produto", lead.norma],
+    ["Urgência", lead.urgencia],
+    ["url_cadastro", lead.pagina],
+    ["utm_source", lead.utm_source],
+    ["utm_campaign", lead.utm_campaign],
+    ["utm_term", lead.utm_term],
+    ["CF_email", lead.email],
+  ].filter(([, value]) => value);
+}
+
+async function findManyChatSubscriberByPhone(phone, headers) {
+  const r = await fetch(`${MC_BASE}/fb/subscriber/findBySystemField?phone=${encodeURIComponent(phone)}`, { headers }).catch(() => null);
+  if (!r || !r.ok) return null;
+  const d = await r.json().catch(() => ({}));
+  return d.data && !Array.isArray(d.data) && d.data.id ? d.data.id : null;
+}
+
+async function saveToManyChat(lead, env) {
+  const token = env.MANYCHAT_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const phone = toE164BR(lead.telefone);
+  if (!phone) return { ok: false, reason: "no_phone" };
+
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token };
+
+  try {
+    let subscriberId = await findManyChatSubscriberByPhone(phone, headers);
+
+    if (!subscriberId) {
+      const rc = await fetch(`${MC_BASE}/fb/subscriber/createSubscriber`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          whatsapp_phone: phone,
+          first_name: lead.nome || lead.email,
+          consent_phrase: "Lead aceitou receber mensagens no WhatsApp da Templum ao preencher formulário em templum.com.br",
+        }),
+      }).catch(() => null);
+
+      if (rc && rc.ok) {
+        const d = await rc.json().catch(() => ({}));
+        subscriberId = d.data?.id || null;
+      } else {
+        // Já existe (corrida entre requests, ou telefone já cadastrado por outro canal) → busca de novo.
+        subscriberId = await findManyChatSubscriberByPhone(phone, headers);
+      }
+    }
+
+    if (!subscriberId) return { ok: false, error: "no_subscriber_id" };
+
+    const fields = manyChatFieldsFor(lead);
+    const tags = manyChatTagsFor(lead);
+
+    await Promise.all([
+      ...fields.map(([field_name, field_value]) =>
+        fetch(`${MC_BASE}/fb/subscriber/setCustomFieldByName`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ subscriber_id: subscriberId, field_name, field_value }),
+        }).catch(() => null)
+      ),
+      ...tags.map((tag_name) =>
+        fetch(`${MC_BASE}/fb/subscriber/addTagByName`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ subscriber_id: subscriberId, tag_name }),
+        }).catch(() => null)
+      ),
+    ]);
+
+    return { ok: true, subscriber_id: subscriberId };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+// ---- 5) Meta CAPI — evento Lead server-side --------------------------------
 async function sendMetaLead(lead, env, request) {
   const accounts = [
     { pixel: env.META_PIXEL_ID, token: env.META_CAPI_TOKEN, test: env.META_TEST_EVENT_CODE },
