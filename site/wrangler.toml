@@ -4,6 +4,10 @@
 name = "site-templum"
 main = "worker.js"
 compatibility_date = "2025-01-01"
+# Fixo pra evitar que `wrangler deploy`/`secret put` caiam na conta pessoal
+# (o login tem acesso a 2 contas Cloudflare) e criem um Worker "site-templum"
+# decoy sem os secrets reais. Conta real: Templum_e_Evolutto.
+account_id = "9d5769774958e2d0940660a221d0f603"
 
 [assets]
 directory = "./dist"
