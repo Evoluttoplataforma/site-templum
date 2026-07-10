@@ -1,6 +1,5 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
-import PageHero from "../../components/PageHero.astro";
 import SeloImplementando from "../../components/SeloImplementando.astro";
 import Especialistas from "../../components/Especialistas.astro";
 import Testimonials from "../../components/Testimonials.astro";
@@ -74,31 +73,7 @@ const faqs = [
   { q: "Quanto custa preparar minha empresa para o GERIC e o PBQP-H?", a: "O investimento varia conforme o porte da construtora e o quanto falta organizar. O diagnóstico inicial é gratuito, e a partir dele apresentamos uma proposta sob medida para o seu cenário." },
   { q: "O financiamento cobre 100% do custo da obra?", a: "Programas de apoio à produção podem financiar uma parcela significativa do custo de obra a executar, combinado com outras fontes de recurso do empreendimento. As condições exatas dependem da análise de cada operação." },
   { q: "O que é o 'Apoio à Produção' da Caixa?", a: "É a linha da Caixa voltada a financiar a construção de empreendimentos habitacionais, liberando recursos por etapas conforme a obra avança — desde que a construtora esteja qualificada e o projeto aprovado." },
-  { q: "Como faço o Diagnóstico de Prontidão Caixa™?", a: "Basta responder 7 perguntas rápidas sobre a sua construtora aqui na página. Ao final, você recebe o nível de prontidão da sua empresa (Baixo, Médio ou Alto) e pode falar com um especialista da Templum sobre os próximos passos." },
-];
-
-const quiz = [
-  { q: "A sua construtora possui PBQP-H?", opts: [
-    { t: "Sim, nível A ou B", v: 3 }, { t: "Sim, nível C ou D", v: 2 }, { t: "Está implementando", v: 1 }, { t: "Não possui", v: 0 },
-  ]},
-  { q: "Quantos anos de mercado a empresa tem?", opts: [
-    { t: "Mais de 10 anos", v: 3 }, { t: "5 a 10 anos", v: 2 }, { t: "2 a 5 anos", v: 1 }, { t: "Menos de 2 anos", v: 0 },
-  ]},
-  { q: "Quantos empreendimentos já foram entregues?", opts: [
-    { t: "Mais de 10", v: 3 }, { t: "4 a 10", v: 2 }, { t: "1 a 3", v: 1 }, { t: "Nenhum ainda", v: 0 },
-  ]},
-  { q: "Já trabalhou com financiamento da Caixa?", opts: [
-    { t: "Sim, mais de uma vez", v: 3 }, { t: "Sim, uma vez", v: 2 }, { t: "Já tentei, mas não avançou", v: 1 }, { t: "Nunca", v: 0 },
-  ]},
-  { q: "A empresa possui processos documentados (financeiro, técnico, qualidade)?", opts: [
-    { t: "Sim, formalizados", v: 3 }, { t: "Parcialmente", v: 2 }, { t: "Só o básico", v: 1 }, { t: "Não", v: 0 },
-  ]},
-  { q: "Possui responsável técnico dedicado?", opts: [
-    { t: "Sim, dedicado ao empreendimento", v: 3 }, { t: "Sim, dividido com outras obras", v: 2 }, { t: "Terceirizado por obra", v: 1 }, { t: "Não", v: 0 },
-  ]},
-  { q: "Já teve alguma operação aprovada pela Caixa ou outro banco para produção?", opts: [
-    { t: "Sim", v: 3 }, { t: "Está em análise agora", v: 2 }, { t: "Já tentei e não avançou", v: 1 }, { t: "Nunca tentei", v: 0 },
-  ]},
+  { q: "Como funciona o diagnóstico da minha construtora?", a: "Você preenche o formulário nesta página com os dados básicos da sua empresa. Um especialista da Templum analisa gratuitamente o cenário — PBQP-H, tempo de mercado, histórico com a Caixa — e retorna com o que falta para chegar pronta na análise de crédito." },
 ];
 
 const schemaService = {
@@ -121,26 +96,31 @@ const schemaFaq = {
 
 <LpBase
   title="Financiamento Caixa para Construtoras — Como Conseguir | Templum"
-  description="Descubra como construtoras acessam linhas de financiamento e crédito imobiliário da Caixa. Faça o Diagnóstico de Prontidão Caixa™ gratuito e entenda o caminho — do GERIC ao PBQP-H — até a liberação dos recursos."
+  description="Descubra como construtoras acessam linhas de financiamento e crédito imobiliário da Caixa. Fale com um especialista e entenda o caminho — do GERIC ao PBQP-H — até a liberação dos recursos."
   formAnchor="#diagnostico"
   noindex={false}
   schemas={[schemaService, schemaFaq]}
 >
   <!-- HERO -->
-  <PageHero
-    tag="Financiamento Caixa · Construtoras"
-    sub="Descubra como centenas de construtoras conseguem acessar linhas de financiamento para produção imobiliária — e o que muda quando sua empresa está pronta para ser aprovada."
-    image="/assets/img/hero/templum-consultoria-construcao.webp"
-    badge="Crédito para produção"
-    icon="solar:buildings-3-bold"
-    chips={["Crédito para produção imobiliária", "Método aplicado em +500 construtoras", "Diagnóstico sem custo"]}
-  >
-    <Fragment slot="title">Construa utilizando recursos da <em class="accent">Caixa</em></Fragment>
-    <Fragment slot="cta">
-      <a href="#diagnostico" class="btn btn--primary btn--lg">Quero entender como funciona <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="#mercado" class="btn btn--onDark btn--lg">Ver dados do mercado</a>
-    </Fragment>
-  </PageHero>
+  <section class="fc-hero">
+    <div class="fc-hero-bg" aria-hidden="true"></div>
+    <div class="container xl fc-hero-grid">
+      <div class="fc-hero-text">
+        <span class="tag-pill tag-pill--glow">Financiamento Caixa · Construtoras</span>
+        <h1 class="fc-hero-title">Construa utilizando recursos da <em class="accent">Caixa</em></h1>
+        <p class="fc-hero-sub">Descubra como centenas de construtoras conseguem acessar linhas de financiamento para produção imobiliária — e o que muda quando sua empresa está pronta para ser aprovada.</p>
+        <div class="fc-hero-chips">
+          <span class="fc-hero-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>Crédito para produção imobiliária</span>
+          <span class="fc-hero-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>Método aplicado em +500 construtoras</span>
+          <span class="fc-hero-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>Diagnóstico sem custo</span>
+        </div>
+        <a href="#mercado" class="fc-hero-link">Ver dados do mercado <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+      </div>
+      <div class="fc-hero-form">
+        <LeadForm titulo="Quero entender como funciona" sub="Fale com um especialista e descubra o caminho até o crédito da Caixa." cta="Quero entender como funciona" obrigado="/lp/financiamento-caixa-obrigado" simples={true} faturamento={true} />
+      </div>
+    </div>
+  </section>
 
   <!-- DADOS DO MERCADO -->
   <section id="mercado" class="section section--cream">
@@ -256,12 +236,18 @@ const schemaFaq = {
     <div class="container md fc-case">
       <span class="tag-pill">Case de sucesso</span>
       <h2>Construtora Carvalho Forte: <em class="accent">crescimento na obra</em></h2>
-      <a class="fc-case-video" href="https://vimeo.com/103908164" target="_blank" rel="noopener">
+      <a class="fc-case-video" href="https://vimeo.com/103908164" data-vimeo="103908164">
         <img src="https://vumbnail.com/103908164.jpg" alt="Depoimento da Construtora Carvalho Forte" loading="lazy" />
         <span class="fc-case-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
         <span class="fc-case-tag">PBQP-H</span>
       </a>
       <p class="fc-case-cap">Assista ao depoimento sobre como a certificação PBQP-H impulsionou o crescimento da obra.</p>
+    </div>
+
+    <!-- lightbox -->
+    <div class="fc-case-lb" data-case-lightbox hidden>
+      <button class="fc-case-lb-close" data-case-lb-close aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+      <div class="fc-case-lb-frame" data-case-lb-frame></div>
     </div>
   </section>
 
@@ -299,37 +285,20 @@ const schemaFaq = {
     </div>
   </section>
 
-  <!-- DIAGNÓSTICO DE PRONTIDÃO CAIXA -->
-  <section id="diagnostico" class="section section--cream fc-diag-sec">
-    <div class="container lg">
-      <div class="section-header">
-        <span class="tag-pill">Ferramenta gratuita</span>
-        <h2>Diagnóstico de Prontidão Caixa<span class="fc-tm">™</span></h2>
-        <p>Responda 7 perguntas rápidas e descubra o nível de prontidão da sua construtora para buscar financiamento junto à Caixa.</p>
+  <!-- DIAGNÓSTICO / FORMULÁRIO -->
+  <section id="diagnostico" class="fc-form section--navy">
+    <div class="container lg fc-form-grid">
+      <div class="fc-form-pitch">
+        <span class="tag-pill tag-pill--glow">Comece agora</span>
+        <h2>Descubra se a sua construtora está <em class="accent">apta</em> para a Caixa</h2>
+        <p>Um especialista da Templum analisa o cenário da sua empresa — PBQP-H, tempo de mercado, histórico com a Caixa — e mostra exatamente o que falta para chegar pronta na análise de crédito.</p>
+        <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico gratuito e sem compromisso</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Plano de ação sob medida para o seu momento</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Preparação completa: GERIC, PBQP-H e documentação</li>
+        </ul>
       </div>
-
-      <div class="fc-diag" data-diag>
-        <div class="fc-diag-progress"><div class="fc-diag-progress-bar" data-diag-progress></div></div>
-
-        {quiz.map((item, i) => (
-          <div class="fc-diag-step" data-diag-step={i} hidden={i !== 0}>
-            <span class="fc-diag-count">Pergunta {i + 1} de {quiz.length}</span>
-            <h3>{item.q}</h3>
-            <div class="fc-diag-opts">
-              {item.opts.map((o) => <button type="button" class="fc-diag-opt" data-score={o.v}>{o.t}</button>)}
-            </div>
-          </div>
-        ))}
-
-        <div class="fc-diag-step fc-diag-result" data-diag-step={quiz.length} hidden>
-          <span class="fc-diag-badge" data-diag-badge>Nível de prontidão</span>
-          <h3 data-diag-title>Resultado</h3>
-          <p data-diag-text></p>
-          <div class="fc-diag-lead">
-            <LeadForm titulo="Fale com um especialista" sub="Conte com a análise de um consultor Templum sobre os próximos passos da sua construtora." cta="Quero falar com um especialista" obrigado="/lp/financiamento-caixa-obrigado" simples={true} faturamento={true} />
-          </div>
-        </div>
-      </div>
+      <LeadForm titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Quero meu diagnóstico gratuito" obrigado="/lp/financiamento-caixa-obrigado" simples={true} faturamento={true} />
     </div>
   </section>
 
@@ -354,6 +323,22 @@ const schemaFaq = {
 </LpBase>
 
 <style>
+  /* hero */
+  .fc-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .fc-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, rgba(255,89,37,0.28), transparent 60%), radial-gradient(560px 380px at 100% 100%, rgba(255,89,37,0.14), transparent 60%); }
+  .fc-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .fc-hero-text { max-width: 600px; }
+  .fc-hero .tag-pill { margin-bottom: 20px; }
+  .fc-hero-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .fc-hero-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; line-height: 1.6; }
+  .fc-hero-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .fc-hero-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .fc-hero-chip iconify-icon { color: color-mix(in srgb, var(--orange) 58%, #ffffff); font-size: 18px; }
+  .fc-hero-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .fc-hero-link:hover { color: var(--orange); }
+  .fc-hero-form { align-self: start; }
+  @media (max-width: 900px) { .fc-hero-grid { grid-template-columns: 1fr; } }
+
   .src-note { font-size: 12.5px; color: var(--text-soft); text-align: center; margin-top: 22px; line-height: 1.6; }
   .src-note a { color: var(--text-mid); text-decoration: underline; text-underline-offset: 2px; }
   .fc-stats { grid-template-columns: repeat(4, 1fr); }
@@ -385,6 +370,7 @@ const schemaFaq = {
   .fc-intro .tag-pill { margin: 0 auto 16px; }
   .fc-intro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
   .fc-intro p { font-size: 16.5px; line-height: 1.7; margin-top: 16px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .section--navy .fc-intro h2 { color: var(--cream); }
   .section--navy .fc-intro p { color: rgba(255,244,221,0.75); }
   .section:not(.section--navy) .fc-intro p { color: var(--text-mid); }
   .fc-pbqp-list { max-width: 820px; margin: 32px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
@@ -409,6 +395,12 @@ const schemaFaq = {
   .fc-case-video:hover .fc-case-play { background: var(--orange); color: #fff; transform: translate(-50%,-50%) scale(1.08); }
   .fc-case-tag { position: absolute; top: 14px; right: 14px; z-index: 2; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; background: rgba(255,89,37,0.92); padding: 5px 11px; border-radius: 999px; }
   .fc-case-cap { font-size: 14px; color: var(--text-mid); margin-top: 16px; }
+  .fc-case-lb { position: fixed; inset: 0; z-index: 1000; background: rgba(10,12,15,0.9); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 24px; }
+  .fc-case-lb[hidden] { display: none; }
+  .fc-case-lb-frame { position: relative; width: min(960px, 94vw); aspect-ratio: 16/9; border-radius: var(--r-16); overflow: hidden; box-shadow: var(--shadow-lift); background: #000; }
+  .fc-case-lb-frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .fc-case-lb-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 40px; line-height: 1; opacity: .85; transition: opacity .2s, transform .2s; }
+  .fc-case-lb-close:hover { opacity: 1; transform: scale(1.08); }
 
   /* diferenciais */
   .fc-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
@@ -429,23 +421,13 @@ const schemaFaq = {
   .fc-vs-good li { color: rgba(255,244,221,0.88); }
   .fc-vs-good li iconify-icon { color: var(--orange); }
 
-  /* diagnóstico */
-  .fc-tm { font-size: 0.5em; vertical-align: super; }
-  .fc-diag { max-width: 720px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(28px, 4vw, 44px); box-shadow: var(--shadow-card); }
-  .fc-diag-progress { height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; margin-bottom: 30px; }
-  .fc-diag-progress-bar { height: 100%; width: 0%; background: var(--orange); border-radius: 999px; transition: width .35s var(--ease-soft); }
-  .fc-diag-count { font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orange-ink); }
-  .fc-diag-step h3 { font-size: clamp(19px, 2.4vw, 24px); font-weight: 800; letter-spacing: -0.015em; margin: 10px 0 22px; line-height: 1.3; }
-  .fc-diag-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 560px) { .fc-diag-opts { grid-template-columns: 1fr; } }
-  .fc-diag-opt { text-align: left; padding: 16px 18px; border-radius: var(--r-16); border: 1px solid var(--border); background: var(--bg); font-size: 14.5px; font-weight: 600; color: var(--text); cursor: pointer; transition: border-color .2s, background .2s, transform .15s; }
-  .fc-diag-opt:hover { border-color: var(--orange); background: rgba(255,89,37,0.06); transform: translateY(-1px); }
-
-  .fc-diag-result { text-align: center; }
-  .fc-diag-badge { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange-ink); background: rgba(255,89,37,0.10); padding: 6px 16px; border-radius: 999px; margin-bottom: 14px; }
-  .fc-diag-result h3 { font-size: clamp(22px, 3vw, 30px); }
-  .fc-diag-result > p { font-size: 15.5px; color: var(--text-mid); line-height: 1.65; max-width: 520px; margin: 0 auto 30px; }
-  .fc-diag-lead { text-align: left; margin-top: 6px; }
+  /* diagnóstico / formulário */
+  .fc-form { padding: 88px 0; }
+  .fc-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; }
+  .fc-form-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.12; }
+  .fc-form-pitch > p { font-size: 16px; color: rgba(255,244,221,0.75); line-height: 1.6; margin-bottom: 22px; max-width: 460px; }
+  .fc-form-pitch .check-item { color: var(--cream); }
+  @media (max-width: 880px) { .fc-form-grid { grid-template-columns: 1fr; } }
 
   /* FAQ em fundo navy */
   .section--navy .faq-item { border-color: rgba(255,244,221,0.12); }
@@ -457,49 +439,17 @@ const schemaFaq = {
 
 <script is:inline>
   (function () {
-    const root = document.querySelector("[data-diag]");
-    if (!root) return;
-    const steps = Array.from(root.querySelectorAll("[data-diag-step]"));
-    const bar = root.querySelector("[data-diag-progress]");
-    const total = steps.length - 1; // última é o resultado
-    let score = 0;
-
-    function show(idx) {
-      steps.forEach((s) => { s.hidden = Number(s.dataset.diagStep) !== idx; });
-      bar.style.width = Math.round((Math.min(idx, total) / total) * 100) + "%";
+    var link = document.querySelector(".fc-case-video[data-vimeo]");
+    var lb = document.querySelector("[data-case-lightbox]");
+    var frame = lb && lb.querySelector("[data-case-lb-frame]");
+    if (!link || !lb || !frame) return;
+    function open(id) {
+      frame.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id + '?autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+      lb.hidden = false; document.body.style.overflow = "hidden";
     }
-
-    function finish() {
-      const max = total * 3;
-      const pct = score / max;
-      let nivel = "Baixo", texto = "Sua construtora está no início do caminho. É exatamente o cenário que resolvemos com mais frequência — o diagnóstico completo com um especialista mostra por onde começar.";
-      if (pct >= 0.7) { nivel = "Alto"; texto = "Sua construtora já percorreu boa parte do caminho. Provavelmente falta o empurrão final para ser homologada e acessar o crédito."; }
-      else if (pct >= 0.35) { nivel = "Médio"; texto = "Sua construtora já tem uma base construída — falta organizar alguns pontos para não travar na análise da Caixa."; }
-      const badge = root.querySelector("[data-diag-badge]");
-      const title = root.querySelector("[data-diag-title]");
-      const text = root.querySelector("[data-diag-text]");
-      if (badge) badge.textContent = "Nível de prontidão: " + nivel;
-      if (title) title.textContent = "Prontidão " + nivel;
-      if (text) text.textContent = texto;
-      const form = root.querySelector("form[data-trk-event]");
-      if (form && !form.querySelector('input[name="mensagem"]')) {
-        const input = document.createElement("input");
-        input.type = "hidden"; input.name = "mensagem";
-        input.value = "Diagnóstico de Prontidão Caixa: nível " + nivel + " (" + score + "/" + max + " pts)";
-        form.appendChild(input);
-      }
-      show(total);
-    }
-
-    root.addEventListener("click", (e) => {
-      const opt = e.target.closest(".fc-diag-opt");
-      if (!opt) return;
-      score += Number(opt.dataset.score || 0);
-      const current = steps.findIndex((s) => !s.hidden);
-      if (current < total - 1) show(current + 1);
-      else finish();
-    });
-
-    show(0);
+    function close() { lb.hidden = true; frame.innerHTML = ""; document.body.style.overflow = ""; }
+    link.addEventListener("click", function (e) { e.preventDefault(); open(link.dataset.vimeo); });
+    lb.addEventListener("click", function (e) { if (e.target === lb || e.target.closest("[data-case-lb-close]")) close(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !lb.hidden) close(); });
   })();
 </script>
