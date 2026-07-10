@@ -1,0 +1,505 @@
+---
+import LpBase from "../../layouts/LpBase.astro";
+import PageHero from "../../components/PageHero.astro";
+import SeloImplementando from "../../components/SeloImplementando.astro";
+import Especialistas from "../../components/Especialistas.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
+
+const marketStats = [
+  { num: "R$ 1 tri", label: "em crédito imobiliário na carteira da Caixa — marca histórica alcançada em 2026" },
+  { num: "+16%", label: "de crescimento previsto no financiamento imobiliário em 2026 (SBPE + FGTS), segundo a Abecip" },
+  { num: "R$ 250 bi", label: "em concessões da Caixa projetadas para 2026 — recorde absoluto da série" },
+  { num: "+2,9 mi", label: "trabalhadores formais na construção civil em 2025, 2º setor que mais empregou no país (CBIC)" },
+];
+
+const analiseCaixa = [
+  { icon: "solar:document-text-bold", t: "Documentação", d: "Registro do terreno, projeto aprovado, alvará e licenças ambientais em dia." },
+  { icon: "solar:case-round-bold", t: "Situação fiscal e societária", d: "Regularidade na Receita Federal, Fazenda, trabalhista e junto a órgãos de proteção ao crédito." },
+  { icon: "solar:chart-2-bold", t: "Capacidade financeira", d: "Saúde econômico-financeira e solidez para sustentar a obra até a liberação por etapas." },
+  { icon: "solar:medal-star-bold", t: "Histórico de entregas", d: "Capacidade técnica comprovada: obras anteriores, prazos e qualidade de execução." },
+  { icon: "solar:users-group-rounded-bold", t: "Equipe técnica", d: "Responsável técnico e estrutura de gestão dedicados ao empreendimento." },
+  { icon: "solar:shield-check-bold", t: "Sistema de gestão da qualidade", d: "Processos de obra organizados e comprovados — é aqui que entra o PBQP-H." },
+];
+
+const timeline = [
+  { n: "01", t: "Escolha do empreendimento", d: "Você define o terreno e o produto: o tipo de empreendimento que vai construir e vender." },
+  { n: "02", t: "Estudos", d: "Viabilidade técnica, jurídica e financeira do projeto — para saber se a conta fecha antes de entrar na fila do banco." },
+  { n: "03", t: "Documentação", d: "Registro do terreno, projeto aprovado, alvará e licenças ambientais, além das viabilidades de água, esgoto e energia." },
+  { n: "04", t: "Cadastro", d: "Sua construtora entra no cadastro da Caixa, com situação fiscal, trabalhista e societária regularizada." },
+  { n: "05", t: "GERIC", d: "A Caixa avalia o histórico e a capacidade técnica da sua empresa nesta triagem — é aqui que a maioria trava." },
+  { n: "06", t: "Adequação da empresa", d: "Ajustamos processos internos, controles e organização para atender aos critérios de análise de risco do banco." },
+  { n: "07", t: "PBQP-H", d: "A certificação de qualidade exigida pela Caixa entra em cena, comprovando que sua obra segue um sistema de gestão reconhecido." },
+  { n: "08", t: "Aprovação", d: "Com tudo em ordem, o projeto e a empresa passam pela análise final de crédito." },
+  { n: "09", t: "Contratação", d: "Assinatura do contrato de financiamento, com prazos e condições definidas para a obra." },
+  { n: "10", t: "Liberação dos recursos", d: "O dinheiro entra por etapas, conforme o avanço físico da obra é medido e comprovado." },
+];
+
+const templumSteps = [
+  { t: "Diagnóstico", d: "Avaliamos o cenário atual da sua construtora e o que falta para chegar pronta na Caixa." },
+  { t: "Plano de ação", d: "Montamos um cronograma realista, com prioridades e responsáveis para cada etapa." },
+  { t: "Preparação documental", d: "Organizamos a documentação técnica, jurídica e financeira exigida no processo." },
+  { t: "Implantação do PBQP-H", d: "Estruturamos o sistema de gestão da qualidade da obra conforme o SiAC." },
+  { t: "Preparação para o GERIC", d: "Deixamos a empresa alinhada aos critérios de análise de risco do banco." },
+  { t: "Acompanhamento", d: "Seguimos ao lado da sua equipe até a submissão e a resposta da Caixa." },
+  { t: "Empresa pronta", d: "Sua construtora habilitada a acessar financiamento sempre que precisar — não só uma vez." },
+];
+
+const semTemplum = [
+  "Projeto travado no GERIC sem entender o motivo",
+  "Documentação incompleta descoberta na hora errada",
+  "PBQP-H tratado como burocracia de última hora",
+  "Meses de atraso até a primeira parcela ser liberada",
+  "Reprovação silenciosa, sem retorno claro do banco",
+];
+const comTemplum = [
+  "Diagnóstico prévio mostra exatamente o que falta",
+  "Documentação organizada antes de entrar na fila",
+  "PBQP-H implantado com método e prazo definidos",
+  "Empresa entra no GERIC já qualificada",
+  "Acompanhamento até a liberação dos recursos",
+];
+
+const faqs = [
+  { q: "Toda construtora consegue financiamento da Caixa?", a: "Não automaticamente. O crédito para produção imobiliária existe e está em expansão, mas a Caixa qualifica a empresa antes de liberar qualquer valor — avaliando gestão, documentação, capacidade financeira e histórico. É exatamente esse preparo que decide quem acessa o recurso e quem fica de fora." },
+  { q: "O PBQP-H é obrigatório para financiar com a Caixa?", a: "É frequentemente exigido. O PBQP-H comprova que a sua obra segue um sistema de gestão da qualidade reconhecido, e costuma aparecer como requisito no cadastro e na homologação da construtora — especialmente em programas como o Apoio à Produção e o Minha Casa Minha Vida." },
+  { q: "O que é o GERIC?", a: "GERIC é a área da Caixa Econômica Federal responsável por avaliar e homologar as construtoras aptas a operar com financiamento e recursos do banco. É uma triagem que vai muito além do terreno e do projeto — analisa aspectos tributários, trabalhistas, societários, técnicos e de licenciamento." },
+  { q: "Quanto tempo demora todo o processo, do diagnóstico à liberação dos recursos?", a: "Varia conforme o nível de organização da empresa e a complexidade do empreendimento. Construtoras já com PBQP-H e documentação em dia avançam mais rápido; quem parte do zero costuma levar alguns meses de preparação antes mesmo de submeter o cadastro à Caixa." },
+  { q: "Posso financiar obras comerciais, ou só empreendimentos habitacionais?", a: "A maior parte dos programas da Caixa é voltada à produção habitacional, mas existem linhas de apoio à produção para outros perfis de empreendimento. Um especialista pode indicar a linha mais adequada ao seu projeto." },
+  { q: "Minha construtora nunca trabalhou com a Caixa. Dá para começar do zero?", a: "Sim. A maioria das construtoras que atendemos está nessa situação. O caminho é mais longo, mas perfeitamente possível: começa pelo diagnóstico, passa pela organização da empresa e do PBQP-H, e termina no cadastro e submissão ao GERIC." },
+  { q: "Quais são os níveis do PBQP-H e qual eu preciso ter?", a: "O SiAC (sistema do PBQP-H para obras) tem níveis evolutivos — D, C, B e A. O nível exigido varia conforme o programa e o valor do financiamento buscado; por isso o diagnóstico avalia o seu caso específico antes de definir a meta." },
+  { q: "O que a Caixa analisa além do projeto e do terreno?", a: "Situação cadastral e fiscal da empresa, regularidade trabalhista e societária, saúde econômico-financeira, histórico de obras entregues, qualificação técnica da equipe e o sistema de gestão da qualidade — normalmente comprovado pelo PBQP-H." },
+  { q: "Quanto custa preparar minha empresa para o GERIC e o PBQP-H?", a: "O investimento varia conforme o porte da construtora e o quanto falta organizar. O diagnóstico inicial é gratuito, e a partir dele apresentamos uma proposta sob medida para o seu cenário." },
+  { q: "O financiamento cobre 100% do custo da obra?", a: "Programas de apoio à produção podem financiar uma parcela significativa do custo de obra a executar, combinado com outras fontes de recurso do empreendimento. As condições exatas dependem da análise de cada operação." },
+  { q: "O que é o 'Apoio à Produção' da Caixa?", a: "É a linha da Caixa voltada a financiar a construção de empreendimentos habitacionais, liberando recursos por etapas conforme a obra avança — desde que a construtora esteja qualificada e o projeto aprovado." },
+  { q: "Como faço o Diagnóstico de Prontidão Caixa™?", a: "Basta responder 7 perguntas rápidas sobre a sua construtora aqui na página. Ao final, você recebe o nível de prontidão da sua empresa (Baixo, Médio ou Alto) e pode falar com um especialista da Templum sobre os próximos passos." },
+];
+
+const quiz = [
+  { q: "A sua construtora possui PBQP-H?", opts: [
+    { t: "Sim, nível A ou B", v: 3 }, { t: "Sim, nível C ou D", v: 2 }, { t: "Está implementando", v: 1 }, { t: "Não possui", v: 0 },
+  ]},
+  { q: "Quantos anos de mercado a empresa tem?", opts: [
+    { t: "Mais de 10 anos", v: 3 }, { t: "5 a 10 anos", v: 2 }, { t: "2 a 5 anos", v: 1 }, { t: "Menos de 2 anos", v: 0 },
+  ]},
+  { q: "Quantos empreendimentos já foram entregues?", opts: [
+    { t: "Mais de 10", v: 3 }, { t: "4 a 10", v: 2 }, { t: "1 a 3", v: 1 }, { t: "Nenhum ainda", v: 0 },
+  ]},
+  { q: "Já trabalhou com financiamento da Caixa?", opts: [
+    { t: "Sim, mais de uma vez", v: 3 }, { t: "Sim, uma vez", v: 2 }, { t: "Já tentei, mas não avançou", v: 1 }, { t: "Nunca", v: 0 },
+  ]},
+  { q: "A empresa possui processos documentados (financeiro, técnico, qualidade)?", opts: [
+    { t: "Sim, formalizados", v: 3 }, { t: "Parcialmente", v: 2 }, { t: "Só o básico", v: 1 }, { t: "Não", v: 0 },
+  ]},
+  { q: "Possui responsável técnico dedicado?", opts: [
+    { t: "Sim, dedicado ao empreendimento", v: 3 }, { t: "Sim, dividido com outras obras", v: 2 }, { t: "Terceirizado por obra", v: 1 }, { t: "Não", v: 0 },
+  ]},
+  { q: "Já teve alguma operação aprovada pela Caixa ou outro banco para produção?", opts: [
+    { t: "Sim", v: 3 }, { t: "Está em análise agora", v: 2 }, { t: "Já tentei e não avançou", v: 1 }, { t: "Nunca tentei", v: 0 },
+  ]},
+];
+
+const schemaService = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Preparação de construtoras para financiamento Caixa (GERIC e PBQP-H)",
+  description: "A Templum prepara construtoras e incorporadoras para acessar linhas de financiamento e crédito imobiliário da Caixa Econômica Federal, do diagnóstico à homologação no GERIC, incluindo a implantação do PBQP-H.",
+  provider: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  areaServed: { "@type": "Country", name: "Brasil" },
+  serviceType: "Consultoria PBQP-H e preparação para GERIC",
+  audience: { "@type": "Audience", audienceType: "Construtoras, incorporadoras e empreiteiras" },
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+
+<LpBase
+  title="Financiamento Caixa para Construtoras — Como Conseguir | Templum"
+  description="Descubra como construtoras acessam linhas de financiamento e crédito imobiliário da Caixa. Faça o Diagnóstico de Prontidão Caixa™ gratuito e entenda o caminho — do GERIC ao PBQP-H — até a liberação dos recursos."
+  formAnchor="#diagnostico"
+  noindex={false}
+  schemas={[schemaService, schemaFaq]}
+>
+  <!-- HERO -->
+  <PageHero
+    tag="Financiamento Caixa · Construtoras"
+    sub="Descubra como centenas de construtoras conseguem acessar linhas de financiamento para produção imobiliária — e o que muda quando sua empresa está pronta para ser aprovada."
+    image="/assets/img/hero/templum-consultoria-construcao.webp"
+    badge="Crédito para produção"
+    icon="solar:buildings-3-bold"
+    chips={["Crédito para produção imobiliária", "Método aplicado em +500 construtoras", "Diagnóstico sem custo"]}
+  >
+    <Fragment slot="title">Construa utilizando recursos da <em class="accent">Caixa</em></Fragment>
+    <Fragment slot="cta">
+      <a href="#diagnostico" class="btn btn--primary btn--lg">Quero entender como funciona <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#mercado" class="btn btn--onDark btn--lg">Ver dados do mercado</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- DADOS DO MERCADO -->
+  <section id="mercado" class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">O mercado agora</span>
+        <h2>O crédito para construção está em <em class="accent">expansão histórica</em></h2>
+        <p>A Caixa é o principal financiador da produção imobiliária no Brasil — e o volume de crédito disponível nunca foi tão alto.</p>
+      </div>
+      <div class="numbers-grid fc-stats">
+        {marketStats.map((s) => (
+          <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>
+        ))}
+      </div>
+      <p class="src-note">
+        Fontes:
+        <a href="https://credited.com.br/noticias/2026/07/02/caixa-economica-alcanca-r-1-trilhao-em-credito-imobiliario/" target="_blank" rel="noopener">Caixa Econômica Federal (2026)</a> ·
+        <a href="https://prognum.com.br/abecip-financiamentos-imobiliarios-com-recursos-das-cadernetas-do-sbpe-somaram-em-abril-r-1698-bilhoes/" target="_blank" rel="noopener">Abecip (abr/2026)</a> ·
+        <a href="https://cbic.org.br/construcao-civil-projeta-2026-mais-positivo-que-2025-impulsionado-por-credito-e-investimentos/" target="_blank" rel="noopener">CBIC (2026)</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="section section--navy">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">O que ninguém te conta</span>
+        <h2>O dinheiro existe. <em class="accent">Poucas construtoras conseguem acessar.</em></h2>
+        <p>Enquanto o crédito para o comprador final bate recorde, o financiamento direto à produção — o dinheiro que entra na sua obra — segue muito mais seletivo. Não é falta de recurso: é que a Caixa avalia muito mais do que o terreno e o projeto.</p>
+      </div>
+      <div class="eco-grid fc-analise">
+        {analiseCaixa.map((a) => (
+          <div class="eco-card reveal"><span class="fc-ico"><iconify-icon icon={a.icon}></iconify-icon></span><h3>{a.t}</h3><p>{a.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SELO -->
+  <SeloImplementando />
+
+  <!-- TIMELINE — COMO FUNCIONA -->
+  <section id="como-funciona" class="section section--cream fc-passos-sec">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O caminho até o crédito</span>
+        <h2>10 etapas entre a ideia e o <em class="accent">dinheiro na obra</em></h2>
+        <p>Cada empreendimento passa por uma sequência parecida — quem entende o caminho evita surpresas e atrasos.</p>
+      </div>
+      <div class="fc-passos-list">
+        {timeline.map((p) => (
+          <div class="fc-passo-item reveal">
+            <div class="fc-passo-num">{p.n}</div>
+            <div class="fc-passo-connector" aria-hidden="true"></div>
+            <div class="fc-passo-body"><h3>{p.t}</h3><p>{p.d}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- GERIC -->
+  <section class="section section--navy">
+    <div class="container md fc-intro">
+      <span class="tag-pill tag-pill--glow">GERIC · Caixa Econômica</span>
+      <h2>GERIC: a etapa que trava a <em class="accent">maioria das construtoras</em></h2>
+      <p>O GERIC é a área da Caixa responsável por avaliar e homologar as construtoras aptas a operar com financiamento e recursos do banco. Ele existe para proteger o dinheiro que a Caixa está prestes a colocar na sua obra — garantindo que a empresa do outro lado tem capacidade real de entregar.</p>
+      <p>É por isso que a análise vai muito além do projeto: aspectos tributários, trabalhistas, societários, registros do terreno, qualificação técnica, licenciamento ambiental e as minutas de contrato entram todos na mesma triagem. A maioria das construtoras trava aqui não porque falta obra boa — falta organização que comprove isso ao banco.</p>
+    </div>
+  </section>
+
+  <!-- PBQP-H -->
+  <section class="section section--cream">
+    <div class="container md fc-intro">
+      <span class="tag-pill">PBQP-H</span>
+      <h2>PBQP-H: o requisito que aparece no meio do caminho</h2>
+      <p>O PBQP-H (Programa Brasileiro da Qualidade e Produtividade do Habitat) é um sistema de gestão da qualidade voltado para a construção civil. Ele organiza os processos da obra — do controle de materiais à qualificação da mão de obra — e comprova ao mercado que a empresa segue um padrão reconhecido.</p>
+      <p>Costuma aparecer como requisito no cadastro da construtora junto à Caixa e em programas como o Apoio à Produção e o Minha Casa Minha Vida — exatamente porque é a forma mais objetiva de o banco verificar a capacidade de gestão da empresa antes de liberar o crédito.</p>
+    </div>
+    <div class="container xl">
+      <ul class="check-list fc-pbqp-list">
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Ajuda a comprovar capacidade técnica e de gestão na análise de risco da Caixa</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Reduz desperdício, retrabalho e custos dentro do canteiro de obras</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Abre portas para participação em licitações públicas</li>
+        <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Organiza processos e qualifica a mão de obra da construtora</li>
+      </ul>
+      <div class="fc-intro-cta"><a href="/consultoria/pbqp-h/" class="btn btn--outline">Entenda o PBQP-H em detalhes <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+    </div>
+  </section>
+
+  <!-- PAPEL DA TEMPLUM -->
+  <section class="section section--navy">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Onde a Templum atua</span>
+        <h2>Preparamos sua construtora para <em class="accent">chegar pronta</em> na Caixa</h2>
+        <p>Não financiamos a sua obra — preparamos a sua empresa para ser aprovada por quem financia.</p>
+      </div>
+      <div class="step-grid fc-templum-grid">
+        {templumSteps.map((p, i) => (
+          <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ESPECIALISTAS -->
+  <Especialistas sub="Consultores que conhecem o mercado da construção civil e o processo de qualificação junto à Caixa — de perto." />
+
+  <!-- CASES -->
+  <section class="section section--cream">
+    <div class="container md fc-case">
+      <span class="tag-pill">Case de sucesso</span>
+      <h2>Construtora Carvalho Forte: <em class="accent">crescimento na obra</em></h2>
+      <a class="fc-case-video" href="https://vimeo.com/103908164" target="_blank" rel="noopener">
+        <img src="https://vumbnail.com/103908164.jpg" alt="Depoimento da Construtora Carvalho Forte" loading="lazy" />
+        <span class="fc-case-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
+        <span class="fc-case-tag">PBQP-H</span>
+      </a>
+      <p class="fc-case-cap">Assista ao depoimento sobre como a certificação PBQP-H impulsionou o crescimento da obra.</p>
+    </div>
+  </section>
+
+  <Testimonials nota="4,9" ctaTexto="Quero saber se minha construtora está apta" ctaHref="#diagnostico" />
+  <DepoimentosTexto />
+  <ClientLogos dark={true} titulo="Construtoras que crescem com a Templum" />
+
+  <!-- PROVA SOCIAL -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header"><span class="tag-pill">Números que sustentam a experiência</span><h2>Não é a primeira vez que <em class="accent">fazemos isso</em></h2></div>
+      <div class="numbers-grid fc-stats">
+        <div class="number-card reveal"><div class="value"><em>+500</em></div><div class="label">construtoras atendidas</div></div>
+        <div class="number-card reveal"><div class="value"><em>+2.000</em></div><div class="label">empresas atendidas pela Templum</div></div>
+        <div class="number-card reveal"><div class="value"><em>+30</em></div><div class="label">anos de experiência</div></div>
+        <div class="number-card reveal"><div class="value"><em>200%</em></div><div class="label">de garantia registrada em contrato</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFERENCIAIS -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header"><span class="tag-pill tag-pill--glow">A diferença de chegar preparada</span><h2>Sem preparação <em class="accent">vs.</em> Com a Templum</h2></div>
+      <div class="fc-vs">
+        <div class="fc-vs-col fc-vs-bad">
+          <h3><iconify-icon icon="solar:close-circle-bold"></iconify-icon> Sem preparação</h3>
+          <ul>{semTemplum.map((s) => <li><iconify-icon icon="solar:close-circle-linear"></iconify-icon>{s}</li>)}</ul>
+        </div>
+        <div class="fc-vs-col fc-vs-good">
+          <h3><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Com apoio da Templum</h3>
+          <ul>{comTemplum.map((s) => <li><iconify-icon icon="solar:check-circle-linear"></iconify-icon>{s}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAGNÓSTICO DE PRONTIDÃO CAIXA -->
+  <section id="diagnostico" class="section section--cream fc-diag-sec">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Ferramenta gratuita</span>
+        <h2>Diagnóstico de Prontidão Caixa<span class="fc-tm">™</span></h2>
+        <p>Responda 7 perguntas rápidas e descubra o nível de prontidão da sua construtora para buscar financiamento junto à Caixa.</p>
+      </div>
+
+      <div class="fc-diag" data-diag>
+        <div class="fc-diag-progress"><div class="fc-diag-progress-bar" data-diag-progress></div></div>
+
+        {quiz.map((item, i) => (
+          <div class="fc-diag-step" data-diag-step={i} hidden={i !== 0}>
+            <span class="fc-diag-count">Pergunta {i + 1} de {quiz.length}</span>
+            <h3>{item.q}</h3>
+            <div class="fc-diag-opts">
+              {item.opts.map((o) => <button type="button" class="fc-diag-opt" data-score={o.v}>{o.t}</button>)}
+            </div>
+          </div>
+        ))}
+
+        <div class="fc-diag-step fc-diag-result" data-diag-step={quiz.length} hidden>
+          <span class="fc-diag-badge" data-diag-badge>Nível de prontidão</span>
+          <h3 data-diag-title>Resultado</h3>
+          <p data-diag-text></p>
+          <div class="fc-diag-lead">
+            <LeadForm titulo="Fale com um especialista" sub="Conte com a análise de um consultor Templum sobre os próximos passos da sua construtora." cta="Quero falar com um especialista" obrigado="/lp/financiamento-caixa-obrigado" simples={true} faturamento={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header"><span class="tag-pill tag-pill--glow">Tire suas dúvidas</span><h2>Perguntas frequentes sobre <em class="accent">financiamento Caixa</em></h2></div>
+      <div class="faq-list">
+        {faqs.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Quero construir com <em>recursos da Caixa</em></h2>
+      <p>Descubra se a sua construtora está apta e o que falta para chegar lá — sem compromisso.</p>
+      <a href="#diagnostico" class="btn btn--dark btn--lg">Solicitar um diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</LpBase>
+
+<style>
+  .src-note { font-size: 12.5px; color: var(--text-soft); text-align: center; margin-top: 22px; line-height: 1.6; }
+  .src-note a { color: var(--text-mid); text-decoration: underline; text-underline-offset: 2px; }
+  .fc-stats { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 980px) { .fc-stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .fc-stats { grid-template-columns: 1fr; } }
+
+  .fc-analise { grid-template-columns: repeat(3, 1fr); margin-top: 8px; }
+  @media (max-width: 880px) { .fc-analise { grid-template-columns: 1fr; } }
+  .fc-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+  .section--navy .fc-ico { color: color-mix(in srgb, var(--orange) 55%, #fff); background: rgba(255,89,37,0.16); }
+  .section--navy .eco-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
+  .section--navy .eco-card h3 { color: var(--cream); }
+  .section--navy .eco-card p { color: rgba(255,244,221,0.68); }
+
+  /* timeline */
+  .fc-passos-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .fc-passo-item { display: grid; grid-template-columns: 60px 40px 1fr; gap: 0 20px; align-items: start; padding: 10px 0; }
+  .fc-passo-num { font-size: 36px; font-weight: 800; color: var(--orange); letter-spacing: -0.04em; line-height: 1.1; text-align: right; }
+  .fc-passo-connector { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+  .fc-passo-connector::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+  .fc-passo-connector::after { content: ""; width: 2px; flex: 1; background: linear-gradient(to bottom, var(--orange), rgba(255,89,37,0.1)); margin-top: 6px; min-height: 44px; }
+  .fc-passo-item:last-child .fc-passo-connector::after { display: none; }
+  .fc-passo-body { padding: 6px 0 26px; }
+  .fc-passo-body h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+  .fc-passo-body p { font-size: 14.5px; color: var(--text-mid); line-height: 1.65; }
+  @media (max-width: 600px) { .fc-passo-item { grid-template-columns: 44px 28px 1fr; } .fc-passo-num { font-size: 26px; } }
+
+  .fc-intro { text-align: center; }
+  .fc-intro .tag-pill { margin: 0 auto 16px; }
+  .fc-intro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
+  .fc-intro p { font-size: 16.5px; line-height: 1.7; margin-top: 16px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .section--navy .fc-intro p { color: rgba(255,244,221,0.75); }
+  .section:not(.section--navy) .fc-intro p { color: var(--text-mid); }
+  .fc-pbqp-list { max-width: 820px; margin: 32px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+  @media (max-width: 700px) { .fc-pbqp-list { grid-template-columns: 1fr; } }
+  .fc-intro-cta { text-align: center; margin-top: 30px; }
+
+  .fc-templum-grid { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 980px) { .fc-templum-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .fc-templum-grid { grid-template-columns: 1fr; } }
+  .section--navy .step-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
+  .section--navy .step-card h3 { color: var(--cream); }
+  .section--navy .step-card p { color: rgba(255,244,221,0.68); }
+
+  /* case destaque */
+  .fc-case { text-align: center; }
+  .fc-case .tag-pill { margin: 0 auto 16px; }
+  .fc-case h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 26px; }
+  .fc-case-video { position: relative; display: block; max-width: 560px; margin: 0 auto; aspect-ratio: 16/9; border-radius: var(--r-20); overflow: hidden; box-shadow: var(--shadow-card); }
+  .fc-case-video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .fc-case-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,12,15,0.55), transparent 55%); }
+  .fc-case-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 64px; height: 64px; border-radius: 999px; background: rgba(255,255,255,0.92); color: var(--navy); display: grid; place-items: center; font-size: 26px; z-index: 2; transition: background .3s, transform .3s; }
+  .fc-case-video:hover .fc-case-play { background: var(--orange); color: #fff; transform: translate(-50%,-50%) scale(1.08); }
+  .fc-case-tag { position: absolute; top: 14px; right: 14px; z-index: 2; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; background: rgba(255,89,37,0.92); padding: 5px 11px; border-radius: 999px; }
+  .fc-case-cap { font-size: 14px; color: var(--text-mid); margin-top: 16px; }
+
+  /* diferenciais */
+  .fc-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
+  @media (max-width: 780px) { .fc-vs { grid-template-columns: 1fr; } }
+  .fc-vs-col { border-radius: var(--r-20); padding: 30px clamp(22px, 3vw, 32px); }
+  .fc-vs-col h3 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+  .fc-vs-col ul { display: flex; flex-direction: column; gap: 14px; }
+  .fc-vs-col li { display: flex; align-items: flex-start; gap: 10px; font-size: 14.5px; line-height: 1.55; }
+  .fc-vs-col li iconify-icon { flex-shrink: 0; font-size: 19px; margin-top: 1px; }
+  .fc-vs-bad { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,244,221,0.1); }
+  .fc-vs-bad h3 { color: rgba(255,244,221,0.75); }
+  .fc-vs-bad h3 iconify-icon { color: #f87171; }
+  .fc-vs-bad li { color: rgba(255,244,221,0.6); }
+  .fc-vs-bad li iconify-icon { color: #f87171; }
+  .fc-vs-good { background: rgba(255,89,37,0.10); border: 1px solid rgba(255,89,37,0.28); }
+  .fc-vs-good h3 { color: var(--cream); }
+  .fc-vs-good h3 iconify-icon { color: var(--orange); }
+  .fc-vs-good li { color: rgba(255,244,221,0.88); }
+  .fc-vs-good li iconify-icon { color: var(--orange); }
+
+  /* diagnóstico */
+  .fc-tm { font-size: 0.5em; vertical-align: super; }
+  .fc-diag { max-width: 720px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(28px, 4vw, 44px); box-shadow: var(--shadow-card); }
+  .fc-diag-progress { height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; margin-bottom: 30px; }
+  .fc-diag-progress-bar { height: 100%; width: 0%; background: var(--orange); border-radius: 999px; transition: width .35s var(--ease-soft); }
+  .fc-diag-count { font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orange-ink); }
+  .fc-diag-step h3 { font-size: clamp(19px, 2.4vw, 24px); font-weight: 800; letter-spacing: -0.015em; margin: 10px 0 22px; line-height: 1.3; }
+  .fc-diag-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .fc-diag-opts { grid-template-columns: 1fr; } }
+  .fc-diag-opt { text-align: left; padding: 16px 18px; border-radius: var(--r-16); border: 1px solid var(--border); background: var(--bg); font-size: 14.5px; font-weight: 600; color: var(--text); cursor: pointer; transition: border-color .2s, background .2s, transform .15s; }
+  .fc-diag-opt:hover { border-color: var(--orange); background: rgba(255,89,37,0.06); transform: translateY(-1px); }
+
+  .fc-diag-result { text-align: center; }
+  .fc-diag-badge { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange-ink); background: rgba(255,89,37,0.10); padding: 6px 16px; border-radius: 999px; margin-bottom: 14px; }
+  .fc-diag-result h3 { font-size: clamp(22px, 3vw, 30px); }
+  .fc-diag-result > p { font-size: 15.5px; color: var(--text-mid); line-height: 1.65; max-width: 520px; margin: 0 auto 30px; }
+  .fc-diag-lead { text-align: left; margin-top: 6px; }
+
+  /* FAQ em fundo navy */
+  .section--navy .faq-item { border-color: rgba(255,244,221,0.12); }
+  .section--navy .faq-question { color: var(--cream); }
+  .section--navy .faq-question:hover { color: var(--orange); }
+  .section--navy .faq-question .faq-arrow { color: var(--orange); }
+  .section--navy .faq-answer { color: rgba(255,244,221,0.72); }
+</style>
+
+<script is:inline>
+  (function () {
+    const root = document.querySelector("[data-diag]");
+    if (!root) return;
+    const steps = Array.from(root.querySelectorAll("[data-diag-step]"));
+    const bar = root.querySelector("[data-diag-progress]");
+    const total = steps.length - 1; // última é o resultado
+    let score = 0;
+
+    function show(idx) {
+      steps.forEach((s) => { s.hidden = Number(s.dataset.diagStep) !== idx; });
+      bar.style.width = Math.round((Math.min(idx, total) / total) * 100) + "%";
+    }
+
+    function finish() {
+      const max = total * 3;
+      const pct = score / max;
+      let nivel = "Baixo", texto = "Sua construtora está no início do caminho. É exatamente o cenário que resolvemos com mais frequência — o diagnóstico completo com um especialista mostra por onde começar.";
+      if (pct >= 0.7) { nivel = "Alto"; texto = "Sua construtora já percorreu boa parte do caminho. Provavelmente falta o empurrão final para ser homologada e acessar o crédito."; }
+      else if (pct >= 0.35) { nivel = "Médio"; texto = "Sua construtora já tem uma base construída — falta organizar alguns pontos para não travar na análise da Caixa."; }
+      const badge = root.querySelector("[data-diag-badge]");
+      const title = root.querySelector("[data-diag-title]");
+      const text = root.querySelector("[data-diag-text]");
+      if (badge) badge.textContent = "Nível de prontidão: " + nivel;
+      if (title) title.textContent = "Prontidão " + nivel;
+      if (text) text.textContent = texto;
+      const form = root.querySelector("form[data-trk-event]");
+      if (form && !form.querySelector('input[name="mensagem"]')) {
+        const input = document.createElement("input");
+        input.type = "hidden"; input.name = "mensagem";
+        input.value = "Diagnóstico de Prontidão Caixa: nível " + nivel + " (" + score + "/" + max + " pts)";
+        form.appendChild(input);
+      }
+      show(total);
+    }
+
+    root.addEventListener("click", (e) => {
+      const opt = e.target.closest(".fc-diag-opt");
+      if (!opt) return;
+      score += Number(opt.dataset.score || 0);
+      const current = steps.findIndex((s) => !s.hidden);
+      if (current < total - 1) show(current + 1);
+      else finish();
+    });
+
+    show(0);
+  })();
+</script>
