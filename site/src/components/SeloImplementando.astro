@@ -1,7 +1,7 @@
 ---
 // Seção dedicada ao selo "Estamos Implementando" — benefício entregue ao
 // iniciar a consultoria (autoridade desde o primeiro dia).
-const { dark = true } = Astro.props;
+const { dark = true, ctaHref = "/form/", ctaTexto = "Começar minha certificação" } = Astro.props;
 ---
 
 <section class={`selo ${dark ? "section--navy" : "section--cream"}`}>
@@ -21,7 +21,7 @@ const { dark = true } = Astro.props;
         <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diferencial em propostas, vendas e licitações</li>
         <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Mostra ao cliente o seu compromisso com a qualidade</li>
       </ul>
-      <a href="/form/" class="btn btn--primary btn--lg">Começar minha certificação <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href={ctaHref} class="btn btn--primary btn--lg">{ctaTexto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
 
     <div class="selo-media">
