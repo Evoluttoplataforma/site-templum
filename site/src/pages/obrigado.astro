@@ -96,7 +96,6 @@ const depoimentos = [
         // pixel primário + Google Ads + CAPI (via tracking-kit)
         try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
         // Lead também na 2ª conta Meta (o kit dispara só no pixel primário)
-        try { if (window.fbq) window.fbq("trackSingle", SECOND_PIXEL, "Lead"); } catch (_) {}
       }
       var n = 0, t = setInterval(function () {
         n++;

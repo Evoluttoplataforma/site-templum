@@ -1,0 +1,26 @@
+---
+// Código base OFICIAL do Meta Pixel — único lugar do projeto que faz
+// fbq('init', ...) + fbq('track','PageView'). Carrega IMEDIATAMENTE (sem
+// esperar gesto do usuário), diferente do resto do rastreamento (GA4/Ads/
+// Clarity/tracking-kit, que seguem lazy em Base.astro/LpBase.astro por
+// performance — ver comentário lá).
+//
+// As 2 contas Meta configuradas no projeto. Os MESMOS IDs são usados no
+// disparo do Lead (Base.astro/LpBase.astro) — mantenha os dois em sincronia.
+---
+<script is:inline>
+  !function(f,b,e,v,n,t,s){
+    if (f.fbq) return;
+    n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if (!f._fbq) f._fbq = n;
+    n.push = n; n.loaded = true; n.version = "2.0"; n.queue = [];
+    t = b.createElement(e); t.async = true; t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", "1265191353683807");
+  fbq("init", "4177249519256900");
+  fbq("track", "PageView");
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1" alt="" /></noscript>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=4177249519256900&ev=PageView&noscript=1" alt="" /></noscript>

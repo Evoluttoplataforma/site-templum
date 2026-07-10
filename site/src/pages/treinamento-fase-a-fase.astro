@@ -190,9 +190,12 @@ const objetivos = [
     });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !modal.hidden) close(); });
 
+    var leadSent = false;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (leadSent) return; // trava de disparo único
+      leadSent = true;
       var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
       if (window.trk && typeof window.trk.lead === "function") {
         try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
@@ -201,7 +204,12 @@ const objetivos = [
         fetch("/api/lead", {
           method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
           body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Inscrição: " + (d.treinamento || ""), evento: "treinamento", pagina: location.pathname }),
-        });
+        }).then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
+        }).then(function (res) {
+          var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+          if (saved && window.fireMetaLead) window.fireMetaLead({ email: d.email, phone: d.telefone }, d.treinamento || "treinamento-fase-a-fase");
+        }).catch(function () {});
       } catch (_) {}
       form.hidden = true; success.hidden = false;
       if (currentZoom) {

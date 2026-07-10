@@ -47,7 +47,6 @@ import Base from "../layouts/Base.astro";
       function fire() {
         if (done) return; done = true;
         try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
-        try { if (window.fbq) window.fbq("trackSingle", SECOND_PIXEL, "Lead"); } catch (_) {}
       }
       var n = 0, t = setInterval(function () {
         n++;

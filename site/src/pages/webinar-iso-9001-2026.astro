@@ -682,16 +682,34 @@ const schemaEvent = {
 
   // Submit
   const form = document.getElementById("wb-form") as HTMLFormElement;
+  let wbLeadSent = false;
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (wbLeadSent) return; // trava de disparo único
     const nome   = (document.getElementById("wb-nome") as HTMLInputElement).value.trim();
     const email  = (document.getElementById("wb-email") as HTMLInputElement).value.trim();
     const empresa = (document.getElementById("wb-empresa") as HTMLInputElement).value.trim();
     const wpp    = (document.getElementById("wb-wpp") as HTMLInputElement).value.trim();
     if (!nome || !email) { alert("Por favor, preencha nome e e-mail."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("E-mail inválido."); return; }
+    wbLeadSent = true;
 
-    // Envia para /api/lead → Mailchimp (tag: webinar01_01_07) + webhook
+    // Salva dados para disparo de conversão na thank-you page (GA4/Ads via trk.lead)
+    try {
+      sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+        email, phone: wpp, name: nome, norma: "ISO 9001",
+      }));
+    } catch (_) {}
+
+    var redirected = false;
+    function goToObrigado() {
+      if (redirected) return; redirected = true;
+      window.location.href = "/obrigado-webserie";
+    }
+    var fallback = setTimeout(goToObrigado, 5000); // fallback: redireciona em no máximo 5s
+
+    // Envia para /api/lead → Mailchimp (tag: webinar01_01_07) + webhook. O Lead
+    // do Meta Pixel só dispara depois de confirmar que o Supabase salvou o cadastro.
     try {
       const attrib = (window as any).__tplAttrib ? (window as any).__tplAttrib() : {};
       fetch("/api/lead", {
@@ -705,17 +723,12 @@ const schemaEvent = {
           pagina: location.pathname,
           ...attrib,
         }),
-      });
-    } catch (_) {}
-
-    // Salva dados para disparo de conversão na thank-you page
-    try {
-      sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
-        email, phone: wpp, name: nome, norma: "ISO 9001",
-      }));
-    } catch (_) {}
-
-    // Redireciona para página de obrigado da webserie
-    window.location.href = "/obrigado-webserie";
+      }).then((r) => r.json().catch(() => ({})).then((body: any) => ({ httpOk: r.ok, body })))
+        .then((res: any) => {
+          const saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+          if (saved && (window as any).fireMetaLead) (window as any).fireMetaLead({ email, phone: wpp }, "webinar-iso-9001-2026");
+          clearTimeout(fallback); goToObrigado();
+        }).catch(() => { clearTimeout(fallback); goToObrigado(); });
+    } catch (_) { clearTimeout(fallback); goToObrigado(); }
   });
 </script>

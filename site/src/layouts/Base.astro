@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import TrackingKit from "../components/TrackingKit.astro";
+import MetaPixel from "../components/MetaPixel.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -68,6 +69,9 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
+    <MetaPixel />
 
     <!-- Tracking (Clarity + GA4 x2 + Google Ads + tracking-kit) carregado SÓ na 1ª
          interação do usuário (ou ocioso pós-load) → fora do caminho crítico de render. -->
@@ -236,10 +240,37 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       })();
     </script>
 
+    <!-- Meta Pixel — Lead: único ponto de disparo (ver handler de submit abaixo).
+         content_name deriva automaticamente da rota atual (último segmento da
+         URL, sem sufixo "-lp"). Os IDs são os mesmos do MetaPixel.astro. -->
+    <script is:inline>
+      window.__tplContentName = function (pathname) {
+        var parts = (pathname || location.pathname).split("/").filter(Boolean);
+        if (!parts.length) return "home";
+        return parts[parts.length - 1].replace(/-lp$/, "");
+      };
+      window.fireMetaLead = function (data, contentName) {
+        if (!window.fbq) return;
+        data = data || {};
+        var email = (data.email || "").trim().toLowerCase().replace(/\s+/g, "");
+        var digits = (data.phone || data.telefone || "").replace(/\D/g, "");
+        var phone = digits ? "55" + digits : "";
+        try {
+          ["1265191353683807", "4177249519256900"].forEach(function (id) {
+            fbq("init", id, { em: email || undefined, ph: phone || undefined });
+          });
+          fbq("track", "Lead", { content_name: contentName || window.__tplContentName() }, { eventID: crypto.randomUUID() });
+        } catch (_) {}
+      };
+    </script>
+
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
-         Mailchimp + webhook), dispara a conversão no tracking-kit e redireciona.
+         Supabase + Mailchimp + Pipedrive/ManyChat), dispara o Lead do Meta Pixel
+         SÓ depois de confirmar que o Supabase salvou o cadastro, e redireciona.
          Vale para qualquer form[data-trk-event]. data-trk-event="denuncia"
-         não é enviado ao Mailchimp/webhook nem ao tracking (apenas UI). -->
+         não é enviado ao Mailchimp/webhook nem ao tracking (apenas UI).
+         trk.lead() continua disparando na /obrigado — segue tratando GA4/Ads/
+         TikTok, que não são afetados por esta mudança (Meta é tratado só aqui). -->
     <script is:inline>
       document.addEventListener("submit", function (e) {
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
@@ -260,9 +291,13 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           return;
         }
 
-        // Conversão (evento Lead): guardamos os dados e disparamos na /obrigado.
-        // Fazer aqui correria com o redirect (400ms) e o Pixel Helper só veria o
-        // PageView da /obrigado. Disparar na thank-you page é confiável e visível.
+        // Trava de disparo único: o mesmo form não processa 2x (duplo clique,
+        // duplo submit, re-interação) — mesmo antes do botão ser desabilitado.
+        if (form.dataset.leadSubmitted === "1") return;
+        form.dataset.leadSubmitted = "1";
+
+        // GA4/Ads/TikTok (via trk.lead) continuam disparando na /obrigado —
+        // por isso mantemos esse relay, inalterado.
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
@@ -276,6 +311,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         var _rDone = false;
         function _go() { if (!_rDone) { _rDone = true; window.location.href = destino; } }
         var _t = setTimeout(_go, 5000); // fallback: redireciona em no máximo 5s
+        var contentName = window.__tplContentName(location.pathname);
         try {
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual
           var _attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
@@ -294,7 +330,15 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               faturamento: d.faturamento || "",
               evento: evt, pagina: location.pathname,
             }, _attrib)),
-          }).then(function() { clearTimeout(_t); _go(); }).catch(function() { clearTimeout(_t); _go(); });
+          }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
+          }).then(function (res) {
+            // Lead do Meta Pixel: só dispara com confirmação real de que o
+            // Supabase salvou o cadastro (res.body.supabase.ok === true).
+            var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+            if (saved) window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName);
+            clearTimeout(_t); _go();
+          }).catch(function() { clearTimeout(_t); _go(); });
         } catch (_) { clearTimeout(_t); _go(); }
       });
     </script>

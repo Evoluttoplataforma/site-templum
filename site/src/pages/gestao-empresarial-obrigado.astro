@@ -70,7 +70,6 @@ import Base from "../layouts/Base.astro";
       function fire() {
         if (done) return; done = true;
         try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name, content_name: PRODUCT.content_name, content_category: PRODUCT.content_category }); } catch (_) {}
-        try { if (window.fbq) window.fbq('track', 'Lead', PRODUCT); } catch (_) {}
       }
       var n = 0, t = setInterval(function () {
         n++;

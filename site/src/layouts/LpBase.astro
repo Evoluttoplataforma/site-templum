@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import TrackingKit from "../components/TrackingKit.astro";
+import MetaPixel from "../components/MetaPixel.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -23,6 +24,9 @@ const allSchemas = schemas;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
+    <MetaPixel />
 
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -187,7 +191,32 @@ const allSchemas = schemas;
       })();
     </script>
 
-    <!-- Handler formulários (igual ao Base.astro) -->
+    <!-- Meta Pixel — Lead: único ponto de disparo (ver handler de submit abaixo).
+         content_name deriva automaticamente da rota atual. Mesmos IDs do MetaPixel.astro. -->
+    <script is:inline>
+      window.__tplContentName = function (pathname) {
+        var parts = (pathname || location.pathname).split("/").filter(Boolean);
+        if (!parts.length) return "home";
+        return parts[parts.length - 1].replace(/-lp$/, "");
+      };
+      window.fireMetaLead = function (data, contentName) {
+        if (!window.fbq) return;
+        data = data || {};
+        var email = (data.email || "").trim().toLowerCase().replace(/\s+/g, "");
+        var digits = (data.phone || data.telefone || "").replace(/\D/g, "");
+        var phone = digits ? "55" + digits : "";
+        try {
+          ["1265191353683807", "4177249519256900"].forEach(function (id) {
+            fbq("init", id, { em: email || undefined, ph: phone || undefined });
+          });
+          fbq("track", "Lead", { content_name: contentName || window.__tplContentName() }, { eventID: crypto.randomUUID() });
+        } catch (_) {}
+      };
+    </script>
+
+    <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
+         depois de confirmar que o Supabase salvou o cadastro. trk.lead()
+         continua na /obrigado, tratando GA4/Ads/TikTok (inalterado). -->
     <script is:inline>
       document.addEventListener("submit", function (e) {
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
@@ -197,6 +226,11 @@ const allSchemas = schemas;
         var evt = form.getAttribute("data-trk-event");
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
+
+        // Trava de disparo único: o mesmo form não processa 2x.
+        if (form.dataset.leadSubmitted === "1") return;
+        form.dataset.leadSubmitted = "1";
+
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
@@ -208,6 +242,7 @@ const allSchemas = schemas;
         var _rDone = false;
         function _go() { if (!_rDone) { _rDone = true; window.location.href = destino; } }
         var _t = setTimeout(_go, 5000); // fallback: redireciona em no máximo 5s
+        var contentName = window.__tplContentName(location.pathname);
         try {
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual
           var _attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
@@ -225,7 +260,13 @@ const allSchemas = schemas;
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               evento: evt, pagina: location.pathname,
             }, _attrib)),
-          }).then(function() { clearTimeout(_t); _go(); }).catch(function() { clearTimeout(_t); _go(); });
+          }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
+          }).then(function (res) {
+            var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+            if (saved) window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName);
+            clearTimeout(_t); _go();
+          }).catch(function() { clearTimeout(_t); _go(); });
         } catch (_) { clearTimeout(_t); _go(); }
       });
     </script>

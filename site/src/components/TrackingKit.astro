@@ -2,6 +2,15 @@
 // tracking-kit (https://github.com/rodrigoosouza/tracking-kit) — substituto do GTM.
 // IDs vazios = plataforma DESLIGADA. O cliente preenche meta/ga4/googleAds/etc.
 // quando tiver as credenciais. Conversões: forms com data-trk-event e trk.lead().
+//
+// meta.pixelId fica vazio DE PROPÓSITO: o Meta Pixel (init + PageView + Lead +
+// Advanced Matching) agora é feito nativamente em MetaPixel.astro e no handler
+// de submit de Base.astro/LpBase.astro — únicos pontos auditáveis deste repo.
+// A lib externa (CDN, fora deste repo) dispara, dentro de trk.lead(), um
+// fbq('setUserProperties', ...) que não controlamos; com pixelId vazio esse
+// ramo específico do Meta fica inativo dentro da lib, SEM afetar GA4/Google
+// Ads/TikTok — que continuam disparando normalmente via trk.lead() em cada
+// página de obrigado (chave própria, ga4.measurementId/googleAds.conversionId).
 ---
 <script is:inline>
 window.TRACKING_CONFIG = {
@@ -13,7 +22,8 @@ window.TRACKING_CONFIG = {
     primaryConversion: 'Lead'
   },
   // IDs públicos (client-side). Tokens de CAPI/api_secret são SECRETOS → vão no servidor, nunca aqui.
-  meta:      { pixelId: '1265191353683807', capi: true, advancedMatching: true, ctwa: true },
+  // pixelId vazio = desliga o ramo Meta da lib (init/PageView/Lead/setUserProperties) — ver nota acima.
+  meta:      { pixelId: '', capi: false, advancedMatching: false, ctwa: false },
   googleAds: { conversionId: 'AW-17896226473', leadLabel: 'aPsvCKnw27kcEKn9ytVC', enhancedConversions: true, offlineConversions: false },
   ga4:       { measurementId: 'G-2BW8QTYLB5', apiSecret: '', engagementTracking: true },
   tiktok:    { pixelId: '', eventsApi: false },
@@ -62,16 +72,7 @@ window.__loadTrackingKit = function () {
       });
     });
   });
-  // 2ª conta Meta (fbq dispara p/ todos os pixels iniciados, mesmo eventID → dedup com CAPI)
-  var SECOND_PIXEL = '4177249519256900'; // '' para desativar
-  if (SECOND_PIXEL) {
-    var n = 0, t = setInterval(function () {
-      n++;
-      if (window.fbq) {
-        clearInterval(t);
-        try { window.fbq('init', SECOND_PIXEL); window.fbq('trackSingle', SECOND_PIXEL, 'PageView'); } catch (e) {}
-      } else if (n > 150) { clearInterval(t); }
-    }, 100);
-  }
+  // Init da 2ª conta Meta foi REMOVIDO daqui — as 2 contas já são inicializadas
+  // nativamente e imediatamente em MetaPixel.astro (ver Base.astro/LpBase.astro).
 };
 </script>

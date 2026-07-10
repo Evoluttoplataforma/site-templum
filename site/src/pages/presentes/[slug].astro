@@ -34,7 +34,7 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
       <div class="lead-card isca-card">
         <div class="lead-title">Receba agora — é grátis</div>
         <p class="lead-sub">Preencha os dados e o material abre na hora.</p>
-        <form class="form" id="iscaForm" data-download={download} novalidate>
+        <form class="form" id="iscaForm" data-download={download} data-isca-slug={isca.slug} novalidate>
           <input type="hidden" name="isca" value={isca.slug} />
           <div class="field"><label for="i-nome">Nome</label><input class="input" id="i-nome" name="nome" placeholder="Seu nome" required /></div>
           <div class="field"><label for="i-email">E-mail</label><input class="input" id="i-email" type="email" name="email" placeholder="voce@empresa.com" required /></div>
@@ -142,9 +142,12 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
     if (!form) return;
     var success = document.getElementById("iscaSuccess");
     var dl = form.getAttribute("data-download") || "";
+    var leadSent = false;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (leadSent) return; // trava de disparo único
+      leadSent = true;
       var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
       if (window.trk && typeof window.trk.lead === "function") {
         try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
@@ -153,7 +156,12 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
         fetch("/api/lead", {
           method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
           body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Isca: " + (d.isca || ""), evento: "isca", pagina: location.pathname }),
-        });
+        }).then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
+        }).then(function (res) {
+          var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+          if (saved && window.fireMetaLead) window.fireMetaLead({ email: d.email, phone: d.telefone }, form.dataset.iscaSlug);
+        }).catch(function () {});
       } catch (_) {}
       form.hidden = true; if (success) success.hidden = false;
       if (dl) window.open(dl, "_blank", "noopener");
