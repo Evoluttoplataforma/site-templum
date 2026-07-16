@@ -1,0 +1,387 @@
+---
+import Base from "../layouts/Base.astro";
+
+const topicos = [
+  {
+    icon: "solar:medal-ribbons-star-bold",
+    t: "Ética como requisito da ISO 9001:2026",
+    d: "O que a nova versão da norma passa a exigir sobre comportamento ético e valores dentro do sistema de gestão — e como comprovar isso na prática.",
+  },
+  {
+    icon: "solar:users-group-rounded-bold",
+    t: "Cultura da qualidade: da intenção à prática",
+    d: "Por que ter o procedimento no papel não garante cultura — e o que realmente forma um time comprometido com a qualidade.",
+  },
+  {
+    icon: "solar:crown-star-bold",
+    t: "O papel da liderança na cultura ética",
+    d: "Como a alta direção influencia (e sabota) o comportamento da equipe — e o que a norma espera de quem lidera.",
+  },
+  {
+    icon: "solar:clipboard-check-bold",
+    t: "Como auditar comportamento e valores",
+    d: "Critérios práticos para avaliar cultura e ética durante auditorias internas e externas — sem cair no subjetivismo.",
+  },
+];
+
+const schemaEvent = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: "Comportamento Ético e Cultura da Qualidade — Templum Consultoria",
+  startDate: "2026-07-22T16:00:00-03:00",
+  endDate: "2026-07-22T17:00:00-03:00",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  location: { "@type": "VirtualLocation", url: "https://www.youtube.com/@templumcertifica/live" },
+  organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  performer: { "@type": "Person", name: "Daniela Albuquerque" },
+  isAccessibleForFree: true,
+};
+---
+
+<Base
+  title="Webinar Gratuito — Comportamento Ético e Cultura da Qualidade | Templum"
+  description="A dimensão humana da qualidade: ética, valores e como construir uma cultura sólida. Quarta, 22 de julho às 16h. Com Daniela Albuquerque — Templum Consultoria."
+  schemas={[schemaEvent]}
+  hideWpp={true}
+>
+
+  <!-- ── HERO ── -->
+  <section class="wb-hero">
+    <div class="container xl">
+      <div class="wb-hero-grid">
+
+        <!-- ESQUERDA: copy + speaker -->
+        <div class="wb-copy">
+          <div class="wb-badges">
+            <span class="wb-badge-free">
+              <iconify-icon icon="solar:gift-bold"></iconify-icon> Gratuito
+            </span>
+            <span class="wb-badge-live">
+              <span class="wb-dot"></span> Ao vivo
+            </span>
+          </div>
+
+          <h1>
+            Comportamento Ético<br />
+            e <em>Cultura</em> da Qualidade<br />
+            <span class="wb-h1-sub">A dimensão humana da ISO 9001:2026.</span>
+          </h1>
+
+          <div class="wb-date-bar">
+            <div class="wb-date-item">
+              <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Data</span>
+                <span class="wb-date-val">
+                  <span class="wb-date-val-full">Quarta, 22 de Julho de 2026</span>
+                  <span class="wb-date-val-short">22 Jul 2026</span>
+                </span>
+              </div>
+            </div>
+            <div class="wb-date-divider"></div>
+            <div class="wb-date-item">
+              <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Horário</span>
+                <span class="wb-date-val">
+                  <span class="wb-date-val-full">16h00 (Brasília)</span>
+                  <span class="wb-date-val-short">16h00</span>
+                </span>
+              </div>
+            </div>
+            <div class="wb-date-divider"></div>
+            <div class="wb-date-item">
+              <iconify-icon icon="mdi:youtube"></iconify-icon>
+              <div>
+                <span class="wb-date-label">Formato</span>
+                <span class="wb-date-val">YouTube · Gratuito</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="wb-desc">
+            A ética e os valores da equipe também fazem parte do sistema de gestão. Entenda o que a ISO 9001:2026 passa a exigir sobre comportamento e cultura organizacional — e como construir isso na prática, sem discurso vazio.
+          </p>
+
+          <!-- SPEAKER STRIP -->
+          <div class="wb-speaker-strip">
+            <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-speaker-photo" />
+            <div>
+              <div class="wb-speaker-name">Daniela Albuquerque</div>
+              <div class="wb-speaker-role">Sócia Diretora · Templum Consultoria · +15 anos em normas ISO</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIREITA: formulário -->
+        <div class="wb-form-col">
+          <div class="wb-form-card" id="wb-card">
+            <div id="wb-form-wrap">
+              <div class="wb-form-event-bar">
+                <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+                <span><strong>Quarta, 22 de Julho</strong> · 16h · YouTube · Gratuito</span>
+              </div>
+              <div class="wb-form-header">
+                <div class="wb-form-title">Garantir minha vaga</div>
+                <p class="wb-form-sub">Preencha abaixo para participar gratuitamente.</p>
+              </div>
+              <form novalidate data-trk-event="webinar-etica-cultura-2207" data-obrigado="/obrigado-webinar-etica">
+                <div class="wb-field">
+                  <label for="wb-nome">Nome completo</label>
+                  <input class="input" type="text" id="wb-nome" name="nome" placeholder="Seu nome completo" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-email">E-mail</label>
+                  <input class="input" type="email" id="wb-email" name="email" placeholder="voce@empresa.com" required />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-empresa">Empresa</label>
+                  <input class="input" type="text" id="wb-empresa" name="empresa" placeholder="Nome da empresa" />
+                </div>
+                <div class="wb-field">
+                  <label for="wb-wpp">WhatsApp *</label>
+                  <input class="input" type="tel" id="wb-wpp" name="telefone" placeholder="(00) 00000-0000" required />
+                </div>
+                <input type="hidden" name="norma" value="ISO 9001" />
+                <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
+                  Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </form>
+              <p class="wb-legal">Gratuito. Sem spam. Dados protegidos pela LGPD.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TÓPICOS ── -->
+  <section class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O que você vai aprender</span>
+        <h2>1 hora de conteúdo <em class="accent">direto ao ponto</em></h2>
+        <p>Uma conversa prática sobre ética, valores e cultura organizacional — com quem certifica e audita há mais de 15 anos.</p>
+      </div>
+      <div class="wb-topics-grid">
+        {topicos.map((t) => (
+          <div class="wb-topic-card reveal">
+            <div class="wb-topic-ico">
+              <iconify-icon icon={t.icon}></iconify-icon>
+            </div>
+            <h3>{t.t}</h3>
+            <p>{t.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── APRESENTADORA ── -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Quem apresenta</span>
+        <h2>Aprenda com quem já <em class="accent">certificou +2.000 empresas</em></h2>
+      </div>
+      <div class="wb-presenter-card reveal">
+        <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="wb-presenter-photo" />
+        <div class="wb-presenter-body">
+          <h3>Daniela Albuquerque</h3>
+          <span class="wb-presenter-role">Sócia Diretora · Templum Consultoria</span>
+          <p>
+            Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela vê de perto o que separa empresas que só têm o procedimento no papel das que realmente vivem uma cultura de qualidade — com ética, valores e liderança presente no dia a dia.
+          </p>
+          <div class="wb-presenter-stats">
+            <div><strong>+15 anos</strong><span>de experiência</span></div>
+            <div><strong>+2.000</strong><span>empresas certificadas</span></div>
+            <div><strong>4,9 ★</strong><span>nota no Google</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="section wb-cta-sec">
+    <div class="container sm" style="text-align:center;">
+      <span class="tag-pill">Vagas limitadas</span>
+      <h2 style="margin-top:20px;margin-bottom:14px;">Reserve seu lugar agora.</h2>
+      <p class="paragraph" style="margin-bottom:32px;">
+        Gratuito. Ao vivo no YouTube. Dia 22 de julho às 16h. Basta se inscrever.
+      </p>
+      <a href="#wb-card" class="btn btn--primary btn--lg">
+        Quero minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  :root { --wb-radius: 16px; }
+
+  /* ─── HERO ─── */
+  .wb-hero {
+    background: var(--navy);
+    padding: clamp(72px, 10vw, 120px) 0 clamp(72px, 10vw, 100px);
+    position: relative;
+    overflow: hidden;
+  }
+  .wb-hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,89,37,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .wb-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  /* BADGES */
+  .wb-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+  .wb-badge-free, .wb-badge-live {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 100px;
+  }
+  .wb-badge-free { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .wb-badge-live { background: rgba(255,89,37,0.12); color: var(--orange); border: 1px solid rgba(255,89,37,0.3); }
+  .wb-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+  /* COPY */
+  .wb-copy h1 {
+    font-size: clamp(32px, 4.5vw, 52px); font-weight: 800;
+    color: var(--cream); line-height: 1.1;
+    letter-spacing: -0.03em; margin-bottom: 22px;
+  }
+  .wb-copy h1 em { font-style: normal; color: var(--orange); }
+  .wb-h1-sub { color: rgba(255,244,221,0.6); font-size: 0.85em; }
+  .wb-desc { font-size: 16px; color: rgba(255,244,221,0.70); line-height: 1.75; margin-bottom: 36px; max-width: 520px; }
+
+  /* DATE BAR */
+  .wb-date-bar {
+    display: flex; align-items: center; gap: 0;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 12px; padding: 16px 20px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .wb-date-item { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 120px; }
+  .wb-date-item iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+  .wb-date-item div { display: flex; flex-direction: column; gap: 1px; }
+  .wb-date-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,244,221,0.4); }
+  .wb-date-val { font-size: 13px; font-weight: 700; color: var(--cream); }
+  .wb-date-val-short { display: none; }
+  .wb-date-divider { width: 1px; height: 32px; background: rgba(255,244,221,0.12); margin: 0 16px; flex-shrink: 0; }
+
+  /* SPEAKER STRIP */
+  .wb-speaker-strip {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 12px; background: rgba(255,255,255,0.04); width: fit-content;
+  }
+  .wb-speaker-photo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0; }
+  .wb-speaker-name { font-size: 15px; font-weight: 800; color: var(--cream); }
+  .wb-speaker-role { font-size: 12px; color: rgba(255,244,221,0.55); margin-top: 2px; }
+
+  /* FORM */
+  .wb-form-col { align-self: start; }
+  .wb-form-card {
+    background: #fff; border-radius: var(--wb-radius);
+    padding: clamp(24px,3vw,36px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .wb-form-event-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,89,37,0.08); border: 1px solid rgba(255,89,37,0.2);
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 18px;
+    font-size: 13px; color: var(--orange); font-weight: 600;
+  }
+  .wb-form-event-bar iconify-icon { font-size: 16px; flex-shrink: 0; }
+  .wb-form-event-bar strong { font-weight: 800; }
+  .wb-form-header { margin-bottom: 22px; }
+  .wb-form-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
+  .wb-form-sub { font-size: 13.5px; color: var(--text-mid); line-height: 1.5; }
+  .wb-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .wb-field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .wb-legal { font-size: 11px; color: var(--text-soft); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+  /* ─── TÓPICOS ─── */
+  .wb-topics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .wb-topic-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-20); padding: 28px 24px;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .wb-topic-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-2); }
+  .wb-topic-ico {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(255,89,37,0.10); color: var(--orange);
+    display: grid; place-items: center; font-size: 24px; margin-bottom: 16px;
+  }
+  .wb-topic-card h3 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .wb-topic-card p { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
+
+  /* ─── APRESENTADORA ─── */
+  .wb-presenter-card {
+    display: grid; grid-template-columns: 240px 1fr; gap: 48px; align-items: start;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.10);
+    border-radius: var(--r-24); padding: 40px; max-width: 800px; margin: 0 auto;
+  }
+  .wb-presenter-photo {
+    width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top;
+    border-radius: 12px; border: 3px solid rgba(255,89,37,0.4);
+  }
+  .wb-presenter-body h3 { font-size: 26px; font-weight: 800; color: var(--cream); margin-bottom: 4px; }
+  .wb-presenter-role {
+    display: block; font-size: 12px; font-weight: 700; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 18px;
+  }
+  .wb-presenter-body p { font-size: 15px; color: rgba(255,244,221,0.65); line-height: 1.75; margin-bottom: 24px; }
+  .wb-presenter-stats { display: flex; gap: 28px; flex-wrap: wrap; }
+  .wb-presenter-stats div { display: flex; flex-direction: column; gap: 2px; }
+  .wb-presenter-stats strong { font-size: 20px; font-weight: 800; color: var(--cream); }
+  .wb-presenter-stats span { font-size: 12px; color: rgba(255,244,221,0.5); }
+
+  /* ─── CTA ─── */
+  .wb-cta-sec { background: var(--cream); }
+
+  /* ─── RESPONSIVO ─── */
+  @media (max-width: 960px) {
+    .wb-hero-grid { grid-template-columns: 1fr; }
+    .wb-desc { max-width: 100%; }
+  }
+  @media (max-width: 768px) {
+    .wb-topics-grid { grid-template-columns: 1fr; }
+    .wb-presenter-card { grid-template-columns: 1fr; text-align: center; padding: 32px 24px; gap: 24px; }
+    .wb-presenter-photo { width: 160px; aspect-ratio: 1; border-radius: 50%; margin: 0 auto; }
+    .wb-presenter-stats { justify-content: center; }
+    .wb-speaker-strip { width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .wb-date-bar {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px 6px; padding: 14px 10px;
+    }
+    .wb-date-divider { display: none; }
+    .wb-date-item {
+      flex-direction: column; align-items: flex-start; gap: 6px;
+      min-width: 0; flex: none;
+    }
+    .wb-date-item:not(:first-child) {
+      border-left: 1px solid rgba(255,244,221,0.12);
+      padding-left: 10px;
+    }
+    .wb-date-item iconify-icon { font-size: 17px; }
+    .wb-date-label { font-size: 9px; }
+    .wb-date-val { font-size: 11.5px; line-height: 1.25; }
+    .wb-date-val-full { display: none; }
+    .wb-date-val-short { display: inline; }
+  }
+</style>
