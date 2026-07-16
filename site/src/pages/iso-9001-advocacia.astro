@@ -1,0 +1,435 @@
+---
+import Base from "../layouts/Base.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Testimonials from "../components/Testimonials.astro";
+
+const dores = [
+  { icon: "solar:document-text-bold", t: "Fora da lista de habilitados em licitações", d: "Editais de órgãos públicos e grandes empresas já exigem certificação de qualidade dos escritórios prestadores de serviços jurídicos. Sem ISO 9001, seu escritório nem chega à fase de habilitação técnica." },
+  { icon: "solar:calendar-bold", t: "Prazos perdidos, processos não documentados", d: "Sem um sistema de gestão, prazos processuais e administrativos dependem da memória de quem está no caso. Um esquecimento pode custar uma ação inteira." },
+  { icon: "solar:users-group-rounded-bold", t: "Dependência de sócios e advogados-chave", d: "Se um sócio sai ou um advogado sênior pede demissão, o conhecimento do caso vai junto. Sem documentação, o cliente sente a diferença." },
+  { icon: "solar:danger-triangle-bold", t: "Falhas recorrentes no atendimento", d: "Cada advogado atende do seu jeito, sem padrão. O resultado varia, e o cliente corporativo percebe a inconsistência." },
+  { icon: "solar:clipboard-check-bold", t: "Dificuldade em comprovar capacidade técnica", d: "Grandes contratantes exigem evidências de organização e controle de qualidade. Sem certificação, é a palavra do escritório contra a exigência do edital." },
+  { icon: "solar:buildings-2-bold", t: "Perda de contratos para escritórios maiores", d: "Bancas mais estruturadas, com processos e certificações, levam vantagem em concorrências e credenciamentos que o seu escritório ainda não acessa." },
+  { icon: "solar:graph-new-bold", t: "Gestão sem indicadores confiáveis", d: "Decisões sobre equipe, prazos e capacidade tomadas no feeling, porque não há dados organizados sobre a operação do escritório." },
+  { icon: "solar:scale-bold", t: "Falta de estrutura para crescer", d: "Abrir novas áreas de atuação ou unidades sem um sistema de gestão é multiplicar o caos, não o resultado." },
+];
+
+const beneficios = [
+  "Habilitação técnica para participar de licitações e editais que exigem certificação de qualidade",
+  "Mais credibilidade diante de órgãos públicos, estatais e grandes contratantes",
+  "Processos jurídicos e administrativos padronizados, com menos prazos perdidos",
+  "Redução da dependência de sócios e advogados-chave — conhecimento documentado, não na cabeça de alguém",
+  "Atendimento consistente, no mesmo padrão, independente de qual advogado conduz o caso",
+  "Indicadores de gestão para decidir com dados, não no feeling",
+  "Diferencial competitivo frente a escritórios sem certificação",
+  "Base sólida para crescer, abrir novas áreas de atuação ou unidades",
+];
+
+const numeros = [
+  { n: "+2.000", l: "empresas certificadas" },
+  { n: "+30", l: "anos de experiência" },
+  { n: "200%", l: "de garantia em contrato" },
+  { n: "4,9", l: "de nota no Google" },
+];
+
+const diferenciais = [
+  { icon: "solar:case-round-bold", t: "Especialistas em serviços profissionais", d: "Nossa equipe entende a rotina de um escritório de advocacia: prazos, sigilo e a relação direta com o cliente. A implementação respeita o jeito como a banca trabalha." },
+  { icon: "solar:shield-check-bold", t: "Garantia de 200% em contrato", d: "Certificação garantida ou o dobro do investimento de volta. A única consultoria do Brasil que assume o risco junto com você." },
+  { icon: "solar:document-bold", t: "Documentos feitos por nós", d: "Não entregamos templates para o escritório preencher. Nossa equipe elabora todo o sistema de gestão adaptado à realidade jurídica." },
+  { icon: "solar:user-check-rounded-bold", t: "Consultor dedicado ao seu escritório", d: "Um especialista exclusivo para o seu projeto, disponível todos os dias em horário comercial. Sem fila, sem resposta automática." },
+  { icon: "solar:medal-ribbons-star-bold", t: "+30 anos de prática em certificação", d: "Mais de três décadas certificando empresas de diversos setores, incluindo prestadores de serviços profissionais e jurídicos." },
+  { icon: "solar:cpu-bolt-bold", t: "Tecnologia que acelera a implementação", d: "O Templum OS com a Olivia, nossa IA especializada em ISO, organiza documentos, gera instruções de trabalho e mantém o projeto no prazo." },
+];
+
+const passos = [
+  { n: "01", t: "Diagnóstico gratuito do seu escritório", d: "Avaliamos a situação atual, mapeamos os gaps em relação à norma e definimos o caminho mais rápido até a certificação — sem atrapalhar o atendimento aos clientes." },
+  { n: "02", t: "Cronograma ajustado à rotina jurídica", d: "Montamos um plano de implementação que respeita prazos processuais, audiências e a carga de trabalho da equipe, sem sobrecarregar ninguém." },
+  { n: "03", t: "Implementação guiada pela nossa equipe", d: "Documentos, procedimentos e registros são elaborados pelos nossos consultores. Seus advogados participam, mas não acumulam trabalho extra." },
+  { n: "04", t: "Auditoria interna simulada", d: "Antes de chamar a certificadora, fazemos uma auditoria interna que identifica pontos de melhoria e prepara o escritório para ser aprovado na primeira tentativa." },
+  { n: "05", t: "Certificação com a certificadora", d: "Acompanhamos a auditoria externa do início ao fim. Se surgir alguma não conformidade, tratamos juntos — coberto pela nossa garantia." },
+];
+
+const faqs = [
+  { q: "Meu escritório precisa parar de atender clientes para implementar a ISO 9001?", a: "Não. A implementação é feita em paralelo com a rotina do escritório. Nossa metodologia respeita prazos processuais e a agenda da equipe — o atendimento aos clientes não para." },
+  { q: "Quanto tempo leva para um escritório de advocacia conseguir a ISO 9001?", a: "O prazo médio é de 6 a 12 meses, dependendo do porte do escritório, número de áreas de atuação e maturidade dos processos internos. Após o diagnóstico, apresentamos um cronograma realista para o seu caso." },
+  { q: "Meus sócios e advogados precisam se envolver muito?", a: "O envolvimento é estratégico, não operacional. A equipe participa das validações e aprovações, mas quem elabora os documentos e conduz a implementação somos nós." },
+  { q: "A certificação é garantida?", a: "Sim. Se você concluir todas as etapas da nossa consultoria e ainda assim não obtiver a certificação, devolvemos 200% do valor investido. Essa garantia está registrada em contrato — não é promessa de marketing." },
+  { q: "Vale a pena certificar se ainda não fui exigido em nenhum edital?", a: "Vale. O mercado de licitações e credenciamentos está exigindo cada vez mais certificação de qualidade dos prestadores jurídicos. Quem certifica antes de precisar entra habilitado, enquanto o concorrente ainda está começando o processo." },
+  { q: "ISO 9001 substitui as normas da OAB ou compliance jurídico?", a: "Não. A ISO 9001 é um sistema de gestão da qualidade que organiza os processos administrativos e operacionais do escritório. Ela é complementar às exigências da OAB e a programas de compliance, e frequentemente é o requisito adicional pedido em editais e credenciamentos." },
+  { q: "Escritórios pequenos ou boutique também podem certificar?", a: "Sim, e costumam ter vantagem: processos mais simples de padronizar e equipe mais ágil para adotar mudanças. A certificação abre acesso a contratos e licitações que antes eram inacessíveis para bancas menores." },
+];
+
+const schemaService = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Consultoria ISO 9001 para Escritórios de Advocacia",
+  description: "Implementação da ISO 9001 para escritórios de advocacia que buscam se habilitar em licitações e credenciamentos. Do diagnóstico à certificação com garantia de 200% em contrato.",
+  provider: {
+    "@type": "Organization",
+    name: "Templum Consultoria",
+    url: "https://templum.com.br"
+  },
+  areaServed: { "@type": "Country", name: "Brasil" },
+  serviceType: "Consultoria de certificação ISO 9001",
+  audience: {
+    "@type": "Audience",
+    audienceType: "Sócios e diretores de escritórios de advocacia"
+  }
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a }
+  }))
+};
+---
+
+<Base
+  title="ISO 9001 para Advocacia | Habilitação para Licitações — Templum"
+  description="A Templum certifica escritórios de advocacia na ISO 9001 para participar de grandes licitações e credenciamentos. Metodologia própria, documentos feitos por nós e garantia de 200% em contrato."
+  schemas={[schemaService, schemaFaq]}
+>
+
+  <!-- HERO — FORM -->
+  <section id="diagnostico" class="section section--navy form-sec hero-form-sec">
+    <div class="container xl form-split">
+      <div class="form-copy">
+        <span class="tag-pill tag-pill--navy">Habilitação para licitações</span>
+        <h1>Sua advocacia quer atender <em class="accent">grandes licitações?</em> A ISO 9001 é a chave.</h1>
+        <p>Editais públicos e grandes contratantes já exigem certificação de qualidade dos escritórios prestadores de serviços jurídicos. A Templum leva seu escritório do diagnóstico à certificação, com metodologia própria e garantia de 200% em contrato.</p>
+        <ul class="form-selos">
+          <li><iconify-icon icon="solar:rocket-2-bold"></iconify-icon> Amplie suas oportunidades de negócios</li>
+          <li><iconify-icon icon="solar:shield-check-bold"></iconify-icon> Transmita confiança, organização e profissionalismo</li>
+          <li><iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon> Fortaleça sua gestão e equipe</li>
+          <li><iconify-icon icon="solar:medal-star-bold"></iconify-icon> Seja referência em excelência</li>
+        </ul>
+      </div>
+      <div class="form-col">
+        <LeadForm
+          norma="ISO 9001"
+          titulo="Agende sua conversa"
+          sub="Preencha o formulário e um especialista entrará em contato."
+          cta="Fale com um Especialista"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2 — DORES -->
+  <section class="section section--navy dores-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Os desafios do setor</span>
+        <h2>Por que sua advocacia está de fora das <em class="accent">grandes licitações</em></h2>
+        <p>Muitos escritórios têm excelentes advogados e bons resultados — mas ficam de fora de editais e credenciamentos porque não têm a certificação que o contratante exige.</p>
+      </div>
+      <div class="dores-grid">
+        {dores.map((d) => (
+          <div class="dor-card">
+            <span class="dor-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 — BENEFÍCIOS -->
+  <section class="section section--cream beneficios-sec">
+    <div class="container lg">
+      <div class="beneficios-wrap">
+        <div class="beneficios-text">
+          <span class="tag-pill">O que muda com a ISO 9001</span>
+          <h2>O que seu escritório conquista com <em class="accent">a certificação ISO 9001</em></h2>
+          <p>A ISO 9001 não é burocracia. É o certificado que habilita seu escritório para licitações, fortalece a credibilidade junto a grandes clientes e organiza a gestão por trás do atendimento jurídico.</p>
+        </div>
+        <ul class="beneficios-list">
+          {beneficios.map((b) => (
+            <li>
+              <span class="check-icon"><iconify-icon icon="solar:check-circle-bold"></iconify-icon></span>
+              {b}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 — POR QUE TEMPLUM -->
+  <section class="section section--navy porque-sec">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--navy">Por que a Templum</span>
+        <h2>A consultoria que <em class="accent">mais certifica</em> no Brasil</h2>
+      </div>
+
+      <div class="numeros-grid">
+        {numeros.map((n) => (
+          <div class="numero-card">
+            <span class="numero-n">{n.n}</span>
+            <span class="numero-l">{n.l}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="diferenciais-grid">
+        {diferenciais.map((d) => (
+          <div class="eco-card diff-card">
+            <span class="diff-icon"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <h3>{d.t}</h3>
+            <p>{d.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 — COMO FUNCIONA -->
+  <section id="como-funciona" class="section section--cream passos-sec">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O caminho até a certificação</span>
+        <h2>Certificação sem atrapalhar o <em class="accent">atendimento aos seus clientes</em></h2>
+        <p>Nossa metodologia foi desenhada para a rotina jurídica. Cada etapa respeita prazos processuais e a agenda da equipe — o escritório continua atendendo enquanto implementamos o sistema.</p>
+      </div>
+      <div class="passos-list">
+        {passos.map((p) => (
+          <div class="passo-item">
+            <div class="passo-num">{p.n}</div>
+            <div class="passo-connector" aria-hidden="true"></div>
+            <div class="passo-body">
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6 — DEPOIMENTOS -->
+  <Testimonials nota="4.9" />
+
+  <!-- SEÇÃO 7 — FAQ -->
+  <section class="section faq-sec">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Dúvidas frequentes</span>
+        <h2>Perguntas sobre ISO 9001 <em class="accent">para escritórios de advocacia</em></h2>
+      </div>
+      <dl class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">
+              {f.q}
+              <span class="faq-arrow">+</span>
+            </summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+
+  <!-- STICKY CTA -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="container sticky-cta-inner">
+      <p>ISO 9001 para advocacia · habilite-se para licitações públicas</p>
+      <a href="#diagnostico" class="btn btn--primary btn--sm">Fale com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </div>
+
+
+</Base>
+
+<style>
+  /* ---- TAG PILL SOBRE NAVY ---- */
+  .tag-pill--navy {
+    background: rgba(255,89,37,0.18);
+    border-color: rgba(255,89,37,0.55);
+    color: var(--orange);
+  }
+
+  /* ============================
+     SEÇÃO 2 — DORES
+  ============================ */
+  .dores-sec { padding-bottom: 80px; }
+  .dores-sec .section-header h2 { color: var(--cream); }
+  .dores-sec .section-header p { color: rgba(255,244,221,0.7); }
+
+  .dores-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1100px) { .dores-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .dores-grid { grid-template-columns: 1fr; } }
+
+  .dor-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,244,221,0.1);
+    border-radius: var(--r-20);
+    padding: 26px 22px;
+    transition: background .3s, border-color .3s;
+  }
+  .dor-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .dor-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+  .dor-card h3 { font-size: 15px; font-weight: 800; color: var(--cream); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .dor-card p { font-size: 13.5px; color: rgba(255,244,221,0.65); line-height: 1.6; }
+
+  /* ============================
+     SEÇÃO 3 — BENEFÍCIOS
+  ============================ */
+  .beneficios-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 860px) { .beneficios-wrap { grid-template-columns: 1fr; } }
+
+  .beneficios-text .tag-pill { margin-bottom: 18px; }
+  .beneficios-text h2 { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
+  .beneficios-text p { font-size: 16px; color: var(--text-mid); line-height: 1.7; }
+
+  .beneficios-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .beneficios-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .check-icon { color: var(--orange); font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ============================
+     SEÇÃO 4 — POR QUE TEMPLUM
+  ============================ */
+  .porque-sec .section-header h2 { color: var(--cream); }
+
+  .numeros-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 860px) { .numeros-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .numero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,244,221,0.12);
+    border-radius: var(--r-20);
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .numero-n { display: block; font-size: clamp(32px, 4vw, 52px); font-weight: 800; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
+  .numero-l { display: block; font-size: 13px; color: rgba(255,244,221,0.65); margin-top: 8px; font-weight: 500; }
+
+  .diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 960px) { .diferenciais-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .diferenciais-grid { grid-template-columns: 1fr; } }
+
+  .diff-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.1); }
+  .diff-card:hover { background: rgba(255,89,37,0.08); border-color: rgba(255,89,37,0.3); }
+  .diff-card h3 { color: var(--cream); }
+  .diff-card p { color: rgba(255,244,221,0.65); }
+  .diff-icon { display: block; font-size: 28px; color: var(--orange); margin-bottom: 14px; }
+
+  /* ============================
+     SEÇÃO 5 — PASSOS
+  ============================ */
+  .passos-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .passo-item {
+    display: grid;
+    grid-template-columns: 72px 40px 1fr;
+    gap: 0 20px;
+    align-items: start;
+    padding: 10px 0;
+  }
+  .passo-num { font-size: 42px; font-weight: 800; color: var(--orange); letter-spacing: -0.04em; line-height: 1.1; text-align: right; }
+  .passo-connector { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+  .passo-connector::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+  .passo-connector::after { content: ""; width: 2px; flex: 1; background: linear-gradient(to bottom, var(--orange), rgba(255,89,37,0.1)); margin-top: 6px; min-height: 60px; }
+  .passo-item:last-child .passo-connector::after { display: none; }
+  .passo-body { padding: 8px 0 32px; }
+  .passo-body h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .passo-body p { font-size: 15px; color: var(--text-mid); line-height: 1.7; }
+
+  @media (max-width: 600px) {
+    .passo-item { grid-template-columns: 52px 28px 1fr; }
+    .passo-num { font-size: 32px; }
+  }
+
+  /* ============================
+     SEÇÃO 7 — FAQ
+  ============================ */
+  .faq-sec { background: var(--surface); }
+  .faq-sec .section-header h2 { color: var(--text); }
+
+  /* ============================
+     SEÇÃO FORM / HERO
+  ============================ */
+  .form-sec { padding-top: 80px; padding-bottom: 80px; }
+  .hero-form-sec { padding-top: clamp(80px, 10vw, 130px); padding-bottom: clamp(80px, 10vw, 120px); }
+  .hero-form-sec .form-copy h1 { font-size: clamp(28px, 3.5vw, 46px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 16px; }
+  .form-split {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+  @media (max-width: 960px) { .form-split { grid-template-columns: 1fr; } }
+
+  .form-copy .tag-pill { margin-bottom: 20px; }
+  .form-copy h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 16px; }
+  .form-copy p { font-size: 16px; color: rgba(255,244,221,0.72); line-height: 1.7; margin-bottom: 32px; }
+
+  .form-selos { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .form-selos li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: rgba(255,244,221,0.85); }
+  .form-selos iconify-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; }
+
+  /* ============================
+     STICKY CTA
+  ============================ */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 90;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,89,37,0.3);
+    padding: 14px 0;
+    transform: translateY(100%);
+    transition: transform .4s var(--ease-soft);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .sticky-cta p { font-size: 14px; color: rgba(255,244,221,0.8); font-weight: 500; margin: 0; }
+  @media (max-width: 600px) {
+    .sticky-cta p { display: none; }
+    .sticky-cta .btn { width: 100%; }
+  }
+
+</style>
+
+<script is:inline>
+  (function () {
+    const bar = document.getElementById("stickyCta");
+    if (!bar) return;
+    const toggle = () => bar.classList.toggle("visible", window.scrollY > 300);
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+  })();
+</script>
