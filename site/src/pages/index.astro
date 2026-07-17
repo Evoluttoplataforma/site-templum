@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import HeroSlider from "../components/HeroSlider.astro";
+import VideoInstitucional from "../components/VideoInstitucional.astro";
 import NormShowcase from "../components/NormShowcase.astro";
 import OrbitPlatform from "../components/OrbitPlatform.astro";
 import SeloImplementando from "../components/SeloImplementando.astro";
@@ -77,6 +78,9 @@ const serviceSchema = {
 <Base schemas={[faqSchema, serviceSchema]} preloadImage="/assets/img/hero/templum-consultoria-industria.webp">
   <!-- 1. HERO (escura) -->
   <HeroSlider />
+
+  <!-- VÍDEO INSTITUCIONAL (clara) -->
+  <VideoInstitucional youtubeId="C3kCbqttWBU" />
 
   <!-- LOGOS DE CLIENTES (trusted by) -->
   <ClientLogos />

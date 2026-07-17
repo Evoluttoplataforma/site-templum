@@ -1,0 +1,55 @@
+---
+// Vídeo institucional (YouTube) — thumbnail com play, carrega o iframe só ao clicar.
+const { youtubeId = "C3kCbqttWBU" } = Astro.props;
+---
+
+<section class="vi section section--cream">
+  <div class="container lg vi-grid">
+    <div class="vi-text">
+      <span class="tag-pill">Vídeo institucional</span>
+      <h2>Conheça a <em class="accent">Templum</em></h2>
+      <p class="paragraph">Mais de 30 anos organizando a gestão de empresas em todo o Brasil — veja como transformamos certificação em resultado real.</p>
+    </div>
+    <button class="vi-thumb" data-vi-play aria-label="Assistir vídeo institucional da Templum">
+      <img src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`} alt="Vídeo institucional Templum" loading="lazy" />
+      <span class="vi-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
+    </button>
+  </div>
+</section>
+
+<style>
+  .vi-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .vi-grid > * { min-width: 0; }
+  .vi-text h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; margin: 14px 0 14px; }
+  .vi-text .paragraph { font-size: 16.5px; color: var(--text-mid); max-width: 440px; }
+
+  .vi-thumb { position: relative; display: block; width: 100%; aspect-ratio: 16/9; border-radius: var(--r-20); overflow: hidden; box-shadow: var(--shadow-card); background: var(--navy); cursor: pointer; }
+  .vi-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .vi-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,12,15,0.45), transparent 55%); }
+  .vi-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 76px; height: 76px; border-radius: 999px; background: rgba(255,255,255,0.92); color: var(--navy); display: grid; place-items: center; font-size: 30px; z-index: 2; transition: background .3s, transform .3s var(--ease-soft); }
+  .vi-thumb:hover .vi-play { background: var(--orange); color: #fff; transform: translate(-50%,-50%) scale(1.08); }
+
+  .vi-thumb.is-playing img,
+  .vi-thumb.is-playing .vi-play,
+  .vi-thumb.is-playing::after { display: none; }
+  .vi-thumb :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  @media (max-width: 860px) {
+    .vi-grid { grid-template-columns: 1fr; }
+    .vi-text { text-align: center; }
+    .vi-text .paragraph { margin: 0 auto; }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll("[data-vi-play]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.querySelector("img").src.match(/vi\/([^/]+)\//)[1];
+      btn.classList.add("is-playing");
+      btn.insertAdjacentHTML(
+        "beforeend",
+        `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" title="Vídeo institucional Templum" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+      );
+    }, { once: true });
+  });
+</script>
