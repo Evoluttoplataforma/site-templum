@@ -14,6 +14,7 @@
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
+//   MAPADOSITE_PASSWORD    senha (Basic Auth) para /mapadosite (default: Tp3321@)
 //   META_PIXEL_ID          ex.: 4177249519256900 — conta 1
 //   META_CAPI_TOKEN        (SECRETO) token CAPI — conta 1
 //   META_TEST_EVENT_CODE   (opcional) só para testes
@@ -67,6 +68,17 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // /mapadosite — protegido por senha (Basic Auth). Página interna, não deve ficar pública.
+    if (url.pathname === "/mapadosite" || url.pathname === "/mapadosite/") {
+      const expected = env.MAPADOSITE_PASSWORD || "Tp3321@";
+      if (!checkBasicAuth(request, expected)) {
+        return new Response("Autenticação necessária.", {
+          status: 401,
+          headers: { "WWW-Authenticate": 'Basic realm="Mapa do site", charset="UTF-8"' },
+        });
+      }
+    }
+
     // tudo o mais = arquivos estáticos (Astro build em ./dist)
     return env.ASSETS.fetch(request);
   },
@@ -77,6 +89,19 @@ function json(data, status = 200) {
     status,
     headers: { "content-type": "application/json; charset=utf-8" },
   });
+}
+
+// Confere Basic Auth (usuário é ignorado, só a senha importa) contra `expected`.
+function checkBasicAuth(request, expected) {
+  const header = request.headers.get("Authorization") || "";
+  if (!header.startsWith("Basic ")) return false;
+  try {
+    const decoded = atob(header.slice(6));
+    const pass = decoded.slice(decoded.indexOf(":") + 1);
+    return pass === expected;
+  } catch (_) {
+    return false;
+  }
 }
 
 async function sha256(value) {

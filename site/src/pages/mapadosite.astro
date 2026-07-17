@@ -1,0 +1,224 @@
+---
+import Base from "../layouts/Base.astro";
+import { normas } from "../data/normas.js";
+import { pages as iscas } from "../data/iscas.js";
+import { getCollection } from "astro:content";
+
+const artigos = await getCollection("blog");
+
+// LPs de campanha (tráfego pago) — 1 par LP + Obrigado por norma, exceto GERIC (página única).
+const lpsCampanha = normas.map((n) => ({
+  nome: n.nome,
+  color: n.color,
+  lp: `/consultoria/${n.slug}-lp/`,
+  obrigado: `/consultoria/${n.slug}-obrigado/`,
+}));
+
+const grupos = [
+  {
+    key: "principais",
+    label: "Principais",
+    icon: "solar:home-2-bold",
+    color: "var(--orange)",
+    links: [
+      { t: "Home", h: "/" },
+      { t: "Consultoria — todas as normas", h: "/consultoria/" },
+      { t: "Auditoria", h: "/auditoria/" },
+      { t: "Metodologia", h: "/metodologia/" },
+      { t: "Soluções de IA", h: "/solucoes-de-ia/" },
+      { t: "Treinamento fase a fase", h: "/treinamento-fase-a-fase/" },
+      { t: "Cases de sucesso", h: "/case-de-sucesso/" },
+      { t: "Histórias de clientes", h: "/historias/" },
+      { t: "Blog", h: "/blog/" },
+      { t: "Presentes (e-books e planilhas)", h: "/presentes/" },
+      { t: "Drops (cashback e prêmios)", h: "/drops/" },
+      { t: "Quem somos", h: "/quem-somos/sobre/" },
+      { t: "Nossos valores", h: "/quem-somos/valores/" },
+      { t: "Carreira", h: "/carreira/" },
+      { t: "Contato", h: "/contato/" },
+      { t: "Canal de denúncias", h: "/contato/canal-de-denuncias/" },
+      { t: "Falar com um especialista", h: "/form/" },
+      { t: "Política de Privacidade", h: "/page/" },
+    ],
+  },
+  {
+    key: "segmentos",
+    label: "Segmentos e nichos",
+    icon: "solar:buildings-2-bold",
+    color: "var(--norm-iso9001)",
+    links: [
+      { t: "ISO 9001 para Advocacia", h: "/iso-9001-advocacia/" },
+      { t: "ISO 9001 — Campinas", h: "/iso-9001-campinas/" },
+      { t: "ISO 9001 para Indústria", h: "/iso-9001-industria/" },
+      { t: "ISO 9001 para Laboratórios", h: "/iso-9001-laboratorios/" },
+      { t: "Gestão para Escritórios de Contabilidade (PQC)", h: "/pqc/" },
+      { t: "Gestão para Cartórios (PQTA)", h: "/pqta/" },
+      { t: "GERIC", h: "/consultoria/geric/" },
+      { t: "Gestão Empresarial", h: "/gestao-empresarial-lp/" },
+      { t: "Gestão Empresarial — Obrigado", h: "/gestao-empresarial-obrigado/" },
+      { t: "Financiamento Caixa para Construtoras", h: "/lp/financiamento-caixa/" },
+      { t: "Financiamento Caixa — Obrigado", h: "/lp/financiamento-caixa-obrigado/" },
+    ],
+  },
+  {
+    key: "webinars",
+    label: "Webinars e eventos",
+    icon: "solar:videocamera-record-bold",
+    color: "var(--norm-iso27001)",
+    links: [
+      { t: "Webinar Nigel Croft — ISO 9001", h: "/webinar-nigel-croft-iso-9001/" },
+      { t: "Webinar Nigel Croft — Sorteio", h: "/webinar-nigel-croft-sorteio/" },
+      { t: "Obrigado — Webinar Nigel Croft", h: "/obrigado-webinar-nigel/" },
+      { t: "Webinar — Comportamento Ético e Cultura da Qualidade", h: "/webinar-etica-cultura-qualidade/" },
+      { t: "Obrigado — Webinar Ética", h: "/obrigado-webinar-etica/" },
+      { t: "Webinar — IA + ISO 9001/19011", h: "/webinar-ia-iso9001-19011/" },
+      { t: "Obrigado — Webinar IA", h: "/obrigado-webinar-ia/" },
+      { t: "Webinar — ISO 9001:2026", h: "/webinar-iso-9001-2026/" },
+      { t: "Websérie — ISO 9001:2026", h: "/webserie-iso-9001-2026/" },
+      { t: "Obrigado — Websérie", h: "/obrigado-webserie/" },
+      { t: "Obrigado (genérico)", h: "/obrigado/" },
+    ],
+  },
+];
+---
+
+<Base
+  title="Mapa do Site — Templum"
+  description="Mapa do site da Templum: todas as páginas institucionais, de consultoria por norma, landing pages de campanha, conteúdos e materiais disponíveis."
+  noindex
+>
+  <section class="ms-hero">
+    <div class="container md">
+      <span class="tag-pill">Mapa do site</span>
+      <h1>Todas as páginas <em class="accent">da Templum</em>, num só lugar</h1>
+      <p>Um índice completo do site institucional — páginas principais, consultoria por norma, landing pages de campanha, webinars e conteúdos.</p>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      {grupos.map((g) => (
+        <div class="ms-grupo" style={`--c:${g.color}`}>
+          <header class="ms-grupo-head">
+            <span class="ms-grupo-ico"><iconify-icon icon={g.icon}></iconify-icon></span>
+            <div>
+              <h2>{g.label}</h2>
+              <span class="ms-grupo-sub">{g.links.length} páginas</span>
+            </div>
+          </header>
+          <ul class="ms-list">
+            {g.links.map((l) => (
+              <li><a href={l.h}>{l.t}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <!-- CONSULTORIA POR NORMA -->
+      <div class="ms-grupo" style="--c: var(--orange)">
+        <header class="ms-grupo-head">
+          <span class="ms-grupo-ico"><iconify-icon icon="solar:medal-ribbon-star-bold"></iconify-icon></span>
+          <div>
+            <h2>Consultoria por norma</h2>
+            <span class="ms-grupo-sub">{normas.length} páginas</span>
+          </div>
+        </header>
+        <ul class="ms-list ms-list--cols">
+          {normas.map((n) => (
+            <li style={`--c:${n.color}`}><a href={n.href}>{n.nome}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- LPS DE CAMPANHA -->
+      <div class="ms-grupo" style="--c: var(--norm-lgpd)">
+        <header class="ms-grupo-head">
+          <span class="ms-grupo-ico"><iconify-icon icon="solar:target-bold"></iconify-icon></span>
+          <div>
+            <h2>Landing pages de campanha</h2>
+            <span class="ms-grupo-sub">{lpsCampanha.length} pares LP + Obrigado (tráfego pago)</span>
+          </div>
+        </header>
+        <ul class="ms-list ms-list--pair">
+          {lpsCampanha.map((l) => (
+            <li style={`--c:${l.color}`}>
+              <a href={l.lp}>{l.nome}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+              <a href={l.obrigado} class="ms-sub">Obrigado</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- PRESENTES (materiais) -->
+      <div class="ms-grupo" style="--c: var(--norm-esg)">
+        <header class="ms-grupo-head">
+          <span class="ms-grupo-ico"><iconify-icon icon="solar:gift-bold"></iconify-icon></span>
+          <div>
+            <h2>Presentes — e-books e planilhas</h2>
+            <span class="ms-grupo-sub">{iscas.length} materiais em <a href="/presentes/">/presentes/</a></span>
+          </div>
+        </header>
+        <ul class="ms-list ms-list--cols">
+          {iscas.map((i) => (
+            <li><a href={`/presentes/${i.slug}/`}>{(i.title || "").replace(/\s*·\s*Templum\s*$/i, "")}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- BLOG -->
+      <div class="ms-grupo" style="--c: var(--norm-iso14001)">
+        <header class="ms-grupo-head">
+          <span class="ms-grupo-ico"><iconify-icon icon="solar:notebook-bold"></iconify-icon></span>
+          <div>
+            <h2>Blog</h2>
+            <span class="ms-grupo-sub">{artigos.length} artigos em <a href="/blog/">/blog/</a></span>
+          </div>
+        </header>
+        <ul class="ms-list ms-list--cols">
+          {artigos.map((a) => (
+            <li><a href={`/blog/${a.slug}/`}>{a.data.titulo || a.slug}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Não achou o que procurava?</h2>
+      <p>Fale com um especialista e a gente te encaminha para o lugar certo.</p>
+      <a href="/form/" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ms-hero { background: var(--navy); color: var(--cream); padding: clamp(72px, 8vw, 110px) 0 clamp(56px, 6vw, 80px); text-align: center; }
+  .ms-hero .tag-pill { margin-bottom: 20px; }
+  .ms-hero h1 { font-size: clamp(32px, 4.5vw, 54px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; color: var(--cream); }
+  .ms-hero p { font-size: 17px; color: rgba(255,244,221,0.7); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+  .ms-grupo { margin-top: 56px; }
+  .ms-grupo:first-child { margin-top: 8px; }
+  .ms-grupo-head { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .ms-grupo-ico { width: 50px; height: 50px; flex-shrink: 0; border-radius: 14px; display: grid; place-items: center; font-size: 24px; color: #fff; background: var(--c); box-shadow: 0 8px 22px -8px color-mix(in srgb, var(--c) 70%, transparent); }
+  .ms-grupo-head h2 { font-size: clamp(19px, 2.2vw, 24px); font-weight: 800; letter-spacing: -0.02em; }
+  .ms-grupo-sub { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+  .ms-grupo-sub a { color: var(--c); font-weight: 700; }
+
+  .ms-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 32px; }
+  .ms-list--cols { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .ms-list, .ms-list--cols { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .ms-list, .ms-list--cols { grid-template-columns: 1fr; } }
+
+  .ms-list li { list-style: none; }
+  .ms-list a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 4px; font-size: 14px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); transition: color .25s; }
+  .ms-list a iconify-icon { font-size: 15px; color: var(--text-mid); opacity: 0; transform: translateX(-4px); transition: transform .25s, opacity .25s; }
+  .ms-list a:hover { color: var(--c); }
+  .ms-list a:hover iconify-icon { opacity: 1; transform: translateX(0); color: var(--c); }
+
+  .ms-list--pair li { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); padding: 4px 4px; }
+  .ms-list--pair a { border-bottom: none; padding: 6px 0; flex: 1; }
+  .ms-list--pair .ms-sub { flex: 0 0 auto; font-size: 12.5px; font-weight: 700; color: var(--text-mid); padding: 6px 10px; border-radius: 999px; background: var(--surface-2, rgba(0,0,0,0.04)); }
+  .ms-list--pair .ms-sub:hover { color: var(--c); }
+</style>
