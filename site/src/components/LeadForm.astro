@@ -14,6 +14,8 @@ const {
   obrigado = "",   // ex: "/consultoria/iso-9001-obrigado" — sobrescreve o /obrigado padrão
   simples = false, // true → oculta nº funcionários, cargo e urgência
   faturamento = false, // true → mostra faturamento mensal (qualificação p/ PCI, mín. R$ 100 mil/mês)
+  labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
+  cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
@@ -32,7 +34,7 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
     </div>
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
     <div class="form-row">
-      <div class="field"><label>Empresa</label><input class="input" name="empresa" placeholder="Nome da empresa" /></div>
+      <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
       {!simples && (
         <div class="field">
           <label>Nº de funcionários</label>
@@ -52,7 +54,7 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
         </div>
       )}
     </div>
-    {!simples && (
+    {(!simples || cargo) && (
       <div class="form-row">
         <div class="field">
           <label>Seu cargo</label>
@@ -61,13 +63,15 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
             {cargos.map((c) => <option value={c}>{c}</option>)}
           </select>
         </div>
-        <div class="field">
-          <label>Qual sua urgência?</label>
-          <select class="select" name="urgencia" aria-label="Qual sua urgência?">
-            <option value="">Selecione</option>
-            {urgencias.map((u) => <option value={u}>{u}</option>)}
-          </select>
-        </div>
+        {!simples && (
+          <div class="field">
+            <label>Qual sua urgência?</label>
+            <select class="select" name="urgencia" aria-label="Qual sua urgência?">
+              <option value="">Selecione</option>
+              {urgencias.map((u) => <option value={u}>{u}</option>)}
+            </select>
+          </div>
+        )}
       </div>
     )}
     {!norma && (
