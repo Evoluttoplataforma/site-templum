@@ -16,8 +16,12 @@ binding = "ASSETS"
 not_found_handling = "404-page"
 # força o Worker a rodar ANTES de servir o asset estático dessas rotas
 # (necessário pro gate de senha de /mapadosite — por padrão, asset existente
-# pula direto o worker.js).
-run_worker_first = ["/mapadosite", "/mapadosite/"]
+# pula direto o worker.js). As rotas /api/* TAMBÉM precisam estar aqui: sem
+# elas, /api/lead, /api/leads, /api/track e /api/raffle* (que não têm asset
+# correspondente em dist/) eram interceptadas pela camada de assets ANTES do
+# worker.js — GET caía no 404 estático cacheado, POST recebia 405 puro da
+# plataforma. Resultado: nenhum lead era salvo (bug ativo de 17/07 a 20/07).
+run_worker_first = ["/mapadosite", "/mapadosite/", "/api/*"]
 
 # Todas as variáveis/secrets do Worker são definidas no painel
 # (Settings → Variables and Secrets) como SECRET — assim persistem entre deploys
