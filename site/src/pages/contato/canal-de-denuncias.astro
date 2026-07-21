@@ -59,23 +59,15 @@ const oque = ["Fraude ou corrupção", "Suborno e propina", "Conflito de interes
       <div class="lead-card">
         <div class="lead-title">Registrar um relato</div>
         <p class="lead-sub">Preencher os dados de contato é opcional — você pode relatar de forma anônima.</p>
-        <form class="form" id="cd-form" data-trk-event="denuncia" novalidate>
-          <div class="field">
-            <label for="tipo">Tipo de ocorrência</label>
-            <select class="select" id="tipo" name="tipo">
-              <option value="">Selecione</option>
-              {oque.map((o) => <option value={o}>{o}</option>)}
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-          <div class="field"><label for="rel">Descreva a ocorrência</label><textarea class="textarea" id="rel" name="relato" rows="5" placeholder="Conte o que aconteceu, com o máximo de detalhes possível (datas, locais, envolvidos)." required></textarea></div>
-          <div class="field"><label for="email">E-mail para retorno <span class="hint">(opcional)</span></label><input class="input" id="email" type="email" name="email" placeholder="Deixe em branco para permanecer anônimo" /></div>
-          <button type="submit" class="btn btn--primary btn--block btn--lg">Enviar relato com sigilo <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
-        </form>
-        <div class="form-success" id="cd-success" hidden>
-          <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-          <div><h4>Relato registrado</h4><p>Obrigado. Sua mensagem será analisada com sigilo pela área responsável.</p></div>
-        </div>
+        <a
+          href="https://app.templum.com.br/sesmt/denuncia/9395837f8e3ddd24a23cd31738bf05d3c8fea5e32a863917"
+          class="btn btn--primary btn--block btn--lg"
+          data-trk-event="denuncia"
+          target="_blank"
+          rel="noopener"
+        >
+          Enviar relato com sigilo <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+        </a>
       </div>
     </div>
   </section>
@@ -98,7 +90,5 @@ const oque = ["Fraude ou corrupção", "Suborno e propina", "Conflito de interes
   @media (max-width: 520px) {
     .cd-form-grid .lead-card { padding: 20px 16px; }
   }
-
-  .form[hidden], .form-success[hidden] { display: none; }
 </style>
 
