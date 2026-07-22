@@ -1,0 +1,178 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+---
+
+<LpBase
+  title="Inscrição confirmada — Planejamento Estratégico 2027 | Templum"
+  description="Sua vaga no workshop Planejamento Estratégico 2027 está garantida."
+  noindex={true}
+>
+
+  <section class="ob-hero">
+    <div class="ob-glow"></div>
+    <div class="container sm ob-inner">
+
+      <div class="ob-check">
+        <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+      </div>
+      <span class="ob-badge">Vaga garantida</span>
+
+      <h1>Você está dentro!<br /><em>Salve a data.</em></h1>
+
+      <p class="ob-lead">
+        No dia <strong>10/09/2026 às 15h</strong> você vai construir o
+        <strong>planejamento estratégico</strong> da sua empresa ao vivo, com
+        <strong>Igor Furniel</strong> e <strong>Daniela Albuquerque</strong>.
+        As instruções de acesso (Zoom) chegam no seu e-mail antes do evento.
+      </p>
+
+      <div class="ob-event-card">
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+          <span><strong>10 de setembro de 2026</strong></span>
+        </div>
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+          <span><strong>15h (horário de Brasília)</strong></span>
+        </div>
+        <div class="ob-event-row">
+          <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
+          <span>Zoom (participação) + YouTube — @templumcertifica</span>
+        </div>
+      </div>
+
+      <div class="ob-divider"></div>
+
+      <p class="ob-share">Bloqueie sua agenda:</p>
+      <div class="ob-cal-btns">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Planejamento+Estrat%C3%A9gico+2027+%7C+Templum&dates=20260910T180000Z/20260910T210000Z&details=Instru%C3%A7%C3%B5es+de+acesso+enviadas+por+e-mail.&location=Online+%28Zoom%29" target="_blank" rel="noopener" class="btn-cal">
+          <iconify-icon icon="mdi:google"></iconify-icon> Google Calendar
+        </a>
+        <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=Planejamento+Estrat%C3%A9gico+2027+%7C+Templum&startdt=2026-09-10T15:00:00-03:00&enddt=2026-09-10T18:00:00-03:00&body=Instru%C3%A7%C3%B5es+de+acesso+enviadas+por+e-mail." target="_blank" rel="noopener" class="btn-cal">
+          <iconify-icon icon="mdi:microsoft-outlook"></iconify-icon> Outlook
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</LpBase>
+
+<style>
+  html, body { background: var(--navy); min-height: 100%; }
+
+  .ob-hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    min-height: 80vh;
+    padding: clamp(56px, 8vw, 90px) 0 clamp(48px, 6vw, 80px);
+    text-align: center;
+  }
+  .ob-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(255,89,37,0.13) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .ob-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ob-check {
+    font-size: 68px;
+    color: #22c55e;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .ob-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #22c55e;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .ob-inner h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .ob-inner h1 em {
+    font-style: normal;
+    color: var(--orange);
+  }
+  .ob-lead {
+    font-size: 17px;
+    color: rgba(255,244,221,0.75);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto 32px;
+  }
+  .ob-lead strong { color: var(--cream); }
+
+  .ob-event-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .ob-event-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255,244,221,0.8);
+  }
+  .ob-event-row iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+  .ob-event-row strong { color: var(--cream); }
+
+  .ob-divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 0 auto 24px;
+  }
+  .ob-share {
+    font-size: 14px;
+    color: rgba(255,244,221,0.5);
+    margin-bottom: 14px;
+  }
+  .ob-cal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-cal {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,244,221,0.7);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 9px 18px;
+    transition: background .2s, color .2s;
+    text-decoration: none;
+  }
+  .btn-cal:hover { background: rgba(255,255,255,0.12); color: var(--cream); }
+  .btn-cal iconify-icon { font-size: 16px; }
+</style>

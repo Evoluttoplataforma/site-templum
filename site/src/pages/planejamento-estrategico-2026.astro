@@ -1,0 +1,504 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+import Testimonials from "../components/Testimonials.astro";
+
+const CHECKOUT = "https://www.asaas.com/c/c87t7y02ktlsq407";
+
+const construir = [
+  {
+    icon: "solar:target-bold",
+    t: "Missão, visão e valores",
+    d: "Construídos com apoio de IA — revisados e personalizados por você, não um texto genérico de gaveta.",
+  },
+  {
+    icon: "solar:compass-bold",
+    t: "Análise SWOT com plano de ação",
+    d: "Forças, fraquezas, oportunidades e ameaças com pontuação — cada item vira um risco ou oportunidade com plano, responsável e prazo.",
+  },
+  {
+    icon: "solar:graph-up-bold",
+    t: "Objetivos estratégicos (BSC)",
+    d: "Financeiro, clientes, processos internos e aprendizado — o Balanced Scorecard da sua empresa, montado ao vivo.",
+  },
+  {
+    icon: "solar:pie-chart-2-bold",
+    t: "Indicadores (KPIs) com metas",
+    d: "Indicadores que avisam sozinhos quando saem da meta — e viram problema com plano de ação automaticamente.",
+  },
+  {
+    icon: "solar:buildings-2-bold",
+    t: "Departamentos e processos",
+    d: "Estrutura de processos principais e de apoio gerada por IA, com responsáveis e riscos de cada um.",
+  },
+  {
+    icon: "solar:users-group-rounded-bold",
+    t: "Cargos e desenvolvimento de pessoas",
+    d: "Descrição de cargo, avaliação de desempenho e plano de desenvolvimento individual (PDI) de cada colaborador.",
+  },
+  {
+    icon: "solar:calendar-mark-bold",
+    t: "Ritos de execução",
+    d: "A cadência de reuniões (mensal, semanal, diária) que garante que o plano não pare de rodar em fevereiro.",
+  },
+];
+
+const comoFunciona = [
+  {
+    n: "1",
+    t: "Teoria enxuta",
+    d: "Insights rápidos sobre IA nos negócios, contexto de mercado para 2027 e os dois motivos que fazem a maioria dos planejamentos falhar — só o necessário pra nivelar todo mundo.",
+  },
+  {
+    n: "2",
+    t: "Mão na massa, ao vivo",
+    d: "Cerca de 3 horas construindo o planejamento estratégico da SUA empresa, dentro da plataforma Orbit, com Igor e Daniela ao seu lado o tempo todo.",
+  },
+  {
+    n: "3",
+    t: "Plano pronto pra executar",
+    d: "Você sai com SWOT, objetivos, indicadores e tarefas já registrados — e a cadência de reuniões pra manter tudo rodando em 2027.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Preciso ter uma empresa para participar?",
+    a: "Sim. O workshop é mão na massa: você constrói o planejamento estratégico da sua própria empresa ao vivo, durante o evento.",
+  },
+  {
+    q: "Preciso ter conhecimento prévio sobre planejamento estratégico?",
+    a: "Não. O evento começa com uma teoria enxuta pra nivelar todo mundo antes da parte prática — não é preciso experiência anterior.",
+  },
+  {
+    q: "Como vou acessar o evento?",
+    a: "Ao vivo pelo Zoom (com participação) ou acompanhando pelo YouTube. Depois da confirmação da compra, você recebe as instruções de acesso por e-mail.",
+  },
+  {
+    q: "Preciso instalar algo ou ter conta em algum sistema?",
+    a: "Você vai usar a plataforma Orbit, da Templum, durante o workshop — o acesso é feito na hora, sem preparo prévio.",
+  },
+  {
+    q: "Quanto tempo dura o evento?",
+    a: "Cerca de 3 horas. É um workshop completo, não uma palestra rápida — reserve a tarde pra estar presente do início ao fim.",
+  },
+  {
+    q: "Como funciona o pagamento?",
+    a: "O checkout é processado com segurança pela Asaas. Depois da confirmação, você recebe a confirmação da sua vaga.",
+  },
+];
+
+const schemaEvent = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: "Planejamento Estratégico 2027 — Templum Consultoria",
+  description: "Workshop ao vivo e mão na massa de planejamento estratégico, com Igor Furniel e Daniela Albuquerque.",
+  startDate: "2026-09-10T15:00:00-03:00",
+  endDate: "2026-09-10T18:00:00-03:00",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  location: { "@type": "VirtualLocation", url: "https://www.youtube.com/@templumcertifica/live" },
+  organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  performer: [
+    { "@type": "Person", name: "Igor Furniel" },
+    { "@type": "Person", name: "Daniela Albuquerque" },
+  ],
+  offers: {
+    "@type": "Offer",
+    price: "197.00",
+    priceCurrency: "BRL",
+    availability: "https://schema.org/InStock",
+    url: CHECKOUT,
+  },
+  isAccessibleForFree: false,
+};
+---
+
+<LpBase
+  title="Planejamento Estratégico 2027 — Workshop ao vivo com Igor Furniel | Templum"
+  description="Workshop mão na massa de planejamento estratégico, ao vivo, com Igor Furniel e Daniela Albuquerque. 10 de setembro, 15h. Valor de lançamento: R$197."
+  schemas={[schemaEvent]}
+  formAnchor="#ingresso"
+>
+
+  <!-- ── HERO ── -->
+  <section class="pe-hero">
+    <div class="container xl">
+      <div class="pe-hero-grid">
+
+        <div class="pe-copy">
+          <div class="pe-badges">
+            <span class="badge badge--orange-solid">Evento anual</span>
+            <span class="badge badge--cream">Ao vivo · Vagas limitadas</span>
+          </div>
+
+          <h1>
+            O Planejamento Estratégico<br />
+            que vai fazer sua empresa <em>crescer em 2027</em>
+          </h1>
+
+          <p class="pe-desc">
+            Workshop mão na massa e ao vivo com <strong>Igor Furniel</strong> e <strong>Daniela Albuquerque</strong>.
+            Você não sai daqui com teoria — sai com o planejamento estratégico da sua empresa pronto,
+            e o sistema pra executar ele o ano inteiro.
+          </p>
+
+          <div class="pe-date-bar">
+            <div class="pe-date-item">
+              <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+              <div>
+                <span class="pe-date-label">Data</span>
+                <span class="pe-date-val">Quinta, 10 de Setembro de 2026</span>
+              </div>
+            </div>
+            <div class="pe-date-divider"></div>
+            <div class="pe-date-item">
+              <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+              <div>
+                <span class="pe-date-label">Horário</span>
+                <span class="pe-date-val">15h (Brasília)</span>
+              </div>
+            </div>
+            <div class="pe-date-divider"></div>
+            <div class="pe-date-item">
+              <iconify-icon icon="mdi:video-outline"></iconify-icon>
+              <div>
+                <span class="pe-date-label">Formato</span>
+                <span class="pe-date-val">Zoom + YouTube</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pe-speakers-strip">
+            <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="pe-speaker-photo" />
+            <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="pe-speaker-photo" />
+            <div>
+              <div class="pe-speaker-name">Igor Furniel &amp; Daniela Albuquerque</div>
+              <div class="pe-speaker-role">Templum Consultoria</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pe-price-col">
+          <div class="pe-price-card" id="ingresso-hero">
+            <span class="badge badge--orange">Valor de lançamento</span>
+            <div class="pe-price-from">De R$597,00 por</div>
+            <div class="pe-price-now"><span class="pe-price-currency">R$</span>197<span class="pe-price-cents">,00</span></div>
+            <div class="pe-price-note">à vista · vagas limitadas</div>
+            <a href={CHECKOUT} class="btn btn--primary btn--block btn--lg">
+              Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </a>
+            <p class="pe-legal">Pagamento processado com segurança via Asaas.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="section section--cream" style="padding-top:48px;padding-bottom:48px;">
+    <div class="container lg">
+      <div class="pe-stats-grid">
+        <div class="number-card">
+          <div class="value">+2.000</div>
+          <div class="label">empresas atendidas pela Templum</div>
+        </div>
+        <div class="number-card">
+          <div class="value">+30 anos</div>
+          <div class="label">de experiência em gestão e processos</div>
+        </div>
+        <div class="number-card">
+          <div class="value">+24 anos</div>
+          <div class="label">de Igor Furniel à frente de planejamentos estratégicos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── O PROBLEMA ── -->
+  <section class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Mais comum do que parece</span>
+        <h2>A maioria das empresas <em class="accent">não tem</em> um plano.<br />As que têm, <em class="accent">falham na execução</em>.</h2>
+        <p>Dois problemas que andam juntos — e que este workshop resolve na mesma noite.</p>
+      </div>
+      <div class="pe-problema-grid">
+        <div class="eco-card reveal">
+          <h3>Sem plano definido</h3>
+          <p>Sem um plano claro, crescer vira loteria: decisões no improviso, sem direção definida de onde a empresa quer chegar.</p>
+        </div>
+        <div class="eco-card reveal">
+          <h3>Com plano, sem execução</h3>
+          <p>A rotina consome, e o time volta pros velhos hábitos — o plano fica engavetado depois da primeira semana.</p>
+        </div>
+      </div>
+      <p class="pe-problema-lead">
+        Neste workshop, você resolve os dois de uma vez: sai com o plano pronto — e com o sistema pra executar ele o ano inteiro.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── O QUE VOCÊ CONSTRÓI ── -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Mão na massa, ao vivo</span>
+        <h2>O que você sai <em class="accent">construindo</em> na sua empresa</h2>
+        <p>Tudo dentro da plataforma Orbit, passo a passo, com Igor e Daniela conduzindo ao vivo.</p>
+      </div>
+      <div class="pe-construir-grid">
+        {construir.map((c) => (
+          <div class="step-card reveal">
+            <div class="step-num"><iconify-icon icon={c.icon}></iconify-icon></div>
+            <h3>{c.t}</h3>
+            <p>{c.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMO FUNCIONA ── -->
+  <section class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Como funciona</span>
+        <h2>Da teoria à <em class="accent">execução</em>, em uma tarde</h2>
+      </div>
+      <div class="step-grid" style="grid-template-columns:repeat(3,1fr);">
+        {comoFunciona.map((s) => (
+          <div class="step-card reveal">
+            <div class="step-num">{s.n}</div>
+            <h3>{s.t}</h3>
+            <p>{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PALESTRANTES ── -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Quem conduz</span>
+        <h2>Aprenda com quem <em class="accent">vive planejamento estratégico</em></h2>
+      </div>
+      <div class="pe-speakers-grid">
+        <div class="pe-speaker-card reveal">
+          <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="pe-speaker-card-photo" />
+          <div class="pe-speaker-card-body">
+            <h3>Igor Furniel</h3>
+            <span class="pe-speaker-card-role">Sócio-fundador · Templum e Evoluto</span>
+            <p>
+              Empreendedor há mais de 24 anos, Igor já conduziu centenas de planejamentos estratégicos para empresas de todos os tamanhos — de pequenos negócios a franquias que faturam mais de R$300 milhões por ano. Fundador da Templum (certificações ISO) e da Evoluto (plataforma de gestão para consultores), é uma referência em processos e execução estratégica no Brasil.
+            </p>
+          </div>
+        </div>
+        <div class="pe-speaker-card reveal">
+          <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="pe-speaker-card-photo" />
+          <div class="pe-speaker-card-body">
+            <h3>Daniela Albuquerque</h3>
+            <span class="pe-speaker-card-role">Sócia Diretora · Templum Consultoria</span>
+            <p>
+              Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela traz a visão de quem ajuda centenas de empresas, todos os dias, a tirar o planejamento do papel e transformá-lo em rotina real de gestão.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEPOIMENTOS ── -->
+  <Testimonials nota="4,9" />
+
+  <!-- ── OFERTA ── -->
+  <section class="section section--cream" id="ingresso">
+    <div class="container sm">
+      <div class="section-header">
+        <span class="tag-pill">Inscrições abertas</span>
+        <h2>Garanta sua vaga no <em class="accent">Planejamento Estratégico 2027</em></h2>
+      </div>
+      <div class="pe-price-card pe-price-card--lg">
+        <span class="badge badge--orange">Valor de lançamento · vagas limitadas</span>
+        <div class="pe-price-from">De R$597,00 por</div>
+        <div class="pe-price-now"><span class="pe-price-currency">R$</span>197<span class="pe-price-cents">,00</span></div>
+        <div class="pe-price-note">à vista</div>
+        <ul class="check-list pe-price-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel e Daniela Albuquerque (~3h)</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Construção do planejamento estratégico da sua empresa, na prática</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso à plataforma Orbit durante o evento</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Participação pelo Zoom + transmissão no YouTube</li>
+        </ul>
+        <a href={CHECKOUT} class="btn btn--primary btn--block btn--lg">
+          Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+        </a>
+        <p class="pe-legal">Vagas limitadas. Pagamento processado com segurança via Asaas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="section section--cream">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill">Dúvidas</span>
+        <h2>Perguntas <em class="accent">frequentes</em></h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+            <p class="faq-answer">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="cta-band">
+    <div class="container sm" style="text-align:center;">
+      <h2>Sua empresa merece um plano — <em>e um jeito de executar ele</em>.</h2>
+      <p>10 de setembro, às 15h. Ao vivo. Vagas limitadas.</p>
+      <a href={CHECKOUT} class="btn btn--dark btn--lg">
+        Garantir minha vaga por R$197 <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
+    </div>
+  </section>
+
+</LpBase>
+
+<style>
+  :root { --pe-radius: 16px; }
+
+  /* ─── HERO ─── */
+  .pe-hero {
+    background: var(--navy);
+    padding: clamp(56px, 8vw, 96px) 0 clamp(56px, 8vw, 80px);
+    position: relative;
+    overflow: hidden;
+  }
+  .pe-hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,89,37,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .pe-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+
+  .pe-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+
+  .pe-copy h1 {
+    font-size: clamp(30px, 4.2vw, 48px); font-weight: 800;
+    color: var(--cream); line-height: 1.15;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+  .pe-copy h1 em { font-style: normal; color: var(--orange); }
+  .pe-desc { font-size: 16px; color: rgba(255,244,221,0.72); line-height: 1.75; margin-bottom: 32px; max-width: 540px; }
+  .pe-desc strong { color: var(--cream); }
+
+  /* DATE BAR */
+  .pe-date-bar {
+    display: flex; align-items: center; gap: 0;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .pe-date-item { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 150px; }
+  .pe-date-item iconify-icon { font-size: 20px; color: var(--orange); flex-shrink: 0; }
+  .pe-date-item div { display: flex; flex-direction: column; gap: 1px; }
+  .pe-date-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,244,221,0.4); }
+  .pe-date-val { font-size: 13px; font-weight: 700; color: var(--cream); }
+  .pe-date-divider { width: 1px; height: 32px; background: rgba(255,244,221,0.12); margin: 0 16px; flex-shrink: 0; }
+
+  /* SPEAKERS STRIP */
+  .pe-speakers-strip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px; border: 1px solid rgba(255,244,221,0.12);
+    border-radius: 12px; background: rgba(255,255,255,0.04); width: fit-content;
+  }
+  .pe-speaker-photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0; margin-right: -18px; }
+  .pe-speaker-photo:last-of-type { margin-right: 4px; }
+  .pe-speaker-name { font-size: 14px; font-weight: 800; color: var(--cream); }
+  .pe-speaker-role { font-size: 12px; color: rgba(255,244,221,0.55); margin-top: 2px; }
+
+  /* PRICE CARD */
+  .pe-price-col { align-self: start; }
+  .pe-price-card {
+    background: #fff; border-radius: var(--pe-radius);
+    padding: clamp(28px,3vw,36px); text-align: center;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .pe-price-from { font-size: 14px; color: var(--text-mid); margin-top: 16px; text-decoration: line-through; text-decoration-color: var(--text-soft); }
+  .pe-price-now { font-size: clamp(44px, 5vw, 58px); font-weight: 900; color: var(--orange-ink); line-height: 1; letter-spacing: -0.03em; margin: 6px 0 4px; }
+  .pe-price-currency, .pe-price-cents { font-size: 0.4em; font-weight: 800; vertical-align: super; }
+  .pe-price-note { font-size: 13px; color: var(--text-mid); margin-bottom: 22px; }
+  .pe-price-list { text-align: left; margin: 22px 0; }
+  .pe-legal { font-size: 11px; color: var(--text-soft); text-align: center; margin-top: 12px; line-height: 1.5; }
+
+  .pe-price-card--lg { max-width: 480px; margin: 0 auto; }
+
+  /* STATS */
+  .pe-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  /* PROBLEMA */
+  .pe-problema-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 32px; }
+  .pe-problema-grid .eco-card h3 { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+  .pe-problema-grid .eco-card p { font-size: 15px; }
+  .pe-problema-lead { text-align: center; max-width: 640px; margin: 0 auto; font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.6; }
+
+  /* CONSTRUIR GRID */
+  .pe-construir-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .pe-construir-grid .step-card h3 { color: var(--cream); }
+
+  /* SPEAKERS GRID (cards grandes) */
+  .pe-speakers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 960px; margin: 0 auto; }
+  .pe-speaker-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.10);
+    border-radius: var(--r-24); padding: 36px 28px;
+  }
+  .pe-speaker-card-photo {
+    width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+    border: 3px solid rgba(255,89,37,0.4); margin-bottom: 20px;
+  }
+  .pe-speaker-card-body h3 { font-size: 22px; font-weight: 800; color: var(--cream); margin-bottom: 4px; }
+  .pe-speaker-card-role {
+    display: block; font-size: 12px; font-weight: 700; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;
+  }
+  .pe-speaker-card-body p { font-size: 14px; color: rgba(255,244,221,0.65); line-height: 1.7; }
+
+  /* ─── RESPONSIVO ─── */
+  @media (max-width: 960px) {
+    .pe-hero-grid { grid-template-columns: 1fr; }
+    .pe-desc { max-width: 100%; }
+    .pe-construir-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .pe-stats-grid { grid-template-columns: 1fr; }
+    .pe-problema-grid { grid-template-columns: 1fr; }
+    .pe-construir-grid { grid-template-columns: 1fr; }
+    .pe-speakers-grid { grid-template-columns: 1fr; }
+    .step-grid[style] { grid-template-columns: 1fr !important; }
+  }
+  @media (max-width: 640px) {
+    .pe-date-bar {
+      display: grid; grid-template-columns: 1fr;
+      gap: 12px; padding: 14px 16px;
+    }
+    .pe-date-divider { display: none; }
+    .pe-date-item:not(:first-child) {
+      border-top: 1px solid rgba(255,244,221,0.12);
+      padding-top: 12px;
+    }
+  }
+</style>
