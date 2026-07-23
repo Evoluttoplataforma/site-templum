@@ -1,17 +1,21 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
-//   POST /api/lead   → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
-//   POST /api/track  → envia eventos ao Meta Conversions API (CAPI), server-side
-//   GET    /api/leads → leitura interna de leads (senha protegida)
-//   DELETE /api/leads → exclui um lead no Supabase por id (senha protegida)
+//   POST /api/lead          → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
+//   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
+//   GET    /api/leads       → leitura interna de leads (senha protegida)
+//   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
+//   POST /api/asaas-webhook → recebe webhook de pagamento do Asaas (eventos pagos, ex.:
+//                             Planejamento Estratégico) e marca status_pagamento='pago' no
+//                             lead correspondente em site_leads (rodar supabase-site-leads-pagamento.sql antes)
 //
 // Secrets/vars (Cloudflare → Worker → Settings → Variables and Secrets):
 //   SUPABASE_URL           (opcional) default já no código
 //   SUPABASE_ANON_KEY      (SECRETO) chave anon do Supabase
-//   SUPABASE_SERVICE_KEY   (SECRETO) chave service role — necessária para GET /api/leads
+//   SUPABASE_SERVICE_KEY   (SECRETO) chave service role — necessária para GET /api/leads e para o webhook do Asaas
 //   MAILCHIMP_API_KEY      ex.: abc123...-us21
 //   MAILCHIMP_LIST_ID      ex.: 1a2b3c4d5e
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
+//   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
 //   MAPADOSITE_PASSWORD    senha (Basic Auth) para /mapadosite (default: Tp3321@)
@@ -21,6 +25,10 @@
 //   META_PIXEL_ID_2        (opcional) 2ª conta Meta
 //   META_CAPI_TOKEN_2      (opcional, SECRETO) token CAPI da 2ª conta
 //   META_TEST_EVENT_CODE_2 (opcional) 2ª conta
+//   ASAAS_API_KEY          (SECRETO) Chave de API do Asaas (Configurações → Integrações) — usada pra
+//                          buscar nome/e-mail do cliente por customer id (o webhook não manda isso)
+//   ASAAS_WEBHOOK_TOKEN    (SECRETO) token que você mesmo escolhe (32-255 chars) ao cadastrar o
+//                          webhook no painel Asaas — vem de volta no header "asaas-access-token"
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 
@@ -60,6 +68,10 @@ export default {
     if (url.pathname === "/api/pipedrive-batch") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handlePipedriveBatch(request, env);
+    }
+    if (url.pathname === "/api/asaas-webhook") {
+      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleAsaasWebhook(request, env);
     }
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -187,6 +199,7 @@ async function handleLead(request, env, ctx) {
     funcionarios: body.funcionarios || "",
     faturamento: body.faturamento || "",
     mensagem: body.mensagem || "",
+    status_pagamento: body.status_pagamento || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
     session_id: body.session_id || "",
@@ -224,7 +237,10 @@ async function handleLead(request, env, ctx) {
     ["meta", sendMetaLead(lead, env, request)],
     ["manychat", saveToManyChat(lead, env)],
   ];
-  if (!isWebinar) bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
+  if (!isWebinar) {
+    bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
+    bgTasks.push(["orbit", saveToOrbit(lead, env)]);
+  }
 
   // Loga falhas (ok:false ou exceção) de cada tarefa em background — sem isso,
   // erros ficam completamente invisíveis (ctx.waitUntil não expõe o resultado).
@@ -244,6 +260,22 @@ async function saveToSupabase(lead, env) {
   if (!sbKey) return { ok: false, reason: "not_configured" };
 
   try {
+    // status_pagamento só é enviado quando o form o preenche (produtos pagos) — assim
+    // um site_leads sem a coluna ainda (migração não rodada) não quebra os outros leads.
+    const payload = {
+      nome: lead.nome, email: lead.email, telefone: lead.telefone,
+      empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
+      funcionarios: lead.funcionarios, urgencia: lead.urgencia,
+      faturamento: lead.faturamento,
+      evento: lead.evento, pagina: lead.pagina,
+      utm_source: lead.utm_source, utm_medium: lead.utm_medium,
+      utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
+      utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
+      utm_campaign_ft: lead.utm_campaign_ft,
+      gclid: lead.gclid, fbclid: lead.fbclid,
+    };
+    if (lead.status_pagamento) payload.status_pagamento = lead.status_pagamento;
+
     const r = await fetch(`${sbUrl}/rest/v1/site_leads`, {
       method: "POST",
       headers: {
@@ -252,18 +284,7 @@ async function saveToSupabase(lead, env) {
         "authorization": "Bearer " + sbKey,
         "prefer": "return=minimal",
       },
-      body: JSON.stringify({
-        nome: lead.nome, email: lead.email, telefone: lead.telefone,
-        empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
-        funcionarios: lead.funcionarios, urgencia: lead.urgencia,
-        faturamento: lead.faturamento,
-        evento: lead.evento, pagina: lead.pagina,
-        utm_source: lead.utm_source, utm_medium: lead.utm_medium,
-        utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
-        utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
-        utm_campaign_ft: lead.utm_campaign_ft,
-        gclid: lead.gclid, fbclid: lead.fbclid,
-      }),
+      body: JSON.stringify(payload),
     });
     if (r.ok) return { ok: true };
     const e = await r.text().catch(() => "");
@@ -481,6 +502,81 @@ async function saveToPipedrive(lead, env) {
     const e = rd ? await rd.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
 
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+// ---- 3b) CRM Orbit ---------------------------------------------------------
+// Pipeline INBOUND ("Importado do Pipedrive") → Stage NOVO LEAD
+const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
+const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
+const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
+// Campos personalizados do CRM (field_key obtido em CRM → Campos Personalizados)
+const ORBIT_FIELDS = {
+  norma:        "cf_produto",
+  cargo:        "cf_cargo_do_contato",
+  funcionarios: "cf_faixa_de_funcion_rios",
+  faturamento:  "cf_faixa_de_faturamento",
+  pagina:       "cf_p_gina_de_convers_o",
+  utm_source:   "cf_utm_source",
+  utm_medium:   "cf_utm_medium",
+  utm_campaign: "cf_utm_campaign",
+  utm_term:     "cf_utm_term",
+  utm_content:  "cf_utm_content",
+};
+
+async function saveToOrbit(lead, env) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const title = [lead.empresa || lead.nome || lead.email, lead.norma].filter(Boolean).join(" - ");
+
+  const custom_fields = {};
+  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+    const val = lead[field];
+    if (val) custom_fields[key] = val;
+  }
+
+  const body = {
+    title,
+    pipeline_id: ORBIT_PIPELINE_ID,
+    stage_id: ORBIT_STAGE_ID,
+    contact_name: lead.nome || lead.email,
+    contact_email: lead.email,
+    source: "site",
+  };
+  if (lead.telefone) body.contact_phone = lead.telefone;
+  if (lead.empresa) body.company_name = lead.empresa;
+  if (lead.mensagem) body.notes = lead.mensagem;
+  if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
+
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token };
+
+  try {
+    let r = await fetch(`${ORBIT_BASE}/leads`, {
+      method: "POST", headers, body: JSON.stringify(body),
+    }).catch(() => null);
+
+    if (r && r.ok) {
+      const d = await r.json().catch(() => ({}));
+      return { ok: true, lead_id: d.data?.id };
+    }
+
+    // Fallback: se algum campo personalizado for inválido (ex.: select com opção
+    // não prevista), tenta de novo só com os campos essenciais.
+    const basicBody = { ...body };
+    delete basicBody.custom_fields;
+    r = await fetch(`${ORBIT_BASE}/leads`, {
+      method: "POST", headers, body: JSON.stringify(basicBody),
+    }).catch(() => null);
+
+    if (r && r.ok) {
+      const d = await r.json().catch(() => ({}));
+      return { ok: true, lead_id: d.data?.id, fields_dropped: true };
+    }
+    const e = r ? await r.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(e).slice(0, 140) };
   } catch (e) {
     return { ok: false, error: "fetch_failed" };
   }
@@ -1128,4 +1224,128 @@ async function handlePipedriveBatch(request, env) {
   } catch (e) {
     return json({ ok: false, error: "fetch_failed", detail: e.message }, 500);
   }
+}
+
+// =====================================================================
+// ASAAS — webhook de pagamento (produtos pagos, ex.: Planejamento Estratégico)
+// =====================================================================
+
+// paymentLink (Asaas) → evento (site_leads) de cada produto pago ativo.
+// O id do link é o mesmo trecho depois de "asaas.com/c/" na URL de checkout.
+const ASAAS_PRODUTOS = {
+  "c87t7y02ktlsq407": "planejamento-estrategico-2026",
+};
+
+const ASAAS_EVENTOS_PAGAMENTO = new Set(["PAYMENT_CONFIRMED", "PAYMENT_RECEIVED"]);
+
+async function handleAsaasWebhook(request, env) {
+  // Autenticação: header customizado (definido por nós ao cadastrar o webhook no painel Asaas).
+  const token = request.headers.get("asaas-access-token") || "";
+  const expected = env.ASAAS_WEBHOOK_TOKEN || "";
+  if (!expected || token !== expected) {
+    return json({ ok: false, error: "unauthorized" }, 401);
+  }
+
+  let body = {};
+  try { body = await request.json(); } catch (_) { return json({ ok: true }); }
+
+  const event = body.event || "";
+  const payment = body.payment || {};
+  if (!ASAAS_EVENTOS_PAGAMENTO.has(event)) return json({ ok: true, skipped: "event" });
+
+  const evento = ASAAS_PRODUTOS[payment.paymentLink];
+  if (!evento) {
+    console.error("[asaas-webhook] paymentLink não mapeado:", payment.paymentLink);
+    return json({ ok: true, skipped: "payment_link" });
+  }
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "no_supabase_key" }, 500);
+  const sbHeaders = { apikey: sbKey, Authorization: "Bearer " + sbKey };
+
+  // Idempotência — o Asaas reenvia webhook (at-least-once): se esse payment.id já
+  // foi processado antes, não faz nada.
+  try {
+    const dup = await fetch(
+      `${sbUrl}/rest/v1/site_leads?asaas_payment_id=eq.${encodeURIComponent(payment.id)}&select=id&limit=1`,
+      { headers: sbHeaders }
+    );
+    const dupData = await dup.json().catch(() => []);
+    if (Array.isArray(dupData) && dupData.length) return json({ ok: true, skipped: "duplicate" });
+  } catch (e) {
+    console.error("[asaas-webhook] falha ao checar duplicidade", e && e.message);
+  }
+
+  // O webhook não manda e-mail/nome — busca na API do Asaas pelo customer id.
+  let customerEmail = "", customerName = "";
+  try {
+    const custRes = await fetch(`https://api.asaas.com/v3/customers/${payment.customer}`, {
+      headers: {
+        access_token: env.ASAAS_API_KEY || "",
+        "User-Agent": "Templum-Site/1.0 (site-templum worker)",
+      },
+    });
+    if (custRes.ok) {
+      const cust = await custRes.json();
+      customerEmail = (cust.email || "").trim().toLowerCase();
+      customerName = cust.name || "";
+    } else {
+      console.error("[asaas-webhook] customers API respondeu", custRes.status);
+    }
+  } catch (e) {
+    console.error("[asaas-webhook] falha ao buscar customer", e && e.message);
+  }
+
+  const pagamentoFields = {
+    status_pagamento: "pago",
+    valor_pago: payment.value ?? null,
+    asaas_payment_id: payment.id,
+    asaas_customer_id: payment.customer || null,
+    data_pagamento: payment.confirmedDate || payment.paymentDate || new Date().toISOString(),
+  };
+
+  // Tenta casar com o lead 'pendente' que a pessoa criou preenchendo o form antes do checkout
+  // (mesmo e-mail + mesmo evento). Se o e-mail digitado no Asaas for diferente do form, não casa.
+  let matched = false;
+  if (customerEmail) {
+    try {
+      const find = await fetch(
+        `${sbUrl}/rest/v1/site_leads?email=eq.${encodeURIComponent(customerEmail)}&evento=eq.${encodeURIComponent(evento)}&order=created_at.desc&limit=1&select=id`,
+        { headers: sbHeaders }
+      );
+      const rows = await find.json().catch(() => []);
+      if (Array.isArray(rows) && rows.length) {
+        const upd = await fetch(`${sbUrl}/rest/v1/site_leads?id=eq.${encodeURIComponent(rows[0].id)}`, {
+          method: "PATCH",
+          headers: { ...sbHeaders, "content-type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify(pagamentoFields),
+        });
+        matched = upd.ok;
+        if (!upd.ok) console.error("[asaas-webhook] falha ao atualizar lead", await upd.text().catch(() => ""));
+      }
+    } catch (e) {
+      console.error("[asaas-webhook] falha ao casar lead", e && e.message);
+    }
+  }
+
+  // Sem lead correspondente (e-mail diferente do form, ou compra direta sem passar pelo form):
+  // cria um registro novo, pra nenhum pagamento ficar invisível.
+  if (!matched) {
+    try {
+      const ins = await fetch(`${sbUrl}/rest/v1/site_leads`, {
+        method: "POST",
+        headers: { ...sbHeaders, "content-type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({
+          nome: customerName, email: customerEmail, evento, pagina: "asaas-webhook",
+          ...pagamentoFields,
+        }),
+      });
+      if (!ins.ok) console.error("[asaas-webhook] falha ao criar lead de fallback", await ins.text().catch(() => ""));
+    } catch (e) {
+      console.error("[asaas-webhook] falha ao criar lead de fallback", e && e.message);
+    }
+  }
+
+  return json({ ok: true, matched });
 }
