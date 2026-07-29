@@ -9,6 +9,7 @@ const {
   ogImage = "/assets/og/templum-og.jpg",
   noindex = true,
   formAnchor = "#form",
+  headerCta = "Falar com especialista",
   schemas = [],
 } = Astro.props;
 
@@ -91,7 +92,7 @@ const allSchemas = schemas;
         </span>
         <div class="lp-header-right">
           <a href={formAnchor} class="btn btn--primary lp-cta-btn">
-            Falar com especialista
+            {headerCta}
             <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
           </a>
         </div>

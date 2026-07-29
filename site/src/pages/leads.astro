@@ -176,7 +176,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      min-width: 1100px;
+      min-width: 1300px;
       background: var(--surface);
       border-radius: 12px;
       overflow: hidden;
@@ -217,6 +217,15 @@
       color: var(--orange);
       white-space: nowrap;
     }
+    .td-evento { font-size: 11px; color: var(--text-mid); max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pag-pill {
+      display: inline-block;
+      font-size: 11px; font-weight: 800;
+      padding: 3px 10px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .pag-pago      { background: rgba(5,150,105,0.1);  color: #059669; }
+    .pag-pendente  { background: rgba(217,119,6,0.1);  color: #d97706; }
     .td-pagina { font-size: 11px; color: var(--text-mid); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .td-utm { font-size: 11px; }
     .utm-block { display: flex; flex-direction: column; gap: 3px; }
@@ -368,6 +377,14 @@
     <select id="filter-pagina">
       <option value="">Todas as páginas</option>
     </select>
+    <select id="filter-evento">
+      <option value="">Todos os eventos</option>
+    </select>
+    <select id="filter-pagamento">
+      <option value="">Qualquer pagamento</option>
+      <option value="pago">Pago</option>
+      <option value="pendente">Pendente</option>
+    </select>
     <input type="date" id="filter-de" title="De" />
     <input type="date" id="filter-ate" title="Até" />
     <button class="btn-refresh" id="btn-refresh">↻ Atualizar</button>
@@ -395,6 +412,8 @@
           <th data-col="empresa">Empresa</th>
           <th data-col="norma">Norma</th>
           <th data-col="pagina">Página</th>
+          <th data-col="evento">Evento</th>
+          <th data-col="status_pagamento">Pagamento</th>
           <th data-col="utm_source">Fonte</th>
           <th data-col="utm_medium">Meio</th>
           <th data-col="utm_campaign">Campanha</th>
@@ -449,6 +468,8 @@
   var fNorma = document.getElementById("filter-norma");
   var fSource = document.getElementById("filter-source");
   var fPagina = document.getElementById("filter-pagina");
+  var fEvento = document.getElementById("filter-evento");
+  var fPagamento = document.getElementById("filter-pagamento");
   var fDe = document.getElementById("filter-de");
   var fAte = document.getElementById("filter-ate");
 
@@ -524,6 +545,10 @@
       metaTotal.textContent = (body.total || allLeads.length) + " leads no total";
       buildFilters();
       fSource.value = "facebook"; // padrão: Meta (facebook + fb + ig)
+      try {
+        var qpEvento = new URLSearchParams(location.search).get("evento");
+        if (qpEvento) fEvento.value = qpEvento;
+      } catch(_) {}
       render();
     } catch(e) {
       stateEl.innerHTML = '<strong>Erro ao carregar</strong>' + e.message;
@@ -553,6 +578,11 @@
     var paginas = [...new Set(allLeads.map(function(l){ return l.pagina || ""; }).filter(Boolean))].sort();
     fPagina.innerHTML = '<option value="">Todas as páginas</option>';
     paginas.forEach(function(p) { fPagina.innerHTML += '<option value="' + esc(p) + '">' + esc(p) + '</option>'; });
+
+    // Eventos
+    var eventos = [...new Set(allLeads.map(function(l){ return l.evento || ""; }).filter(Boolean))].sort();
+    fEvento.innerHTML = '<option value="">Todos os eventos</option>';
+    eventos.forEach(function(ev) { fEvento.innerHTML += '<option value="' + esc(ev) + '">' + esc(ev) + '</option>'; });
   }
 
   // Sort listeners
@@ -573,7 +603,7 @@
   var lastFiltered = [];
 
   // Ao mudar filtro, volta pra página 1
-  [fSearch, fNorma, fSource, fPagina, fDe, fAte].forEach(function(el) {
+  [fSearch, fNorma, fSource, fPagina, fEvento, fPagamento, fDe, fAte].forEach(function(el) {
     el.addEventListener("input",  function() { currentPage = 1; render(); });
     el.addEventListener("change", function() { currentPage = 1; render(); });
   });
@@ -583,6 +613,8 @@
     var norma = fNorma.value;
     var source = fSource.value;
     var pagina = fPagina.value;
+    var evento = fEvento.value;
+    var pagamento = fPagamento.value;
     var de = fDe.value ? new Date(fDe.value) : null;
     var ate = fAte.value ? new Date(fAte.value + "T23:59:59") : null;
 
@@ -590,6 +622,8 @@
       if (norma && (l.norma || "") !== norma) return false;
       if (source && normSource(l.utm_source || "") !== source) return false;
       if (pagina && (l.pagina || "") !== pagina) return false;
+      if (evento && (l.evento || "") !== evento) return false;
+      if (pagamento && (l.status_pagamento || "") !== pagamento) return false;
       if (de && new Date(l.created_at) < de) return false;
       if (ate && new Date(l.created_at) > ate) return false;
       if (q) {
@@ -614,7 +648,9 @@
     var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     currentPage = Math.min(currentPage, totalPages);
 
-    filtersCount.textContent = filtered.length + " resultado" + (filtered.length !== 1 ? "s" : "");
+    var pagosCount = filtered.filter(function(l) { return l.status_pagamento === "pago"; }).length;
+    filtersCount.textContent = filtered.length + " resultado" + (filtered.length !== 1 ? "s" : "") +
+      (pagosCount ? " · " + pagosCount + " pago" + (pagosCount !== 1 ? "s" : "") : "");
 
     if (filtered.length === 0) {
       stateEl.innerHTML = '<strong>Nenhum lead encontrado</strong>Tente ajustar os filtros.';
@@ -646,6 +682,8 @@
         "<td>" + esc(l.empresa || "—") + "</td>" +
         "<td class='td-norma'>" + (l.norma ? "<span class='pill'>" + esc(l.norma) + "</span>" : "—") + "</td>" +
         "<td class='td-pagina' title='" + esc(l.pagina || "") + "'>" + esc(l.pagina || "—") + "</td>" +
+        "<td class='td-evento' title='" + esc(l.evento || "") + "'>" + esc(l.evento || "—") + "</td>" +
+        "<td>" + pagamentoCell(l) + "</td>" +
         "<td class='td-utm'>" + esc(l.utm_source   || "—") + "</td>" +
         "<td class='td-utm'>" + esc(l.utm_medium   || "—") + "</td>" +
         "<td class='td-utm'>" + esc(l.utm_campaign || "—") + "</td>" +
@@ -866,6 +904,15 @@
         td.innerHTML = "<span class='crm-none'>—</span>";
       });
     }
+  }
+
+  function pagamentoCell(l) {
+    if (!l.status_pagamento) return "<span class='crm-none'>—</span>";
+    var cls = l.status_pagamento === "pago" ? "pag-pago" : "pag-pendente";
+    var label = l.status_pagamento === "pago" ? "Pago" : "Pendente";
+    var valor = l.valor_pago ? " · R$" + Number(l.valor_pago).toLocaleString("pt-BR", { minimumFractionDigits: 2 }) : "";
+    var titulo = l.data_pagamento ? " title='" + esc(new Date(l.data_pagamento).toLocaleString("pt-BR")) + "'" : "";
+    return "<span class='pag-pill " + cls + "'" + titulo + ">" + label + valor + "</span>";
   }
 
   function esc(s) {

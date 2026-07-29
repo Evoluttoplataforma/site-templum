@@ -845,7 +845,7 @@ async function handleLeadsRead(request, env) {
 
   try {
     const res = await fetch(
-      `${sbUrl}/rest/v1/site_leads?select=id,created_at,nome,email,telefone,empresa,norma,cargo,pagina,evento,utm_source,utm_medium,utm_campaign,utm_content,utm_source_ft,utm_campaign_ft,gclid,fbclid&order=created_at.desc&limit=${limit}&offset=${offset}`,
+      `${sbUrl}/rest/v1/site_leads?select=id,created_at,nome,email,telefone,empresa,norma,cargo,pagina,evento,status_pagamento,valor_pago,data_pagamento,utm_source,utm_medium,utm_campaign,utm_content,utm_source_ft,utm_campaign_ft,gclid,fbclid&order=created_at.desc&limit=${limit}&offset=${offset}`,
       {
         headers: {
           "apikey": sbKey,
