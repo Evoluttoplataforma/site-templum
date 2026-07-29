@@ -184,7 +184,7 @@ const schemaEvent = {
             <div class="pe-price-from">De R$597,00 por</div>
             <div class="pe-price-now"><span class="pe-price-currency">R$</span>197<span class="pe-price-cents">,00</span></div>
             <div class="pe-price-note">à vista · vagas limitadas</div>
-            <a href={CHECKOUT} class="btn btn--primary btn--block btn--lg">
+            <a href="#ingresso" class="btn btn--primary btn--block btn--lg">
               Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
             </a>
             <p class="pe-legal">Pagamento processado com segurança via Asaas.</p>
@@ -331,9 +331,28 @@ const schemaEvent = {
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso à plataforma Orbit durante o evento</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Participação pelo Zoom + transmissão no YouTube</li>
         </ul>
-        <a href={CHECKOUT} class="btn btn--primary btn--block btn--lg">
-          Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
-        </a>
+        <form class="pe-form" novalidate data-trk-event="planejamento-estrategico-2026" data-obrigado={CHECKOUT}>
+          <div class="pe-field">
+            <label for="pe-nome">Nome completo</label>
+            <input class="input" type="text" id="pe-nome" name="nome" placeholder="Seu nome completo" required />
+          </div>
+          <div class="pe-field">
+            <label for="pe-email">E-mail</label>
+            <input class="input" type="email" id="pe-email" name="email" placeholder="voce@empresa.com" required />
+          </div>
+          <div class="pe-field">
+            <label for="pe-empresa">Empresa</label>
+            <input class="input" type="text" id="pe-empresa" name="empresa" placeholder="Nome da empresa" />
+          </div>
+          <div class="pe-field">
+            <label for="pe-wpp">WhatsApp *</label>
+            <input class="input" type="tel" id="pe-wpp" name="telefone" placeholder="(00) 00000-0000" required />
+          </div>
+          <input type="hidden" name="status_pagamento" value="pendente" />
+          <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
+            Ir para o pagamento <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </button>
+        </form>
         <p class="pe-legal">Vagas limitadas. Pagamento processado com segurança via Asaas.</p>
       </div>
     </div>
@@ -362,7 +381,7 @@ const schemaEvent = {
     <div class="container sm" style="text-align:center;">
       <h2>Sua empresa merece um plano — <em>e um jeito de executar ele</em>.</h2>
       <p>10 de setembro, às 15h. Ao vivo. Vagas limitadas.</p>
-      <a href={CHECKOUT} class="btn btn--dark btn--lg">
+      <a href="#ingresso" class="btn btn--dark btn--lg">
         Garantir minha vaga por R$197 <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
       </a>
     </div>
@@ -443,6 +462,11 @@ const schemaEvent = {
   .pe-price-note { font-size: 13px; color: var(--text-mid); margin-bottom: 22px; }
   .pe-price-list { text-align: left; margin: 22px 0; }
   .pe-legal { font-size: 11px; color: var(--text-soft); text-align: center; margin-top: 12px; line-height: 1.5; }
+
+  /* FORM (dentro do card de oferta) */
+  .pe-form { text-align: left; margin: 22px 0 0; display: flex; flex-direction: column; gap: 14px; }
+  .pe-field { display: flex; flex-direction: column; gap: 6px; }
+  .pe-field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
 
   .pe-price-card--lg { max-width: 480px; margin: 0 auto; }
 
