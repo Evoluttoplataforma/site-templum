@@ -11,6 +11,10 @@
 # Query string / UTM são preservadas automaticamente pelo Cloudflare.
 /canal-de-denuncias  /contato/canal-de-denuncias/  301
 /canal-de-denuncias/  /contato/canal-de-denuncias/  301
+/planejamento-estrategico-2026  /planejamento-estrategico-2027/  301
+/planejamento-estrategico-2026/  /planejamento-estrategico-2027/  301
+/obrigado-planejamento-estrategico-2026  /obrigado-planejamento-estrategico-2027/  301
+/obrigado-planejamento-estrategico-2026/  /obrigado-planejamento-estrategico-2027/  301
 /certificacao-iso-9001-t01  /consultoria/iso-9001/  301
 /certificacao-iso-9001-t01/  /consultoria/iso-9001/  301
 /consultoria-geric  /consultoria/geric/  301

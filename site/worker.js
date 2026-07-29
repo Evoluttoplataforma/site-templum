@@ -1233,7 +1233,7 @@ async function handlePipedriveBatch(request, env) {
 // paymentLink (Asaas) → evento (site_leads) de cada produto pago ativo.
 // O id do link é o mesmo trecho depois de "asaas.com/c/" na URL de checkout.
 const ASAAS_PRODUTOS = {
-  "c87t7y02ktlsq407": "planejamento-estrategico-2026",
+  "c87t7y02ktlsq407": "planejamento-estrategico-2027",
 };
 
 const ASAAS_EVENTOS_PAGAMENTO = new Set(["PAYMENT_CONFIRMED", "PAYMENT_RECEIVED"]);
