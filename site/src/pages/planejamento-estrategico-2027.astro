@@ -180,9 +180,8 @@ const schemaEvent = {
 
         <div class="pe-price-col">
           <div class="pe-price-card" id="ingresso-hero">
-            <span class="badge badge--orange">Valor de lançamento</span>
-            <div class="pe-price-from">De R$597,00 por</div>
-            <div class="pe-price-now"><span class="pe-price-currency">R$</span>197<span class="pe-price-cents">,00</span></div>
+            <span class="badge badge--orange">Vagas limitadas</span>
+            <div class="pe-price-now"><span class="pe-price-currency">R$</span>597<span class="pe-price-cents">,00</span></div>
             <div class="pe-price-note">à vista · vagas limitadas</div>
             <a href="#ingresso" class="btn btn--primary btn--block btn--lg">
               Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
@@ -318,10 +317,21 @@ const schemaEvent = {
         <h2>Garanta sua vaga no <em class="accent">Planejamento Estratégico 2027</em></h2>
       </div>
       <div class="pe-price-card pe-price-card--lg">
-        <span class="badge badge--orange">Valor de lançamento · vagas limitadas</span>
-        <div class="pe-price-from">De R$597,00 por</div>
-        <div class="pe-price-now"><span class="pe-price-currency">R$</span>197<span class="pe-price-cents">,00</span></div>
+        <span class="badge badge--orange">Vagas limitadas</span>
+        <div class="pe-price-now" id="pe-price-now">
+          <span class="pe-price-currency">R$</span><span id="pe-price-value">597</span><span class="pe-price-cents">,00</span>
+        </div>
         <div class="pe-price-note">à vista</div>
+
+        <div class="pe-coupon">
+          <label for="pe-cupom-input">Tem um cupom de desconto?</label>
+          <div class="pe-coupon-row">
+            <input class="input" type="text" id="pe-cupom-input" placeholder="Digite seu cupom" autocomplete="off" />
+            <button type="button" class="btn btn--outline" id="pe-cupom-btn">Aplicar</button>
+          </div>
+          <p class="pe-coupon-msg" id="pe-cupom-msg"></p>
+        </div>
+
         <ul class="check-list pe-price-list">
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel e Daniela Albuquerque (~3h)</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Construção do planejamento estratégico da sua empresa, na prática</li>
@@ -354,6 +364,42 @@ const schemaEvent = {
       </div>
     </div>
   </section>
+
+  <script is:inline define:vars={{ CUPOM_CODIGO: "MENTORIADANI", PRECO_CHEIO: 597, PRECO_COM_CUPOM: 197 }}>
+    (function () {
+      var input = document.getElementById("pe-cupom-input");
+      var btn = document.getElementById("pe-cupom-btn");
+      var msg = document.getElementById("pe-cupom-msg");
+      var valueEl = document.getElementById("pe-price-value");
+      var priceEl = document.getElementById("pe-price-now");
+      if (!input || !btn || !msg || !valueEl || !priceEl) return;
+
+      var aplicado = false;
+
+      function aplicarCupom() {
+        if (aplicado) return;
+        var codigo = (input.value || "").trim().toUpperCase();
+        if (codigo === CUPOM_CODIGO) {
+          aplicado = true;
+          priceEl.innerHTML =
+            '<span class="pe-price-strike">R$' + PRECO_CHEIO + ',00</span> ' +
+            '<span class="pe-price-currency">R$</span>' + PRECO_COM_CUPOM + '<span class="pe-price-cents">,00</span>';
+          msg.textContent = "Cupom " + CUPOM_CODIGO + " aplicado — desconto de R$" + (PRECO_CHEIO - PRECO_COM_CUPOM) + ",00!";
+          msg.className = "pe-coupon-msg pe-coupon-msg--ok";
+          input.disabled = true;
+          btn.disabled = true;
+        } else {
+          msg.textContent = "Cupom inválido.";
+          msg.className = "pe-coupon-msg pe-coupon-msg--erro";
+        }
+      }
+
+      btn.addEventListener("click", aplicarCupom);
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); aplicarCupom(); }
+      });
+    })();
+  </script>
 
   <!-- ── FAQ ── -->
   <section class="section section--cream">
@@ -466,6 +512,16 @@ const schemaEvent = {
   .pe-field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
 
   .pe-price-card--lg { max-width: 480px; margin: 0 auto; }
+
+  /* CUPOM */
+  .pe-coupon { text-align: left; margin: 20px 0 0; padding-top: 20px; border-top: 1px dashed var(--border, #e5e0d5); }
+  .pe-coupon label { display: block; font-size: 13px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
+  .pe-coupon-row { display: flex; gap: 8px; }
+  .pe-coupon-row .input { flex: 1; }
+  .pe-coupon-msg { font-size: 13px; font-weight: 700; margin: 8px 0 0; min-height: 1em; }
+  .pe-coupon-msg--ok { color: #1a7f37; }
+  .pe-coupon-msg--erro { color: #c62828; }
+  .pe-price-strike { font-size: 0.35em; font-weight: 700; color: var(--text-soft); text-decoration: line-through; vertical-align: middle; }
 
   /* STATS */
   .pe-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
