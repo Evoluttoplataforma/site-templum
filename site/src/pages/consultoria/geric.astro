@@ -3,41 +3,44 @@ import Base from "../../layouts/Base.astro";
 import PageHero from "../../components/PageHero.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 
-// NOTA: GERIC não tem página própria no site atual — copy baseada no contexto
-// "Construa com o dinheiro da Caixa / Geric da Caixa" da página PBQP-H. Validar.
 const motivos = [
-  { icon: "solar:wad-of-money-bold", t: "Construa com o dinheiro da Caixa", d: "Com a homologação, sua construtora fica apta a participar de programas habitacionais e acessar financiamentos que só aceitam empresas qualificadas." },
-  { icon: "solar:case-round-bold", t: "Mais contratos e credibilidade", d: "A habilitação no GERIC abre portas para novos contratos e fortalece a reputação da sua empresa no mercado da construção." },
-  { icon: "solar:rocket-2-bold", t: "Crescimento acelerado", d: "Acelere o crescimento da sua construtora com a força dos recursos da Caixa Federal por trás dos seus projetos." },
+  { icon: "solar:wad-of-money-bold", t: "Capacidade de contratação real", d: "O GERIC mede a confiança que a Caixa deposita na sua empresa com base no faturamento — não depende só de patrimônio ou de garantia adicional." },
+  { icon: "solar:case-round-bold", t: "Menos obra parada esperando venda", d: "Com o GERIC e o PBQP-H em dia, sua construtora acessa capital de giro pra próxima obra sem depender só do recurso da atual." },
+  { icon: "solar:document-add-bold", t: "Abre porta pra licitação também", d: "O PBQP-H — pré-requisito do GERIC — costuma ser exigido em editais públicos de infraestrutura, não só em financiamento privado." },
+];
+const matriz = [
+  { t: "Evolução de obra", d: "Quanto já foi investido e construído de fato — o que a Caixa consegue medir e comprovar." },
+  { t: "Vendas financiadas", d: "O valor que entrou via financiamento direto e caiu na conta gerida pelo banco durante a obra." },
+  { t: "PJ (linha de crédito)", d: "A linha de crédito pessoa jurídica, multiplicada por um fator de até dez vezes — porque mede sua capacidade de pagar o juro da obra, não o crédito em si." },
 ];
 const passos = [
-  { t: "Diagnóstico", d: "Avaliamos o cenário da sua construtora e o que falta para a homologação no GERIC." },
-  { t: "PBQP-H", d: "Estruturamos a certificação PBQP-H, pré-requisito para a qualificação junto à Caixa." },
-  { t: "Documentação", d: "Organizamos a documentação técnica, jurídica e financeira exigida no processo." },
-  { t: "Submissão e acompanhamento", d: "Conduzimos a submissão ao GERIC e acompanhamos até a sua empresa ser homologada." },
+  { t: "Diagnóstico", d: "Avaliamos o faturamento dos últimos três anos fiscais e estimamos o teto de GERIC realista pra sua empresa." },
+  { t: "PBQP-H em paralelo", d: "Conduzimos a certificação PBQP-H, pré-requisito da Caixa, enquanto o GERIC avança — pra chegar com os dois prontos." },
+  { t: "Assessoria fiscal e contábil", d: "Organizamos a documentação e, se necessário, alinhamos com seu contador notas explicativas pra margens fora do padrão do setor." },
+  { t: "Negociação direta com a Caixa", d: "Acompanhamos o trâmite junto à agência e à superintendência até a aprovação — sem promessa de resultado que não podemos garantir." },
 ];
 const requisitos = [
-  "Certificação PBQP-H no nível adequado",
-  "Regularidade fiscal, jurídica e trabalhista",
-  "Comprovação de capacidade técnica e de obras",
-  "Documentação econômico-financeira organizada",
-  "Sistema de gestão da qualidade implantado",
+  "Faturamento anual dentro da referência que a Caixa considera pra análise de crédito",
+  "CNAE compatível: engenharia, arquitetura, construção ou incorporação",
+  "Regularidade fiscal e contábil, com declarações em dia",
+  "PBQP-H no nível adequado (pré-requisito da Caixa)",
+  "Relacionamento bancário ativo com a Caixa — conta PF ou PJ já ajuda no trâmite",
 ];
 ---
 
 <Base
   title="GERIC Caixa — Homologação de construtoras para financiamento | Templum"
-  description="Homologue sua construtora no GERIC da Caixa Econômica Federal e acesse financiamentos e programas habitacionais. A Templum prepara sua empresa para a qualificação, do PBQP-H à submissão."
+  description="Entenda como a Caixa calcula o GERIC da sua construtora, quanto de crédito você pode acessar e como a Templum conduz o processo do diagnóstico à aprovação — sem promessa irreal."
 >
   <PageHero
     tag="GERIC · Caixa Econômica"
-    sub="A homologação no GERIC da Caixa abre acesso a financiamentos e programas habitacionais que só aceitam construtoras qualificadas. A Templum prepara a sua empresa para conquistar essa habilitação — do PBQP-H à submissão."
+    sub="O GERIC é o limite de crédito que a Caixa dá pra sua construtora com base no histórico fiscal e contábil — não é dinheiro parado, é capacidade de contratar financiamento pra suas obras. A Templum analisa sua empresa, organiza a documentação e conduz o trâmite direto com a Caixa."
     image="/assets/img/hero/templum-consultoria-construcao.webp"
     badge="GERIC · Caixa"
     icon="solar:buildings-3-bold"
-    chips={["Acesso a recursos da Caixa", "Programas habitacionais", "+30 anos de método"]}
+    chips={["Baseado no seu faturamento", "Mais rápido que o PBQP-H", "+30 anos de método"]}
   >
-    <Fragment slot="title">Homologue sua construtora no GERIC e construa com o <em class="accent">dinheiro da Caixa</em></Fragment>
+    <Fragment slot="title">Descubra quanto sua construtora pode captar no <em class="accent">GERIC da Caixa</em></Fragment>
     <Fragment slot="cta">
       <a href="/form/" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       <a href="/consultoria/pbqp-h/" class="btn btn--onDark btn--lg">Ver PBQP-H</a>
@@ -48,8 +51,28 @@ const requisitos = [
   <section class="section section--cream">
     <div class="container md gr-intro">
       <span class="tag-pill">O que é o GERIC</span>
-      <h2>A porta de entrada para os <em class="accent">recursos da Caixa</em></h2>
-      <p>O GERIC é a área da Caixa Econômica Federal responsável por avaliar e homologar as construtoras aptas a operar com financiamentos e recursos do banco. Sem essa habilitação, a sua empresa fica de fora dos grandes programas habitacionais — com ela, você ganha acesso ao crédito que move a construção no Brasil.</p>
+      <h2>Um limite de crédito que mede <em class="accent">confiança</em>, não dinheiro em caixa</h2>
+      <p>O GERIC é calculado pela Caixa com base na média ponderada do faturamento dos últimos três anos fiscais — o ano mais recente pesa mais que os dois anteriores somados. Ele define até quanto a Caixa confia na sua empresa pra contratar um empreendimento. Ter o limite aprovado é o primeiro passo; quanto do crédito é efetivamente liberado pra obra depende de outros fatores, que explicamos abaixo.</p>
+    </div>
+  </section>
+
+  <!-- MATRIZ DE CONJUGAÇÃO -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag-pill">Como o crédito é liberado</span>
+        <h2>A matriz de conjugação: as <em class="accent">três variáveis</em> que decidem o valor</h2>
+        <p>Quando o empreendimento é contratado, a Caixa assume a gestão do custo da obra. A partir daí, o dinheiro é liberado aos poucos, seguindo três variáveis conhecidas no mercado como matriz de conjugação.</p>
+      </div>
+      <div class="gr-grid">
+        {matriz.map((m, i) => (
+          <div class="eco-card">
+            <span class="gr-ico">{i + 1}</span>
+            <h3>{m.t}</h3>
+            <p>{m.d}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -77,8 +100,8 @@ const requisitos = [
     <div class="container xl">
       <div class="section-header">
         <span class="tag-pill">Como a Templum ajuda</span>
-        <h2>Do PBQP-H à <em class="accent">homologação</em></h2>
-        <p>Conduzimos cada etapa para a sua construtora ser aprovada no GERIC com segurança.</p>
+        <h2>Diagnóstico sério, sem <em class="accent">promessa irreal</em></h2>
+        <p>Conduzimos cada etapa com base no que o seu faturamento comprova — não prometemos aprovação que não podemos garantir.</p>
       </div>
       <div class="step-grid">
         {passos.map((p, i) => (
@@ -103,6 +126,15 @@ const requisitos = [
     </div>
   </section>
 
+  <!-- ALERTA LOCAÇÃO DE GERIC -->
+  <section class="section section--cream">
+    <div class="container md gr-intro">
+      <span class="tag-pill">Um alerta antes de contratar</span>
+      <h2>Cuidado com quem oferece <em class="accent">"locação de GERIC"</em></h2>
+      <p>Existe no mercado a prática de "alugar" a capacidade de GERIC de outra empresa pra fechar um empreendimento — um atalho que pode custar entre 6% e 10% do valor da obra e compromete a integridade da sua relação com o banco. A Templum trabalha só pelo caminho da qualificação real da sua empresa: análise técnica do seu próprio histórico fiscal e contábil, sem interferência manual no sistema da Caixa.</p>
+    </div>
+  </section>
+
   <ClientLogos dark={false} titulo="Construtoras que crescem com a Templum" />
 
   <!-- CTA -->
@@ -123,7 +155,7 @@ const requisitos = [
 
   .gr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
   @media (max-width: 880px) { .gr-grid { grid-template-columns: 1fr; } }
-  .gr-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+  .gr-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
 
   .gr-req { max-width: 760px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 32px; }
   .gr-req .check-item { color: var(--cream); }
