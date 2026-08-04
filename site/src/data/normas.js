@@ -102,6 +102,15 @@ export const normas = [
     href: "/consultoria/sassmaq/",
   },
   {
+    slug: "geric",
+    nome: "GERIC",
+    categoria: "Crédito Caixa Econômica",
+    tagline: "O crédito que destrava sua próxima obra",
+    color: "var(--norm-geric)",
+    icon: "solar:wad-of-money-bold",
+    href: "/consultoria/geric/",
+  },
+  {
     slug: "lgpd",
     nome: "LGPD",
     categoria: "Proteção de Dados",

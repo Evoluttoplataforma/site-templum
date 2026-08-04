@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
-import PageHero from "../../components/PageHero.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
 
 const motivos = [
   { icon: "solar:wad-of-money-bold", t: "Capacidade de contratação real", d: "O GERIC mede a confiança que a Caixa deposita na sua empresa com base no faturamento — não depende só de patrimônio ou de garantia adicional." },
@@ -32,20 +32,33 @@ const requisitos = [
   title="GERIC Caixa — Homologação de construtoras para financiamento | Templum"
   description="Entenda como a Caixa calcula o GERIC da sua construtora, quanto de crédito você pode acessar e como a Templum conduz o processo do diagnóstico à aprovação — sem promessa irreal."
 >
-  <PageHero
-    tag="GERIC · Caixa Econômica"
-    sub="O GERIC é o limite de crédito que a Caixa dá pra sua construtora com base no histórico fiscal e contábil — não é dinheiro parado, é capacidade de contratar financiamento pra suas obras. A Templum analisa sua empresa, organiza a documentação e conduz o trâmite direto com a Caixa."
-    image="/assets/img/hero/templum-consultoria-construcao.webp"
-    badge="GERIC · Caixa"
-    icon="solar:buildings-3-bold"
-    chips={["Baseado no seu faturamento", "Mais rápido que o PBQP-H", "+30 anos de método"]}
-  >
-    <Fragment slot="title">Descubra quanto sua construtora pode captar no <em class="accent">GERIC da Caixa</em></Fragment>
-    <Fragment slot="cta">
-      <a href="/form/" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="/consultoria/pbqp-h/" class="btn btn--onDark btn--lg">Ver PBQP-H</a>
-    </Fragment>
-  </PageHero>
+  <!-- HERO (escuro, com formulário — GERIC não tem página LP separada) -->
+  <section class="gr-hero" id="form">
+    <div class="gr-hero-bg" aria-hidden="true"></div>
+    <div class="container xl gr-hero-grid">
+      <div class="gr-hero-text">
+        <span class="tag-pill tag-pill--glow">GERIC · Caixa Econômica</span>
+        <h1 class="gr-title">Descubra quanto sua construtora pode captar no <span class="gr-hl">GERIC da Caixa</span></h1>
+        <p class="gr-sub">O GERIC é o limite de crédito que a Caixa dá pra sua construtora com base no histórico fiscal e contábil — não é dinheiro parado, é capacidade de contratar financiamento pra suas obras. A Templum analisa sua empresa, organiza a documentação e conduz o trâmite direto com a Caixa.</p>
+        <div class="gr-chips">
+          {["Baseado no seu faturamento", "Mais rápido que o PBQP-H", "+30 anos de método"].map((ch) => (
+            <span class="gr-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>
+          ))}
+        </div>
+        <a href="/consultoria/pbqp-h/" class="gr-ver-pbqph">Ver PBQP-H <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+      <div class="gr-hero-form">
+        <LeadForm
+          norma="GERIC"
+          titulo="Descubra seu limite de GERIC"
+          sub="Preencha o formulário e um especialista da Templum entra em contato."
+          cta="Quero meu diagnóstico"
+          faturamento={true}
+          labelEmpresa="Nome da construtora"
+        />
+      </div>
+    </div>
+  </section>
 
   <!-- O QUE É -->
   <section class="section section--cream">
@@ -142,12 +155,28 @@ const requisitos = [
     <div class="container md">
       <h2>Pronto para construir com o <em>apoio da Caixa</em>?</h2>
       <p>Fale com um especialista e descubra o caminho mais curto até a homologação no GERIC.</p>
-      <a href="/form/" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <a href="#form" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
 </Base>
 
 <style>
+  .gr-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .gr-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, rgba(255,89,37,0.30), transparent 60%), radial-gradient(560px 380px at 100% 100%, rgba(255,89,37,0.16), transparent 60%); }
+  .gr-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .gr-hero-text { max-width: 600px; }
+  .gr-hero .tag-pill { margin-bottom: 20px; }
+  .gr-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .gr-hl { color: color-mix(in srgb, var(--orange) 58%, #ffffff); }
+  .gr-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; line-height: 1.6; }
+  .gr-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .gr-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .gr-chip iconify-icon { color: color-mix(in srgb, var(--orange) 58%, #ffffff); font-size: 18px; }
+  .gr-hero-form { align-self: start; }
+  .gr-ver-pbqph { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .gr-ver-pbqph:hover { color: color-mix(in srgb, var(--orange) 58%, #ffffff); }
+  @media (max-width: 900px) { .gr-hero-grid { grid-template-columns: 1fr; } }
+
   .gr-intro { text-align: center; }
   .gr-intro .tag-pill { margin: 0 auto 16px; }
   .gr-intro h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.025em; }
