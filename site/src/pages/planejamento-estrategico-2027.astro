@@ -50,7 +50,7 @@ const comoFunciona = [
   {
     n: "2",
     t: "Mão na massa, ao vivo",
-    d: "Cerca de 3 horas construindo o planejamento estratégico da SUA empresa, dentro da plataforma Orbit, com Igor ao seu lado o tempo todo.",
+    d: "Cerca de 3 horas construindo o planejamento estratégico da SUA empresa, dentro do Templum OS, com Igor ao seu lado o tempo todo.",
   },
   {
     n: "3",
@@ -70,11 +70,11 @@ const faqs = [
   },
   {
     q: "Como vou acessar o evento?",
-    a: "Ao vivo pelo Zoom (com participação) ou acompanhando pelo YouTube. Depois da confirmação da compra, você recebe as instruções de acesso por e-mail.",
+    a: "Ao vivo, em sala fechada no Zoom — só pra quem garantiu a vaga. Depois da confirmação da compra, você recebe as instruções de acesso por e-mail.",
   },
   {
     q: "Preciso instalar algo ou ter conta em algum sistema?",
-    a: "Você vai usar a plataforma Orbit, da Templum, durante o workshop — o acesso é feito na hora, sem preparo prévio.",
+    a: "Você vai usar o Templum OS durante o workshop — o acesso é feito na hora, sem preparo prévio.",
   },
   {
     q: "Quanto tempo dura o evento?",
@@ -95,7 +95,7 @@ const schemaEvent = {
   endDate: "2026-09-10T18:00:00-03:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-  location: { "@type": "VirtualLocation", url: "https://www.youtube.com/@templumcertifica/live" },
+  location: { "@type": "VirtualLocation", url: "https://templum.com.br/planejamento-estrategico-2027" },
   organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
   performer: [
     { "@type": "Person", name: "Igor Furniel" },
@@ -162,7 +162,7 @@ const schemaEvent = {
               <iconify-icon icon="mdi:video-outline"></iconify-icon>
               <div>
                 <span class="pe-date-label">Formato</span>
-                <span class="pe-date-val">Zoom + YouTube</span>
+                <span class="pe-date-val">Zoom (sala fechada)</span>
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@ const schemaEvent = {
           <div class="pe-price-card" id="ingresso-hero">
             <span class="badge badge--orange">Vagas limitadas</span>
             <div class="pe-price-now"><span class="pe-price-currency">R$</span>597<span class="pe-price-cents">,00</span></div>
-            <div class="pe-price-note">à vista · vagas limitadas</div>
+            <div class="pe-price-note">à vista ou em até 5x no cartão · vagas limitadas</div>
             <a href="#ingresso" class="btn btn--primary btn--block btn--lg">
               Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
             </a>
@@ -242,7 +242,7 @@ const schemaEvent = {
       <div class="section-header">
         <span class="tag-pill tag-pill--glow">Mão na massa, ao vivo</span>
         <h2>O que você sai <em class="accent">construindo</em> na sua empresa</h2>
-        <p>Tudo dentro da plataforma Orbit, passo a passo, com Igor conduzindo ao vivo.</p>
+        <p>Tudo dentro do Templum OS, passo a passo, com Igor conduzindo ao vivo.</p>
       </div>
       <div class="pe-construir-grid">
         {construir.map((c) => (
@@ -309,7 +309,7 @@ const schemaEvent = {
         <div class="pe-price-now" id="pe-price-now">
           <span class="pe-price-currency">R$</span><span id="pe-price-value">597</span><span class="pe-price-cents">,00</span>
         </div>
-        <div class="pe-price-note">à vista</div>
+        <div class="pe-price-note">à vista ou em até 5x no cartão</div>
 
         <div class="pe-coupon">
           <label for="pe-cupom-input">Tem um cupom de desconto?</label>
@@ -323,8 +323,8 @@ const schemaEvent = {
         <ul class="check-list pe-price-list">
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel (~3h)</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Construção do planejamento estratégico da sua empresa, na prática</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso à plataforma Orbit durante o evento</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Participação pelo Zoom + transmissão no YouTube</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso ao Templum OS durante o evento</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Sala fechada no Zoom — só pra quem garantiu a vaga</li>
         </ul>
         <form class="pe-form" novalidate data-trk-event="planejamento-estrategico-2027" data-obrigado={CHECKOUT}>
           <div class="pe-field">
@@ -353,7 +353,7 @@ const schemaEvent = {
     </div>
   </section>
 
-  <script is:inline define:vars={{ CUPOM_CODIGO: "MENTORIADANI", PRECO_CHEIO: 597, PRECO_COM_CUPOM: 197 }}>
+  <script is:inline define:vars={{ CUPONS_VALIDOS: ["MENTORIADANI", "PE2027"], PRECO_CHEIO: 597, PRECO_COM_CUPOM: 197 }}>
     (function () {
       var input = document.getElementById("pe-cupom-input");
       var btn = document.getElementById("pe-cupom-btn");
@@ -367,12 +367,12 @@ const schemaEvent = {
       function aplicarCupom() {
         if (aplicado) return;
         var codigo = (input.value || "").trim().toUpperCase();
-        if (codigo === CUPOM_CODIGO) {
+        if (CUPONS_VALIDOS.indexOf(codigo) !== -1) {
           aplicado = true;
           priceEl.innerHTML =
             '<span class="pe-price-strike">R$' + PRECO_CHEIO + ',00</span> ' +
             '<span class="pe-price-currency">R$</span>' + PRECO_COM_CUPOM + '<span class="pe-price-cents">,00</span>';
-          msg.textContent = "Cupom " + CUPOM_CODIGO + " aplicado — desconto de R$" + (PRECO_CHEIO - PRECO_COM_CUPOM) + ",00!";
+          msg.textContent = "Cupom " + codigo + " aplicado — desconto de R$" + (PRECO_CHEIO - PRECO_COM_CUPOM) + ",00!";
           msg.className = "pe-coupon-msg pe-coupon-msg--ok";
           input.disabled = true;
           btn.disabled = true;
