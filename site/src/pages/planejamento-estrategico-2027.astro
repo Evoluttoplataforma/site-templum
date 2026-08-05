@@ -179,7 +179,7 @@ const schemaEvent = {
         <div class="pe-price-col">
           <div class="pe-price-card" id="ingresso-hero">
             <span class="badge badge--orange">Vagas limitadas</span>
-            <div class="pe-price-now"><span class="pe-price-currency">R$</span>597<span class="pe-price-cents">,00</span></div>
+            <div class="pe-price-now" id="pe-price-now-hero"><span class="pe-price-currency">R$</span>597<span class="pe-price-cents">,00</span></div>
             <div class="pe-price-note">à vista ou em até 5x no cartão · vagas limitadas</div>
             <a href="#ingresso" class="btn btn--primary btn--block btn--lg">
               Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
@@ -360,6 +360,7 @@ const schemaEvent = {
       var msg = document.getElementById("pe-cupom-msg");
       var valueEl = document.getElementById("pe-price-value");
       var priceEl = document.getElementById("pe-price-now");
+      var priceHeroEl = document.getElementById("pe-price-now-hero");
       if (!input || !btn || !msg || !valueEl || !priceEl) return;
 
       var aplicado = false;
@@ -369,9 +370,11 @@ const schemaEvent = {
         var codigo = (input.value || "").trim().toUpperCase();
         if (CUPONS_VALIDOS.indexOf(codigo) !== -1) {
           aplicado = true;
-          priceEl.innerHTML =
+          var precoComDesconto =
             '<span class="pe-price-strike">R$' + PRECO_CHEIO + ',00</span> ' +
             '<span class="pe-price-currency">R$</span>' + PRECO_COM_CUPOM + '<span class="pe-price-cents">,00</span>';
+          priceEl.innerHTML = precoComDesconto;
+          if (priceHeroEl) priceHeroEl.innerHTML = precoComDesconto;
           msg.textContent = "Cupom " + codigo + " aplicado — desconto de R$" + (PRECO_CHEIO - PRECO_COM_CUPOM) + ",00!";
           msg.className = "pe-coupon-msg pe-coupon-msg--ok";
           input.disabled = true;
