@@ -1,0 +1,593 @@
+---
+// Página interna — noindex, sem layout principal. Relatório do funil inbound (CRM Orbit).
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Relatório Inbound · Templum</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
+  <style is:global>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @font-face { font-family: Montserrat; src: url(/fonts/montserrat-500.woff2) format('woff2'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: Montserrat; src: url(/fonts/montserrat-800.woff2) format('woff2'); font-weight: 800; font-display: swap; }
+
+    :root {
+      --orange: #FF5925;
+      --navy:   #222831;
+      --bg:     #f4f6fa;
+      --surface: #ffffff;
+      --surface2: #f9fafb;
+      --border: #e5e9f0;
+      --text:   #222831;
+      --text-mid: #6b7280;
+      --text-dim: #9ca3af;
+      --green: #059669;
+      --red: #dc2626;
+      --blue: #1a56db;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: Montserrat, system-ui, sans-serif;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ── LOGIN (idêntico ao /leads) ── */
+    #login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: var(--bg); }
+    .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px 36px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .login-logo { font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
+    .login-logo span { color: var(--orange); }
+    .login-box h1 { font-size: 16px; font-weight: 800; color: var(--navy); }
+    .login-box p { font-size: 13px; color: var(--text-mid); }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 12px; font-weight: 800; color: var(--text-mid); text-transform: uppercase; letter-spacing: 1px; }
+    .field input { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: inherit; color: var(--navy); outline: none; transition: border-color .2s; }
+    .field input:focus { border-color: var(--orange); background: #fff; }
+    .login-err { font-size: 13px; color: #dc2626; display: none; }
+    .btn-login { background: var(--orange); color: #fff; font-family: inherit; font-weight: 800; font-size: 15px; border: none; border-radius: 10px; padding: 13px; cursor: pointer; transition: opacity .2s; }
+    .btn-login:hover { opacity: 0.88; }
+
+    /* ── APP ── */
+    #app { display: none; flex-direction: column; min-height: 100vh; }
+
+    .app-header { background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 clamp(16px, 3vw, 32px); display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 10; }
+    .app-logo { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .app-logo span { color: var(--orange); }
+    .app-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .btn-logout { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.6); cursor: pointer; font-family: inherit; transition: color .2s, background .2s; }
+    .btn-logout:hover { color: #fff; background: rgba(255,255,255,0.14); }
+
+    /* Filters */
+    .filters { padding: 12px clamp(16px, 3vw, 32px); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .filters select, .filters input { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; color: var(--navy); outline: none; transition: border-color .2s; }
+    .filters select:focus, .filters input:focus { border-color: var(--orange); }
+    .filters select { min-width: 170px; }
+    .filter-label { font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+    .btn-refresh { background: rgba(255,89,37,0.08); border: 1.5px solid rgba(255,89,37,0.2); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 800; color: var(--orange); cursor: pointer; font-family: inherit; transition: background .2s; white-space: nowrap; margin-left: auto; }
+    .btn-refresh:hover { background: rgba(255,89,37,0.15); }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; padding: 0 clamp(16px, 3vw, 32px); background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab-btn { font-family: inherit; font-size: 13.5px; font-weight: 800; color: var(--text-mid); background: none; border: none; border-bottom: 3px solid transparent; padding: 14px 16px 12px; cursor: pointer; white-space: nowrap; }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+    .content-wrap { flex: 1; padding: 24px clamp(16px, 3vw, 32px) 48px; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+    /* KPI strip */
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 8px rgba(0,0,0,0.05); }
+    .kpi-label { font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .kpi-value { font-size: 26px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
+    .kpi-value.green { color: var(--green); }
+    .kpi-value.red { color: var(--red); }
+
+    /* Views */
+    .view { display: none; }
+    .view.active { display: block; }
+    .view-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .view-sub { font-size: 13px; color: var(--text-mid); margin-bottom: 20px; }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 8px rgba(0,0,0,0.05); }
+    .panel-title { font-size: 13px; font-weight: 800; color: var(--navy); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 18px; }
+
+    .bar-row { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .bar-row-label { font-size: 13px; font-weight: 700; color: var(--navy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { background: var(--surface2); border-radius: 8px; height: 22px; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange), #ffa07a); border-radius: 8px; transition: width .3s; min-width: 3px; }
+    .bar-fill.won { background: linear-gradient(90deg, var(--green), #6ee7b7); }
+    .bar-fill.lost { background: linear-gradient(90deg, var(--red), #fca5a5); }
+    .bar-value { font-size: 13px; font-weight: 800; color: var(--navy); text-align: right; white-space: nowrap; }
+    .bar-sub { font-size: 11px; color: var(--text-dim); text-align: right; }
+
+    .conv-drop { font-size: 11px; color: var(--text-dim); margin-left: 8px; }
+
+    .month-chart { display: flex; align-items: flex-end; gap: 10px; height: 220px; padding-top: 20px; overflow-x: auto; }
+    .month-col { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 64px; flex-shrink: 0; height: 100%; justify-content: flex-end; }
+    .month-bars { display: flex; align-items: flex-end; gap: 3px; height: 170px; }
+    .month-bar { width: 14px; border-radius: 3px 3px 0 0; min-height: 2px; }
+    .month-bar.new { background: var(--blue); }
+    .month-bar.won { background: var(--green); }
+    .month-bar.lost { background: var(--red); }
+    .month-label { font-size: 10.5px; color: var(--text-mid); font-weight: 700; white-space: nowrap; }
+    .legend { display: flex; gap: 18px; margin-bottom: 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-mid); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    .state { text-align: center; padding: 64px 24px; color: var(--text-mid); font-size: 14px; }
+    .state strong { display: block; font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid rgba(255,89,37,0.15); border-top-color: var(--orange); border-radius: 50%; animation: spin .7s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">Templum<span>!</span></div>
+    <div>
+      <h1>Relatório Inbound</h1>
+      <p style="margin-top:4px">Acesso restrito à equipe interna.</p>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="pwd" placeholder="Digite a senha" autocomplete="current-password" />
+    </div>
+    <p class="login-err" id="login-err">Senha incorreta.</p>
+    <button class="btn-login" id="btn-login">Entrar</button>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header class="app-header">
+    <div class="app-logo">Templum<span>!</span> <span style="font-size:13px;font-weight:500;color:var(--text-dim)">/ Relatório Inbound</span></div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="app-meta" id="meta-total"></span>
+      <button class="btn-logout" id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <span class="filter-label">Pipeline</span>
+    <select id="filter-pipeline">
+      <option value="">Todos</option>
+      <option value="B2B">B2B</option>
+      <option value="CANAL">Canal</option>
+    </select>
+    <span class="filter-label">Responsável</span>
+    <select id="filter-resp"><option value="">Todos</option></select>
+    <span class="filter-label">De</span>
+    <input type="date" id="filter-de" />
+    <span class="filter-label">Até</span>
+    <input type="date" id="filter-ate" />
+    <button class="btn-refresh" id="btn-refresh">↻ Atualizar</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-view="desempenho">Desempenho</button>
+    <button class="tab-btn" data-view="conversao">Conversão</button>
+    <button class="tab-btn" data-view="duracao">Duração</button>
+    <button class="tab-btn" data-view="progresso">Progresso</button>
+  </div>
+
+  <div class="content-wrap">
+    <div id="global-state" class="state"><div class="spinner"></div><br>Carregando relatório…</div>
+
+    <div id="views" style="display:none">
+      <div class="kpis" id="kpis"></div>
+
+      <div class="view active" data-view="desempenho">
+        <div class="view-title">Desempenho</div>
+        <div class="view-sub">Quantos leads estão parados em cada etapa agora (funil aberto).</div>
+        <div class="panel" id="panel-desempenho"></div>
+      </div>
+
+      <div class="view" data-view="conversao">
+        <div class="view-title">Conversão</div>
+        <div class="view-sub">Quantos leads já alcançaram cada etapa em algum momento (funil histórico) e a taxa de vitória.</div>
+        <div class="panel" id="panel-conversao"></div>
+      </div>
+
+      <div class="view" data-view="duracao">
+        <div class="view-title">Duração</div>
+        <div class="view-sub">Tempo médio (em dias) que um lead passa em cada etapa antes de avançar.</div>
+        <div class="panel" id="panel-duracao"></div>
+      </div>
+
+      <div class="view" data-view="progresso">
+        <div class="view-title">Progresso</div>
+        <div class="view-sub">Evolução mensal de leads novos, ganhos e perdidos.</div>
+        <div class="panel" id="panel-progresso"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var API = "/api/crm-report";
+  var SESSION_KEY = "tpl_report_auth";
+  var SESSION_PWD = "tpl_report_pwd";
+  function isAuth() { return sessionStorage.getItem(SESSION_KEY) === "1"; }
+  function setAuth(pwd) { sessionStorage.setItem(SESSION_KEY, "1"); sessionStorage.setItem(SESSION_PWD, pwd); }
+  function clearAuth() { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_PWD); }
+  function savedPwd() { return sessionStorage.getItem(SESSION_PWD) || ""; }
+
+  var loginEl = document.getElementById("login");
+  var appEl = document.getElementById("app");
+  var pwdEl = document.getElementById("pwd");
+  var errEl = document.getElementById("login-err");
+  var btnLogin = document.getElementById("btn-login");
+  var btnLogout = document.getElementById("btn-logout");
+  var btnRefresh = document.getElementById("btn-refresh");
+  var metaTotal = document.getElementById("meta-total");
+  var globalState = document.getElementById("global-state");
+  var viewsEl = document.getElementById("views");
+
+  var fPipeline = document.getElementById("filter-pipeline");
+  var fResp = document.getElementById("filter-resp");
+  var fDe = document.getElementById("filter-de");
+  var fAte = document.getElementById("filter-ate");
+
+  if (isAuth()) { showApp(); }
+
+  btnLogin.addEventListener("click", async function () {
+    btnLogin.disabled = true;
+    btnLogin.textContent = "Verificando…";
+    var pwd = pwdEl.value;
+    try {
+      var res = await fetch(API + "?token=" + encodeURIComponent(pwd));
+      if (res.ok) {
+        var body = await res.json();
+        errEl.style.display = "none";
+        setAuth(pwd);
+        onData(body);
+        showApp();
+      } else {
+        errEl.style.display = "block";
+      }
+    } catch (_) { errEl.textContent = "Erro de conexão."; errEl.style.display = "block"; }
+    btnLogin.disabled = false;
+    btnLogin.textContent = "Entrar";
+  });
+  pwdEl.addEventListener("keydown", function (e) { if (e.key === "Enter") btnLogin.click(); });
+
+  btnLogout.addEventListener("click", function () {
+    clearAuth();
+    loginEl.style.display = "flex";
+    appEl.style.display = "none";
+    pwdEl.value = "";
+  });
+
+  btnRefresh.addEventListener("click", function () { loadReport(); });
+
+  function showApp() {
+    loginEl.style.display = "none";
+    appEl.style.display = "flex";
+    if (!allLeads.length) loadReport();
+  }
+
+  // ── Data ──
+  var allLeads = [];
+  var allEvents = [];
+  var allStages = [];
+  var leadMeta = {}; // lead_id -> { code, responsible_name, created_at }
+  var CANONICAL_STAGES = []; // [{ordem, name, stage_type}] ordem 0..10
+
+  async function loadReport() {
+    globalState.innerHTML = '<div class="spinner"></div><br>Carregando relatório…';
+    globalState.style.display = "block";
+    viewsEl.style.display = "none";
+    try {
+      var res = await fetch(API + "?token=" + encodeURIComponent(savedPwd()));
+      if (res.status === 401) {
+        clearAuth();
+        appEl.style.display = "none";
+        loginEl.style.display = "flex";
+        errEl.textContent = "Sessão expirada. Entre novamente.";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var body = await res.json();
+      onData(body);
+    } catch (e) {
+      globalState.innerHTML = '<strong>Erro ao carregar</strong>' + e.message;
+    }
+  }
+
+  function pipelineCode(name) {
+    if (!name) return null;
+    if (/b2b/i.test(name)) return "B2B";
+    if (/canal/i.test(name)) return "CANAL";
+    return null;
+  }
+
+  function onData(body) {
+    allLeads = body.leads || [];
+    allEvents = body.events || [];
+    allStages = body.stages || [];
+
+    CANONICAL_STAGES = allStages
+      .filter(function (s) { return s.pipeline === "B2B" && s.name; })
+      .sort(function (a, b) { return a.ordem - b.ordem; });
+
+    leadMeta = {};
+    allLeads.forEach(function (l) {
+      leadMeta[l.lead_id] = {
+        code: pipelineCode(l.pipeline),
+        responsible_name: l.responsible_name || "",
+        created_at: l.created_at,
+      };
+    });
+
+    // Filtro de responsável
+    var resps = [...new Set(allLeads.map(function (l) { return l.responsible_name || ""; }).filter(Boolean))].sort();
+    fResp.innerHTML = '<option value="">Todos</option>';
+    resps.forEach(function (r) { fResp.innerHTML += '<option value="' + esc(r) + '">' + esc(r) + '</option>'; });
+
+    metaTotal.textContent = allLeads.length + " leads no total";
+    globalState.style.display = "none";
+    viewsEl.style.display = "block";
+    render();
+  }
+
+  [fPipeline, fResp, fDe, fAte].forEach(function (el) {
+    el.addEventListener("change", render);
+  });
+
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+      document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelector('.view[data-view="' + btn.getAttribute("data-view") + '"]').classList.add("active");
+    });
+  });
+
+  function filteredLeads() {
+    var code = fPipeline.value;
+    var resp = fResp.value;
+    var de = fDe.value ? new Date(fDe.value) : null;
+    var ate = fAte.value ? new Date(fAte.value + "T23:59:59") : null;
+    return allLeads.filter(function (l) {
+      if (code && pipelineCode(l.pipeline) !== code) return false;
+      if (resp && (l.responsible_name || "") !== resp) return false;
+      if (de && new Date(l.created_at) < de) return false;
+      if (ate && new Date(l.created_at) > ate) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    var leads = filteredLeads();
+    var leadIds = new Set(leads.map(function (l) { return l.lead_id; }));
+    var events = allEvents.filter(function (e) { return leadIds.has(e.lead_id); });
+
+    renderKpis(leads, events);
+    renderDesempenho(leads);
+    renderConversao(leads);
+    renderDuracao(leads, events);
+    renderProgresso(leads, events);
+  }
+
+  function renderKpis(leads, events) {
+    var won = leads.filter(function (l) { return l.status === "won"; });
+    var lost = leads.filter(function (l) { return l.status === "lost"; });
+    var open = leads.filter(function (l) { return l.status === "open"; });
+    var openValue = open.reduce(function (s, l) { return s + (Number(l.value) || 0); }, 0);
+    var winRate = (won.length + lost.length) > 0 ? (won.length / (won.length + lost.length)) * 100 : 0;
+
+    // ciclo médio (dias) dos ganhos: created_at → entered_at do evento de "Ganho" (ordem 9)
+    var cycles = [];
+    won.forEach(function (l) {
+      var wonEvents = events.filter(function (e) { return e.lead_id === l.lead_id && e.stage_order === 9; });
+      if (!wonEvents.length) return;
+      var last = wonEvents.sort(function (a, b) { return new Date(b.entered_at) - new Date(a.entered_at); })[0];
+      var days = (new Date(last.entered_at) - new Date(l.created_at)) / 86400000;
+      if (days >= 0) cycles.push(days);
+    });
+    var avgCycle = cycles.length ? cycles.reduce(function (a, b) { return a + b; }, 0) / cycles.length : null;
+
+    var html = "";
+    html += kpiCard("Leads (filtro)", leads.length, "");
+    html += kpiCard("Valor em aberto", "R$ " + Math.round(openValue).toLocaleString("pt-BR"), "");
+    html += kpiCard("Taxa de vitória", winRate.toFixed(1) + "%", winRate >= 50 ? "green" : (winRate > 0 ? "red" : ""));
+    html += kpiCard("Ciclo médio (ganhos)", avgCycle !== null ? Math.round(avgCycle) + " dias" : "—", "");
+    document.getElementById("kpis").innerHTML = html;
+  }
+
+  function kpiCard(label, value, cls) {
+    return '<div class="kpi-card"><div class="kpi-label">' + esc(label) + '</div><div class="kpi-value ' + cls + '">' + value + '</div></div>';
+  }
+
+  function stagesForFilter() {
+    var code = fPipeline.value;
+    if (code) {
+      return allStages.filter(function (s) { return s.pipeline === code && s.name; }).sort(function (a, b) { return a.ordem - b.ordem; });
+    }
+    return CANONICAL_STAGES;
+  }
+
+  // ── DESEMPENHO: leads abertos por etapa atual ──
+  function renderDesempenho(leads) {
+    var stages = stagesForFilter().filter(function (s) { return s.stage_type === "normal"; });
+    var open = leads.filter(function (l) { return l.status === "open"; });
+    var counts = {}, values = {};
+    open.forEach(function (l) {
+      var o = l.stage_order;
+      counts[o] = (counts[o] || 0) + 1;
+      values[o] = (values[o] || 0) + (Number(l.value) || 0);
+    });
+    var max = Math.max(1, Object.values(counts).reduce(function (a, b) { return Math.max(a, b); }, 0));
+
+    var html = "";
+    stages.forEach(function (s) {
+      var c = counts[s.ordem] || 0;
+      var v = values[s.ordem] || 0;
+      var pct = Math.round((c / max) * 100);
+      html += '<div class="bar-row">' +
+        '<div class="bar-row-label" title="' + esc(s.name) + '">' + esc(s.name) + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div><div class="bar-value">' + c + '</div><div class="bar-sub">R$ ' + Math.round(v).toLocaleString("pt-BR") + '</div></div>' +
+        '</div>';
+    });
+    document.getElementById("panel-desempenho").innerHTML = html || emptyMsg();
+  }
+
+  // ── CONVERSÃO: funil histórico (max_reached) + ganho/perdido ──
+  function renderConversao(leads) {
+    var stages = stagesForFilter().filter(function (s) { return s.stage_type === "normal"; });
+    var total = leads.length;
+    var funnel = stages.map(function (s) {
+      var c = leads.filter(function (l) { return (l.max_reached || 0) >= s.ordem; }).length;
+      return { name: s.name, ordem: s.ordem, count: c };
+    });
+    var won = leads.filter(function (l) { return l.status === "won"; }).length;
+    var lost = leads.filter(function (l) { return l.status === "lost"; }).length;
+    var max = Math.max(1, total);
+
+    var html = "";
+    funnel.forEach(function (f, i) {
+      var pct = Math.round((f.count / max) * 100);
+      var dropText = "";
+      if (i > 0 && funnel[i - 1].count > 0) {
+        var conv = (f.count / funnel[i - 1].count) * 100;
+        dropText = '<span class="conv-drop">' + conv.toFixed(0) + '% da etapa anterior</span>';
+      }
+      html += '<div class="bar-row">' +
+        '<div class="bar-row-label" title="' + esc(f.name) + '">' + esc(f.name) + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="bar-value">' + f.count + '</div>' +
+        '</div>' +
+        (dropText ? '<div style="text-align:right;margin:-8px 0 8px">' + dropText + '</div>' : "");
+    });
+
+    var wonPct = Math.round((won / max) * 100);
+    var lostPct = Math.round((lost / max) * 100);
+    var winRate = (won + lost) > 0 ? (won / (won + lost) * 100).toFixed(1) : "0.0";
+    html += '<div class="bar-row" style="margin-top:16px">' +
+      '<div class="bar-row-label">Ganho</div>' +
+      '<div class="bar-track"><div class="bar-fill won" style="width:' + wonPct + '%"></div></div>' +
+      '<div class="bar-value">' + won + '</div></div>';
+    html += '<div class="bar-row">' +
+      '<div class="bar-row-label">Perdido</div>' +
+      '<div class="bar-track"><div class="bar-fill lost" style="width:' + lostPct + '%"></div></div>' +
+      '<div class="bar-value">' + lost + '</div></div>';
+    html += '<div style="text-align:right;font-size:12px;font-weight:800;color:var(--text-mid);margin-top:4px">Taxa de vitória (ganho ÷ ganho+perdido): ' + winRate + '%</div>';
+
+    document.getElementById("panel-conversao").innerHTML = total ? html : emptyMsg();
+  }
+
+  // ── DURAÇÃO: tempo médio (dias) por etapa, via eventos ──
+  function renderDuracao(leads, events) {
+    var stages = stagesForFilter().filter(function (s) { return s.stage_type === "normal"; });
+    var byLead = {};
+    events.forEach(function (e) {
+      (byLead[e.lead_id] = byLead[e.lead_id] || []).push(e);
+    });
+    var buckets = {}; // ordem -> [durations em dias]
+    Object.keys(byLead).forEach(function (leadId) {
+      var evs = byLead[leadId].slice().sort(function (a, b) { return new Date(a.entered_at) - new Date(b.entered_at); });
+      for (var i = 0; i < evs.length - 1; i++) {
+        var days = (new Date(evs[i + 1].entered_at) - new Date(evs[i].entered_at)) / 86400000;
+        if (days < 0) continue;
+        var o = evs[i].stage_order;
+        (buckets[o] = buckets[o] || []).push(days);
+      }
+    });
+
+    var avg = {};
+    Object.keys(buckets).forEach(function (o) {
+      var arr = buckets[o];
+      avg[o] = arr.reduce(function (a, b) { return a + b; }, 0) / arr.length;
+    });
+    var max = Math.max(1, Object.values(avg).reduce(function (a, b) { return Math.max(a, b); }, 0));
+
+    var html = "";
+    var any = false;
+    stages.forEach(function (s) {
+      var d = avg[s.ordem];
+      if (d === undefined) return;
+      any = true;
+      var pct = Math.round((d / max) * 100);
+      html += '<div class="bar-row">' +
+        '<div class="bar-row-label" title="' + esc(s.name) + '">' + esc(s.name) + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="bar-value">' + d.toFixed(1) + 'd</div>' +
+        '</div>';
+    });
+    document.getElementById("panel-duracao").innerHTML = any ? html : emptyMsg("Sem histórico de eventos suficiente para calcular duração.");
+  }
+
+  // ── PROGRESSO: leads novos / ganhos / perdidos por mês ──
+  function renderProgresso(leads, events) {
+    var months = {}; // "YYYY-MM" -> { novo, won, lost }
+    function bucket(m) { return (months[m] = months[m] || { novo: 0, won: 0, lost: 0 }); }
+    function monthOf(dateStr) { var d = new Date(dateStr); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
+
+    leads.forEach(function (l) {
+      if (!l.created_at) return;
+      bucket(monthOf(l.created_at)).novo++;
+    });
+
+    var byLead = {};
+    events.forEach(function (e) { (byLead[e.lead_id] = byLead[e.lead_id] || []).push(e); });
+    leads.forEach(function (l) {
+      if (l.status !== "won" && l.status !== "lost") return;
+      var targetOrdem = l.status === "won" ? 9 : 10;
+      var evs = (byLead[l.lead_id] || []).filter(function (e) { return e.stage_order === targetOrdem; });
+      if (!evs.length) return;
+      var last = evs.sort(function (a, b) { return new Date(b.entered_at) - new Date(a.entered_at); })[0];
+      bucket(monthOf(last.entered_at))[l.status]++;
+    });
+
+    var monthKeys = Object.keys(months).sort();
+    if (!monthKeys.length) {
+      document.getElementById("panel-progresso").innerHTML = emptyMsg();
+      return;
+    }
+    var max = Math.max(1, monthKeys.reduce(function (m, k) { return Math.max(m, months[k].novo, months[k].won, months[k].lost); }, 0));
+
+    var html = '<div class="legend">' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Novos</div>' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Ganhos</div>' +
+      '<div class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Perdidos</div>' +
+      '</div><div class="month-chart">';
+    monthKeys.forEach(function (k) {
+      var m = months[k];
+      html += '<div class="month-col">' +
+        '<div class="month-bars">' +
+        '<div class="month-bar new" style="height:' + Math.round((m.novo / max) * 170) + 'px" title="' + m.novo + ' novos"></div>' +
+        '<div class="month-bar won" style="height:' + Math.round((m.won / max) * 170) + 'px" title="' + m.won + ' ganhos"></div>' +
+        '<div class="month-bar lost" style="height:' + Math.round((m.lost / max) * 170) + 'px" title="' + m.lost + ' perdidos"></div>' +
+        '</div>' +
+        '<div class="month-label">' + k + '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    document.getElementById("panel-progresso").innerHTML = html;
+  }
+
+  function emptyMsg(msg) {
+    return '<div class="state"><strong>Sem dados</strong>' + (msg || "Ajuste os filtros para ver resultados.") + '</div>';
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+})();
+</script>
+
+</body>
+</html>

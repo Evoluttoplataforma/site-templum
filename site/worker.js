@@ -3,6 +3,7 @@
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
+//   GET    /api/crm-report  → dados do funil inbound Orbit (orbit_crm_leads/events/stages), p/ /relatorio-inbound (senha protegida, reusa LEADS_PASSWORD)
 //   POST /api/asaas-webhook → recebe webhook de pagamento do Asaas (eventos pagos, ex.:
 //                             Planejamento Estratégico) e marca status_pagamento='pago' no
 //                             lead correspondente em site_leads (rodar supabase-site-leads-pagamento.sql antes)
@@ -51,6 +52,10 @@ export default {
       if (request.method === "GET") return handleLeadsRead(request, env);
       if (request.method === "DELETE") return handleLeadDelete(request, env);
       return json({ ok: false, error: "method_not_allowed" }, 405);
+    }
+    if (url.pathname === "/api/crm-report") {
+      if (request.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleCrmReport(request, env);
     }
     if (url.pathname === "/api/raffle") {
       if (request.method === "POST") return handleRaffleInsert(request, env);
@@ -883,6 +888,45 @@ async function handleLeadsRead(request, env) {
       status: 502,
       headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
+  }
+}
+
+// ---------------------- CRM Report (GET /api/crm-report) ----------------------
+// Devolve leads + eventos + etapas do funil inbound Orbit (tabelas orbit_crm_leads/
+// orbit_crm_events/orbit_crm_stages, RLS ligado — só service_role lê). O front-end
+// (/relatorio-inbound) recebe os dados crus e monta os 4 painéis (Desempenho,
+// Conversão, Duração, Progresso) no cliente, aplicando filtro de pipeline/
+// responsável/período sem precisar de outro round-trip ao servidor.
+async function handleCrmReport(request, env) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) {
+    return json({ ok: false, error: "unauthorized" }, 401);
+  }
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "no_supabase_service_key" }, 500);
+
+  const h = { apikey: sbKey, Authorization: "Bearer " + sbKey, Accept: "application/json" };
+
+  try {
+    const [leadsRes, eventsRes, stagesRes] = await Promise.all([
+      fetch(`${sbUrl}/rest/v1/orbit_crm_leads?select=lead_id,pipeline,seg,stage_order,stage_name,status,value,max_reached,responsible_name,created_at,stage_entered_at,lead_updated_at&order=created_at.desc&limit=5000`, { headers: h }),
+      fetch(`${sbUrl}/rest/v1/orbit_crm_events?select=lead_id,stage_order,entered_at,status,responsible_name,pipedrive_id&order=entered_at.asc&limit=10000`, { headers: h }),
+      fetch(`${sbUrl}/rest/v1/orbit_crm_stages?select=pipeline,ordem,name,stage_type,win_probability,color&pipeline=in.(B2B,CANAL)&order=pipeline.asc,ordem.asc`, { headers: h }),
+    ]);
+    if (!leadsRes.ok || !eventsRes.ok || !stagesRes.ok) {
+      return json({ ok: false, error: "supabase_error", leads: leadsRes.status, events: eventsRes.status, stages: stagesRes.status }, 502);
+    }
+    const [leads, events, stages] = await Promise.all([leadsRes.json(), eventsRes.json(), stagesRes.json()]);
+    return new Response(JSON.stringify({ ok: true, leads, events, stages }), {
+      status: 200,
+      headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store" },
+    });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed", detail: e.message }, 502);
   }
 }
 
