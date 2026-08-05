@@ -3,7 +3,7 @@
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
-//   GET    /api/crm-report  → dados do funil inbound Orbit (orbit_crm_leads/events/stages), p/ /relatorio-inbound (senha protegida, reusa LEADS_PASSWORD)
+//   GET    /api/crm-report  → leads do funil INBOUND real da Templum (tabela templum_inbound_leads), p/ /relatorio-inbound (senha protegida, reusa LEADS_PASSWORD)
 //   POST /api/asaas-webhook → recebe webhook de pagamento do Asaas (eventos pagos, ex.:
 //                             Planejamento Estratégico) e marca status_pagamento='pago' no
 //                             lead correspondente em site_leads (rodar supabase-site-leads-pagamento.sql antes)
@@ -892,11 +892,11 @@ async function handleLeadsRead(request, env) {
 }
 
 // ---------------------- CRM Report (GET /api/crm-report) ----------------------
-// Devolve leads + eventos + etapas do funil inbound Orbit (tabelas orbit_crm_leads/
-// orbit_crm_events/orbit_crm_stages, RLS ligado — só service_role lê). O front-end
-// (/relatorio-inbound) recebe os dados crus e monta os 4 painéis (Desempenho,
-// Conversão, Duração, Progresso) no cliente, aplicando filtro de pipeline/
-// responsável/período sem precisar de outro round-trip ao servidor.
+// Devolve os leads do funil INBOUND real da Templum Consultoria (tabela
+// templum_inbound_leads, espelhada do Orbit via templum-inbound-sync a cada hora;
+// RLS ligado — só service_role lê). O front-end (/relatorio-inbound) recebe os
+// dados crus e monta os 3 painéis (Desempenho, Conversão, Progresso) no cliente,
+// aplicando filtro de responsável/fonte/período sem precisar de outro round-trip.
 async function handleCrmReport(request, env) {
   const url = new URL(request.url);
   const token = url.searchParams.get("token") || "";
@@ -910,18 +910,23 @@ async function handleCrmReport(request, env) {
   if (!sbKey) return json({ ok: false, error: "no_supabase_service_key" }, 500);
 
   const h = { apikey: sbKey, Authorization: "Bearer " + sbKey, Accept: "application/json" };
+  const cols = "lead_id,stage_name,stage_order,status,value,responsible_name,source,utm_source,created_at,closed_at";
 
   try {
-    const [leadsRes, eventsRes, stagesRes] = await Promise.all([
-      fetch(`${sbUrl}/rest/v1/orbit_crm_leads?select=lead_id,pipeline,seg,stage_order,stage_name,status,value,max_reached,responsible_name,created_at,stage_entered_at,lead_updated_at&order=created_at.desc&limit=5000`, { headers: h }),
-      fetch(`${sbUrl}/rest/v1/orbit_crm_events?select=lead_id,stage_order,entered_at,status,responsible_name,pipedrive_id&order=entered_at.asc&limit=10000`, { headers: h }),
-      fetch(`${sbUrl}/rest/v1/orbit_crm_stages?select=pipeline,ordem,name,stage_type,win_probability,color&pipeline=in.(B2B,CANAL)&order=pipeline.asc,ordem.asc`, { headers: h }),
-    ]);
-    if (!leadsRes.ok || !eventsRes.ok || !stagesRes.ok) {
-      return json({ ok: false, error: "supabase_error", leads: leadsRes.status, events: eventsRes.status, stages: stagesRes.status }, 502);
+    const leads = [];
+    let from = 0;
+    const size = 1000;
+    for (;;) {
+      const res = await fetch(`${sbUrl}/rest/v1/templum_inbound_leads?select=${cols}&order=created_at.desc`, {
+        headers: { ...h, Range: `${from}-${from + size - 1}` },
+      });
+      if (!res.ok) return json({ ok: false, error: "supabase_error", status: res.status }, 502);
+      const batch = await res.json();
+      leads.push(...batch);
+      if (batch.length < size) break;
+      from += size;
     }
-    const [leads, events, stages] = await Promise.all([leadsRes.json(), eventsRes.json(), stagesRes.json()]);
-    return new Response(JSON.stringify({ ok: true, leads, events, stages }), {
+    return new Response(JSON.stringify({ ok: true, leads }), {
       status: 200,
       headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store" },
     });
