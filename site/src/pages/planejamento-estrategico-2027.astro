@@ -50,7 +50,7 @@ const comoFunciona = [
   {
     n: "2",
     t: "Mão na massa, ao vivo",
-    d: "Cerca de 3 horas construindo o planejamento estratégico da SUA empresa, dentro da plataforma Orbit, com Igor e Daniela ao seu lado o tempo todo.",
+    d: "Cerca de 3 horas construindo o planejamento estratégico da SUA empresa, dentro da plataforma Orbit, com Igor ao seu lado o tempo todo.",
   },
   {
     n: "3",
@@ -90,7 +90,7 @@ const schemaEvent = {
   "@context": "https://schema.org",
   "@type": "Event",
   name: "Planejamento Estratégico 2027 — Templum Consultoria",
-  description: "Workshop ao vivo e mão na massa de planejamento estratégico, com Igor Furniel e Daniela Albuquerque.",
+  description: "Workshop ao vivo e mão na massa de planejamento estratégico, com Igor Furniel.",
   startDate: "2026-09-10T15:00:00-03:00",
   endDate: "2026-09-10T18:00:00-03:00",
   eventStatus: "https://schema.org/EventScheduled",
@@ -99,7 +99,6 @@ const schemaEvent = {
   organizer: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
   performer: [
     { "@type": "Person", name: "Igor Furniel" },
-    { "@type": "Person", name: "Daniela Albuquerque" },
   ],
   offers: {
     "@type": "Offer",
@@ -114,7 +113,7 @@ const schemaEvent = {
 
 <LpBase
   title="Planejamento Estratégico 2027 — Workshop ao vivo com Igor Furniel | Templum"
-  description="Workshop mão na massa de planejamento estratégico, ao vivo, com Igor Furniel e Daniela Albuquerque. 10 de setembro, 15h. Valor de lançamento: R$197."
+  description="Workshop mão na massa de planejamento estratégico, ao vivo, com Igor Furniel. 10 de setembro, 15h. Valor de lançamento: R$197."
   schemas={[schemaEvent]}
   formAnchor="#ingresso"
   headerCta="Garantir minha vaga"
@@ -137,7 +136,7 @@ const schemaEvent = {
           </h1>
 
           <p class="pe-desc">
-            Workshop mão na massa e ao vivo com <strong>Igor Furniel</strong> e <strong>Daniela Albuquerque</strong>.
+            Workshop mão na massa e ao vivo com <strong>Igor Furniel</strong>.
             Você não sai daqui com teoria — sai com o planejamento estratégico da sua empresa pronto,
             e o sistema pra executar ele o ano inteiro.
           </p>
@@ -170,10 +169,9 @@ const schemaEvent = {
 
           <div class="pe-speakers-strip">
             <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="pe-speaker-photo" />
-            <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="pe-speaker-photo" />
             <div>
-              <div class="pe-speaker-name">Igor Furniel &amp; Daniela Albuquerque</div>
-              <div class="pe-speaker-role">Templum Consultoria</div>
+              <div class="pe-speaker-name">Igor Furniel</div>
+              <div class="pe-speaker-role">Sócio-fundador · Templum Consultoria</div>
             </div>
           </div>
         </div>
@@ -244,7 +242,7 @@ const schemaEvent = {
       <div class="section-header">
         <span class="tag-pill tag-pill--glow">Mão na massa, ao vivo</span>
         <h2>O que você sai <em class="accent">construindo</em> na sua empresa</h2>
-        <p>Tudo dentro da plataforma Orbit, passo a passo, com Igor e Daniela conduzindo ao vivo.</p>
+        <p>Tudo dentro da plataforma Orbit, passo a passo, com Igor conduzindo ao vivo.</p>
       </div>
       <div class="pe-construir-grid">
         {construir.map((c) => (
@@ -284,24 +282,14 @@ const schemaEvent = {
         <span class="tag-pill tag-pill--glow">Quem conduz</span>
         <h2>Aprenda com quem <em class="accent">vive planejamento estratégico</em></h2>
       </div>
-      <div class="pe-speakers-grid">
+      <div class="pe-speakers-grid pe-speakers-grid--single">
         <div class="pe-speaker-card reveal">
-          <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="pe-speaker-card-photo" />
+          <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" class="pe-speaker-card-photo pe-speaker-card-photo--lg" />
           <div class="pe-speaker-card-body">
             <h3>Igor Furniel</h3>
             <span class="pe-speaker-card-role">Sócio-fundador · Templum e Evoluto</span>
             <p>
               Empreendedor há mais de 24 anos, Igor já conduziu centenas de planejamentos estratégicos para empresas de todos os tamanhos — de pequenos negócios a franquias que faturam mais de R$300 milhões por ano. Fundador da Templum (certificações ISO) e da Evoluto (plataforma de gestão para consultores), é uma referência em processos e execução estratégica no Brasil.
-            </p>
-          </div>
-        </div>
-        <div class="pe-speaker-card reveal">
-          <img src="/assets/img/socios/dani.jpg" alt="Daniela Albuquerque" class="pe-speaker-card-photo" />
-          <div class="pe-speaker-card-body">
-            <h3>Daniela Albuquerque</h3>
-            <span class="pe-speaker-card-role">Sócia Diretora · Templum Consultoria</span>
-            <p>
-              Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela traz a visão de quem ajuda centenas de empresas, todos os dias, a tirar o planejamento do papel e transformá-lo em rotina real de gestão.
             </p>
           </div>
         </div>
@@ -333,7 +321,7 @@ const schemaEvent = {
         </div>
 
         <ul class="check-list pe-price-list">
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel e Daniela Albuquerque (~3h)</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel (~3h)</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Construção do planejamento estratégico da sua empresa, na prática</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso à plataforma Orbit durante o evento</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Participação pelo Zoom + transmissão no YouTube</li>
@@ -487,8 +475,7 @@ const schemaEvent = {
     padding: 14px 20px; border: 1px solid rgba(255,244,221,0.12);
     border-radius: 12px; background: rgba(255,255,255,0.04); width: fit-content;
   }
-  .pe-speaker-photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0; margin-right: -18px; }
-  .pe-speaker-photo:last-of-type { margin-right: 4px; }
+  .pe-speaker-photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); flex-shrink: 0; }
   .pe-speaker-name { font-size: 14px; font-weight: 800; color: var(--cream); }
   .pe-speaker-role { font-size: 12px; color: rgba(255,244,221,0.55); margin-top: 2px; }
 
@@ -538,6 +525,7 @@ const schemaEvent = {
 
   /* SPEAKERS GRID (cards grandes) */
   .pe-speakers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 960px; margin: 0 auto; }
+  .pe-speakers-grid--single { grid-template-columns: 1fr; max-width: 560px; }
   .pe-speaker-card {
     display: flex; flex-direction: column; align-items: center; text-align: center;
     background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.10);
@@ -547,6 +535,7 @@ const schemaEvent = {
     width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
     border: 3px solid rgba(255,89,37,0.4); margin-bottom: 20px;
   }
+  .pe-speaker-card-photo--lg { width: 180px; height: 180px; }
   .pe-speaker-card-body h3 { font-size: 22px; font-weight: 800; color: var(--cream); margin-bottom: 4px; }
   .pe-speaker-card-role {
     display: block; font-size: 12px; font-weight: 700; color: var(--orange);
