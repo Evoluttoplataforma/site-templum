@@ -386,6 +386,12 @@ const schemaEvent = {
       input.addEventListener("keydown", function (e) {
         if (e.key === "Enter") { e.preventDefault(); aplicarCupom(); }
       });
+
+      var cupomUrl = new URLSearchParams(window.location.search).get("cupom");
+      if (cupomUrl) {
+        input.value = cupomUrl;
+        aplicarCupom();
+      }
     })();
   </script>
 
