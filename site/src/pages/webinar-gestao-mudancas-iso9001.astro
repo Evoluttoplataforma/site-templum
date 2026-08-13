@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:transfer-horizontal-bold",
+    t: "6.3 × 8.5.6: duas mudanças, dois requisitos",
+    d: "A diferença entre planejar mudanças no sistema de gestão (6.3) e controlar mudanças na produção e na prestação de serviço (8.5.6) — e por que confundir os dois é caminho curto para não conformidade.",
+  },
+  {
+    icon: "solar:checklist-minimalistic-bold",
+    t: "As quatro perguntas antes de mudar",
+    d: "A norma manda considerar o propósito da mudança e suas consequências, a integridade do SGQ, a disponibilidade de recursos e a realocação de responsabilidades. Um checklist curto que evita a maior parte dos problemas.",
+  },
+  {
+    icon: "solar:danger-triangle-bold",
+    t: "As mudanças que derrubam o sistema",
+    d: "Troca de ERP, de máquina, de fornecedor crítico ou de responsável técnico, mudança de endereço, entrada de produto novo: o que precisa ser avaliado e documentado em cada um desses casos.",
+  },
+  {
+    icon: "mdi:hammer-wrench",
+    t: "Mão na massa: formulário de gestão de mudanças",
+    d: "Montamos ao vivo o registro de mudança — o que muda, por quê, impacto, riscos, ações e aprovação — amarrando o 6.3 com riscos (6.1), informação documentada (7.5) e competência (7.2).",
+  },
+];
+
+const sinais = [
+  "A empresa trocou de ERP, de máquina ou de fornecedor e nada disso foi registrado no SGQ.",
+  "Mudou o responsável por um processo e o procedimento continua com o nome antigo.",
+  "Ninguém avalia o impacto da mudança antes de executá-la.",
+  "Depois de cada mudança, documentos e treinamentos ficam meses desatualizados.",
+  "Você não tem nenhum registro de mudança para mostrar ao auditor.",
+  "A mudança \"urgente\" virou improviso permanente na operação.",
+];
+---
+
+<WebinarLp
+  slug="webinar-gestao-mudancas-iso9001"
+  metaTitle="Webinar Gratuito — Gestão de Mudanças (6.3 e 8.5.6) | ISO 9001:2026 | Templum"
+  metaDescription="Como planejar e controlar mudanças sem quebrar o sistema de gestão: requisitos 6.3 e 8.5.6 da ISO 9001:2026 na prática. Quarta, 26 de agosto às 16h, com Daniela Albuquerque."
+  eventName="Requisitos 6.3 e 8.5.6 — Gestão de Mudanças | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisitos 6.3 e 8.5.6"
+  h1Destaque="Gestão de Mudanças"
+  h1Resto="sob controle"
+  h1Sub="Mudar sem quebrar o sistema de gestão — ISO 9001:2026."
+  dataFull="Quarta, 26 de Agosto de 2026"
+  dataCurta="26 Ago 2026"
+  dataBarra="Quarta, 26 de Agosto"
+  startIso="2026-08-26T16:00:00-03:00"
+  endIso="2026-08-26T17:00:00-03:00"
+  desc="Toda empresa muda: troca de ERP, de máquina, de fornecedor, de responsável. O problema é mudar sem avaliar impacto — o sistema de gestão fica para trás e a auditoria encontra. Neste webinar prático você entende o que os requisitos 6.3 e 8.5.6 da ISO 9001:2026 exigem e sai com um formulário de gestão de mudanças pronto para usar."
+  evento="webinar-gestao-mudancas-2608"
+  obrigado="/obrigado-webinar-gestao-mudancas"
+  topicosIntro="Um webinar 100% prático sobre planejamento e controle de mudanças — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Sua empresa muda e o SGQ"
+  sinaisTituloEm="fica para trás?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela acompanha de perto empresas em plena mudança — troca de sistema, de planta, de time — e sabe exatamente onde o sistema de gestão costuma ficar para trás."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 26 de agosto às 16h. Basta se inscrever."
+/>

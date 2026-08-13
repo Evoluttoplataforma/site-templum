@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:clipboard-list-bold",
+    t: "As entradas obrigatórias do 9.3.2",
+    d: "Status das ações anteriores, mudanças no contexto, satisfação do cliente, objetivos da qualidade, desempenho dos processos, não conformidades, resultados de auditoria, fornecedores externos, recursos e eficácia das ações de risco. Nenhuma dessas pode faltar na pauta.",
+  },
+  {
+    icon: "solar:document-add-bold",
+    t: "A ata que sustenta a auditoria",
+    d: "O que registrar e o que é dispensável. As saídas exigidas pelo 9.3.3 — oportunidades de melhoria, mudanças necessárias no SGQ e necessidade de recursos — sempre com responsável e prazo.",
+  },
+  {
+    icon: "solar:users-group-rounded-bold",
+    t: "Como conduzir a reunião (e por que a direção precisa estar)",
+    d: "Periodicidade, quem participa, quanto tempo dura e como transformar duas horas de reunião em decisão. Análise crítica sem a alta direção presente é não conformidade na hora.",
+  },
+  {
+    icon: "mdi:hammer-wrench",
+    t: "Mão na massa: montando sua pauta e sua ata",
+    d: "Construímos ao vivo o modelo de pauta e de ata de análise crítica que você aplica já na próxima reunião da sua empresa.",
+  },
+];
+
+const sinais = [
+  "A análise crítica acontece uma vez por ano, duas semanas antes da auditoria.",
+  "A reunião é uma apresentação de slides — ninguém sai de lá com decisão registrada.",
+  "A alta direção não participa: quem conduz e assina é só o coordenador da qualidade.",
+  "A ata não traz responsável nem prazo para as ações levantadas.",
+  "Você não consegue mostrar que as ações da última análise crítica foram acompanhadas.",
+  "Faltam entradas obrigatórias na pauta — satisfação do cliente, fornecedores, riscos.",
+];
+---
+
+<WebinarLp
+  slug="webinar-analise-critica-iso9001"
+  metaTitle="Webinar Gratuito — Análise Crítica pela Direção (Requisito 9.3) | ISO 9001:2026 | Templum"
+  metaDescription="As entradas obrigatórias, a ata que sustenta auditoria e a decisão que sai da reunião: o requisito 9.3 da ISO 9001:2026 na prática. Quarta, 19 de agosto às 16h, com Daniela Albuquerque."
+  eventName="Requisito 9.3 — Análise Crítica pela Direção | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisito 9.3"
+  h1Destaque="Análise Crítica"
+  h1Resto="pela Direção"
+  h1Sub="A reunião que decide — e a primeira que o auditor abre. ISO 9001:2026."
+  dataFull="Quarta, 19 de Agosto de 2026"
+  dataCurta="19 Ago 2026"
+  dataBarra="Quarta, 19 de Agosto"
+  startIso="2026-08-19T16:00:00-03:00"
+  endIso="2026-08-19T17:00:00-03:00"
+  desc="A análise crítica é o momento em que a direção olha o sistema de gestão de frente e decide. Feita errada, vira slide bonito sem consequência — e é uma das não conformidades mais comuns em auditoria. Neste webinar prático você monta a pauta completa do requisito 9.3, com todas as entradas obrigatórias, e sai com o modelo de ata pronto."
+  evento="webinar-analise-critica-1908"
+  obrigado="/obrigado-webinar-analise-critica"
+  topicosIntro="Um webinar 100% prático sobre o requisito 9.3 — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Sua análise crítica decide algo ou"
+  sinaisTituloEm="é só um slide?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela já participou e auditou centenas de análises críticas — e sabe que a diferença entre a reunião que muda a empresa e a que só cumpre tabela está na pauta e na ata."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 19 de agosto às 16h. Basta se inscrever."
+/>

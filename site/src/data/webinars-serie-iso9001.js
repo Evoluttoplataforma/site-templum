@@ -1,10 +1,29 @@
-// Série de webinars gratuitos ISO 9001:2026 — setembro/2026, com Daniela Albuquerque.
-// Fonte única de datas/slugs: alimenta o bloco "a série completa" nas 5 LPs.
+// Série de webinars gratuitos ISO 9001:2026 com Daniela Albuquerque.
 // Todas as quartas, 16h (Brasília), ao vivo no YouTube @templumcertifica.
-export const serieSetembro2026 = [
+// Fonte única de datas/slugs: alimenta o bloco "próximos webinars" das LPs.
+//
+// `dataIso` é usada para esconder, no próximo build, os webinars que já
+// aconteceram — por isso mantenha a lista em ordem cronológica.
+export const serieIso9001 = [
+  {
+    slug: "webinar-analise-critica-iso9001",
+    dataIso: "2026-08-19",
+    dataCurta: "19 Ago",
+    requisito: "Requisito 9.3",
+    t: "Análise Crítica pela Direção",
+    d: "As entradas obrigatórias, a ata que sustenta auditoria e a decisão que sai da reunião.",
+  },
+  {
+    slug: "webinar-gestao-mudancas-iso9001",
+    dataIso: "2026-08-26",
+    dataCurta: "26 Ago",
+    requisito: "Requisitos 6.3 e 8.5.6",
+    t: "Gestão de Mudanças",
+    d: "Como planejar e controlar mudanças sem quebrar o sistema de gestão no meio do caminho.",
+  },
   {
     slug: "webinar-nao-conformidades-iso9001",
-    n: "01",
+    dataIso: "2026-09-02",
     dataCurta: "02 Set",
     requisito: "Requisito 10.2",
     t: "Não Conformidade e Ação Corretiva",
@@ -12,7 +31,7 @@ export const serieSetembro2026 = [
   },
   {
     slug: "webinar-gestao-treinamentos-iso9001",
-    n: "02",
+    dataIso: "2026-09-09",
     dataCurta: "09 Set",
     requisito: "Requisitos 7.2 e 7.3",
     t: "Gestão de Treinamentos e Competência",
@@ -20,7 +39,7 @@ export const serieSetembro2026 = [
   },
   {
     slug: "webinar-gestao-indicadores-iso9001",
-    n: "03",
+    dataIso: "2026-09-16",
     dataCurta: "16 Set",
     requisito: "Requisitos 6.2 e 9.1",
     t: "Gestão de Indicadores",
@@ -28,7 +47,7 @@ export const serieSetembro2026 = [
   },
   {
     slug: "webinar-gestao-processos-iso9001",
-    n: "04",
+    dataIso: "2026-09-23",
     dataCurta: "23 Set",
     requisito: "Requisito 4.4",
     t: "Gestão de Processos",
@@ -36,7 +55,7 @@ export const serieSetembro2026 = [
   },
   {
     slug: "webinar-controle-documentos-iso9001",
-    n: "05",
+    dataIso: "2026-09-30",
     dataCurta: "30 Set",
     requisito: "Requisito 7.5",
     t: "Controle de Documentos",

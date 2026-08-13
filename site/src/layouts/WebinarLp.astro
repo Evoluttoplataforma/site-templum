@@ -11,7 +11,7 @@
 //   · aplicar no ManyChat as etiquetas webserie_ISO9001 + lp9001 (norma ISO 9001);
 //   · NÃO abrir negócio no Pipedrive/Orbit (webinar não é lead comercial).
 import Base from "./Base.astro";
-import { serieSetembro2026 } from "../data/webinars-setembro-2026.js";
+import { serieIso9001 } from "../data/webinars-serie-iso9001.js";
 
 const {
   slug,             // slug desta LP — marca "você está aqui" na lista da série
@@ -38,6 +38,12 @@ const {
   bio,              // parágrafo da apresentadora
   ctaTexto,         // frase do CTA final
 } = Astro.props;
+
+// Lista da série: esconde os webinars que já aconteceram (comparação feita no
+// build — cada deploy atualiza). A própria página atual entra sempre, mesmo se
+// já passou, para não sumir da lista onde ela é o "você está aqui".
+const hojeIso = new Date().toISOString().slice(0, 10);
+const serie = serieIso9001.filter((w) => w.dataIso >= hojeIso || w.slug === slug);
 
 const schemaEvent = {
   "@context": "https://schema.org",
@@ -243,15 +249,16 @@ const schemaEvent = {
   </section>
 
   <!-- ── SÉRIE COMPLETA ── -->
+  {serie.length > 1 && (
   <section class="section section--navy">
     <div class="container lg">
       <div class="section-header">
-        <span class="tag-pill tag-pill--glow">Série Setembro 2026</span>
-        <h2>5 quartas-feiras, <em class="accent">5 requisitos</em> resolvidos</h2>
-        <p>Cada encontro é independente e gratuito. Inscreva-se em todos e feche setembro com o SGQ redondo.</p>
+        <span class="tag-pill tag-pill--glow">Série ISO 9001:2026</span>
+        <h2>Toda quarta, <em class="accent">um requisito</em> resolvido</h2>
+        <p>Cada encontro é independente e gratuito. Inscreva-se em todos e organize seu SGQ requisito por requisito.</p>
       </div>
       <div class="wb-serie-list">
-        {serieSetembro2026.map((w) => (
+        {serie.map((w) => (
           w.slug === slug ? (
             <div class="wb-serie-item wb-serie-item--atual">
               <span class="wb-serie-date">{w.dataCurta}</span>
@@ -277,6 +284,7 @@ const schemaEvent = {
       </div>
     </div>
   </section>
+  )}
 
   <!-- ── CTA FINAL ── -->
   <section class="section wb-cta-sec">
