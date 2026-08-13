@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:target-bold",
+    t: "Do objetivo da qualidade ao indicador (6.2 → 9.1)",
+    d: "Como amarrar política da qualidade → objetivo → meta → indicador → responsável, exatamente na sequência que o auditor rastreia. Se essa linha quebra em algum ponto, é achado.",
+  },
+  {
+    icon: "solar:graph-up-bold",
+    t: "Poucos indicadores e os certos",
+    d: "Indicador de processo × indicador de resultado, eficácia × eficiência: como escolher o conjunto mínimo que mostra a saúde do SGQ — e por que 40 indicadores dá no mesmo que nenhum.",
+  },
+  {
+    icon: "solar:calculator-minimalistic-bold",
+    t: "Mão na massa: montando a ficha do indicador",
+    d: "Fórmula, fonte de dados, frequência, meta, dono e critério de análise. Construímos a ficha ao vivo — o documento que resolve 90% das dúvidas de auditoria no requisito 9.1.",
+  },
+  {
+    icon: "solar:presentation-graph-bold",
+    t: "Análise crítica (9.3): número que vira decisão",
+    d: "A pauta obrigatória da análise crítica pela direção, como registrar a decisão e o que fazer quando a meta não é atingida — dica: a resposta não é reduzir a meta.",
+  },
+];
+
+const sinais = [
+  "Os indicadores são preenchidos na véspera da auditoria, de memória.",
+  "Existe indicador, mas ninguém sabe dizer a meta nem quem é o dono.",
+  "A meta foi \"ajustada\" para baixo porque nunca era atingida.",
+  "A análise crítica da direção é uma apresentação de slides sem nenhuma decisão registrada.",
+  "Você mede o que é fácil medir, não o que afeta o cliente.",
+  "Indicador estourou a meta e não gerou plano de ação nenhum.",
+];
+---
+
+<WebinarLp
+  slug="webinar-gestao-indicadores-iso9001"
+  metaTitle="Webinar Gratuito — Gestão de Indicadores (6.2 e 9.1) | ISO 9001:2026 | Templum"
+  metaDescription="Do objetivo da qualidade ao número que muda a análise crítica: indicadores nos requisitos 6.2, 9.1 e 9.3 da ISO 9001:2026. Quarta, 16 de setembro às 16h, com Daniela Albuquerque."
+  eventName="Requisitos 6.2 e 9.1 — Gestão de Indicadores | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisitos 6.2 e 9.1"
+  h1Destaque="Gestão de Indicadores"
+  h1Resto="que geram decisão"
+  h1Sub="Do objetivo da qualidade ao número que muda a reunião — ISO 9001:2026."
+  dataFull="Quarta, 16 de Setembro de 2026"
+  dataCurta="16 Set 2026"
+  dataBarra="Quarta, 16 de Setembro"
+  startIso="2026-09-16T16:00:00-03:00"
+  endIso="2026-09-16T17:00:00-03:00"
+  desc="Indicador que só existe para mostrar ao auditor é custo, não gestão. Neste webinar prático você vai montar a corrente completa que a ISO 9001:2026 exige — objetivo da qualidade, meta, indicador, fonte de dados e análise crítica — e sair com a ficha de indicador da sua empresa começada."
+  evento="webinar-gestao-indicadores-1609"
+  obrigado="/obrigado-webinar-gestao-indicadores"
+  topicosIntro="Um webinar 100% prático sobre medição, análise e avaliação — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Seus indicadores medem gestão ou"
+  sinaisTituloEm="só enfeitam a parede?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela usa indicadores para tomar decisão todos os dias — e mostra como um punhado de números bem escolhidos substitui dezenas de planilhas que ninguém lê."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 16 de setembro às 16h. Basta se inscrever."
+/>

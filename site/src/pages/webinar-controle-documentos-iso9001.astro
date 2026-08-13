@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:document-text-bold",
+    t: "Informação documentada: documento × registro",
+    d: "O que a ISO 9001:2026 pede para \"manter\" e o que pede para \"reter\" — e a lista mínima de informação documentada que a sua empresa precisa ter. Nem uma linha mais, nem uma menos.",
+  },
+  {
+    icon: "solar:pen-new-square-bold",
+    t: "Criação, identificação e aprovação (7.5.2)",
+    d: "Código, título, revisão, data, autor e aprovador: como padronizar a identificação dos documentos sem transformar a qualidade num cartório interno que trava a operação.",
+  },
+  {
+    icon: "solar:shield-check-bold",
+    t: "Controle (7.5.3): versão vigente, acesso e retenção",
+    d: "Como garantir que ninguém use versão obsoleta, controlar documento de origem externa (norma, legislação, desenho de cliente) e definir por quanto tempo cada registro fica guardado.",
+  },
+  {
+    icon: "mdi:cloud-check-outline",
+    t: "Digital de verdade: da pasta compartilhada ao sistema",
+    d: "Assinatura eletrônica, backup, controle de acesso e descarte. Como escapar das duas armadilhas clássicas: papel demais de um lado e um \"controle mestre\" em Excel desatualizado do outro.",
+  },
+];
+
+const sinais = [
+  "Existem três versões do mesmo procedimento salvas em pastas diferentes.",
+  "O \"controle mestre de documentos\" é uma planilha que ninguém alimenta desde a última auditoria.",
+  "Alguém imprimiu um procedimento e usa aquela cópia até hoje.",
+  "Registro obrigatório não é encontrado na hora em que o auditor pede.",
+  "Ninguém sabe por quanto tempo cada registro deve ser mantido — ou já jogou fora o que devia guardar.",
+  "A norma ISO usada como referência na empresa é uma versão antiga baixada da internet.",
+];
+---
+
+<WebinarLp
+  slug="webinar-controle-documentos-iso9001"
+  metaTitle="Webinar Gratuito — Controle de Documentos (Requisito 7.5) | ISO 9001:2026 | Templum"
+  metaDescription="Informação documentada na ISO 9001:2026: o que criar, o que controlar e o que descartar no requisito 7.5, sem burocracia. Quarta, 30 de setembro às 16h, com Daniela Albuquerque."
+  eventName="Requisito 7.5 — Controle de Documentos e Informação Documentada | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisito 7.5"
+  h1Destaque="Controle de Documentos"
+  h1Resto="sem burocracia"
+  h1Sub="Informação documentada: o que criar, controlar e descartar — ISO 9001:2026."
+  dataFull="Quarta, 30 de Setembro de 2026"
+  dataCurta="30 Set 2026"
+  dataBarra="Quarta, 30 de Setembro"
+  startIso="2026-09-30T16:00:00-03:00"
+  endIso="2026-09-30T17:00:00-03:00"
+  desc="Documento demais engessa a operação; documento de menos derruba a auditoria. Neste webinar prático você vai entender exatamente o que o requisito 7.5 da ISO 9001:2026 exige de informação documentada, como controlar versão, acesso e retenção — e como fazer isso no digital, sem criar um cartório interno."
+  evento="webinar-controle-documentos-3009"
+  obrigado="/obrigado-webinar-controle-documentos"
+  topicosIntro="Um webinar 100% prático sobre informação documentada — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Seus documentos estão sob controle ou"
+  sinaisTituloEm="espalhados por aí?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela já viu os dois extremos: empresas soterradas em procedimento que ninguém lê e empresas sem o registro básico que o auditor pede — e vai mostrar onde fica o ponto de equilíbrio."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 30 de setembro às 16h. Basta se inscrever."
+/>

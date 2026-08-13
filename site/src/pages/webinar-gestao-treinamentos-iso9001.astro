@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:users-group-two-rounded-bold",
+    t: "Matriz de competências: o coração do requisito 7.2",
+    d: "Como descrever a competência necessária por função combinando educação, treinamento e experiência — sem transformar o documento em um romance de 40 páginas que ninguém atualiza.",
+  },
+  {
+    icon: "solar:calendar-add-bold",
+    t: "Levantamento de necessidades e plano anual",
+    d: "O caminho para sair do treinamento por impulso: identificar o gap de competência, priorizar, montar o plano com orçamento e cronograma — e o que fazer quando não há verba para treinar.",
+  },
+  {
+    icon: "solar:diploma-verified-bold",
+    t: "Avaliação de eficácia — o item mais mal resolvido do 7.2",
+    d: "Reação, aprendizado e aplicação no trabalho: quais evidências realmente convencem o auditor e por que lista de presença e certificado não provam eficácia nenhuma.",
+  },
+  {
+    icon: "solar:lightbulb-bolt-bold",
+    t: "Conscientização (7.3) e conhecimento organizacional (7.1.6)",
+    d: "Como fazer o time entender a política da qualidade e o impacto do próprio trabalho — e como registrar o conhecimento da empresa para ele não sair pela porta junto com quem pede demissão.",
+  },
+];
+
+const sinais = [
+  "Treinamento é \"registrado\" com uma lista de presença assinada e mais nada.",
+  "A matriz de competências foi feita na certificação e nunca mais foi atualizada.",
+  "Você contratou, promoveu e mudou gente de função — e a matriz continua igual.",
+  "Ninguém na empresa consegue provar que o treinamento surtiu efeito.",
+  "O time não sabe repetir a política da qualidade nem explicar seu impacto no processo.",
+  "Treinamento obrigatório venceu e você só descobriu durante a auditoria.",
+];
+---
+
+<WebinarLp
+  slug="webinar-gestao-treinamentos-iso9001"
+  metaTitle="Webinar Gratuito — Gestão de Treinamentos e Competência (7.2 e 7.3) | ISO 9001:2026 | Templum"
+  metaDescription="Da matriz de competências ao plano anual e à avaliação de eficácia: os requisitos 7.2 e 7.3 da ISO 9001:2026 na prática. Quarta, 09 de setembro às 16h, com Daniela Albuquerque."
+  eventName="Requisitos 7.2 e 7.3 — Gestão de Treinamentos e Competência | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisitos 7.2 e 7.3"
+  h1Destaque="Gestão de Treinamentos"
+  h1Resto="e Competência"
+  h1Sub="Da matriz de competências à prova de eficácia — ISO 9001:2026."
+  dataFull="Quarta, 09 de Setembro de 2026"
+  dataCurta="09 Set 2026"
+  dataBarra="Quarta, 09 de Setembro"
+  startIso="2026-09-09T16:00:00-03:00"
+  endIso="2026-09-09T17:00:00-03:00"
+  desc="Quase toda empresa treina. Pouquíssimas conseguem provar que o treinamento funcionou — e é exatamente aí que a auditoria bate. Neste webinar prático você vai montar a lógica completa do requisito 7.2: matriz de competências, levantamento de necessidades, plano de treinamento e avaliação de eficácia com evidência que se sustenta."
+  evento="webinar-gestao-treinamentos-0909"
+  obrigado="/obrigado-webinar-gestao-treinamentos"
+  topicosIntro="Um webinar 100% prático sobre competência, treinamento e conscientização — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Você treina o time ou só"
+  sinaisTituloEm="coleta assinatura?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela costuma dizer que treinamento é o requisito que as empresas acham mais fácil — até o auditor pedir a evidência de que a competência foi realmente adquirida."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 09 de setembro às 16h. Basta se inscrever."
+/>

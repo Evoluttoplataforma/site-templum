@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:danger-triangle-bold",
+    t: "O que é (e o que não é) uma não conformidade",
+    d: "A diferença prática entre não conformidade, observação e oportunidade de melhoria — e todas as portas por onde uma NC entra: auditoria interna, auditoria externa, reclamação de cliente, indicador fora da meta e erro de processo.",
+  },
+  {
+    icon: "solar:magnifer-bug-bold",
+    t: "Causa raiz de verdade: 5 Porquês e Ishikawa ao vivo",
+    d: "Por que \"falta de atenção do colaborador\" nunca é causa raiz — e como conduzir a análise até chegar na falha real do processo. Aplicamos as duas ferramentas em um caso real, na tela.",
+  },
+  {
+    icon: "solar:clipboard-check-bold",
+    t: "Correção × ação corretiva × ação preventiva",
+    d: "Apagar o incêndio não é ação corretiva. Você vai ver como preencher o RNC (registro de não conformidade) do jeito que o auditor espera: descrição do fato, causa, ação, responsável, prazo e evidência.",
+  },
+  {
+    icon: "solar:restart-square-bold",
+    t: "Eficácia e reincidência: o que o auditor cobra no 10.2",
+    d: "Como provar que a ação funcionou, que prazo de verificação usar e por que NC reincidente é um dos achados que mais colocam a certificação em risco. Inclui o gancho com melhoria contínua (10.3).",
+  },
+];
+
+const sinais = [
+  "Suas NCs são fechadas com \"colaborador orientado\" e voltam a acontecer meses depois.",
+  "O registro de NC fica aberto por meses porque ninguém definiu responsável nem prazo.",
+  "A mesma não conformidade aparece na auditoria de recertificação, ano após ano.",
+  "Reclamação de cliente não gera NC — gera só um e-mail de desculpas.",
+  "Ninguém consegue dizer se a ação corretiva do ano passado realmente funcionou.",
+  "O auditor pediu evidência de eficácia e você mostrou o plano de ação.",
+];
+---
+
+<WebinarLp
+  slug="webinar-nao-conformidades-iso9001"
+  metaTitle="Webinar Gratuito — Não Conformidade e Ação Corretiva (10.2) | ISO 9001:2026 | Templum"
+  metaDescription="Aprenda a tratar não conformidade do jeito certo: causa raiz, ação corretiva e evidência de eficácia no requisito 10.2 da ISO 9001:2026. Quarta, 02 de setembro às 16h, com Daniela Albuquerque."
+  eventName="Requisito 10.2 — Não Conformidade e Ação Corretiva | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisito 10.2"
+  h1Destaque="Não Conformidade"
+  h1Resto="e Ação Corretiva"
+  h1Sub="Pare de fechar NC por fechar — ISO 9001:2026."
+  dataFull="Quarta, 02 de Setembro de 2026"
+  dataCurta="02 Set 2026"
+  dataBarra="Quarta, 02 de Setembro"
+  startIso="2026-09-02T16:00:00-03:00"
+  endIso="2026-09-02T17:00:00-03:00"
+  desc="Não conformidade mal tratada é a maior fábrica de retrabalho de um sistema de gestão — e a causa nº 1 de achado repetido em auditoria. Neste webinar 100% prático você vai aprender a chegar na causa raiz, definir a ação corretiva certa e comprovar eficácia do jeito que a ISO 9001:2026 exige no requisito 10.2."
+  evento="webinar-nao-conformidades-0209"
+  obrigado="/obrigado-webinar-nao-conformidades"
+  topicosIntro="Um webinar 100% prático sobre o requisito 10.2 — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Sua empresa"
+  sinaisTituloEm="trata NC ou só registra?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela vê de perto o mesmo padrão se repetir: empresas que registram muitas não conformidades e resolvem pouquíssimas — porque param na correção e nunca chegam na causa."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 02 de setembro às 16h. Basta se inscrever."
+/>

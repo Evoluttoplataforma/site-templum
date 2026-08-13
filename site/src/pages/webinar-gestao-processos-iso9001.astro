@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:hierarchy-2-bold",
+    t: "Abordagem de processo: o que o 4.4 realmente pede",
+    d: "Entradas, saídas, sequência, interação, critérios, recursos, responsáveis, riscos e indicadores — o requisito 4.4 destrinchado item por item, com exemplo em cada um.",
+  },
+  {
+    icon: "mdi:sitemap-outline",
+    t: "Cadeia de valor e mapa de processos",
+    d: "Como desenhar o mapa da sua empresa separando processos gerenciais, de negócio e de apoio — e por que mapear departamento como se fosse processo é o erro mais comum do SGQ.",
+  },
+  {
+    icon: "mdi:hammer-wrench",
+    t: "Mão na massa: mapeando um processo ao vivo",
+    d: "Escolhemos um processo real e montamos junto: dono, entradas, atividades, saídas, critérios de aceitação, indicador e riscos. Você sai com o modelo para replicar nos seus processos.",
+  },
+  {
+    icon: "solar:refresh-circle-bold",
+    t: "PDCA, riscos e melhoria do processo",
+    d: "Como conectar cada processo com riscos e oportunidades (6.1), indicadores (9.1) e não conformidades (10.2) — o ciclo que faz o sistema de gestão andar sozinho entre auditorias.",
+  },
+];
+
+const sinais = [
+  "Seu \"mapa de processos\" é, na verdade, o organograma com algumas setas.",
+  "Cada processo tem procedimento escrito, mas ninguém sabe dizer quem é o dono.",
+  "Não existem critérios de entrada e saída — o trabalho passa adiante do jeito que der.",
+  "O processo mudou na prática e o fluxograma continua igual desde a certificação.",
+  "Há processo sem nenhum indicador, então não se sabe se ele está funcionando.",
+  "Retrabalho constante justamente na interface entre dois setores.",
+];
+---
+
+<WebinarLp
+  slug="webinar-gestao-processos-iso9001"
+  metaTitle="Webinar Gratuito — Gestão de Processos (Requisito 4.4) | ISO 9001:2026 | Templum"
+  metaDescription="Abordagem de processo, cadeia de valor e PDCA aplicados na prática: o requisito 4.4 da ISO 9001:2026. Quarta, 23 de setembro às 16h, com Daniela Albuquerque."
+  eventName="Requisito 4.4 — Gestão de Processos | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisito 4.4"
+  h1Destaque="Gestão de Processos"
+  h1Resto="na prática"
+  h1Sub="Abordagem de processo, cadeia de valor e PDCA — ISO 9001:2026."
+  dataFull="Quarta, 23 de Setembro de 2026"
+  dataCurta="23 Set 2026"
+  dataBarra="Quarta, 23 de Setembro"
+  startIso="2026-09-23T16:00:00-03:00"
+  endIso="2026-09-23T17:00:00-03:00"
+  desc="A abordagem de processo é o princípio que sustenta a ISO 9001 inteira — e o requisito 4.4 é onde a maioria das empresas se perde, mapeando setor em vez de processo. Neste webinar prático você vai aprender a desenhar a cadeia de valor da sua empresa e a mapear um processo do começo ao fim, com dono, critérios, indicador e riscos."
+  evento="webinar-gestao-processos-2309"
+  obrigado="/obrigado-webinar-gestao-processos"
+  topicosIntro="Um webinar 100% prático sobre o requisito 4.4 e a abordagem de processo — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Você gerencia processos ou"
+  sinaisTituloEm="apenas departamentos?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela mapeou processos em empresas de todos os portes e sabe onde o desenho bonito no papel deixa de existir na operação — e como corrigir isso."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 23 de setembro às 16h. Basta se inscrever."
+/>
