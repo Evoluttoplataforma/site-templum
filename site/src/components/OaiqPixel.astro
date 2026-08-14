@@ -1,0 +1,24 @@
+---
+// Pixel da OpenAI (oaiq) — código base + conversão.
+//
+// O snippet base vai no <head> de todas as páginas, igual ao MetaPixel.astro:
+// pixel que só carrega na LP não enxerga a jornada e mede pior.
+//
+// O evento de lead sai APENAS nas páginas de obrigado, e a decisão é pela ROTA,
+// não página por página. São 25+ páginas de obrigado com dois padrões de nome
+// (`obrigado-webinar-x` e `consultoria/iso-9001-obrigado`), e cada webinar novo
+// cria mais uma — incluir manualmente garante esquecer a próxima.
+const ehObrigado = /obrigado/i.test(Astro.url.pathname);
+---
+<script is:inline>
+  !function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"YQQb4HvF2y3zkKZNbiuMNT",debug:true});
+</script>
+{ehObrigado && (
+  <script is:inline>
+    oaiq("measure", "lead", {
+      type: "customer_action",
+      amount: 0,
+      currency: "BRL"
+    });
+  </script>
+)}

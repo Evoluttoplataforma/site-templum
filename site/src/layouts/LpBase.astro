@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import TrackingKit from "../components/TrackingKit.astro";
 import MetaPixel from "../components/MetaPixel.astro";
+import OaiqPixel from "../components/OaiqPixel.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -28,6 +29,9 @@ const allSchemas = schemas;
 
     <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
     <MetaPixel />
+
+    <!-- Pixel da OpenAI: base em todas as páginas, conversão só nas de obrigado. -->
+    <OaiqPixel />
 
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
