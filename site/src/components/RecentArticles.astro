@@ -1,5 +1,5 @@
 ---
-import { getRecentPosts, blogImg, blogUrl } from "../lib/blog.js";
+import { getRecentPosts, blogUrl } from "../lib/blog.js";
 const posts = await getRecentPosts(6);
 const fmt = (d) => d ? new Date(d).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }) : "";
 ---
@@ -16,9 +16,8 @@ const fmt = (d) => d ? new Date(d).toLocaleDateString("pt-BR", { day: "2-digit",
         {posts.map((p) => (
           <a class="ra-card" href={blogUrl(p.slug)}>
             <div class="ra-thumb">
-              {p.featured_image
-                ? <img src={blogImg(p.featured_image)} alt={p.title} loading="lazy" onerror="this.style.display='none'" />
-                : <span class="ra-fallback">Templum<em>!</em></span>}
+              <span class="ra-fallback">Templum<em>!</em></span>
+              {p.cover && <img src={p.cover} alt={p.title} width="640" height="400" loading="lazy" decoding="async" onerror="this.style.display='none'" />}
             </div>
             <div class="ra-body">
               {p.category_name && <span class="ra-cat">{p.category_name}</span>}
