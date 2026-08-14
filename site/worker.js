@@ -229,6 +229,11 @@ async function handleLead(request, env, ctx) {
     fbp: body.fbp || "",
     fbc: body.fbc || "",
     landing: body.landing || "",
+    // Meta: id compartilhado com o Lead do navegador (dedup) e content_name
+    // igual ao do pixel — sem ele, custom conversion filtrada por content_name
+    // não casava com os eventos server-side.
+    meta_event_id: body.meta_event_id || "",
+    meta_content_name: body.meta_content_name || "",
   };
 
   const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
@@ -733,14 +738,22 @@ async function sendMetaLead(lead, env, request) {
   user_data.client_ip_address = request.headers.get("cf-connecting-ip") || "";
   user_data.client_user_agent = request.headers.get("user-agent") || "";
 
+  // content_name idêntico ao do pixel do navegador (último segmento da rota,
+  // sem sufixo "-lp") — é por esse parâmetro que o gestor de tráfego filtra
+  // conversão personalizada por LP.
+  const slug = (lead.meta_content_name || "").trim() ||
+    (lead.pagina || "").split("/").filter(Boolean).pop()?.replace(/-lp$/, "") || "home";
+
   const event = {
     event_name: "Lead",
     event_time: Math.floor(Date.now() / 1000),
-    event_id: `lead-${lead.email}-${Date.now()}`,
+    // Mesmo id do fbq eventID (meta_event_id) → Meta deduplica navegador + CAPI.
+    event_id: lead.meta_event_id || `lead-${lead.email}-${Date.now()}`,
     action_source: "website",
     event_source_url: lead.pagina ? `https://templum.com.br${lead.pagina}` : "https://templum.com.br",
     user_data,
     custom_data: {
+      content_name: slug,
       norma: lead.norma || "",
       evento: lead.evento || "",
     },

@@ -200,7 +200,16 @@ const allSchemas = schemas;
         if (!parts.length) return "home";
         return parts[parts.length - 1].replace(/-lp$/, "");
       };
-      window.fireMetaLead = function (data, contentName) {
+      // crypto.randomUUID() não existe em Safari < 15.4 / WebView antigo — sem
+      // fallback, o Lead do Meta morria no throw dentro do try.
+      window.__tplUuid = function () {
+        try { return crypto.randomUUID(); }
+        catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+      };
+      // eventId vem de fora (mesmo valor enviado ao worker em meta_event_id) para
+      // o Meta DEDUPLICAR o Lead do navegador com o Lead do CAPI. Sem isso o mesmo
+      // cadastro era contado 2x.
+      window.fireMetaLead = function (data, contentName, eventId) {
         if (!window.fbq) return;
         data = data || {};
         var email = (data.email || "").trim().toLowerCase().replace(/\s+/g, "");
@@ -210,7 +219,7 @@ const allSchemas = schemas;
           ["1265191353683807", "4177249519256900"].forEach(function (id) {
             fbq("init", id, { em: email || undefined, ph: phone || undefined });
           });
-          fbq("track", "Lead", { content_name: contentName || window.__tplContentName() }, { eventID: crypto.randomUUID() });
+          fbq("track", "Lead", { content_name: contentName || window.__tplContentName() }, { eventID: eventId || window.__tplUuid() });
         } catch (_) {}
       };
     </script>
@@ -244,6 +253,9 @@ const allSchemas = schemas;
         function _go() { if (!_rDone) { _rDone = true; window.location.href = destino; } }
         var _t = setTimeout(_go, 5000); // fallback: redireciona em no máximo 5s
         var contentName = window.__tplContentName(location.pathname);
+        // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
+        // é o que permite o Meta deduplicar em vez de contar 2 leads.
+        var leadEventId = window.__tplUuid();
         try {
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual
           var _attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
@@ -261,13 +273,20 @@ const allSchemas = schemas;
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               status_pagamento: d.status_pagamento || "",
               evento: evt, pagina: location.pathname,
+              meta_event_id: leadEventId, meta_content_name: contentName,
             }, _attrib)),
           }).then(function (r) {
             return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
           }).then(function (res) {
             var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
-            if (saved) window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName);
-            clearTimeout(_t); _go();
+            clearTimeout(_t);
+            if (saved) {
+              window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
+              // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
+              // forma assíncrona e o navegador CANCELA requisição em andamento na
+              // navegação — redirecionar no mesmo tick fazia o evento se perder.
+              setTimeout(_go, 400);
+            } else { _go(); }
           }).catch(function() { clearTimeout(_t); _go(); });
         } catch (_) { clearTimeout(_t); _go(); }
       });
