@@ -35,6 +35,19 @@
 
 const META_API_VERSION = "v21.0";
 
+// Lead qualificado da LP /diagnostico-de-gestao: faixas de faturamento acima de
+// R$ 100 mil/mês. Precisa bater EXATAMENTE com a lista da LP (o pixel do
+// navegador dispara o mesmo evento) — senão o CAPI emite sozinho e o Meta conta
+// duas vezes em vez de deduplicar.
+const LP_QUALIFICADO = "diagnostico-de-gestao";
+const EVENTO_QUALIFICADO = "lead_qualificado_diagnostico";
+const FATURAMENTO_QUALIFICADO = [
+  "R$ 100 mil a R$ 300 mil",
+  "R$ 300 mil a R$ 500 mil",
+  "R$ 500 mil a R$ 1 milhão",
+  "Acima de R$ 1 milhão",
+];
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -759,8 +772,26 @@ async function sendMetaLead(lead, env, request) {
     },
   };
 
+  const events = [event];
+
+  // Espelho server-side do trackCustom do navegador. O event_id leva o sufixo
+  // "-q" — mesmo id que a LP usa no fbq — para o Meta deduplicar os dois.
+  if (slug === LP_QUALIFICADO && FATURAMENTO_QUALIFICADO.includes(lead.faturamento)) {
+    events.push({
+      ...event,
+      event_name: EVENTO_QUALIFICADO,
+      event_id: `${lead.meta_event_id || `lead-${lead.email}-${Date.now()}`}-q`,
+      custom_data: {
+        content_name: "Diagnóstico de Gestão",
+        faturamento: lead.faturamento,
+        funcionarios: lead.funcionarios || "",
+        cargo: lead.cargo || "",
+      },
+    });
+  }
+
   await Promise.all(accounts.map(async (a) => {
-    const body = { data: [event] };
+    const body = { data: events };
     if (a.test) body.test_event_code = a.test;
     await fetch(
       `https://graph.facebook.com/${META_API_VERSION}/${a.pixel}/events?access_token=${encodeURIComponent(a.token)}`,
