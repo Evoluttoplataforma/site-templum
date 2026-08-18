@@ -1,0 +1,356 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+import Testimonials from "../components/Testimonials.astro";
+import ClientLogos from "../components/ClientLogos.astro";
+import LeadForm from "../components/LeadForm.astro";
+
+// Campanha Meta Ads — dor de GESTÃO (dono-dependência, falta de processo).
+// Oferta única: o diagnóstico. Nada de proposta/certificação no topo do funil —
+// a venda só é nomeada no passo 04 da jornada, de propósito.
+const OBRIGADO = "/diagnostico-de-gestao-obrigado";
+
+const d = {
+  sintomas: [
+    "A empresa trava quando você tira férias — ou some por dois dias.",
+    "Todo mundo pergunta tudo para você, inclusive o que já foi decidido.",
+    "O processo existe, mas só na cabeça de quem faz.",
+    "Cada cliente é atendido de um jeito diferente.",
+    "Você apaga o mesmo incêndio todo mês e ninguém sabe por quê.",
+    "Você sente que parou de crescer, mas não sabe apontar onde trava.",
+  ],
+  entregas: [
+    {
+      t: "Raio-x da operação",
+      d: "Mapeamos como sua empresa funciona de verdade hoje: onde as decisões emperram, quais processos existem só na cabeça das pessoas e quanto do seu dia é consumido por coisas que não deveriam chegar até você.",
+    },
+    {
+      t: "Os gargalos que mais custam caro",
+      d: "Não é uma lista de tudo o que está errado — é a priorização do que dói no caixa. Retrabalho, dependência do dono, informação perdida e decisão sem indicador, ordenados por impacto.",
+    },
+    {
+      t: "Plano de ação por escrito",
+      d: "Você sai com um documento: o que resolver primeiro, em que ordem, com que prazo e quem toca cada frente. Serve tanto para executar com a gente quanto para tocar sozinho com o seu time.",
+    },
+  ],
+  jornada: [
+    { t: "Triagem rápida pelo WhatsApp", d: "Um contato curto para entender o seu momento e agendar a sessão no horário que couber na sua agenda." },
+    { t: "Sessão de diagnóstico — 60 min, online", d: "Conversa conduzida por um especialista da Templum, com perguntas que expõem onde a gestão está apoiada em pessoas em vez de processos." },
+    { t: "Plano de ação personalizado", d: "Recomendações práticas e priorizadas, com a mesma metodologia que aplicamos em empresas que já organizaram a gestão conosco." },
+    { t: "Apresentação das nossas soluções", d: "Se você quiser delegar a execução, mostramos como funcionam a consultoria e a plataforma Templum OS. Se preferir tocar sozinho, o plano é seu do mesmo jeito." },
+  ],
+  stats: [
+    { num: "+30 anos", label: "organizando a gestão de empresas brasileiras" },
+    { num: "+2.000", label: "empresas atendidas em todo o Brasil" },
+    { num: "+1,5 mi", label: "de interações com nossos especialistas" },
+    { num: "R$ 3,3 bi", label: "em ganhos gerados aos nossos clientes" },
+  ],
+  faq: [
+    {
+      q: "O diagnóstico tem custo mesmo?",
+      a: "Não. A sessão é gratuita e sem compromisso. Ela é importante para nós avaliarmos se faz sentido te ajudar — e para você conhecer nosso método antes de decidir qualquer coisa.",
+    },
+    {
+      q: "Vou sair da sessão com um vendedor no meu pé?",
+      a: "Não. Quem conduz a sessão é um especialista em gestão, não um vendedor. No fim, apresentamos como funcionam nossos serviços — e você decide. Se disser não, o plano de ação continua sendo seu.",
+    },
+    {
+      q: "Minha empresa é pequena. Isso é para mim?",
+      a: "Sim. Atendemos desde negócios com 5 colaboradores até grandes indústrias. Aliás, é justamente na empresa pequena que a dependência do dono costuma ser mais cara — e mais rápida de resolver.",
+    },
+    {
+      q: "Isso é sobre certificação ISO?",
+      a: "O diagnóstico é sobre a sua gestão, não sobre uma norma. Se no meio do caminho a certificação fizer sentido para o seu mercado, a gente fala sobre isso. Se não fizer, não vamos empurrar.",
+    },
+    {
+      q: "Quanto tempo dura e como é feito?",
+      a: "Cerca de 60 minutos, 100% online por videoconferência. Você não precisa preparar relatório, planilha nem documento nenhum — as perguntas certas dão conta.",
+    },
+    {
+      q: "E se eu não quiser seguir depois?",
+      a: "Sem problema. Você sai com clareza sobre onde sua empresa está travando e um plano por escrito para agir. Isso é seu, independentemente de contratar ou não.",
+    },
+  ],
+};
+---
+
+<LpBase
+  title="Diagnóstico de Gestão gratuito — sua empresa depende demais de você? | Templum"
+  description="Um raio-x honesto da gestão da sua empresa em 60 minutos, sem custo. Descubra o que trava o crescimento e saia com um plano de ação por escrito."
+  formAnchor="#diagnostico"
+  headerCta="Quero meu diagnóstico"
+>
+  <div class="dg-page">
+
+    <!-- ── HERO (form-first) ── -->
+    <section class="dg-hero" id="diagnostico">
+      <div class="dg-hero-bg" aria-hidden="true"></div>
+      <div class="container xl dg-hero-grid">
+        <div class="dg-hero-text">
+          <span class="tag-pill tag-pill--glow">Diagnóstico de Gestão · Gratuito</span>
+          <h1 class="dg-title">Um raio-x <span class="dg-hl">honesto</span> da gestão da sua empresa.</h1>
+          <p class="dg-sub">
+            Uma segunda opinião sobre como o seu negócio funciona hoje — os processos, os gargalos e o que
+            está travando o crescimento — conduzida por quem já organizou a gestão de mais de 2.000 empresas.
+          </p>
+          <p class="dg-sub dg-sub--tight">
+            <strong>60 minutos, sem custo e sem compromisso.</strong> Você sai com um plano de ação por escrito.
+          </p>
+          <div class="dg-chips">
+            <span class="dg-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>Sem proposta empurrada</span>
+            <span class="dg-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>100% online</span>
+            <span class="dg-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>+30 anos de estrada</span>
+          </div>
+          <a href="#entregas" class="dg-ver">Ver o que você recebe <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+        </div>
+        <div class="dg-hero-form">
+          <LeadForm
+            norma="Diagnóstico de Gestão"
+            titulo="Agende seu diagnóstico"
+            sub="Preencha o formulário abaixo para receber o contato de um especialista."
+            cta="Agendar meu diagnóstico"
+            obrigado={OBRIGADO}
+            simples={true}
+            funcionarios={true}
+            cargo={true}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ESPELHO / SINTOMAS ── -->
+    <section class="section section--cream">
+      <div class="container lg">
+        <div class="section-header">
+          <span class="tag-pill">O sintoma antes do diagnóstico</span>
+          <h2>Se você se reconhece em <em class="accent">duas destas frases</em>, essa conversa é para você</h2>
+          <p>Nenhuma delas é sinal de empresa ruim. São sinais de empresa que cresceu mais rápido do que a própria organização.</p>
+        </div>
+        <div class="dg-sint">
+          {d.sintomas.map((s) => (
+            <div class="dg-sint-item reveal">
+              <span class="dg-sint-ico"><iconify-icon icon="solar:danger-triangle-bold"></iconify-icon></span>
+              <p>{s}</p>
+            </div>
+          ))}
+        </div>
+        <p class="dg-sint-foot">
+          O problema quase nunca é falta de esforço. É gestão apoiada em <strong>pessoas</strong> quando deveria estar
+          apoiada em <strong>processos</strong> — e é exatamente isso que o diagnóstico mede.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── O QUE VOCÊ RECEBE ── -->
+    <section id="entregas" class="section">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">O que você recebe</span>
+          <h2>Uma conversa honesta vale mais do que <em class="accent">dez conselhos genéricos</em></h2>
+          <p>Nosso especialista analisa onde sua empresa está, onde você quer chegar e o que está entre os dois pontos.</p>
+        </div>
+        <div class="dg-entregas">
+          {d.entregas.map((e, i) => (
+            <div class="dg-entrega reveal">
+              <span class="dg-entrega-n">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{e.t}</h3>
+              <p>{e.d}</p>
+            </div>
+          ))}
+        </div>
+        <div class="dg-cta-mid">
+          <a href="#diagnostico" class="btn btn--primary btn--lg">Agendar meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMO FUNCIONA ── -->
+    <section class="section section--navy">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill tag-pill--glow">Como funciona</span>
+          <h2>O que esperar da sua <em class="accent">jornada</em> conosco</h2>
+          <p>Quatro etapas, sem surpresa em nenhuma delas — inclusive na última.</p>
+        </div>
+        <div class="dg-jornada">
+          {d.jornada.map((p, i) => (
+            <div class="dg-jornada-card reveal">
+              <span class="dg-jornada-n">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── DEPOIMENTOS EM VÍDEO ── -->
+    <Testimonials nota="4,9" ctaTexto="Quero meu diagnóstico gratuito" ctaHref="#diagnostico" />
+
+    <!-- ── NÚMEROS + POSICIONAMENTO ── -->
+    <section class="section">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">Quem vai olhar para a sua empresa</span>
+          <h2>Três décadas organizando a gestão de <em class="accent">quem produz no Brasil</em></h2>
+        </div>
+        <div class="numbers-grid dg-stats">
+          {d.stats.map((s) => (
+            <div class="number-card reveal">
+              <div class="value"><em>{s.num}</em></div>
+              <div class="label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+        <div class="dg-posic reveal">
+          <p>
+            Não vendemos pasta de documento nem certificado de parede. Organizamos a gestão de verdade —
+            processos que a equipe usa, indicadores que dizem alguma coisa e decisão que não precisa passar
+            pelo dono. E somos a única consultoria do país que registra em contrato a
+            <strong> garantia de 200%</strong>: se você cumprir todas as etapas do método e não atingir o
+            resultado acordado, devolvemos o dobro do investimento.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LOGOS ── -->
+    <ClientLogos dark={true} titulo="Empresas que já organizaram a gestão com a Templum" />
+
+    <!-- ── FAQ ── -->
+    <section class="section section--cream">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">Antes de agendar</span>
+          <h2>Perguntas <em class="accent">frequentes</em></h2>
+        </div>
+        <div class="faq-list">
+          {d.faq.map((f) => (
+            <details class="faq-item">
+              <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+              <div class="faq-answer">{f.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FORM FINAL ── -->
+    <section class="dg-form section--navy">
+      <div class="dg-form-bg" aria-hidden="true"></div>
+      <div class="container lg dg-form-grid">
+        <div class="dg-form-pitch">
+          <span class="tag-pill tag-pill--glow">Último passo</span>
+          <h2>Pronto para a sua <em class="accent">segunda opinião</em>?</h2>
+          <p>Sem custo. Sem pressão. Sem proposta empurrada. Um especialista entra em contato para agendar.</p>
+          <ul class="check-list">
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Sessão de 60 minutos, 100% online</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Plano de ação por escrito, seu para ficar</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Retorno em até 1 dia útil</li>
+          </ul>
+        </div>
+        <LeadForm
+          norma="Diagnóstico de Gestão"
+          titulo="Agende seu diagnóstico"
+          sub="Preencha o formulário abaixo para receber o contato de um especialista."
+          cta="Agendar meu diagnóstico"
+          obrigado={OBRIGADO}
+          simples={true}
+          funcionarios={true}
+          cargo={true}
+        />
+      </div>
+    </section>
+
+    <!-- ── CTA BAND ── -->
+    <section class="cta-band">
+      <div class="container md">
+        <h2>Sua empresa deveria funcionar <em>sem você no centro de tudo</em></h2>
+        <p>Descubra o que está travando o crescimento — em uma conversa de 60 minutos, sem custo.</p>
+        <a href="#diagnostico" class="btn btn--dark btn--lg">Agendar meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+  </div>
+</LpBase>
+
+<style>
+  /* ── HERO ── */
+  .dg-hero { position: relative; background: linear-gradient(120deg, #2b1a12 0%, #1a1418 46%, #0c0e12 100%); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 84px) 0; }
+  .dg-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(760px 480px at 10% -6%, rgba(255,89,37,0.26), transparent 62%),
+                radial-gradient(560px 400px at 100% 108%, rgba(255,89,37,0.12), transparent 62%); }
+  .dg-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .dg-hero-grid > * { min-width: 0; }
+  .dg-hero-text { max-width: 600px; }
+  .dg-hero .tag-pill { margin-bottom: 20px; }
+  .dg-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .dg-hl { color: var(--orange); font-style: italic; }
+  .dg-sub { font-size: 17px; line-height: 1.62; color: rgba(255,244,221,0.78); margin-top: 18px; max-width: 520px; }
+  .dg-sub--tight { margin-top: 12px; font-size: 15.5px; color: rgba(255,244,221,0.62); }
+  .dg-sub--tight strong { color: var(--cream); font-weight: 700; }
+  .dg-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .dg-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .dg-chip iconify-icon { color: var(--orange); font-size: 18px; }
+  .dg-ver { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .dg-ver:hover { color: var(--orange); }
+  .dg-hero-form { align-self: start; }
+
+  /* ── SINTOMAS ── */
+  .dg-sint { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .dg-sint-item { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 20px 22px; }
+  .dg-sint-ico { width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; display: grid; place-items: center; font-size: 20px; color: var(--orange); background: rgba(255,89,37,0.12); }
+  .dg-sint-item p { font-size: 15px; line-height: 1.55; color: var(--text-mid); font-weight: 600; }
+  .dg-sint-foot { max-width: 660px; margin: 32px auto 0; text-align: center; font-size: 16px; line-height: 1.65; color: var(--text-mid); }
+  .dg-sint-foot strong { color: var(--text); font-weight: 800; }
+
+  /* ── ENTREGAS ── */
+  .dg-entregas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .dg-entrega { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 32px 28px; }
+  .dg-entrega-n { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; font-size: 17px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.12); margin-bottom: 18px; }
+  .dg-entrega h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.015em; margin-bottom: 10px; }
+  .dg-entrega p { font-size: 14.5px; line-height: 1.65; color: var(--text-mid); }
+  .dg-cta-mid { display: flex; justify-content: center; margin-top: 40px; }
+
+  /* ── JORNADA ── */
+  .dg-jornada { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .dg-jornada-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 28px 24px; }
+  .dg-jornada-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; font-size: 15px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.16); margin-bottom: 16px; }
+  .dg-jornada-card h3 { font-size: 17px; font-weight: 800; color: var(--cream); letter-spacing: -0.01em; margin-bottom: 8px; }
+  .dg-jornada-card p { font-size: 14px; line-height: 1.6; color: rgba(255,244,221,0.7); }
+
+  /* ── NÚMEROS + POSICIONAMENTO ── */
+  .dg-stats { grid-template-columns: repeat(4, 1fr); }
+  .dg-stats .value { white-space: normal; }
+  .dg-posic { max-width: 760px; margin: 40px auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px clamp(24px, 4vw, 40px); }
+  .dg-posic p { font-size: 16px; line-height: 1.7; color: var(--text-mid); }
+  .dg-posic strong { color: var(--orange); font-weight: 800; }
+
+  /* ── FORM FINAL ── */
+  .dg-form { position: relative; overflow: hidden; padding: clamp(64px, 8vw, 92px) 0; }
+  .dg-form-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(640px 420px at 88% 0%, rgba(255,89,37,0.18), transparent 62%); }
+  .dg-form-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; }
+  .dg-form-grid > * { min-width: 0; }
+  .dg-form-pitch h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; margin: 16px 0 14px; line-height: 1.12; }
+  .dg-form-pitch > p { font-size: 16px; line-height: 1.6; color: rgba(255,244,221,0.75); margin-bottom: 22px; max-width: 440px; }
+  .dg-form-pitch .check-item { color: var(--cream); }
+
+  /* ── RESPONSIVO ── */
+  @media (max-width: 1000px) {
+    .dg-jornada { grid-template-columns: repeat(2, 1fr); }
+    .dg-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .dg-hero-grid { grid-template-columns: 1fr; }
+    .dg-entregas { grid-template-columns: 1fr; }
+    .dg-form-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .dg-sint { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .dg-jornada { grid-template-columns: 1fr; }
+    .dg-stats { grid-template-columns: 1fr; }
+    .dg-chips { gap: 12px; }
+  }
+</style>

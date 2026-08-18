@@ -319,3 +319,9 @@
 # Política de privacidade (linkada como /privacidade em alguns landers) → /page
 /privacidade  /page/  301
 /privacidade/  /page/  301
+
+# LP Diagnóstico de Gestão (Meta Ads) — variações sem hífen usadas em anúncio
+/diagnosticodegestao  /diagnostico-de-gestao/  301
+/diagnosticodegestao/  /diagnostico-de-gestao/  301
+/diagnostico-gestao  /diagnostico-de-gestao/  301
+/diagnostico-gestao/  /diagnostico-de-gestao/  301

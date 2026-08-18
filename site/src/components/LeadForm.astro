@@ -16,10 +16,11 @@ const {
   faturamento = false, // true → mostra faturamento mensal (qualificação p/ PCI, mín. R$ 100 mil/mês)
   labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
   cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
+  funcionarios = false, // true → mostra "Nº de funcionários" mesmo com simples={true}
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
-const funcionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
+const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 ---
 
@@ -35,12 +36,12 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
     <div class="form-row">
       <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
-      {!simples && (
+      {(!simples || funcionarios) && (
         <div class="field">
           <label>Nº de funcionários</label>
           <select class="select" name="funcionarios" aria-label="Nº de funcionários">
             <option value="">Selecione</option>
-            {funcionarios.map((f) => <option value={f}>{f}</option>)}
+            {faixasFuncionarios.map((f) => <option value={f}>{f}</option>)}
           </select>
         </div>
       )}
