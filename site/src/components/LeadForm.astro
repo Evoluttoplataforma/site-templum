@@ -14,12 +14,17 @@ const {
   obrigado = "",   // ex: "/consultoria/iso-9001-obrigado" — sobrescreve o /obrigado padrão
   simples = false, // true → oculta nº funcionários, cargo e urgência
   faturamento = false, // true → mostra faturamento mensal (qualificação p/ PCI, mín. R$ 100 mil/mês)
+  faturamentoObrigatorio = false, // true → torna o faturamento obrigatório (campanhas que otimizam por faixa)
   labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
   cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
   funcionarios = false, // true → mostra "Nº de funcionários" mesmo com simples={true}
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
+// Com funcionários E faturamento juntos, a .form-row (1fr 1fr) ficaria com 3
+// filhos e sobraria um buraco — nesse caso a empresa vai em linha própria.
+const mostraFunc = !simples || funcionarios;
+const parQualif = mostraFunc && faturamento;
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 ---
@@ -34,9 +39,14 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
       <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
     </div>
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
-    <div class="form-row">
+    {parQualif && (
       <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
-      {(!simples || funcionarios) && (
+    )}
+    <div class="form-row">
+      {!parQualif && (
+        <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
+      )}
+      {mostraFunc && (
         <div class="field">
           <label>Nº de funcionários</label>
           <select class="select" name="funcionarios" aria-label="Nº de funcionários">
@@ -48,7 +58,7 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
       {faturamento && (
         <div class="field">
           <label>Faturamento mensal</label>
-          <select class="select" name="faturamento" aria-label="Faturamento mensal">
+          <select class="select" name="faturamento" aria-label="Faturamento mensal" required={faturamentoObrigatorio || undefined}>
             <option value="">Selecione</option>
             {faturamentos.map((f) => <option value={f}>{f}</option>)}
           </select>

@@ -111,6 +111,8 @@ const d = {
             obrigado={OBRIGADO}
             simples={true}
             funcionarios={true}
+            faturamento={true}
+            faturamentoObrigatorio={true}
             cargo={true}
           />
         </div>
@@ -256,6 +258,8 @@ const d = {
           obrigado={OBRIGADO}
           simples={true}
           funcionarios={true}
+          faturamento={true}
+          faturamentoObrigatorio={true}
           cargo={true}
         />
       </div>
@@ -271,6 +275,33 @@ const d = {
     </section>
 
   </div>
+
+  <!-- Meta — lead_qualificado_diagnostico: só para faturamento acima de R$ 100 mil/mês.
+       Escuta o gancho tpl:lead-saved do LpBase, que só dispara DEPOIS de o Supabase
+       confirmar o cadastro (mesma regra do Lead padrão) e antes do redirect. -->
+  <script is:inline>
+    (function () {
+      var QUALIFICADAS = [
+        "R$ 100 mil a R$ 300 mil",
+        "R$ 300 mil a R$ 500 mil",
+        "R$ 500 mil a R$ 1 milhão",
+        "Acima de R$ 1 milhão",
+      ];
+      document.addEventListener("tpl:lead-saved", function (e) {
+        var det = e.detail || {}, d = det.data || {};
+        if (QUALIFICADAS.indexOf(d.faturamento || "") === -1) return;
+        if (!window.fbq) return;
+        try {
+          fbq("trackCustom", "lead_qualificado_diagnostico", {
+            content_name: "Diagnóstico de Gestão",
+            faturamento: d.faturamento,
+            funcionarios: d.funcionarios || "",
+            cargo: d.cargo || "",
+          }, { eventID: det.eventId ? det.eventId + "-q" : window.__tplUuid() });
+        } catch (_) {}
+      });
+    })();
+  </script>
 </LpBase>
 
 <style>

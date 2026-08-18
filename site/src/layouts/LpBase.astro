@@ -275,6 +275,7 @@ const allSchemas = schemas;
               nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
               empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
+              faturamento: d.faturamento || "",
               status_pagamento: d.status_pagamento || "",
               evento: evt, pagina: location.pathname,
               meta_event_id: leadEventId, meta_content_name: contentName,
@@ -286,6 +287,14 @@ const allSchemas = schemas;
             clearTimeout(_t);
             if (saved) {
               window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
+              // Gancho p/ eventos extras da campanha (ex.: lead qualificado por
+              // faturamento). A LP escuta e dispara o que precisar ANTES dos 400ms
+              // de folga do redirect.
+              try {
+                document.dispatchEvent(new CustomEvent("tpl:lead-saved", {
+                  detail: { data: d, contentName: contentName, eventId: leadEventId },
+                }));
+              } catch (_) {}
               // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
               // forma assíncrona e o navegador CANCELA requisição em andamento na
               // navegação — redirecionar no mesmo tick fazia o evento se perder.
