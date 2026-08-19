@@ -152,7 +152,7 @@ Nosso processo começa com um **diagnóstico gratuito**: uma análise estruturad
 
 A implantação acontece com acompanhamento semanal — não entregamos um manual e desaparecemos. Toda semana, nosso consultor está junto com sua equipe, revisando documentos, tirando dúvidas, preparando o time para a auditoria.
 
-Toda a gestão do processo acontece no **Templum OS**, nossa plataforma com a Norma, especialista de IA, que organiza tarefas, registra evidências e mantém a construtora preparada para a auditoria a qualquer momento.
+Toda a gestão do processo acontece no **Templum OS**, nossa plataforma com a Olívia, especialista de IA, que organiza tarefas, registra evidências e mantém a construtora preparada para a auditoria a qualquer momento.
 
 E ao final, oferecemos o que nenhuma outra consultoria no setor oferece: **garantia de 200%**. Sua empresa se certifica ou devolvemos o dobro do investimento.
 
