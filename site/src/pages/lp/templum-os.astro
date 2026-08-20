@@ -51,13 +51,38 @@ const agentes = [
   { icon: "solar:videocamera-record-bold", nome: "Reuniões", dor: "“Reunião não vira ação”", entrega: "Transcreve, extrai decisão e cria o plano de ação automaticamente." },
 ];
 
-// Demonstração do que a Olívia responde. São perguntas reais de uso: a primeira é a
-// dor do dono, as duas seguintes são do profissional da qualidade (a segunda foi
-// demonstrada ao vivo na live de 19/08/2026, sobre análise crítica pela direção).
+// Demonstração do que a Olívia responde. Cinco interações, uma por PAPEL — e o papel
+// aparece na tela de propósito: a objeção silenciosa de quem chega do anúncio é "isso é
+// ferramenta de dono" ou "isso é coisa da qualidade". Mostrar o operador perguntando pelo
+// WhatsApp e o gerente cobrando pendência é o que faz o leitor entender que a plataforma
+// atende a empresa inteira, não um cargo.
+// A interação da análise crítica foi demonstrada ao vivo na live de 19/08/2026.
 const conversa = [
-  { p: "Quais indicadores fecharam fora da meta neste trimestre?", r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações." },
-  { p: "Prepare a análise crítica pela direção deste semestre.", r: "Levantei os 12 insumos do requisito 9.3: tenho 9 completos, 3 com lacuna de dado. Trouxe a tendência de cada indicador e uma saída sugerida por item — em vez de só o número do mês." },
-  { p: "O que um auditor encontraria hoje no meu sistema de gestão?", r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado." },
+  {
+    quem: "Dono · pelo painel",
+    p: "Quais indicadores fecharam fora da meta neste trimestre?",
+    r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações.",
+  },
+  {
+    quem: "Operador · pelo WhatsApp",
+    p: "Como faço a troca de setup da linha 2? Não achei o procedimento.",
+    r: "É a instrução IT‑014, revisão 3. São 6 passos; o crítico é o terceiro (travar o fuso antes de soltar o mandril). Te manda em áudio ou por escrito? Ah — a versão que está na sua pasta é a antiga, use esta.",
+  },
+  {
+    quem: "Gerente de área · pelo painel",
+    p: "O que ficou pendente da reunião da minha área?",
+    r: "Quatro ações: duas concluídas, uma vence hoje (revisar o fluxo de compras, com o Marcelo) e uma atrasada há 9 dias (treinar o time no novo procedimento). Quer que eu cobre os responsáveis agora?",
+  },
+  {
+    quem: "Qualidade · pelo painel",
+    p: "Prepare a análise crítica pela direção deste semestre.",
+    r: "Levantei os 12 insumos do requisito 9.3: tenho 9 completos, 3 com lacuna de dado. Trouxe a tendência de cada indicador e uma saída sugerida por item — em vez de só o número do mês.",
+  },
+  {
+    quem: "Diretor · pelo painel",
+    p: "O que um auditor encontraria hoje no meu sistema de gestão?",
+    r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado.",
+  },
 ];
 
 const semOlivia = [
@@ -206,11 +231,12 @@ const schemaFaq = {
     <div class="container xl ol-chat-grid">
       <div class="ol-chat-text">
         <span class="tag-pill tag-pill--glow">A Olívia por dentro</span>
-        <h2>Pergunte em português. Ela responde <em class="accent">com o dado da sua empresa</em>.</h2>
+        <h2>Do dono ao operador: cada um pergunta, ela responde <em class="accent">com o dado da sua empresa</em>.</h2>
         <p class="paragraph">
           A Olívia não é um chat genérico com o nome da sua empresa colado em cima. Ela conhece o
           planejamento, os processos, as instruções de trabalho, os indicadores, os riscos e as tarefas
-          que existem no seu Templum OS — e conversa por dentro da plataforma ou pelo WhatsApp.
+          que existem no seu Templum OS — e atende quem estiver perguntando: o dono no painel, o
+          operador pelo WhatsApp no meio do turno, o gerente cobrando pendência da própria área.
         </p>
         <ul class="check-list">
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Responde o funcionário com dúvida na instrução de trabalho</li>
@@ -228,6 +254,7 @@ const schemaFaq = {
         </div>
         {conversa.map((c) => (
           <div class="ol-chat-par">
+            <span class="ol-quem">{c.quem}</span>
             <p class="ol-bolha ol-bolha--eu">{c.p}</p>
             <p class="ol-bolha ol-bolha--ia">{c.r}</p>
           </div>
@@ -446,7 +473,11 @@ const schemaFaq = {
   .ol-chat-head strong { display: block; font-size: 15px; color: var(--cream); }
   .ol-chat-head span { font-size: 12px; color: rgba(255,244,221,0.55); }
   .ol-chat-par { margin-bottom: 16px; }
-  .ol-bolha { font-size: 14.5px; line-height: 1.55; border-radius: 16px; padding: 12px 15px; margin: 0 0 8px; max-width: 92%; }
+  /* Rótulo de quem está perguntando: é ele que transforma a demo em prova de que a
+     plataforma serve à empresa inteira, e não a um cargo só. */
+  .ol-quem { display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; color: rgba(255,244,221,0.45); margin-bottom: 7px; }
+  .ol-bolha { font-size: 14px; line-height: 1.5; border-radius: 16px; padding: 11px 14px; margin: 0 0 7px; max-width: 94%; }
   .ol-bolha--eu { background: rgba(255,244,221,0.12); color: var(--cream); margin-left: auto; border-bottom-right-radius: 5px; }
   .ol-bolha--ia { background: var(--orange); color: #fff; border-bottom-left-radius: 5px; }
   .ol-chat .btn { margin-top: 6px; }
