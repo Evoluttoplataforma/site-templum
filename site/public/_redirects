@@ -325,3 +325,11 @@
 /diagnosticodegestao/  /diagnostico-de-gestao/  301
 /diagnostico-gestao  /diagnostico-de-gestao/  301
 /diagnostico-gestao/  /diagnostico-de-gestao/  301
+
+# LP do Templum OS — a rota nasceu como /lp/olivia e foi renomeada no mesmo dia
+# (20/08/2026). O redirect existe porque a URL antiga ficou no ar por alguns minutos
+# e pode ter sido compartilhada ou colada em anúncio.
+/lp/olivia  /lp/templum-os/  301
+/lp/olivia/  /lp/templum-os/  301
+/lp/olivia-obrigado  /lp/templum-os-obrigado/  301
+/lp/olivia-obrigado/  /lp/templum-os-obrigado/  301

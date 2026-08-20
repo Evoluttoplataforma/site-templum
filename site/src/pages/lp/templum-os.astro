@@ -1,5 +1,5 @@
 ---
-// LP de aquisição do Templum OS / Olívia — tráfego PAGO (Meta + Google).
+// /lp/templum-os — LP de aquisição do Templum OS. Tráfego PAGO (Meta + Google).
 //
 // Por que esta página existe, e por que não é a /solucoes-de-ia:
 // a /solucoes-de-ia é uma página de ISO com a Olívia dentro — o hero fecha em
@@ -32,7 +32,10 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 const CRM_PRODUTO = "Mini Orbit";
 
 // A coluna da direita é o gancho de mídia; a do meio é a entrega (doc, seção 4.2).
-// Mesma lista de agentes do OrbitPlatform.astro — aqui reescrita na dor, não na feature.
+// Mesma lista do OrbitPlatform.astro, reescrita na dor e não na feature.
+// NÃO cravar número de agentes em copy nenhuma: a plataforma ganha agente novo quase toda
+// semana, e "12 agentes" já está desatualizado no site. A lista abaixo pode crescer sem
+// obrigar a caçar o número em título, meta description e FAQ.
 const agentes = [
   { icon: "solar:compass-bold", nome: "Estrategista", dor: "“Não sei para onde a empresa está indo”", entrega: "Análise de cenário, objetivos e o plano que desdobra em tarefas com responsável e prazo." },
   { icon: "mdi:sitemap-outline", nome: "Processos", dor: "“Só eu sei como as coisas funcionam aqui”", entrega: "Mapeia, documenta e gera a instrução de trabalho de cada atividade." },
@@ -82,9 +85,9 @@ const passos = [
 
 const faqs = [
   { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma foi construída sobre o método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão: processos, pessoas, indicadores, riscos, documentos e vendas. Se um dia você quiser certificar, o caminho já estará 80% andado — a certificação passa a ser consequência, não pré-requisito." },
-  { q: "Quanto custa?", a: "A assinatura do Templum OS é de R$ 1.500 por mês, sem fidelidade — você cancela quando quiser. Não há cobrança por token de IA nem por agente: os 12 estão inclusos. Na conversa o especialista confirma o escopo para o seu porte antes de qualquer proposta." },
+  { q: "Quanto custa?", a: "A assinatura do Templum OS é de R$ 1.500 por mês, sem fidelidade — você cancela quando quiser. Não há cobrança por token de IA nem por agente: todos estão inclusos. Na conversa o especialista confirma o escopo para o seu porte antes de qualquer proposta." },
   { q: "Consigo testar antes de assinar?", a: "Sim. Existe um período de teste gratuito e, na conversa, o especialista libera o acesso já com a sua organização criada — você usa com dados reais da sua empresa em vez de navegar numa conta de demonstração." },
-  { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os 12 agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa: quem tem dúvida em uma instrução de trabalho ou quer saber por que um indicador caiu pergunta para ela." },
+  { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa: quem tem dúvida em uma instrução de trabalho ou quer saber por que um indicador caiu pergunta para ela." },
   { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É justamente o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
   { q: "Sou da qualidade. O que muda no meu dia?", a: "O trabalho manual sai. A análise crítica pela direção deixa de ser garimpo de dado em oito lugares: os insumos ficam reunidos, com tendência e saída sugerida por item. O mesmo vale para não conformidade com PDCA, controle de documentos, matriz de riscos, pesquisa de satisfação e evidência de treinamento — tudo no mesmo lugar, pronto para auditoria." },
   { q: "Quanto tempo leva para estar rodando?", a: "A primeira estrutura (planejamento, departamentos, processos e indicadores) sai na própria demonstração, em minutos. O que leva tempo é a adoção pelo time — e é por isso que o teste acontece com a sua equipe dentro, não só com você." },
@@ -99,7 +102,7 @@ const schemaSoftware = {
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:
-    "Plataforma de gestão com 12 agentes de inteligência artificial coordenados pela Olívia: organiza planejamento estratégico, processos, pessoas, treinamento, indicadores, riscos, documentos, vendas e reuniões em um só lugar.",
+    "Plataforma de gestão com agentes de inteligência artificial coordenados pela Olívia: organiza planejamento estratégico, processos, pessoas, treinamento, indicadores, riscos, documentos, vendas e reuniões em um só lugar.",
   offers: { "@type": "Offer", price: "1500.00", priceCurrency: "BRL", availability: "https://schema.org/InStock" },
   provider: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
   audience: { "@type": "Audience", audienceType: "Donos de empresa, diretores e profissionais da qualidade" },
@@ -113,8 +116,8 @@ const schemaFaq = {
 ---
 
 <LpBase
-  title="Conheça a Olívia — a IA que organiza a gestão da sua empresa | Templum OS"
-  description="12 agentes de inteligência artificial que mapeiam seus processos, definem quem faz o quê, treinam seu time e monitoram seus indicadores. Veja a Olívia rodando no cenário da sua empresa."
+  title="Templum OS — a plataforma de IA que organiza a gestão da sua empresa | Templum"
+  description="Agentes de inteligência artificial que mapeiam seus processos, definem quem faz o quê, treinam seu time e monitoram seus indicadores. Veja o Templum OS rodando no cenário da sua empresa."
   formAnchor="#demonstracao"
   headerCta="Quero conhecer a Olívia"
   schemas={[schemaSoftware, schemaFaq]}
@@ -125,9 +128,9 @@ const schemaFaq = {
     <div class="container xl ol-hero-grid">
       <div class="ol-hero-text">
         <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
-        <h1 class="ol-hero-title">Conheça a <em class="accent">Olívia</em>: a IA que faz a sua empresa rodar sem depender de você</h1>
+        <h1 class="ol-hero-title">O <em class="accent">Templum OS</em> faz a sua empresa rodar sem depender de você</h1>
         <p class="ol-hero-sub">
-          São <strong>12 agentes de inteligência artificial</strong> que mapeiam seus processos, definem
+          São <strong>agentes de inteligência artificial</strong> que mapeiam seus processos, definem
           quem faz o quê, treinam seu time pelo WhatsApp e monitoram seus indicadores — dentro de uma
           plataforma só. A Olívia coordena todos eles e responde sobre a sua operação.
         </p>
@@ -152,7 +155,7 @@ const schemaFaq = {
           titulo="Veja a Olívia na sua empresa"
           sub="30 minutos, sem compromisso. O especialista roda os agentes no cenário real do seu negócio."
           cta="Quero conhecer a Olívia"
-          obrigado="/lp/olivia-obrigado"
+          obrigado="/lp/templum-os-obrigado"
           simples={true}
           cargo={true}
           funcionarios={true}
@@ -217,7 +220,7 @@ const schemaFaq = {
       </div>
       <div class="ol-chat">
         <div class="ol-chat-head">
-          <img src="/assets/img/olivia.webp" alt="Olívia" width="800" height="1200" loading="lazy" decoding="async" />
+          <img src="/assets/img/olivia_templum.webp" alt="Olívia" width="820" height="1230" loading="lazy" decoding="async" />
           <div>
             <strong>Olívia</strong>
             <span>IA do Templum OS · online</span>
@@ -239,8 +242,8 @@ const schemaFaq = {
     <div class="container xl">
       <div class="section-header">
         <span class="tag-pill">O time de IA</span>
-        <h2>12 agentes, <em class="accent">um para cada coisa que trava</em></h2>
-        <p>Cada agente domina uma área e entrega trabalho pronto. A Olívia costura tudo e mantém o contexto.</p>
+        <h2>Um agente <em class="accent">para cada coisa que trava</em></h2>
+        <p>Cada agente domina uma área e entrega trabalho pronto — e a lista não para de crescer. A Olívia costura tudo e mantém o contexto.</p>
       </div>
       <div class="ol-agentes">
         {agentes.map((a) => (
@@ -336,7 +339,7 @@ const schemaFaq = {
         titulo="Agendar minha demonstração"
         sub="Resposta em até 1 dia útil. Sem compromisso."
         cta="Quero conhecer a Olívia"
-        obrigado="/lp/olivia-obrigado"
+        obrigado="/lp/templum-os-obrigado"
         simples={true}
         cargo={true}
         funcionarios={true}
@@ -366,7 +369,7 @@ const schemaFaq = {
   <section class="cta-band">
     <div class="container md">
       <h2>Sua empresa pode rodar <em>sem depender de você</em></h2>
-      <p>Conheça a Olívia e os 12 agentes numa demonstração feita no cenário do seu negócio.</p>
+      <p>Conheça o Templum OS e a Olívia numa demonstração feita no cenário do seu negócio.</p>
       <a href="#demonstracao" class="btn btn--dark btn--lg">Quero conhecer a Olívia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
@@ -478,6 +481,17 @@ const schemaFaq = {
   .ol-passo h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; letter-spacing: -0.01em; }
   .ol-passo p { font-size: 14.5px; line-height: 1.55; color: rgba(255,244,221,0.78); margin: 0; }
   @media (max-width: 880px) { .ol-passos { grid-template-columns: 1fr; } }
+
+  /* ---------- FAQ EM FUNDO ESCURO ----------
+     O global.css estiliza .faq-* para seção clara (.faq-question usa var(--text)), então
+     em section--navy o texto sai escuro sobre escuro — ilegível. A LP de financiamento
+     resolve com estes mesmos overrides, mas o style do Astro é escopado por componente:
+     cada página precisa dos seus. */
+  .section--navy .faq-item { border-color: rgba(255,244,221,0.12); }
+  .section--navy .faq-question { color: var(--cream); }
+  .section--navy .faq-question:hover { color: var(--orange); }
+  .section--navy .faq-question .faq-arrow { color: var(--orange); }
+  .section--navy .faq-answer { color: rgba(255,244,221,0.72); }
 
   /* ---------- FORMULÁRIO ---------- */
   .ol-form { padding: clamp(48px, 6vw, 84px) 0; }
