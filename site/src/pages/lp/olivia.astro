@@ -1,0 +1,488 @@
+---
+// LP de aquisição do Templum OS / Olívia — tráfego PAGO (Meta + Google).
+//
+// Por que esta página existe, e por que não é a /solucoes-de-ia:
+// a /solucoes-de-ia é uma página de ISO com a Olívia dentro — o hero fecha em
+// "acelerando o caminho até a certificação" e o hub orbital se chama "Uma certificação
+// ISO guiada por tecnologia". Serve para quem já quer certificar. O público desta LP é
+// outro (PROJETO-AQUISICAO-TEMPLUM-OS.md, seções 1 e 4): dono de empresa travado pela
+// desorganização, que não busca "ISO", busca parar de sofrer — e o profissional da
+// qualidade que quer ver a IA aplicada ao sistema de gestão que ele já opera.
+// Os dois entram pela mesma dor (a empresa depende de gente, não de processo) e a
+// certificação aparece como consequência possível, nunca como porta de entrada.
+//
+// Imagem e identidade reaproveitadas da /solucoes-de-ia de propósito (mesma foto da
+// Olívia, mesmos números, mesma paleta): reconhecimento de marca entre anúncio, LP e
+// produto é o que sustenta a taxa de conversão depois do clique.
+//
+// ⚠️ O QUE NÃO PROMETER AQUI: a garantia de 200% é da consultoria de certificação —
+// não existe "resultado acordado" em assinatura mensal (doc, seção 3, risco 3). A
+// reversão de risco desta página é "cancele quando quiser" + teste gratuito.
+import LpBase from "../../layouts/LpBase.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+
+// ⚠️ cf_produto do CRM é SELECT. Valor fora da lista faz o saveToOrbit (worker.js:590)
+// reenviar o lead SEM NENHUM campo personalizado — o lead entra, mas sem cargo, sem
+// faixa de funcionários, sem página de conversão e SEM UTM. Numa LP de mídia paga isso
+// é o mesmo que cegar a campanha. "Mini Orbit" é a opção existente mais próxima do
+// produto; se "Templum OS" for criada no CRM (CRM → Campos Personalizados → Produto),
+// troque a constante abaixo e nada mais.
+const CRM_PRODUTO = "Mini Orbit";
+
+// A coluna da direita é o gancho de mídia; a do meio é a entrega (doc, seção 4.2).
+// Mesma lista de agentes do OrbitPlatform.astro — aqui reescrita na dor, não na feature.
+const agentes = [
+  { icon: "solar:compass-bold", nome: "Estrategista", dor: "“Não sei para onde a empresa está indo”", entrega: "Análise de cenário, objetivos e o plano que desdobra em tarefas com responsável e prazo." },
+  { icon: "mdi:sitemap-outline", nome: "Processos", dor: "“Só eu sei como as coisas funcionam aqui”", entrega: "Mapeia, documenta e gera a instrução de trabalho de cada atividade." },
+  { icon: "solar:users-group-rounded-bold", nome: "Pessoas", dor: "“Contratei e a pessoa não sabe o que fazer”", entrega: "Descrição de cargo, avaliação e plano de desenvolvimento individual." },
+  { icon: "solar:square-academic-cap-bold", nome: "Treinamento", dor: "“Treino a equipe e ninguém aplica”", entrega: "Microlearning diário pelo WhatsApp, no nível de cada colaborador." },
+  { icon: "solar:chart-2-bold", nome: "Indicadores", dor: "“Decido por intuição, não por número”", entrega: "KPI em tempo real, tendência e hipótese de causa raiz do desvio." },
+  { icon: "solar:magnifer-bold", nome: "Pesquisa", dor: "“Não sei o que meu time e meu cliente pensam”", entrega: "Pesquisa de clima, satisfação e NPS com leitura pronta." },
+  { icon: "solar:shield-warning-bold", nome: "Riscos", dor: "“Vivo apagando incêndio”", entrega: "Identifica a ameaça antes de virar crise e propõe o plano de mitigação." },
+  { icon: "solar:lightbulb-bold", nome: "Oportunidades", dor: "“Sinto que estou deixando dinheiro na mesa”", entrega: "Cruza mercado e dado interno para apontar expansão e parceria." },
+  { icon: "solar:danger-triangle-bold", nome: "Problemas", dor: "“O mesmo erro acontece todo mês”", entrega: "Registra a não conformidade e conduz o PDCA até o fechamento." },
+  { icon: "solar:document-text-bold", nome: "Documentos", dor: "“Cada um usa uma versão da planilha”", entrega: "Padroniza, versiona e controla — todos na versão certa." },
+  { icon: "mdi:handshake-outline", nome: "Vendas", dor: "“Perco orçamento sem follow-up”", entrega: "CRM, funil e coaching comercial dentro da mesma plataforma." },
+  { icon: "solar:videocamera-record-bold", nome: "Reuniões", dor: "“Reunião não vira ação”", entrega: "Transcreve, extrai decisão e cria o plano de ação automaticamente." },
+];
+
+// Demonstração do que a Olívia responde. São perguntas reais de uso: a primeira é a
+// dor do dono, as duas seguintes são do profissional da qualidade (a segunda foi
+// demonstrada ao vivo na live de 19/08/2026, sobre análise crítica pela direção).
+const conversa = [
+  { p: "Quais indicadores fecharam fora da meta neste trimestre?", r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações." },
+  { p: "Prepare a análise crítica pela direção deste semestre.", r: "Levantei os 12 insumos do requisito 9.3: tenho 9 completos, 3 com lacuna de dado. Trouxe a tendência de cada indicador e uma saída sugerida por item — em vez de só o número do mês." },
+  { p: "O que um auditor encontraria hoje no meu sistema de gestão?", r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado." },
+];
+
+const semOlivia = [
+  "A empresa para quando o dono viaja",
+  "Processo existe na cabeça das pessoas, não no papel",
+  "Indicador é planilha que ninguém atualiza",
+  "Reunião longa, decisão que não vira ação",
+  "Funcionário sai e leva o conhecimento embora",
+  "Auditoria vira correria de última hora",
+];
+const comOlivia = [
+  "O processo roda porque está escrito e atribuído",
+  "Instrução de trabalho gerada e versionada por agente de IA",
+  "Indicador com tendência e causa raiz sugerida",
+  "Reunião transcrita, decisão em tarefa com prazo",
+  "Conhecimento fica na plataforma, não na pessoa",
+  "Evidência pronta o ano inteiro, não na véspera",
+];
+
+const passos = [
+  { n: "01", t: "Conversa de 30 minutos", d: "Você conta como a empresa funciona hoje: quantas pessoas, o que trava, o que já é organizado." },
+  { n: "02", t: "A Olívia rodando no seu cenário", d: "O especialista cria a sua organização na plataforma e você vê os agentes trabalhando com o contexto da SUA empresa — não numa demo genérica." },
+  { n: "03", t: "Teste com o seu time", d: "Você recebe acesso para usar com a sua equipe antes de decidir. Se fizer sentido, começa; se não, encerra." },
+];
+
+const faqs = [
+  { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma foi construída sobre o método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão: processos, pessoas, indicadores, riscos, documentos e vendas. Se um dia você quiser certificar, o caminho já estará 80% andado — a certificação passa a ser consequência, não pré-requisito." },
+  { q: "Quanto custa?", a: "A assinatura do Templum OS é de R$ 1.500 por mês, sem fidelidade — você cancela quando quiser. Não há cobrança por token de IA nem por agente: os 12 estão inclusos. Na conversa o especialista confirma o escopo para o seu porte antes de qualquer proposta." },
+  { q: "Consigo testar antes de assinar?", a: "Sim. Existe um período de teste gratuito e, na conversa, o especialista libera o acesso já com a sua organização criada — você usa com dados reais da sua empresa em vez de navegar numa conta de demonstração." },
+  { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os 12 agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa: quem tem dúvida em uma instrução de trabalho ou quer saber por que um indicador caiu pergunta para ela." },
+  { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É justamente o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
+  { q: "Sou da qualidade. O que muda no meu dia?", a: "O trabalho manual sai. A análise crítica pela direção deixa de ser garimpo de dado em oito lugares: os insumos ficam reunidos, com tendência e saída sugerida por item. O mesmo vale para não conformidade com PDCA, controle de documentos, matriz de riscos, pesquisa de satisfação e evidência de treinamento — tudo no mesmo lugar, pronto para auditoria." },
+  { q: "Quanto tempo leva para estar rodando?", a: "A primeira estrutura (planejamento, departamentos, processos e indicadores) sai na própria demonstração, em minutos. O que leva tempo é a adoção pelo time — e é por isso que o teste acontece com a sua equipe dentro, não só com você." },
+  { q: "Meus dados ficam seguros?", a: "Sim. A plataforma é da própria Templum, com controle de acesso por usuário e organização, e o tratamento de dados segue a LGPD. Cada organização é isolada: o que você cria não é visível para nenhum outro cliente." },
+  { q: "Serve para mais de uma empresa ou unidade?", a: "Serve. A plataforma é multiorganização: grupos, filiais e unidades podem ter cada um o seu ambiente, e quem administra transita entre eles. Consultores usam exatamente esse recurso para atender vários clientes." },
+];
+
+const schemaSoftware = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Templum OS",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description:
+    "Plataforma de gestão com 12 agentes de inteligência artificial coordenados pela Olívia: organiza planejamento estratégico, processos, pessoas, treinamento, indicadores, riscos, documentos, vendas e reuniões em um só lugar.",
+  offers: { "@type": "Offer", price: "1500.00", priceCurrency: "BRL", availability: "https://schema.org/InStock" },
+  provider: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  audience: { "@type": "Audience", audienceType: "Donos de empresa, diretores e profissionais da qualidade" },
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+
+<LpBase
+  title="Conheça a Olívia — a IA que organiza a gestão da sua empresa | Templum OS"
+  description="12 agentes de inteligência artificial que mapeiam seus processos, definem quem faz o quê, treinam seu time e monitoram seus indicadores. Veja a Olívia rodando no cenário da sua empresa."
+  formAnchor="#demonstracao"
+  headerCta="Quero conhecer a Olívia"
+  schemas={[schemaSoftware, schemaFaq]}
+>
+  <!-- HERO — form na primeira dobra, à direita no desktop -->
+  <section class="ol-hero">
+    <div class="ol-hero-bg" aria-hidden="true"></div>
+    <div class="container xl ol-hero-grid">
+      <div class="ol-hero-text">
+        <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
+        <h1 class="ol-hero-title">Conheça a <em class="accent">Olívia</em>: a IA que faz a sua empresa rodar sem depender de você</h1>
+        <p class="ol-hero-sub">
+          São <strong>12 agentes de inteligência artificial</strong> que mapeiam seus processos, definem
+          quem faz o quê, treinam seu time pelo WhatsApp e monitoram seus indicadores — dentro de uma
+          plataforma só. A Olívia coordena todos eles e responde sobre a sua operação.
+        </p>
+        <div class="ol-hero-chips">
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Até 40% menos tempo de execução</span>
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> 85% menos erros operacionais</span>
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> +2.000 empresas atendidas</span>
+        </div>
+      </div>
+
+      <div class="ol-hero-olivia">
+        <img src="/assets/img/olivia_templum.webp" alt="Olívia, a inteligência artificial do Templum OS" width="820" height="1230" fetchpriority="high" decoding="async" />
+        <div class="ol-hero-quote">
+          <span class="ol-hero-quote-n">Olívia</span>
+          <p>“Seu indicador de retrabalho piora há 4 meses. Quer ver a causa raiz?”</p>
+        </div>
+      </div>
+
+      <div class="ol-hero-form" id="demonstracao">
+        <LeadForm
+          norma={CRM_PRODUTO}
+          titulo="Veja a Olívia na sua empresa"
+          sub="30 minutos, sem compromisso. O especialista roda os agentes no cenário real do seu negócio."
+          cta="Quero conhecer a Olívia"
+          obrigado="/lp/olivia-obrigado"
+          simples={true}
+          cargo={true}
+          funcionarios={true}
+        />
+      </div>
+    </div>
+  </section>
+
+  <ClientLogos dark={true} titulo="Mais de 2.000 empresas já passaram pelo método que virou o Templum OS" />
+
+  <!-- DOIS PÚBLICOS — quem se identifica clica -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Para quem é</span>
+        <h2>Duas dores diferentes, <em class="accent">a mesma origem</em></h2>
+        <p>A empresa depende de pessoas lembrarem, e não de um processo que roda. Escolha o lado da mesa em que você está.</p>
+      </div>
+      <div class="ol-publicos">
+        <div class="ol-publico">
+          <span class="ol-publico-tag"><iconify-icon icon="solar:crown-bold"></iconify-icon> Dono ou diretor</span>
+          <h3>Tudo passa por você — e isso virou o teto do crescimento</h3>
+          <ul class="ol-lista">
+            <li>Você é consultado para decisão que a equipe deveria tomar sozinha</li>
+            <li>Não sabe dizer, com número, qual processo está travando o resultado</li>
+            <li>Contrata, treina, e três meses depois o padrão sumiu</li>
+            <li>Não consegue tirar duas semanas de férias sem a operação oscilar</li>
+          </ul>
+          <a href="#demonstracao" class="btn btn--primary">Quero ver isso resolvido <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+        <div class="ol-publico">
+          <span class="ol-publico-tag"><iconify-icon icon="solar:medal-ribbon-star-bold"></iconify-icon> Qualidade e processos</span>
+          <h3>Você mantém o sistema de gestão vivo à mão, e ele consome o seu mês</h3>
+          <ul class="ol-lista">
+            <li>Junta indicador de oito lugares para montar uma ata que ninguém lê</li>
+            <li>Persegue evidência de treinamento e documento vencido na véspera da auditoria</li>
+            <li>Análise crítica pela direção sai fria, sem tendência e sem decisão</li>
+            <li>A alta direção não senta na mesa porque o dado não chega pronto</li>
+          </ul>
+          <a href="#demonstracao" class="btn btn--primary">Quero ver isso automatizado <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONHEÇA A OLÍVIA — a demonstração da promessa do anúncio -->
+  <section class="section section--navy ol-chat-sec">
+    <div class="container xl ol-chat-grid">
+      <div class="ol-chat-text">
+        <span class="tag-pill tag-pill--glow">A Olívia por dentro</span>
+        <h2>Pergunte em português. Ela responde <em class="accent">com o dado da sua empresa</em>.</h2>
+        <p class="paragraph">
+          A Olívia não é um chat genérico com o nome da sua empresa colado em cima. Ela conhece o
+          planejamento, os processos, as instruções de trabalho, os indicadores, os riscos e as tarefas
+          que existem no seu Templum OS — e conversa por dentro da plataforma ou pelo WhatsApp.
+        </p>
+        <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Responde o funcionário com dúvida na instrução de trabalho</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Explica por que o indicador caiu, com tendência e causa raiz</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Prepara reunião e análise crítica com os insumos já reunidos</li>
+        </ul>
+      </div>
+      <div class="ol-chat">
+        <div class="ol-chat-head">
+          <img src="/assets/img/olivia.webp" alt="Olívia" width="800" height="1200" loading="lazy" decoding="async" />
+          <div>
+            <strong>Olívia</strong>
+            <span>IA do Templum OS · online</span>
+          </div>
+        </div>
+        {conversa.map((c) => (
+          <div class="ol-chat-par">
+            <p class="ol-bolha ol-bolha--eu">{c.p}</p>
+            <p class="ol-bolha ol-bolha--ia">{c.r}</p>
+          </div>
+        ))}
+        <a href="#demonstracao" class="btn btn--primary btn--block">Quero perguntar sobre a minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 AGENTES — cada linha é um gancho -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">O time de IA</span>
+        <h2>12 agentes, <em class="accent">um para cada coisa que trava</em></h2>
+        <p>Cada agente domina uma área e entrega trabalho pronto. A Olívia costura tudo e mantém o contexto.</p>
+      </div>
+      <div class="ol-agentes">
+        {agentes.map((a) => (
+          <div class="ol-agente reveal">
+            <span class="ol-agente-ico"><iconify-icon icon={a.icon}></iconify-icon></span>
+            <div>
+              <span class="ol-agente-nome">{a.nome}</span>
+              <p class="ol-agente-dor">{a.dor}</p>
+              <p class="ol-agente-entrega">{a.entrega}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ANTES / DEPOIS -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">O que muda</span>
+        <h2>A diferença não é ter <em class="accent">mais um sistema</em></h2>
+      </div>
+      <div class="ol-vs">
+        <div class="ol-vs-col ol-vs-bad">
+          <h3><iconify-icon icon="solar:close-circle-bold"></iconify-icon> Como está hoje</h3>
+          <ul>{semOlivia.map((s) => <li><iconify-icon icon="solar:close-circle-linear"></iconify-icon>{s}</li>)}</ul>
+        </div>
+        <div class="ol-vs-col ol-vs-good">
+          <h3><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Com o Templum OS</h3>
+          <ul>{comOlivia.map((s) => <li><iconify-icon icon="solar:check-circle-linear"></iconify-icon>{s}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTADOS -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Resultado prático</span>
+        <h2>Números medidos <em class="accent">nos clientes que já usam</em></h2>
+      </div>
+      <div class="numbers-grid">
+        <div class="number-card reveal"><div class="value"><em>40%</em></div><div class="label">menos tempo na execução dos processos</div></div>
+        <div class="number-card reveal"><div class="value"><em>85%</em></div><div class="label">de redução em erros operacionais</div></div>
+        <div class="number-card reveal"><div class="value"><em>65%</em></div><div class="label">de ganho em produtividade das equipes</div></div>
+        <div class="number-card reveal"><div class="value"><em>+30</em></div><div class="label">anos de método de gestão por trás da plataforma</div></div>
+      </div>
+    </div>
+  </section>
+
+  <DepoimentosTexto />
+
+  <!-- COMO COMEÇA -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Como começa</span>
+        <h2>Três passos até ver <em class="accent">a sua empresa dentro</em></h2>
+      </div>
+      <div class="ol-passos">
+        {passos.map((p) => (
+          <div class="ol-passo reveal">
+            <span class="ol-passo-n">{p.n}</span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIO -->
+  <section id="form" class="ol-form section--navy">
+    <div class="container lg ol-form-grid">
+      <div class="ol-form-pitch">
+        <span class="tag-pill tag-pill--glow">Comece agora</span>
+        <h2>Veja a Olívia trabalhando <em class="accent">com os dados da sua empresa</em></h2>
+        <p class="paragraph">
+          Em 30 minutos o especialista cria a sua organização na plataforma e roda os agentes no seu
+          contexto: planejamento, processos, indicadores e o que mais fizer sentido para o seu momento.
+          Você sai da conversa sabendo exatamente o que a plataforma faz por você — e o que não faz.
+        </p>
+        <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Demonstração na sua realidade, não em conta de exemplo</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Período de teste com a sua equipe antes de decidir</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Assinatura mensal, sem fidelidade — cancele quando quiser</li>
+        </ul>
+      </div>
+      <LeadForm
+        norma={CRM_PRODUTO}
+        titulo="Agendar minha demonstração"
+        sub="Resposta em até 1 dia útil. Sem compromisso."
+        cta="Quero conhecer a Olívia"
+        obrigado="/lp/olivia-obrigado"
+        simples={true}
+        cargo={true}
+        funcionarios={true}
+      />
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Tire suas dúvidas</span>
+        <h2>Perguntas frequentes sobre <em class="accent">a Olívia e o Templum OS</em></h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-band">
+    <div class="container md">
+      <h2>Sua empresa pode rodar <em>sem depender de você</em></h2>
+      <p>Conheça a Olívia e os 12 agentes numa demonstração feita no cenário do seu negócio.</p>
+      <a href="#demonstracao" class="btn btn--dark btn--lg">Quero conhecer a Olívia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+    </div>
+  </section>
+</LpBase>
+
+<style>
+  /* ---------- HERO ---------- */
+  .ol-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(44px, 5.5vw, 76px) 0; }
+  .ol-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 460px at 10% 0%, rgba(255,89,37,0.28), transparent 60%),
+                radial-gradient(560px 380px at 100% 100%, rgba(255,89,37,0.14), transparent 60%); }
+  /* Áreas, e não ordem de DOM: no desktop a foto entra embaixo do texto e o formulário
+     ocupa a coluna inteira; no mobile a sequência vira texto → FORMULÁRIO → foto, porque
+     campo abaixo da dobra em LP de tráfego pago é lead perdido. */
+  .ol-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr;
+    grid-template-areas: "texto form" "olivia form"; gap: clamp(22px, 3vw, 34px) clamp(30px, 4vw, 58px); align-items: start; }
+  .ol-hero-text { grid-area: texto; }
+  .ol-hero-olivia { grid-area: olivia; }
+  .ol-hero-form { grid-area: form; }
+  .ol-hero-text { max-width: 620px; }
+  .ol-hero .tag-pill { margin-bottom: 18px; }
+  .ol-hero-title { font-size: clamp(31px, 4.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); }
+  .ol-hero-sub { font-size: 17px; line-height: 1.6; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 540px; }
+  .ol-hero-sub strong { color: var(--cream); }
+  .ol-hero-chips { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .ol-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .ol-chip iconify-icon { color: color-mix(in srgb, var(--orange) 58%, #ffffff); font-size: 18px; }
+
+  /* Foto da Olívia: a mesma da /solucoes-de-ia, recortada na altura para não empurrar o
+     formulário para fora da dobra. A fala ao lado existe para a foto não ser decoração —
+     ela mostra, em uma linha, o que o produto faz. */
+  .ol-hero-olivia { display: flex; align-items: flex-end; gap: 18px; }
+  .ol-hero-olivia img { width: 168px; height: 210px; object-fit: cover; object-position: 50% 12%; border-radius: 20px; border: 2px solid rgba(255,89,37,0.55); flex: none; }
+  .ol-hero-quote { background: rgba(255,244,221,0.07); border: 1px solid rgba(255,244,221,0.14); border-radius: 16px; padding: 14px 16px; }
+  .ol-hero-quote-n { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+  .ol-hero-quote p { font-size: 14.5px; line-height: 1.5; color: rgba(255,244,221,0.9); margin: 0; }
+  .ol-hero-form { align-self: start; position: sticky; top: 20px; }
+  @media (max-width: 980px) {
+    .ol-hero-grid { grid-template-columns: 1fr; grid-template-areas: "texto" "form" "olivia"; }
+    .ol-hero-form { position: static; }
+    .ol-hero-olivia img { width: 132px; height: 165px; }
+  }
+  /* Celular: cada pixel do hero antes do formulário é um pixel que o lead precisa rolar.
+     Medido em 390x844 — subtítulo e chips ocupavam 312px sozinhos e empurravam o campo
+     para fora da dobra. Aqui eles encolhem (sem cortar texto) e o cartão do formulário
+     sobe ~110px, entrando na primeira tela junto do título dele. */
+  @media (max-width: 600px) {
+    .ol-hero { padding-top: 26px; }
+    .ol-hero-title { font-size: clamp(28px, 8vw, 34px); }
+    .ol-hero-sub { font-size: 15.5px; line-height: 1.5; margin-top: 14px; }
+    .ol-hero-chips { gap: 8px 16px; margin-top: 16px; padding-top: 14px; }
+    .ol-chip { font-size: 12.5px; }
+    .ol-chip iconify-icon { font-size: 16px; }
+  }
+
+  /* ---------- DOIS PÚBLICOS ---------- */
+  .ol-publicos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 42px; }
+  .ol-publico { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; display: flex; flex-direction: column; }
+  .ol-publico-tag { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange-ink, var(--orange)); background: rgba(255,89,37,0.10); border-radius: 100px; padding: 7px 14px; }
+  .ol-publico h3 { font-size: 21px; font-weight: 800; line-height: 1.22; letter-spacing: -0.02em; margin: 16px 0 14px; }
+  .ol-lista { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .ol-lista li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.55; color: var(--text-mid); }
+  .ol-lista li::before { content: "—"; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+  .ol-publico .btn { align-self: flex-start; }
+  @media (max-width: 880px) { .ol-publicos { grid-template-columns: 1fr; } }
+
+  /* ---------- CHAT DA OLÍVIA ---------- */
+  .ol-chat-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(30px, 4vw, 56px); align-items: center; }
+  .ol-chat-text h2 { color: var(--cream); }
+  .ol-chat-text .paragraph { color: rgba(255,244,221,0.82); }
+  .ol-chat { background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-24); padding: 22px; }
+  .ol-chat-head { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,244,221,0.12); }
+  .ol-chat-head img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 2px solid var(--orange); }
+  .ol-chat-head strong { display: block; font-size: 15px; color: var(--cream); }
+  .ol-chat-head span { font-size: 12px; color: rgba(255,244,221,0.55); }
+  .ol-chat-par { margin-bottom: 16px; }
+  .ol-bolha { font-size: 14.5px; line-height: 1.55; border-radius: 16px; padding: 12px 15px; margin: 0 0 8px; max-width: 92%; }
+  .ol-bolha--eu { background: rgba(255,244,221,0.12); color: var(--cream); margin-left: auto; border-bottom-right-radius: 5px; }
+  .ol-bolha--ia { background: var(--orange); color: #fff; border-bottom-left-radius: 5px; }
+  .ol-chat .btn { margin-top: 6px; }
+  @media (max-width: 980px) { .ol-chat-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- 12 AGENTES ---------- */
+  .ol-agentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 42px; }
+  .ol-agente { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 20px; }
+  .ol-agente-ico { width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.10); }
+  .ol-agente-nome { display: block; font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em; }
+  .ol-agente-dor { font-size: 14px; font-style: italic; color: var(--text-mid); margin: 5px 0 6px; }
+  .ol-agente-entrega { font-size: 13.5px; line-height: 1.5; color: var(--text-soft); margin: 0; }
+  @media (max-width: 980px) { .ol-agentes { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .ol-agentes { grid-template-columns: 1fr; } }
+
+  /* ---------- ANTES / DEPOIS ---------- */
+  .ol-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+  .ol-vs-col { border-radius: var(--r-20); padding: 26px 24px; border: 1px solid rgba(255,244,221,0.14); background: rgba(255,244,221,0.04); }
+  .ol-vs-col h3 { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 800; color: var(--cream); margin-bottom: 16px; }
+  .ol-vs-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 11px; }
+  .ol-vs-col li { display: flex; gap: 9px; align-items: flex-start; font-size: 14.5px; line-height: 1.5; color: rgba(255,244,221,0.82); }
+  .ol-vs-col li iconify-icon { flex: none; font-size: 17px; margin-top: 1px; }
+  .ol-vs-bad h3 iconify-icon, .ol-vs-bad li iconify-icon { color: #ff8a6b; }
+  .ol-vs-good { border-color: rgba(255,89,37,0.4); }
+  .ol-vs-good h3 iconify-icon, .ol-vs-good li iconify-icon { color: color-mix(in srgb, var(--orange) 62%, #ffffff); }
+  @media (max-width: 880px) { .ol-vs { grid-template-columns: 1fr; } }
+
+  /* ---------- PASSOS ---------- */
+  .ol-passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 42px; }
+  .ol-passo { background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-20); padding: 26px 24px; }
+  .ol-passo-n { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--orange); margin-bottom: 12px; }
+  .ol-passo h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; letter-spacing: -0.01em; }
+  .ol-passo p { font-size: 14.5px; line-height: 1.55; color: rgba(255,244,221,0.78); margin: 0; }
+  @media (max-width: 880px) { .ol-passos { grid-template-columns: 1fr; } }
+
+  /* ---------- FORMULÁRIO ---------- */
+  .ol-form { padding: clamp(48px, 6vw, 84px) 0; }
+  .ol-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(30px, 4vw, 56px); align-items: center; }
+  .ol-form-pitch h2 { color: var(--cream); }
+  .ol-form-pitch .paragraph { color: rgba(255,244,221,0.82); margin-bottom: 22px; }
+  @media (max-width: 980px) { .ol-form-grid { grid-template-columns: 1fr; } }
+</style>
