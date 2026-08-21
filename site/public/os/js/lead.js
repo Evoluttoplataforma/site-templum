@@ -125,7 +125,13 @@
           // reenviar o lead SEM NENHUM campo personalizado (sem cargo, sem UTM).
           // "Mini Orbit" é a opção existente mais próxima do Templum OS.
           norma: "Mini Orbit",
-          mensagem: "Lead da página-experiência /os/",
+          mensagem: "Lead da página-experiência /os/\nCTA de origem: os-form",
+          // `origem` fora do namespace UTM de propósito: o tracking-kit reescreve
+          // utm_source/utm_medium no clique de link interno com a atribuição de
+          // sessão do visitante, e a origem interna se perde (medido no blog em
+          // 21/08/2026 — CTA de artigo chegava como google/organic). Mesmo campo
+          // que o blog agora grava em blog_templum_leads.
+          origem: "os-form",
           evento: EVENTO, pagina: location.pathname,
           meta_event_id: eventId, meta_content_name: CONTENT_NAME,
         }, atribuicao())),
