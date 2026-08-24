@@ -586,8 +586,28 @@ async function saveToOrbit(lead, env) {
       return { ok: true, lead_id: d.data?.id };
     }
 
-    // Fallback: se algum campo personalizado for inválido (ex.: select com opção
-    // não prevista), tenta de novo só com os campos essenciais.
+    // Fallback 1: cf_produto é o único campo que costuma ser recusado — é um SELECT
+    // do CRM, e a LP pode mandar um valor que ainda não foi criado na lista de opções
+    // (caso de "Templum OS" em 24/08/2026). Antes de desistir de TODOS os campos
+    // personalizados, tenta de novo sem cf_produto e com todo o resto, para que UTM,
+    // cargo e faixa de funcionários sobrevivam. Sem esta etapa, uma opção faltando na
+    // lista do CRM cegava o rastreio da campanha inteira.
+    if (body.custom_fields && body.custom_fields[ORBIT_FIELDS.norma]) {
+      const cf = { ...body.custom_fields };
+      delete cf[ORBIT_FIELDS.norma];
+      if (Object.keys(cf).length) {
+        r = await fetch(`${ORBIT_BASE}/leads`, {
+          method: "POST", headers, body: JSON.stringify({ ...body, custom_fields: cf }),
+        }).catch(() => null);
+        if (r && r.ok) {
+          const d = await r.json().catch(() => ({}));
+          return { ok: true, lead_id: d.data?.id, produto_dropped: true };
+        }
+      }
+    }
+
+    // Fallback 2: qualquer outro campo personalizado inválido — tenta de novo só com
+    // os campos essenciais.
     const basicBody = { ...body };
     delete basicBody.custom_fields;
     r = await fetch(`${ORBIT_BASE}/leads`, {

@@ -23,13 +23,15 @@ import LeadForm from "../../components/LeadForm.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 
-// ⚠️ cf_produto do CRM é SELECT. Valor fora da lista faz o saveToOrbit (worker.js:590)
-// reenviar o lead SEM NENHUM campo personalizado — o lead entra, mas sem cargo, sem
-// faixa de funcionários, sem página de conversão e SEM UTM. Numa LP de mídia paga isso
-// é o mesmo que cegar a campanha. "Mini Orbit" é a opção existente mais próxima do
-// produto; se "Templum OS" for criada no CRM (CRM → Campos Personalizados → Produto),
-// troque a constante abaixo e nada mais.
-const CRM_PRODUTO = "Mini Orbit";
+// ⚠️ cf_produto do CRM é SELECT. Em 24/08/2026 a lista de opções ainda NÃO tem
+// "Templum OS" (só "Mini Orbit") — falta criar em CRM → Campos Personalizados →
+// Produto. Enquanto não existir, o CRM recusa este valor e o lead entra sem o campo
+// Produto preenchido. O resto (cargo, faixa de funcionários, página de conversão e
+// UTM) sobrevive: o saveToOrbit passou a ter um fallback que descarta só o cf_produto
+// antes de recorrer a descartar todos os campos personalizados (worker.js,
+// "Fallback 1"). Sem esse fallback, um valor fora da lista cegava o UTM da campanha.
+// O nome casa com o funil do CRM, que já se chama TEMPLUM OS.
+const CRM_PRODUTO = "Templum OS";
 
 // A coluna da direita é o gancho de mídia; a do meio é a entrega (doc, seção 4.2).
 // Mesma lista do OrbitPlatform.astro, reescrita na dor e não na feature.
@@ -57,31 +59,59 @@ const agentes = [
 // WhatsApp e o gerente cobrando pendência é o que faz o leitor entender que a plataforma
 // atende a empresa inteira, não um cargo.
 // A interação da análise crítica foi demonstrada ao vivo na live de 19/08/2026.
+// Carrossel de papéis: um card por vez, trocado por seta. Empilhar cinco diálogos
+// fazia o visitante rolar tudo sem nenhum ganhar destaque; separado por cargo, ele
+// reconhece o próprio papel. CEO/Proprietário leva duas trocas porque a pergunta do
+// dono e a do diretor ("o que um auditor encontraria") são o mesmo cargo na prática.
+// A Qualidade tem card próprio de propósito: é o segundo público-alvo da página.
 const conversa = [
   {
-    quem: "Dono · pelo painel",
-    p: "Quais indicadores fecharam fora da meta neste trimestre?",
-    r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações.",
+    papel: "CEO / Proprietário",
+    canal: "pelo painel",
+    icon: "solar:crown-bold",
+    trocas: [
+      {
+        p: "Quais indicadores fecharam fora da meta neste trimestre?",
+        r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações.",
+      },
+      {
+        p: "O que um auditor encontraria hoje no meu sistema de gestão?",
+        r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado.",
+      },
+    ],
   },
   {
-    quem: "Operador · pelo WhatsApp",
-    p: "Como faço a troca de setup da linha 2? Não achei o procedimento.",
-    r: "É a instrução IT‑014, revisão 3. São 6 passos; o crítico é o terceiro (travar o fuso antes de soltar o mandril). Te manda em áudio ou por escrito? Ah — a versão que está na sua pasta é a antiga, use esta.",
+    papel: "Gerente de área",
+    canal: "pelo painel",
+    icon: "solar:clipboard-check-bold",
+    trocas: [
+      {
+        p: "O que ficou pendente da reunião da minha área?",
+        r: "Quatro ações: duas concluídas, uma vence hoje (revisar o fluxo de compras, com o Marcelo) e uma atrasada há 9 dias (treinar o time no novo procedimento). Quer que eu cobre os responsáveis agora?",
+      },
+    ],
   },
   {
-    quem: "Gerente de área · pelo painel",
-    p: "O que ficou pendente da reunião da minha área?",
-    r: "Quatro ações: duas concluídas, uma vence hoje (revisar o fluxo de compras, com o Marcelo) e uma atrasada há 9 dias (treinar o time no novo procedimento). Quer que eu cobre os responsáveis agora?",
+    papel: "Funcionário",
+    canal: "pelo WhatsApp",
+    icon: "mdi:account-hard-hat",
+    trocas: [
+      {
+        p: "Como faço a troca de setup da linha 2? Não achei o procedimento.",
+        r: "É a instrução IT‑014, revisão 3. São 6 passos; o crítico é o terceiro (travar o fuso antes de soltar o mandril). Te manda em áudio ou por escrito? Ah — a versão que está na sua pasta é a antiga, use esta.",
+      },
+    ],
   },
   {
-    quem: "Qualidade · pelo painel",
-    p: "Prepare a análise crítica pela direção deste semestre.",
-    r: "Levantei os 12 insumos do requisito 9.3: tenho 9 completos, 3 com lacuna de dado. Trouxe a tendência de cada indicador e uma saída sugerida por item — em vez de só o número do mês.",
-  },
-  {
-    quem: "Diretor · pelo painel",
-    p: "O que um auditor encontraria hoje no meu sistema de gestão?",
-    r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado.",
+    papel: "Qualidade",
+    canal: "pelo painel",
+    icon: "solar:verified-check-bold",
+    trocas: [
+      {
+        p: "Prepare a análise crítica pela direção deste semestre.",
+        r: "Levantei os 12 insumos do requisito 9.3: tenho 9 completos, 3 com lacuna de dado. Trouxe a tendência de cada indicador e uma saída sugerida por item — em vez de só o número do mês.",
+      },
+    ],
   },
 ];
 
@@ -252,13 +282,36 @@ const schemaFaq = {
             <span>IA do Templum OS · online</span>
           </div>
         </div>
-        {conversa.map((c) => (
-          <div class="ol-chat-par">
-            <span class="ol-quem">{c.quem}</span>
-            <p class="ol-bolha ol-bolha--eu">{c.p}</p>
-            <p class="ol-bolha ol-bolha--ia">{c.r}</p>
+        <div class="ol-deck" data-ol-deck>
+          <div class="ol-deck-vp">
+            <div class="ol-deck-track" data-ol-track>
+              {conversa.map((c, i) => (
+                <div class="ol-slide" data-ol-slide role="tabpanel" id={`ol-p-${i}`} aria-labelledby={`ol-t-${i}`} aria-hidden={i !== 0}>
+                  <span class="ol-quem"><iconify-icon icon={c.icon}></iconify-icon>{c.papel} · {c.canal}</span>
+                  {c.trocas.map((t) => (
+                    <div class="ol-troca">
+                      <p class="ol-bolha ol-bolha--eu">{t.p}</p>
+                      <p class="ol-bolha ol-bolha--ia">{t.r}</p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+          <div class="ol-deck-nav">
+            <button type="button" class="ol-arrow" data-ol-prev aria-label="Papel anterior">
+              <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
+            </button>
+            <div class="ol-dots" role="tablist" aria-label="Quem está perguntando">
+              {conversa.map((c, i) => (
+                <button type="button" class="ol-dot" role="tab" id={`ol-t-${i}`} aria-controls={`ol-p-${i}`} aria-selected={i === 0} aria-label={c.papel} data-ol-dot></button>
+              ))}
+            </div>
+            <button type="button" class="ol-arrow" data-ol-next aria-label="Próximo papel">
+              <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </button>
+          </div>
+        </div>
         <a href="#demonstracao" class="btn btn--primary btn--block">Quero perguntar sobre a minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </div>
@@ -467,16 +520,43 @@ const schemaFaq = {
   .ol-chat-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(30px, 4vw, 56px); align-items: center; }
   .ol-chat-text h2 { color: var(--cream); }
   .ol-chat-text .paragraph { color: rgba(255,244,221,0.82); }
-  .ol-chat { background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-24); padding: 22px; }
+  .ol-chat { min-width: 0; background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-24); padding: 22px; }
   .ol-chat-head { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,244,221,0.12); }
   .ol-chat-head img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 2px solid var(--orange); }
   .ol-chat-head strong { display: block; font-size: 15px; color: var(--cream); }
   .ol-chat-head span { font-size: 12px; color: rgba(255,244,221,0.55); }
-  .ol-chat-par { margin-bottom: 16px; }
+  /* Carrossel de papéis. O track é flex: todos os slides herdam a altura do mais alto,
+     então trocar de card não muda a altura do painel (o do CEO tem duas trocas). O
+     align-items:center distribui a sobra dos cards de uma troca só em cima e embaixo,
+     senão ela virava um vão morto no pé do card. */
+  /* min-width:0 é obrigatório aqui: item de grid/flex nasce com min-width:auto, e o
+     min-width:100% dos slides inflava a coluna até o card vazar a tela no mobile. */
+  .ol-deck, .ol-deck-vp { min-width: 0; }
+  .ol-deck-vp { overflow: hidden; }
+  .ol-deck-track { display: flex; align-items: center;
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1); }
+  .ol-slide { flex: 0 0 100%; min-width: 100%; }
+  .ol-troca + .ol-troca { margin-top: 14px; }
+  .ol-deck-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 18px; padding-top: 15px; border-top: 1px solid rgba(255,244,221,0.12); }
+  .ol-arrow { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%; display: grid;
+    place-items: center; font-size: 18px; cursor: pointer; color: var(--cream);
+    background: rgba(255,244,221,0.10); border: 1px solid rgba(255,244,221,0.18);
+    transition: background 0.2s, border-color 0.2s, color 0.2s; }
+  .ol-arrow:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .ol-arrow:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+  .ol-dots { display: flex; align-items: center; gap: 9px; }
+  .ol-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+    background: rgba(255,244,221,0.28); transition: background 0.2s, transform 0.2s; }
+  .ol-dot[aria-selected="true"] { background: var(--orange); transform: scale(1.3); }
+  .ol-dot:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .ol-deck-track { transition: none; } }
   /* Rótulo de quem está perguntando: é ele que transforma a demo em prova de que a
      plataforma serve à empresa inteira, e não a um cargo só. */
-  .ol-quem { display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
-    text-transform: uppercase; color: rgba(255,244,221,0.45); margin-bottom: 7px; }
+  .ol-quem { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,244,221,0.45);
+    margin-bottom: 10px; }
+  .ol-quem iconify-icon { font-size: 15px; color: var(--orange); }
   .ol-bolha { font-size: 14px; line-height: 1.5; border-radius: 16px; padding: 11px 14px; margin: 0 0 7px; max-width: 94%; }
   .ol-bolha--eu { background: rgba(255,244,221,0.12); color: var(--cream); margin-left: auto; border-bottom-right-radius: 5px; }
   .ol-bolha--ia { background: var(--orange); color: #fff; border-bottom-left-radius: 5px; }
@@ -531,3 +611,52 @@ const schemaFaq = {
   .ol-form-pitch .paragraph { color: rgba(255,244,221,0.82); margin-bottom: 22px; }
   @media (max-width: 980px) { .ol-form-grid { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+  // Carrossel de papéis da seção "A Olívia por dentro". Sem autoplay de propósito:
+  // é bloco de argumento, quem lê controla o ritmo — e um card que troca sozinho no
+  // meio da leitura custa a conversão em vez de ajudar.
+  document.querySelectorAll("[data-ol-deck]").forEach((deck) => {
+    const track = deck.querySelector("[data-ol-track]");
+    const slides = Array.from(deck.querySelectorAll("[data-ol-slide]"));
+    const dots = Array.from(deck.querySelectorAll("[data-ol-dot]"));
+    if (!track || slides.length < 2) return;
+
+    let i = 0;
+    const go = (n) => {
+      i = (n + slides.length) % slides.length;
+      track.style.transform = "translateX(-" + i * 100 + "%)";
+      slides.forEach((s, k) => s.setAttribute("aria-hidden", String(k !== i)));
+      dots.forEach((d, k) => d.setAttribute("aria-selected", String(k === i)));
+    };
+
+    const prev = deck.querySelector("[data-ol-prev]");
+    const next = deck.querySelector("[data-ol-next]");
+    if (prev) prev.addEventListener("click", () => go(i - 1));
+    if (next) next.addEventListener("click", () => go(i + 1));
+    dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
+
+    // Setas do teclado só valem com o foco dentro do carrossel — senão sequestrariam
+    // a navegação da página inteira.
+    deck.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); go(i - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); go(i + 1); }
+    });
+
+    // Arraste no mobile. Só troca se o gesto for claramente horizontal, senão briga
+    // com o scroll vertical da página.
+    let x0 = null, y0 = null;
+    track.addEventListener("touchstart", (e) => {
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    track.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? i + 1 : i - 1);
+      x0 = null; y0 = null;
+    }, { passive: true });
+
+    go(0);
+  });
+</script>
