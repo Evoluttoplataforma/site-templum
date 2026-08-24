@@ -3,6 +3,7 @@ import "../styles/global.css";
 import TrackingKit from "../components/TrackingKit.astro";
 import MetaPixel from "../components/MetaPixel.astro";
 import OaiqPixel from "../components/OaiqPixel.astro";
+import ClarityDiag from "../components/ClarityDiag.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -32,6 +33,9 @@ const allSchemas = schemas;
 
     <!-- Pixel da OpenAI: base em todas as páginas, conversão só nas de obrigado. -->
     <OaiqPixel />
+
+    <!-- Diagnóstico: dá nome ao dono do erro de JS que aparece no Clarity. -->
+    <ClarityDiag />
 
     <script is:inline>
       window.dataLayer = window.dataLayer || [];

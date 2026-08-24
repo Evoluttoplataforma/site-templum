@@ -1,0 +1,110 @@
+---
+// Diagnóstico de erro de JS → Clarity. Espelha o que já roda no blog
+// (certificacaoiso.com.br, desde 20/08/2026) e que aqui faltava.
+//
+// POR QUE EXISTE
+// O relatório "Erros de JavaScript" do Clarity de 24/08/2026 (93 erros no dia)
+// é dominado por dois erros gêmeos, sempre no mesmo número de sessões:
+//   · a.includes is not a function. (in 'a.includes("event")')  — 29 sessões
+//   · b.includes is not a function. (in 'b.includes("event")')  — 29 sessões
+//   · as mesmas duas, sem o trecho de código                    — 16 + 16
+// Mais dois avulsos que entregam o ambiente: "window.webkit.messageHandlers"
+// (WKWebView do iOS) e "postMessage: java exception" (WebView do Android).
+//
+// O QUE FOI CONFERIDO (e deu negativo)
+// `a.includes("event")` NÃO existe em nada que o site carrega. Varredura feita
+// pelo Debugger do Chrome sobre TODOS os scripts que a página realmente executa
+// (61 no total, inline e eval inclusive) em templum.com.br e no blog: zero
+// ocorrência. Também baixado e varrido um a um, inclusive com User-Agent de
+// iPhone (Google e Meta servem bundles diferentes por navegador): gtag.js dos 3
+// IDs, fbevents.js, os 2 signals/config dos pixels, clarity.js, oaiq.min.js,
+// beacon da Cloudflare, iconify, os 5 arquivos do tracking-kit e o embed.js do
+// Tally. Nenhum tem `.includes("event")`. O código do repo também não (só
+// /leads e /webinar-*-admin usam .includes, em busca de texto).
+//
+// SOBRA O QUE SÓ O CAMPO RESPONDE
+// A mensagem tem o formato do Safari/WebKit e vem acompanhada de erros de ponte
+// de WebView — a hipótese principal é JS injetado por navegador embutido de app
+// (Instagram/Facebook injetam script na página) ou extensão do leitor. Os pares
+// a/b batem com duas instâncias do mesmo código injetado.
+//
+// Este beacon não conserta nada — dá NOME ao culpado no próximo relatório:
+// filtre por `erro_js` no Clarity e cruze com a tag `nav_embutido`. Se as
+// sessões com erro forem todas de navegador embutido, o caso está fechado e não
+// é código nosso.
+//
+// Duas limitações que valem saber antes de ler o dado:
+//   · script de outra origem sem CORS chega como "Script error." e sem arquivo.
+//     Isso, por si, JÁ é informação: significa que não é código nosso;
+//   · content script de extensão roda em mundo isolado e normalmente não cai
+//     aqui — volume alto no painel sem registro aqui aponta para extensão.
+---
+<script is:inline>
+  // Stub com a MESMA forma do snippet oficial (fila em .q, que o clarity.js drena
+  // ao carregar). O snippet faz `c[a]=c[a]||...`, então PRESERVA este stub —
+  // nada disparado antes do boot do Clarity se perde. Necessário porque aqui o
+  // Clarity só carrega na 1ª interação, e o erro costuma vir antes disso.
+  window.clarity = window.clarity || function () {
+    (window.clarity.q = window.clarity.q || []).push(arguments);
+  };
+
+  (function () {
+    function C() { try { window.clarity.apply(null, arguments); } catch (e) {} }
+    window.clarityTag     = function (k, v) { if (v !== undefined && v !== null && v !== "") C("set", k, String(v)); };
+    window.clarityEvent   = function (n) { C("event", n); };
+    // upgrade() = "esta sessão importa, grave ela" — sem isso a amostragem pode
+    // descartar justamente a sessão que quebrou.
+    window.clarityUpgrade = function (r) { C("upgrade", r); };
+
+    // Navegador embutido de app: é a tag que testa a hipótese principal.
+    // Marcada em TODA sessão (não só nas com erro) para dar denominador — sem
+    // isso não dá pra saber se 100% dos erros em WebView é sinal ou é só o
+    // perfil normal do tráfego de anúncio.
+    var ua = navigator.userAgent || "";
+    var nav = "navegador";
+    if (/FBAN|FBAV|FB_IAB/i.test(ua))            nav = "facebook";
+    else if (/Instagram/i.test(ua))              nav = "instagram";
+    else if (/LinkedInApp/i.test(ua))            nav = "linkedin";
+    else if (/musical_ly|Bytedance|TikTok/i.test(ua)) nav = "tiktok";
+    else if (/\bLine\//i.test(ua))               nav = "line";
+    else if (/GSA\//i.test(ua))                  nav = "google-app";
+    else if (/\bwv\b|WebView/i.test(ua))         nav = "webview";
+    window.clarityTag("nav_embutido", nav);
+
+    // Teto de 3 por sessão: erro em laço encheria a fila do Clarity e o dado
+    // viraria ruído (o volume do relatório vem de repetição, não de leitores).
+    var nErros = 0;
+    function reportaErro(rotulo, detalhe) {
+      if (nErros >= 3) return;
+      nErros++;
+      window.clarityTag("erro_js", String(rotulo).slice(0, 120));
+      if (detalhe) window.clarityTag("erro_js_detalhe", String(detalhe).slice(0, 250));
+      window.clarityTag("erro_js_pagina", location.pathname);
+      window.clarityEvent("erro_js");
+      window.clarityUpgrade("erro_js");
+    }
+
+    // capture:true porque erro de RECURSO (img/script que não carrega) não borbulha.
+    window.addEventListener("error", function (e) {
+      var el = e && e.target;
+      if (el && el.tagName && (el.src || el.href)) {
+        var u = el.src || el.href;
+        var host = (u.indexOf("//") > -1 ? u.split("/")[2] : location.host) || "";
+        reportaErro("recurso:" + el.tagName.toLowerCase() + ":" + host, u);
+        return;
+      }
+      var arq = e && e.filename ? e.filename : "sem-origem(cross-origin)";
+      var origem = arq.indexOf("//") > -1 ? arq.split("/")[2] : arq;
+      // A pilha é o que pode entregar o injetor quando `filename` vem vazio:
+      // script de WebView costuma aparecer nela com nome próprio.
+      var pilha = "";
+      try { pilha = (e && e.error && e.error.stack ? String(e.error.stack) : "").split("\n").slice(0, 2).join(" | "); } catch (_) {}
+      reportaErro("js:" + origem, (e && e.message ? e.message : "") + " @ " + arq + (pilha ? " :: " + pilha : ""));
+    }, true);
+
+    window.addEventListener("unhandledrejection", function (e) {
+      var r = e && e.reason;
+      reportaErro("promise", (r && (r.message || r)) || "sem motivo");
+    });
+  })();
+</script>

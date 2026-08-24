@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import TrackingKit from "../components/TrackingKit.astro";
 import MetaPixel from "../components/MetaPixel.astro";
 import OaiqPixel from "../components/OaiqPixel.astro";
+import ClarityDiag from "../components/ClarityDiag.astro";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -76,6 +77,9 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
 
     <!-- Pixel da OpenAI: base em todas as páginas, conversão só nas de obrigado. -->
     <OaiqPixel />
+
+    <!-- Diagnóstico: dá nome ao dono do erro de JS que aparece no Clarity. -->
+    <ClarityDiag />
 
     <!-- Tracking (Clarity + GA4 x2 + Google Ads + tracking-kit) carregado SÓ na 1ª
          interação do usuário (ou ocioso pós-load) → fora do caminho crítico de render. -->
