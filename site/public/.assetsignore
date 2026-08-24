@@ -1,0 +1,12 @@
+# Arquivos que o Worker NÃO deve publicar como asset estático.
+# Sintaxe estilo .gitignore; o Cloudflare lê este arquivo na raiz de ./dist e
+# não publica nem ele mesmo.
+#
+# .DS_Store: o Finder recria esses arquivos sozinho a qualquer momento em que
+# alguém abre as pastas de public/, e o Astro copia public/ verbatim pra dist/.
+# Apagar não resolve de forma durável — em 24/08/2026 quatro deles estavam
+# servindo em produção (templum.com.br/.DS_Store e mais 3), expondo nomes de
+# arquivos internos. O bloqueio no upload é o único ponto que não depende de
+# ninguém lembrar de limpar antes do deploy.
+.DS_Store
+**/.DS_Store
