@@ -333,3 +333,11 @@
 /lp/olivia/  /lp/templum-os/  301
 /lp/olivia-obrigado  /lp/templum-os-obrigado/  301
 /lp/olivia-obrigado/  /lp/templum-os-obrigado/  301
+
+# Templum OS — página-experiência "A Órbita" tirada do ar em 24/08/2026 a pedido
+# do Rodrigo. Os arquivos estáticos saíram de public/os/ (recuperáveis em git:
+# `git checkout 96cf928 -- site/public/os`). O 302 (e não 301) é de propósito:
+# a página pode voltar, e um 301 ficaria cacheado no navegador de quem clicou.
+/os  /lp/templum-os/  302
+/os/  /lp/templum-os/  302
+/os/*  /lp/templum-os/  302
