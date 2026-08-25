@@ -25,7 +25,7 @@
 import LpBase from "../../layouts/LpBase.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
-import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import { depoimentosOS } from "../../data/depoimentos-os.js";
 
 // ⚠️ cf_produto do CRM é SELECT. Em 24/08/2026 a lista de opções ainda NÃO tem
 // "Templum OS" (só "Mini Orbit") — falta criar em CRM → Campos Personalizados →
@@ -271,7 +271,7 @@ const faqs = [
   { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai. Um exemplo do que não sai: e-mail marketing em massa — a própria Templum manteve o Mailchimp, e a gente não promete cortar o que nós mesmos não cortamos." },
   { q: "Vou perder o histórico dos sistemas que eu cancelar?", a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O sistema atual continua ligado em paralelo enquanto você confere; só depois disso o cancelamento acontece. Ninguém desliga nada no dia da assinatura." },
   { q: "Um sistema só não é pior que seis especialistas?", a: "Em recurso de ponta, às vezes é — e a gente fala isso abertamente. Mas o ganho aqui não é a função isolada, é o dado no mesmo lugar: nenhum dos seis sistemas que a Templum pagava sabia que o retrabalho subiu porque o treinamento não tinha sido aplicado. Se a sua operação usa a fundo um sistema muito específico, esse é o caso de manter só ele e desligar os outros." },
-  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaMes)} por mês — R$ ${brl(faturaAno)} no ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
+  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaMes)} por mês — R$ ${brl(faturaAno)} no ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela roda em mais de 3.000 empresas, no Brasil e nos Estados Unidos, com mais de 20 mil usuários.` },
   { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas, funil, financeiro) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa — e é a parte que nenhum conjunto de sistemas separados entrega, porque ela só funciona com tudo no mesmo banco de dados." },
   { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um dia um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado — em vez de começar da estaca zero com prazo em cima." },
   { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
@@ -317,8 +317,8 @@ const schemaFaq = {
         <p class="ol-hero-sub">
           Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa conta — todos
           <strong>desligados</strong>. No lugar ficou o <strong>Templum OS</strong>: a plataforma de gestão com
-          agentes de inteligência artificial que a Templum construiu para si mesma e que hoje roda em
-          <strong>mais de 200 empresas</strong>.
+          agentes de inteligência artificial que a Templum construiu para si mesma — e que hoje roda em
+          empresas <strong>dos mais diversos ramos</strong>, no Brasil e nos Estados Unidos.
         </p>
         <div class="ol-hero-chips">
           <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Preço fixo até {LIMITE_USUARIOS} usuários</span>
@@ -327,12 +327,10 @@ const schemaFaq = {
         </div>
       </div>
 
-      <div class="ol-hero-olivia">
-        <img src="/assets/img/olivia_templum.webp" alt="Olívia, a inteligência artificial do Templum OS" width="820" height="1230" fetchpriority="high" decoding="async" />
-        <div class="ol-hero-quote">
-          <span class="ol-hero-quote-n">Olívia</span>
-          <p>“O cliente atrasado 15 dias no financeiro tem um orçamento aberto no seu funil. Quer avisar o vendedor?”</p>
-        </div>
+      <div class="ol-hero-provas">
+        <div class="ol-prova"><strong>+3.000</strong><span>empresas rodando</span></div>
+        <div class="ol-prova"><strong>+20 mil</strong><span>usuários ativos</span></div>
+        <div class="ol-prova"><strong>2 países</strong><span>Brasil e Estados Unidos</span></div>
       </div>
 
       <div class="ol-hero-form" id="demonstracao">
@@ -350,7 +348,7 @@ const schemaFaq = {
     </div>
   </section>
 
-  <ClientLogos dark={true} titulo="Mais de 2.000 empresas passaram pelo método da Templum — e mais de 200 já rodam o Templum OS" />
+  <ClientLogos dark={true} titulo="Algumas das empresas atendidas pela Templum ao longo de mais de 30 anos" />
 
   <!-- A NOSSA FATURA — a prova que nenhum concorrente pode copiar: somos o case -->
   <section class="section section--cream">
@@ -699,11 +697,42 @@ const schemaFaq = {
     </div>
   </section>
 
-  <DepoimentosTexto
-    tag="Quem já está dentro"
-    titulo='Mais de <em class="accent">200 empresas</em> rodando o Templum OS'
-    sub="A plataforma que a Templum usa para operar a si mesma — e que estas empresas usam todos os dias."
-  />
+  <!-- PROVA SOCIAL — base instalada. Os depoimentos de certificação saíram daqui: quem
+       chega nesta LP não veio por ISO, e "conquistou a certificação" não fala com quem
+       está cortando custo. Os cards de depoimento voltam sozinhos quando
+       src/data/depoimentos-os.js tiver item (ver o aviso no topo daquele arquivo). -->
+  <section class="section section--cream ol-base">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Quem já está dentro</span>
+        <h2>Mais de <em class="accent">3.000 empresas</em> rodam o Templum OS</h2>
+        <p>
+          No Brasil e nos Estados Unidos, com mais de 20 mil usuários ativos e nos mais diversos
+          ramos de atividade — a mesma plataforma que a Templum usa para operar a si mesma.
+        </p>
+      </div>
+      <div class="numbers-grid">
+        <div class="number-card reveal"><div class="value"><em>+3.000</em></div><div class="label">empresas rodando a plataforma</div></div>
+        <div class="number-card reveal"><div class="value"><em>+20 mil</em></div><div class="label">usuários ativos no dia a dia</div></div>
+        <div class="number-card reveal"><div class="value"><em>2</em></div><div class="label">países: Brasil e Estados Unidos</div></div>
+        <div class="number-card reveal"><div class="value"><em>+30</em></div><div class="label">anos de método de gestão por trás</div></div>
+      </div>
+      {depoimentosOS.length > 0 && (
+        <div class="ol-deps">
+          {depoimentosOS.filter((d) => d.ok).map((d) => (
+            <figure class="ol-dep reveal">
+              <blockquote>{d.texto}</blockquote>
+              <figcaption>
+                <strong>{d.nome}</strong>
+                <span>{d.cargo}</span>
+                {d.ramo && <em>{d.ramo}</em>}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
 
   <!-- PREÇO ABERTO -->
   <section class="section section--navy">
@@ -822,13 +851,13 @@ const schemaFaq = {
   .ol-hero-bg { position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(720px 460px at 10% 0%, rgba(255,89,37,0.28), transparent 60%),
                 radial-gradient(560px 380px at 100% 100%, rgba(255,89,37,0.14), transparent 60%); }
-  /* Áreas, e não ordem de DOM: no desktop a foto entra embaixo do texto e o formulário
-     ocupa a coluna inteira; no mobile a sequência vira texto → FORMULÁRIO → foto, porque
+  /* Áreas, e não ordem de DOM: no desktop a prova entra embaixo do texto e o formulário
+     ocupa a coluna inteira; no mobile a sequência vira texto → FORMULÁRIO → prova, porque
      campo abaixo da dobra em LP de tráfego pago é lead perdido. */
   .ol-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr;
-    grid-template-areas: "texto form" "olivia form"; gap: clamp(22px, 3vw, 34px) clamp(30px, 4vw, 58px); align-items: start; }
+    grid-template-areas: "texto form" "provas form"; gap: clamp(22px, 3vw, 34px) clamp(30px, 4vw, 58px); align-items: start; }
   .ol-hero-text { grid-area: texto; }
-  .ol-hero-olivia { grid-area: olivia; }
+  .ol-hero-provas { grid-area: provas; }
   .ol-hero-form { grid-area: form; }
   .ol-hero-text { max-width: 620px; }
   .ol-hero .tag-pill { margin-bottom: 18px; }
@@ -841,25 +870,22 @@ const schemaFaq = {
   .ol-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .ol-chip iconify-icon { color: color-mix(in srgb, var(--orange) 58%, #ffffff); font-size: 18px; }
 
-  /* Foto da Olívia: a mesma da /solucoes-de-ia, recortada na altura para não empurrar o
-     formulário para fora da dobra. A fala ao lado existe para a foto não ser decoração —
-     ela mostra, em uma linha, o que o produto faz.
-     A fala CRUZA dois módulos de propósito (financeiro + funil de vendas): o H1 ao lado
-     acusa o stack de não conversar entre si, e a frase dela demonstra o que acontece
-     quando conversa. Não colocar aqui nada que a Olívia não possa saber — ela lê o
-     sistema de gestão do cliente, não a fatura de software dele. A versão anterior
-     ("você paga dois sistemas que fazem e-mail") caiu por isso e porque contradizia a
-     nota da página, que diz que a Templum MANTEVE o Mailchimp. */
-  .ol-hero-olivia { display: flex; align-items: flex-end; gap: 18px; }
-  .ol-hero-olivia img { width: 168px; height: 210px; object-fit: cover; object-position: 50% 12%; border-radius: 20px; border: 2px solid rgba(255,89,37,0.55); flex: none; }
-  .ol-hero-quote { background: rgba(255,244,221,0.07); border: 1px solid rgba(255,244,221,0.14); border-radius: 16px; padding: 14px 16px; }
-  .ol-hero-quote-n { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
-  .ol-hero-quote p { font-size: 14.5px; line-height: 1.5; color: rgba(255,244,221,0.9); margin: 0; }
+  /* No lugar da foto da Olívia: prova numérica. A foto era o elemento mais decorativo do
+     hero e carregava a imagem mais pesada da página com fetchpriority alto — trocá-la por
+     três números tira peso do LCP e coloca base instalada logo abaixo da manchete, que é
+     o que sustenta a promessa de corte de custo. A Olívia continua na seção do carrossel,
+     onde ela demonstra o produto em vez de posar. */
+  .ol-hero-provas { display: flex; align-items: stretch; flex-wrap: wrap; gap: 12px; }
+  .ol-prova { flex: 1 1 130px; padding: 14px 18px; border-radius: var(--r-16);
+    background: rgba(255,244,221,0.06); border: 1px solid rgba(255,244,221,0.14); }
+  .ol-prova strong { display: block; font-size: clamp(22px, 2.6vw, 28px); font-weight: 800;
+    letter-spacing: -0.03em; line-height: 1.05; color: var(--orange); }
+  .ol-prova span { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.35;
+    color: rgba(255,244,221,0.7); }
   .ol-hero-form { align-self: start; position: sticky; top: 20px; }
   @media (max-width: 980px) {
-    .ol-hero-grid { grid-template-columns: 1fr; grid-template-areas: "texto" "form" "olivia"; }
+    .ol-hero-grid { grid-template-columns: 1fr; grid-template-areas: "texto" "form" "provas"; }
     .ol-hero-form { position: static; }
-    .ol-hero-olivia img { width: 132px; height: 165px; }
   }
   /* Celular: cada pixel do hero antes do formulário é um pixel que o lead precisa rolar.
      Medido em 390x844 — subtítulo e chips ocupavam 312px sozinhos e empurravam o campo
@@ -1121,6 +1147,29 @@ const schemaFaq = {
     color: rgba(255,244,221,0.6); }
   .ol-iso-nota iconify-icon { flex: none; font-size: 17px; color: var(--orange); margin-top: 1px; }
   .ol-iso-nota strong { color: rgba(255,244,221,0.9); }
+
+  /* O .numbers-grid do design system é de 3 colunas. Aqui são 4 números e o quarto
+     ficava órfão numa linha só para ele. */
+  .ol-base .numbers-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .ol-base .number-card { padding: 32px 22px; }
+  @media (max-width: 980px) { .ol-base .numbers-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .ol-base .numbers-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- DEPOIMENTOS DO OS ----------
+     Estilo pronto, seção ainda sem dado: quando depoimentos-os.js receber item, os
+     cards aparecem já formatados. */
+  .ol-deps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 30px; }
+  .ol-dep { margin: 0; padding: 26px 24px; border-radius: var(--r-20);
+    background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; }
+  .ol-dep blockquote { margin: 0 0 18px; font-size: 14.5px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+  .ol-dep blockquote::before { content: "\201C"; }
+  .ol-dep blockquote::after { content: "\201D"; }
+  .ol-dep figcaption strong { display: block; font-size: 14.5px; font-weight: 800; color: var(--text); }
+  .ol-dep figcaption span { display: block; font-size: 13px; color: var(--text-soft); margin-top: 2px; }
+  .ol-dep figcaption em { display: inline-block; margin-top: 8px; font-style: normal; font-size: 11px;
+    font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--orange);
+    background: rgba(255,89,37,0.10); border-radius: 100px; padding: 5px 11px; }
+  @media (max-width: 980px) { .ol-deps { grid-template-columns: 1fr; } }
 
   /* ---------- PREÇO ---------- */
   .ol-preco { margin-top: 40px; padding: clamp(28px, 4vw, 40px); border-radius: var(--r-24);
