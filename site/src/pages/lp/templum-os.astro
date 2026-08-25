@@ -47,6 +47,10 @@ const PRECO_ANO = PRECO_MES * 12;    // R$ 23.976
 const LIMITE_USUARIOS = 50;
 
 // A fatura de referência. ⚠️ LEIA ANTES DE PUBLICAR:
+// - UNIDADE: a copy fala em MENSAL (decisão de 25/08/2026). O preço que o cliente
+//   paga é mensal, então comparar R$ 10.103/mês com R$ 1.998/mês é maçã com maçã e
+//   tira a multiplicação por 12 da cabeça de quem está lendo o anúncio. O anual
+//   continua onde ele é total e está rotulado: coluna da tabela e bloco de economia.
 // - O desligamento dos seis é REAL. O número da manchete é o TOTAL DESTA TABELA
 //   (faturaAno), não a nota fiscal da Templum — decisão de 25/08/2026: manchete e
 //   tabela têm de bater, senão o leitor pergunta de onde saiu o número.
@@ -81,6 +85,7 @@ const fatura = [
 const faturaMes = fatura.reduce((s, f) => s + f.mes, 0);   // R$ 10.636
 const faturaAno = faturaMes * 12;                          // R$ 127.632
 const economiaAno = faturaAno - PRECO_ANO;                 // R$ 103.656
+const economiaMes = faturaMes - PRECO_MES;                  // R$ 8.105
 const porPessoa = PRECO_MES / LIMITE_USUARIOS;             // R$ 39,96
 const brl = (n) => n.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
@@ -266,7 +271,7 @@ const faqs = [
   { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai. Um exemplo do que não sai: e-mail marketing em massa — a própria Templum manteve o Mailchimp, e a gente não promete cortar o que nós mesmos não cortamos." },
   { q: "Vou perder o histórico dos sistemas que eu cancelar?", a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O sistema atual continua ligado em paralelo enquanto você confere; só depois disso o cancelamento acontece. Ninguém desliga nada no dia da assinatura." },
   { q: "Um sistema só não é pior que seis especialistas?", a: "Em recurso de ponta, às vezes é — e a gente fala isso abertamente. Mas o ganho aqui não é a função isolada, é o dado no mesmo lugar: nenhum dos seis sistemas que a Templum pagava sabia que o retrabalho subiu porque o treinamento não tinha sido aplicado. Se a sua operação usa a fundo um sistema muito específico, esse é o caso de manter só ele e desligar os outros." },
-  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaAno)} por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
+  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaMes)} por mês — R$ ${brl(faturaAno)} no ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
   { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas, funil, financeiro) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa — e é a parte que nenhum conjunto de sistemas separados entrega, porque ela só funciona com tudo no mesmo banco de dados." },
   { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um dia um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado — em vez de começar da estaca zero com prazo em cima." },
   { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
@@ -296,8 +301,8 @@ const schemaFaq = {
 ---
 
 <LpBase
-  title={`Templum OS — troque 6 sistemas por 1 e corte R$ ${brl(economiaAno)} por ano | Templum`}
-  description={`A Templum desligou Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign — uma conta de R$ ${brl(faturaAno)} por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
+  title={`Templum OS — troque 6 sistemas por 1 e corte R$ ${brl(economiaMes)} por mês | Templum`}
+  description={`A Templum desligou Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign — uma conta de R$ ${brl(faturaMes)} por mês. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
   formAnchor="#demonstracao"
   headerCta="Auditoria do meu stack"
   schemas={[schemaSoftware, schemaFaq]}
@@ -308,7 +313,7 @@ const schemaFaq = {
     <div class="container xl ol-hero-grid">
       <div class="ol-hero-text">
         <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
-        <h1 class="ol-hero-title"><em class="accent">R$ {brl(faturaAno)} por ano</em> em seis sistemas. Ou R$ {brl(PRECO_MES)} por mês em um só.</h1>
+        <h1 class="ol-hero-title">Seis sistemas que não conversam, seis faturas: <em class="accent">R$&nbsp;{brl(faturaMes)} por mês</em>. Agora é uma, de R$&nbsp;{brl(PRECO_MES)}.</h1>
         <p class="ol-hero-sub">
           Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa conta — todos
           <strong>desligados</strong>. No lugar ficou o <strong>Templum OS</strong>: a plataforma de gestão com
