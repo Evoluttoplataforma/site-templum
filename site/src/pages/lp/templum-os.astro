@@ -10,7 +10,8 @@
 //
 // A tese desta versão é econômica e datada: a IA não chegou para vender o sétimo
 // sistema, chegou para desligar seis. A Templum desligou Pipedrive, RD Station,
-// Mailchimp, ClickUp, Sólides e Omie — mais de R$ 200 mil/ano — e ficou com a
+// Mailchimp, ClickUp, Sólides e Omie — uma conta de R$ 127.632/ano a preço de
+// tabela para 50 pessoas — e ficou com a
 // plataforma que ela mesma construiu. Corte de custo se vende em 1 call porque o
 // ROI é aritmética, não convencimento; isso ataca de lado o risco R11 do doc
 // (venda humana pesada não cabe em ticket de assinatura).
@@ -47,7 +48,9 @@ const PRECO_ANO = PRECO_MES * 12;    // R$ 23.976
 const LIMITE_USUARIOS = 50;
 
 // A fatura de referência. ⚠️ LEIA ANTES DE PUBLICAR:
-// - Os R$ 200 mil/ano são REAIS: é o que a Templum cortou ao desligar os seis.
+// - O desligamento dos seis é REAL. O número da manchete é o TOTAL DESTA TABELA
+//   (faturaAno), não a nota fiscal da Templum — decisão de 25/08/2026: manchete e
+//   tabela têm de bater, senão o leitor pergunta de onde saiu o número.
 // - Os valores linha a linha NÃO são a nota fiscal da Templum: são preço público de
 //   tabela dos fornecedores, dimensionado para uma empresa de 50 pessoas (o mesmo
 //   corte do preço fixo do Templum OS, para a comparação ficar maçã com maçã).
@@ -61,12 +64,12 @@ const LIMITE_USUARIOS = 50;
 // - Rodrigo: confira cada linha contra a fatura real antes do deploy. Se alguma
 //   estourar ou faltar, o ajuste é só aqui.
 const fatura = [
-  { sistema: "Pipedrive",             cat: "CRM e funil de vendas",              base: "US$ 49 por usuário/mês · 10 comerciais", mes: 2695, agora: "CRM, funil, atividades e coaching comercial" },
-  { sistema: "ClickUp",               cat: "Tarefas, projetos e prazos",          base: "US$ 12 por usuário/mês · 50 usuários",   mes: 3300, agora: "Projetos, fases, tarefas, checklists e automações" },
-  { sistema: "RD Station Marketing",  cat: "Automação de marketing",              base: "Plano Pro, a partir de R$ 1.499/mês",    mes: 1499, agora: "Landing pages, réguas de relacionamento e WhatsApp" },
-  { sistema: "Mailchimp",             cat: "E-mail marketing",                    base: "Standard · base de 10 mil contatos",     mes: 742,  agora: "Disparo e sequência de e-mail na mesma base do CRM" },
-  { sistema: "Sólides",               cat: "RH e gestão de pessoas",              base: "Sob consulta · faixa por colaborador",   mes: 1500, agora: "Cargos, avaliação, PDI, teste comportamental e recrutamento" },
-  { sistema: "Omie",                  cat: "ERP e financeiro",                    base: "Avançado R$ 295/mês + módulos",          mes: 900,  agora: "Contas a pagar e receber, DRE, fluxo de caixa, NF-e e NFS-e" },
+  { sistema: "Pipedrive",            logo: "pipedrive", cat: "CRM e funil de vendas",   base: "US$ 49 por usuário/mês · 10 comerciais", mes: 2695, agora: "CRM, funil, atividades e coaching comercial" },
+  { sistema: "ClickUp",              logo: "clickup",   cat: "Tarefas, projetos e prazos", base: "US$ 12 por usuário/mês · 50 usuários",  mes: 3300, agora: "Projetos, fases, tarefas, checklists e automações" },
+  { sistema: "RD Station Marketing", logo: "rdstation", cat: "Automação de marketing",  base: "Plano Pro, a partir de R$ 1.499/mês",    mes: 1499, agora: "Landing pages, réguas de relacionamento e WhatsApp" },
+  { sistema: "Mailchimp",            logo: "mailchimp", cat: "E-mail marketing",        base: "Standard · base de 10 mil contatos",     mes: 742,  agora: "Disparo e sequência de e-mail na mesma base do CRM" },
+  { sistema: "Sólides",              logo: "solides",   cat: "RH e gestão de pessoas",  base: "Sob consulta · faixa por colaborador",   mes: 1500, agora: "Cargos, avaliação, PDI, teste comportamental e recrutamento" },
+  { sistema: "Omie",                 logo: "omie",      cat: "ERP e financeiro",        base: "Avançado R$ 295/mês + módulos",          mes: 900,  agora: "Contas a pagar e receber, DRE, fluxo de caixa, NF-e e NFS-e" },
 ];
 const faturaMes = fatura.reduce((s, f) => s + f.mes, 0);   // R$ 10.636
 const faturaAno = faturaMes * 12;                          // R$ 127.632
@@ -233,7 +236,7 @@ const faqs = [
   { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai — e a gente diz o que não sai." },
   { q: "Vou perder o histórico dos sistemas que eu cancelar?", a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O sistema atual continua ligado em paralelo enquanto você confere; só depois disso o cancelamento acontece. Ninguém desliga nada no dia da assinatura." },
   { q: "Um sistema só não é pior que seis especialistas?", a: "Em recurso de ponta, às vezes é — e a gente fala isso abertamente. Mas o ganho aqui não é a função isolada, é o dado no mesmo lugar: nenhum dos seis sistemas que a Templum pagava sabia que o retrabalho subiu porque o treinamento não tinha sido aplicado. Se a sua operação usa a fundo um sistema muito específico, esse é o caso de manter só ele e desligar os outros." },
-  { q: "A Templum realmente desligou esses sistemas?", a: "Sim — Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa operação, e a soma que deixou de ser paga passa de R$ 200 mil por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas." },
+  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaAno)} por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
   { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas, funil, financeiro) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa — e é a parte que nenhum conjunto de sistemas separados entrega, porque ela só funciona com tudo no mesmo banco de dados." },
   { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um dia um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado — em vez de começar da estaca zero com prazo em cima." },
   { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
@@ -264,7 +267,7 @@ const schemaFaq = {
 
 <LpBase
   title={`Templum OS — troque 6 sistemas por 1 e corte mais de R$ 100 mil por ano | Templum`}
-  description={`A Templum desligou Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie e cortou mais de R$ 200 mil por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
+  description={`A Templum desligou Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie — uma conta de R$ ${brl(faturaAno)} por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
   formAnchor="#demonstracao"
   headerCta="Auditoria do meu stack"
   schemas={[schemaSoftware, schemaFaq]}
@@ -275,7 +278,7 @@ const schemaFaq = {
     <div class="container xl ol-hero-grid">
       <div class="ol-hero-text">
         <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
-        <h1 class="ol-hero-title">Cortamos <em class="accent">R$ 200 mil por ano</em> em software. O que substituiu tudo custa R$ {brl(PRECO_MES)} por mês.</h1>
+        <h1 class="ol-hero-title"><em class="accent">R$ {brl(faturaAno)} por ano</em> em seis sistemas. Ou R$ {brl(PRECO_MES)} por mês em um só.</h1>
         <p class="ol-hero-sub">
           Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa conta — todos
           <strong>desligados</strong>. No lugar ficou o <strong>Templum OS</strong>: a plataforma de gestão com
@@ -341,7 +344,10 @@ const schemaFaq = {
           <tbody>
             {fatura.map((f) => (
               <tr>
-                <td><strong class="ol-tab-sis">{f.sistema}</strong><span class="ol-tab-off"><iconify-icon icon="solar:close-circle-bold"></iconify-icon> desligado</span></td>
+                <td>
+                  <img class="ol-tab-logo" src={`/assets/img/stack/${f.logo}.png`} alt={f.sistema} title={f.sistema} width="128" height="128" loading="lazy" decoding="async" />
+                  <span class="ol-tab-off"><iconify-icon icon="solar:close-circle-bold"></iconify-icon> desligado</span>
+                </td>
                 <td>{f.cat}</td>
                 <td class="ol-tab-base">{f.base}</td>
                 <td class="ol-tab-num">R$ {brl(f.mes)}</td>
@@ -380,10 +386,11 @@ const schemaFaq = {
       <p class="ol-nota">
         <iconify-icon icon="solar:info-circle-bold"></iconify-icon>
         <span>
-          <strong>Memória de cálculo.</strong> Os R$ 200 mil/ano são o corte real da Templum, no nosso porte.
-          A tabela acima usa <strong>preço público de tabela</strong> dos fornecedores (ago/2026), dimensionado para
-          uma empresa de {LIMITE_USUARIOS} pessoas e câmbio de R$ 5,50 — não é a nossa nota fiscal, é a conta que
-          você pode conferir no site de cada um. O seu número real sai na auditoria, com os seus planos.
+          <strong>Memória de cálculo.</strong> Os seis sistemas saíram da operação da Templum de verdade — isso é
+          o nosso caso. Os valores acima são <strong>preço público de tabela</strong> dos fornecedores (ago/2026),
+          dimensionados para uma empresa de {LIMITE_USUARIOS} pessoas e câmbio de R$ 5,50: é a conta que você pode
+          conferir no site de cada um, não a nossa nota fiscal — no nosso porte ela é maior. O seu número real sai
+          na auditoria, com os seus planos.
         </span>
       </p>
     </div>
@@ -782,9 +789,14 @@ const schemaFaq = {
     text-transform: uppercase; color: var(--text-soft); padding: 16px 18px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   .ol-tab td { padding: 16px 18px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; line-height: 1.45; }
   .ol-tab tbody tr:last-child td { border-bottom: 1px solid var(--border); }
+  /* Logo no lugar do nome: são as marcas dos próprios fornecedores, em 128px de
+     origem renderizados a 34px para ficarem nítidos em tela retina. O nome vive no
+     alt e no title — some da tela, não da acessibilidade nem do que o leitor de
+     tela e o buscador leem. */
+  .ol-tab-logo { display: block; width: 34px; height: 34px; object-fit: contain; border-radius: 7px; }
   .ol-tab-sis { display: block; font-size: 15.5px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
-  .ol-tab-off { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 11px;
-    font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #c2410c; }
+  .ol-tab-off { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 11px;
+    font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #c2410c; white-space: nowrap; }
   .ol-tab-off iconify-icon { font-size: 14px; }
   .ol-tab-base { font-size: 13px; color: var(--text-soft); }
   .ol-tab-agora { font-size: 13.5px; }
