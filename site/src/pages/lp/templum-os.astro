@@ -331,7 +331,7 @@ const schemaFaq = {
         <img src="/assets/img/olivia_templum.webp" alt="Olívia, a inteligência artificial do Templum OS" width="820" height="1230" fetchpriority="high" decoding="async" />
         <div class="ol-hero-quote">
           <span class="ol-hero-quote-n">Olívia</span>
-          <p>“Você paga dois sistemas que fazem e-mail. Quer ver a conta do ano?”</p>
+          <p>“O cliente atrasado 15 dias no financeiro tem um orçamento aberto no seu funil. Quer avisar o vendedor?”</p>
         </div>
       </div>
 
@@ -843,7 +843,13 @@ const schemaFaq = {
 
   /* Foto da Olívia: a mesma da /solucoes-de-ia, recortada na altura para não empurrar o
      formulário para fora da dobra. A fala ao lado existe para a foto não ser decoração —
-     ela mostra, em uma linha, o que o produto faz. */
+     ela mostra, em uma linha, o que o produto faz.
+     A fala CRUZA dois módulos de propósito (financeiro + funil de vendas): o H1 ao lado
+     acusa o stack de não conversar entre si, e a frase dela demonstra o que acontece
+     quando conversa. Não colocar aqui nada que a Olívia não possa saber — ela lê o
+     sistema de gestão do cliente, não a fatura de software dele. A versão anterior
+     ("você paga dois sistemas que fazem e-mail") caiu por isso e porque contradizia a
+     nota da página, que diz que a Templum MANTEVE o Mailchimp. */
   .ol-hero-olivia { display: flex; align-items: flex-end; gap: 18px; }
   .ol-hero-olivia img { width: 168px; height: 210px; object-fit: cover; object-position: 50% 12%; border-radius: 20px; border: 2px solid rgba(255,89,37,0.55); flex: none; }
   .ol-hero-quote { background: rgba(255,244,221,0.07); border: 1px solid rgba(255,244,221,0.14); border-radius: 16px; padding: 14px 16px; }
