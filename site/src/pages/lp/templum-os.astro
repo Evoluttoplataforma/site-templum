@@ -10,9 +10,8 @@
 //
 // A tese desta versão é econômica e datada: a IA não chegou para vender o sétimo
 // sistema, chegou para desligar seis. A Templum desligou Pipedrive, RD Station,
-// Mailchimp, ClickUp, Sólides e Omie — uma conta de R$ 127.632/ano a preço de
-// tabela para 50 pessoas — e ficou com a
-// plataforma que ela mesma construiu. Corte de custo se vende em 1 call porque o
+// ClickUp, Sólides, Omie e Clicksign — a conta de tabela para uma empresa de 50
+// pessoas — e ficou com a plataforma que ela mesma construiu. Corte de custo se vende em 1 call porque o
 // ROI é aritmética, não convencimento; isso ataca de lado o risco R11 do doc
 // (venda humana pesada não cabe em ticket de assinatura).
 //
@@ -58,18 +57,26 @@ const LIMITE_USUARIOS = 50;
 //   memória de cálculo é o tipo de coisa que o lead confere na call.
 // - Câmbio usado: R$ 5,50/US$. Fontes (ago/2026): Pipedrive Professional US$ 49/
 //   usuário/mês anual; ClickUp Business US$ 12/usuário/mês anual; RD Station
-//   Marketing Pro a partir de R$ 1.499/mês; Mailchimp Standard ~US$ 135/mês em 10 mil
-//   contatos; Omie Avançado R$ 295/mês (5 usuários) + módulos; Sólides sob consulta
-//   (faixa de mercado por colaborador).
+//   Marketing Pro a partir de R$ 1.499/mês; Omie Avançado R$ 295/mês (5 usuários) +
+//   módulos; Sólides sob consulta (faixa de mercado por colaborador); Clicksign Plus
+//   R$ 59/mês com 10 usuários + R$ 15 por usuário adicional (preço da própria página
+//   de planos da Clicksign).
+// - ⚠️ MAILCHIMP SAIU DESTA CONTA EM 25/08/2026. A Templum CONTINUA usando — o
+//   worker.js ainda cadastra todo lead na lista. Estava na tabela como desligado, o
+//   que era falso, e o site é a primeira coisa que um prospect confere. Por isso
+//   e-mail marketing em massa também saiu da lista do que a plataforma substitui:
+//   dizer que o cliente pode cancelar o que nós mantemos não sobrevive à primeira
+//   pergunta na call. Virou argumento a favor — a página passou a dizer o que NÃO
+//   substitui, que é o que dá crédito ao resto.
 // - Rodrigo: confira cada linha contra a fatura real antes do deploy. Se alguma
 //   estourar ou faltar, o ajuste é só aqui.
 const fatura = [
   { sistema: "Pipedrive",            logo: "pipedrive", cat: "CRM e funil de vendas",   base: "US$ 49 por usuário/mês · 10 comerciais", mes: 2695, agora: "CRM, funil, atividades e coaching comercial" },
   { sistema: "ClickUp",              logo: "clickup",   cat: "Tarefas, projetos e prazos", base: "US$ 12 por usuário/mês · 50 usuários",  mes: 3300, agora: "Projetos, fases, tarefas, checklists e automações" },
   { sistema: "RD Station Marketing", logo: "rdstation", cat: "Automação de marketing",  base: "Plano Pro, a partir de R$ 1.499/mês",    mes: 1499, agora: "Landing pages, réguas de relacionamento e WhatsApp" },
-  { sistema: "Mailchimp",            logo: "mailchimp", cat: "E-mail marketing",        base: "Standard · base de 10 mil contatos",     mes: 742,  agora: "Disparo e sequência de e-mail na mesma base do CRM" },
   { sistema: "Sólides",              logo: "solides",   cat: "RH e gestão de pessoas",  base: "Sob consulta · faixa por colaborador",   mes: 1500, agora: "Cargos, avaliação, PDI, teste comportamental e recrutamento" },
   { sistema: "Omie",                 logo: "omie",      cat: "ERP e financeiro",        base: "Avançado R$ 295/mês + módulos",          mes: 900,  agora: "Contas a pagar e receber, DRE, fluxo de caixa, NF-e e NFS-e" },
+  { sistema: "Clicksign",            logo: "clicksign", cat: "Assinatura eletrônica",   base: "Plus R$ 59 (10 usuários) + 10 a R$ 15",  mes: 209,  agora: "Envio, assinatura e cobrança da pendência no próprio documento" },
 ];
 const faturaMes = fatura.reduce((s, f) => s + f.mes, 0);   // R$ 10.636
 const faturaAno = faturaMes * 12;                          // R$ 127.632
@@ -85,7 +92,7 @@ const desliga = [
   { icon: "mdi:handshake-outline",              modulo: "CRM e vendas",                 subs: "Pipedrive, RD Station CRM, HubSpot" },
   { icon: "solar:checklist-minimalistic-bold",  modulo: "Tarefas, projetos e prazos",   subs: "ClickUp, Asana, Monday, Trello" },
   { icon: "solar:wallet-money-bold",            modulo: "Financeiro, DRE, NF-e e NFS-e", subs: "Omie, Conta Azul, Bling" },
-  { icon: "solar:letter-opened-bold",           modulo: "E-mail, landing page e régua", subs: "RD Station, Mailchimp" },
+  { icon: "solar:letter-opened-bold",           modulo: "Landing page, régua e WhatsApp", subs: "RD Station" },
   { icon: "solar:users-group-rounded-bold",     modulo: "RH, avaliação, PDI e vaga",    subs: "Sólides, Gupy" },
   { icon: "solar:square-academic-cap-bold",     modulo: "Treinamento e trilha (LMS)",   subs: "plataforma de EAD avulsa" },
   { icon: "solar:videocamera-record-bold",      modulo: "Reunião, transcrição e ata",   subs: "Zoom + Fireflies / Otter" },
@@ -106,10 +113,9 @@ const calc = [
   { id: "crm",  nome: "CRM / funil de vendas",        exemplo: "Pipedrive, HubSpot, RD CRM", val: 2695 },
   { id: "task", nome: "Gestão de tarefas e projetos", exemplo: "ClickUp, Monday, Asana",     val: 3300 },
   { id: "mkt",  nome: "Automação de marketing",       exemplo: "RD Station, HubSpot",        val: 1499 },
-  { id: "mail", nome: "E-mail marketing",             exemplo: "Mailchimp, ActiveCampaign",  val: 742 },
   { id: "rh",   nome: "RH e gestão de pessoas",       exemplo: "Sólides, Gupy",              val: 1500 },
   { id: "erp",  nome: "ERP / financeiro",             exemplo: "Omie, Conta Azul, Bling",    val: 900 },
-  { id: "doc",  nome: "Assinatura eletrônica e GED",  exemplo: "DocuSign, Clicksign",        val: 350 },
+  { id: "doc",  nome: "Assinatura eletrônica e GED",  exemplo: "Clicksign, DocuSign",        val: 209 },
   { id: "bi",   nome: "BI / painel de indicadores",   exemplo: "Power BI, Looker",           val: 400 },
 ];
 
@@ -225,6 +231,30 @@ const objecoes = [
   },
 ];
 
+// Seção da ISO 9001. Existe por dois motivos: é o único diferencial desta página que
+// nenhum concorrente de "plataforma tudo-em-um" tem (a plataforma saiu do método de
+// certificação da Templum), e é o que fala com o segundo público — quem mantém o
+// sistema de gestão à mão. A coluna `sai` é deliberadamente concreta: planilha,
+// Google Docs e pasta no Drive são o que a pessoa reconhece como o próprio trabalho.
+// ⚠️ Nenhuma frase aqui pode dar a entender que a plataforma certifica: certificação
+// depende de auditoria de organismo certificador, e isso está dito na nota da seção.
+const iso = [
+  { n: "4",  t: "Contexto e partes interessadas",       vive: "Análise de cenário, SWOT e matriz de partes interessadas, revisadas dentro da plataforma.", sai: "a apresentação que alguém refaz toda vez que é pedida" },
+  { n: "5",  t: "Liderança e política da qualidade",    vive: "Política, organograma e responsável por processo — cada um com nome, cargo e data.",        sai: "o documento que ninguém acha no Drive" },
+  { n: "6",  t: "Riscos, oportunidades e objetivos",    vive: "Matriz de riscos com plano de ação e objetivo desdobrado em tarefa com responsável e prazo.", sai: "a planilha de riscos parada desde a última auditoria" },
+  { n: "7",  t: "Competência e informação documentada", vive: "Trilha de treinamento com evidência de conclusão e documento versionado, com aprovação registrada.", sai: "o PDF chamado procedimento_final_v3" },
+  { n: "8",  t: "Operação, processos e fornecedores",   vive: "Mapa de processos, instrução de trabalho, qualificação e cotação de fornecedor.",           sai: "o procedimento no Google Docs que cada um edita" },
+  { n: "9",  t: "Indicadores, auditoria e análise crítica", vive: "Indicador com tendência, auditoria interna, pesquisa de satisfação e os insumos do 9.3 já reunidos.", sai: "o garimpo de dado em oito lugares na véspera" },
+  { n: "10", t: "Não conformidade e melhoria",          vive: "Registro da não conformidade conduzido em PDCA até a eficácia ser verificada.",             sai: "o plano de ação que ninguém fecha" },
+];
+
+const isoGanhos = [
+  "Evidência pronta o ano inteiro, não na semana da auditoria",
+  "Uma versão de cada documento — com quem aprovou e quando",
+  "O auditor abre a tela em vez de pedir pasta",
+  "Ninguém precisa manter o sistema de gestão à mão",
+];
+
 const passos = [
   { n: "01", t: "Auditoria do seu stack (30 min)", d: "Você manda a lista do que paga hoje — sistema, plano e valor. A gente devolve, na tela, o que sai da sua conta, o que fica de fora e quanto sobra por ano. Sem proposta nessa conversa." },
   { n: "02", t: "A Olívia rodando no seu cenário", d: "O especialista cria a sua organização na plataforma e roda os agentes com o contexto da SUA empresa: processos, indicadores, funil, financeiro. Não é conta de demonstração." },
@@ -233,10 +263,10 @@ const passos = [
 
 const faqs = [
   { q: "Quanto custa, exatamente?", a: `R$ ${brl(PRECO_MES)} por mês, fixo para até ${LIMITE_USUARIOS} usuários — não cobramos por assento, então entrar com 12 ou com ${LIMITE_USUARIOS} pessoas custa o mesmo. Não há cobrança por token de IA nem por agente: todos estão inclusos. Não há fidelidade — você cancela quando quiser. Acima de ${LIMITE_USUARIOS} usuários existe faixa por porte, e o especialista confirma a sua na auditoria.` },
-  { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai — e a gente diz o que não sai." },
+  { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai. Um exemplo do que não sai: e-mail marketing em massa — a própria Templum manteve o Mailchimp, e a gente não promete cortar o que nós mesmos não cortamos." },
   { q: "Vou perder o histórico dos sistemas que eu cancelar?", a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O sistema atual continua ligado em paralelo enquanto você confere; só depois disso o cancelamento acontece. Ninguém desliga nada no dia da assinatura." },
   { q: "Um sistema só não é pior que seis especialistas?", a: "Em recurso de ponta, às vezes é — e a gente fala isso abertamente. Mas o ganho aqui não é a função isolada, é o dado no mesmo lugar: nenhum dos seis sistemas que a Templum pagava sabia que o retrabalho subiu porque o treinamento não tinha sido aplicado. Se a sua operação usa a fundo um sistema muito específico, esse é o caso de manter só ele e desligar os outros." },
-  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaAno)} por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
+  { q: "A Templum realmente desligou esses sistemas?", a: `Sim — Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. A conta desses seis, a preço público de tabela para uma empresa de ${LIMITE_USUARIOS} pessoas, é de R$ ${brl(faturaAno)} por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas.` },
   { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas, funil, financeiro) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa — e é a parte que nenhum conjunto de sistemas separados entrega, porque ela só funciona com tudo no mesmo banco de dados." },
   { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um dia um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado — em vez de começar da estaca zero com prazo em cima." },
   { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
@@ -266,8 +296,8 @@ const schemaFaq = {
 ---
 
 <LpBase
-  title={`Templum OS — troque 6 sistemas por 1 e corte mais de R$ 100 mil por ano | Templum`}
-  description={`A Templum desligou Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie — uma conta de R$ ${brl(faturaAno)} por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
+  title={`Templum OS — troque 6 sistemas por 1 e corte R$ ${brl(economiaAno)} por ano | Templum`}
+  description={`A Templum desligou Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign — uma conta de R$ ${brl(faturaAno)} por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
   formAnchor="#demonstracao"
   headerCta="Auditoria do meu stack"
   schemas={[schemaSoftware, schemaFaq]}
@@ -280,7 +310,7 @@ const schemaFaq = {
         <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
         <h1 class="ol-hero-title"><em class="accent">R$ {brl(faturaAno)} por ano</em> em seis sistemas. Ou R$ {brl(PRECO_MES)} por mês em um só.</h1>
         <p class="ol-hero-sub">
-          Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa conta — todos
+          Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa conta — todos
           <strong>desligados</strong>. No lugar ficou o <strong>Templum OS</strong>: a plataforma de gestão com
           agentes de inteligência artificial que a Templum construiu para si mesma e que hoje roda em
           <strong>mais de 200 empresas</strong>.
@@ -344,14 +374,16 @@ const schemaFaq = {
           <tbody>
             {fatura.map((f) => (
               <tr>
-                <td>
-                  <img class="ol-tab-logo" src={`/assets/img/stack/${f.logo}.png`} alt={f.sistema} title={f.sistema} width="128" height="128" loading="lazy" decoding="async" />
-                  <span class="ol-tab-off"><iconify-icon icon="solar:close-circle-bold"></iconify-icon> desligado</span>
+                <td data-l="Sistema">
+                  <span class="ol-tab-sis">
+                    <img class="ol-tab-logo" src={`/assets/img/stack/${f.logo}.png`} alt="" width="128" height="128" loading="lazy" decoding="async" />
+                    <strong>{f.sistema}</strong>
+                  </span>
                 </td>
-                <td>{f.cat}</td>
-                <td class="ol-tab-base">{f.base}</td>
-                <td class="ol-tab-num">R$ {brl(f.mes)}</td>
-                <td class="ol-tab-agora">{f.agora}</td>
+                <td data-l="O que fazia">{f.cat}</td>
+                <td class="ol-tab-base" data-l="Base do cálculo">{f.base}</td>
+                <td class="ol-tab-num" data-l="Por mês">R$ {brl(f.mes)}</td>
+                <td class="ol-tab-agora" data-l="Onde vive agora">{f.agora}</td>
               </tr>
             ))}
           </tbody>
@@ -390,7 +422,8 @@ const schemaFaq = {
           o nosso caso. Os valores acima são <strong>preço público de tabela</strong> dos fornecedores (ago/2026),
           dimensionados para uma empresa de {LIMITE_USUARIOS} pessoas e câmbio de R$ 5,50: é a conta que você pode
           conferir no site de cada um, não a nossa nota fiscal — no nosso porte ela é maior. O seu número real sai
-          na auditoria, com os seus planos.
+          na auditoria, com os seus planos. <strong>E o que não saiu:</strong> e-mail marketing em massa.
+          A Templum manteve o Mailchimp, então essa não é uma conta que a gente promete cortar.
         </span>
       </p>
     </div>
@@ -610,6 +643,57 @@ const schemaFaq = {
     </div>
   </section>
 
+  <!-- ISO 9001 — o diferencial que nenhuma plataforma tudo-em-um tem -->
+  <section class="section section--navy">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Sistema de gestão</span>
+        <h2>O seu sistema de gestão sai da planilha e passa a <em class="accent">atender a ISO 9001 por dentro</em></h2>
+        <p>
+          A plataforma saiu do método que a Templum usa em certificação há mais de 30 anos. Cada
+          requisito da norma tem onde morar aqui — e o que sustentava tudo isso à mão para de existir.
+        </p>
+      </div>
+
+      <div class="ol-iso-out">
+        <span>Sai da rotina</span>
+        <em>planilha de controle</em>
+        <em>Google Docs</em>
+        <em>pasta no Drive</em>
+        <em>ata em Word</em>
+      </div>
+
+      <div class="ol-iso">
+        {iso.map((r) => (
+          <div class="ol-iso-row reveal">
+            <span class="ol-iso-n">{r.n}</span>
+            <div class="ol-iso-b">
+              <strong>{r.t}</strong>
+              <p class="ol-iso-vive">{r.vive}</p>
+              <p class="ol-iso-sai"><iconify-icon icon="solar:close-circle-linear"></iconify-icon> {r.sai}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="ol-iso-ganhos">
+        {isoGanhos.map((g) => (
+          <span class="ol-iso-ganho"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> {g}</span>
+        ))}
+      </div>
+
+      <p class="ol-iso-nota">
+        <iconify-icon icon="solar:info-circle-bold"></iconify-icon>
+        <span>
+          Para ser claro: a plataforma <strong>mantém</strong> o sistema de gestão em pé, com a evidência
+          organizada do jeito que a norma pede. O certificado em si sai de uma auditoria de organismo
+          certificador — e se você quiser esse caminho, é a consultoria da Templum que conduz.
+          Usar o Templum OS não obriga a certificar nada.
+        </span>
+      </p>
+    </div>
+  </section>
+
   <DepoimentosTexto
     tag="Quem já está dentro"
     titulo='Mais de <em class="accent">200 empresas</em> rodando o Templum OS'
@@ -781,29 +865,64 @@ const schemaFaq = {
 
   /* ---------- A FATURA (tabela) ----------
      Tabela larga precisa rolar dentro do próprio contêiner: sem o wrapper com
-     overflow-x, o body da página ganha rolagem horizontal no celular. */
+     overflow-x, o body da página ganha rolagem horizontal no celular. Abaixo de
+     720px ela deixa de ser tabela e vira cartão por sistema (os rótulos das colunas
+     voltam pelo atributo data-l de cada célula) — rolar tabela de cinco colunas na
+     horizontal é o pior jeito de ler a seção que carrega o argumento da página. */
   .ol-tab-wrap { margin-top: 42px; overflow-x: auto; -webkit-overflow-scrolling: touch;
     border: 1px solid var(--border); border-radius: var(--r-20); background: var(--surface); }
-  .ol-tab { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14.5px; }
+  .ol-tab { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14.5px; }
   .ol-tab th { text-align: left; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--text-soft); padding: 16px 18px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  .ol-tab td { padding: 16px 18px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; line-height: 1.45; }
-  .ol-tab tbody tr:last-child td { border-bottom: 1px solid var(--border); }
-  /* Logo no lugar do nome: são as marcas dos próprios fornecedores, em 128px de
-     origem renderizados a 34px para ficarem nítidos em tela retina. O nome vive no
-     alt e no title — some da tela, não da acessibilidade nem do que o leitor de
-     tela e o buscador leem. */
-  .ol-tab-logo { display: block; width: 34px; height: 34px; object-fit: contain; border-radius: 7px; }
-  .ol-tab-sis { display: block; font-size: 15.5px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
-  .ol-tab-off { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 11px;
-    font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #c2410c; white-space: nowrap; }
-  .ol-tab-off iconify-icon { font-size: 14px; }
-  .ol-tab-base { font-size: 13px; color: var(--text-soft); }
+    text-transform: uppercase; color: var(--text-soft); padding: 15px 18px;
+    border-bottom: 1px solid var(--border); white-space: nowrap; background: rgba(34,40,49,0.03); }
+  .ol-tab td { padding: 14px 18px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: middle; line-height: 1.45; }
+  .ol-tab tbody tr { transition: background 0.15s; }
+  .ol-tab tbody tr:hover { background: rgba(255,89,37,0.04); }
+
+  /* Logo + nome na mesma linha: o logo dá reconhecimento imediato e o nome resolve as
+     marcas que ninguém identifica de cabeça (Sólides, Omie). O alt do img fica vazio
+     de propósito — o nome já está em texto ao lado, e um alt repetido faria o leitor
+     de tela anunciar o mesmo sistema duas vezes. */
+  .ol-tab-sis { display: flex; align-items: center; gap: 11px; }
+  .ol-tab-logo { width: 30px; height: 30px; flex: none; object-fit: contain; border-radius: 7px; }
+  .ol-tab-sis strong { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; }
+  .ol-tab-base { font-size: 12.5px; color: var(--text-soft); }
   .ol-tab-agora { font-size: 13.5px; }
   .ol-tab-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; color: var(--text); }
-  .ol-tab-tot td { font-weight: 800; color: var(--text); background: rgba(34,40,49,0.04); font-size: 15px; }
+  .ol-tab-tot td { font-weight: 800; color: var(--text); background: rgba(34,40,49,0.05); font-size: 15px; border-bottom: 0; }
   .ol-tab-nos td { font-weight: 800; font-size: 15.5px; color: #fff; background: var(--orange); border-bottom: 0; }
   .ol-tab-nos .ol-tab-num { color: #fff; }
+
+  @media (max-width: 720px) {
+    .ol-tab-wrap { overflow-x: visible; border: 0; border-radius: 0; background: none; margin-top: 32px; }
+    .ol-tab { min-width: 0; display: block; font-size: 14px; }
+    .ol-tab thead { display: none; }
+    .ol-tab tbody, .ol-tab tfoot { display: block; }
+    .ol-tab tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 3px 14px; margin-bottom: 10px;
+      padding: 15px 17px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); }
+    .ol-tab tbody tr:hover { background: var(--surface); }
+    .ol-tab tbody td { display: block; border: 0; padding: 0; grid-column: 1 / -1; }
+    .ol-tab tbody td:nth-child(1) { grid-column: 1; grid-row: 1; }
+    .ol-tab tbody td:nth-child(4) { grid-column: 2; grid-row: 1; align-self: center; font-size: 16px; }
+    /* O rótulo da coluna volta como prefixo — sem ele o cartão vira uma pilha de
+       frases sem saber qual é qual. */
+    .ol-tab tbody td:nth-child(2)::before,
+    .ol-tab tbody td:nth-child(3)::before,
+    .ol-tab tbody td:nth-child(5)::before {
+      content: attr(data-l) ": "; font-weight: 800; font-size: 10.5px; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--text-soft); }
+    .ol-tab tbody td:nth-child(2) { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .ol-tab tfoot tr { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      padding: 15px 17px; border-radius: var(--r-16); }
+    .ol-tab tfoot td { display: block; border: 0; padding: 0; }
+    .ol-tab tfoot td:first-child { flex: 1; }
+    .ol-tab-tot { background: rgba(34,40,49,0.05); margin-bottom: 10px; }
+    .ol-tab-tot td, .ol-tab-nos td { background: none; }
+    .ol-tab-nos { background: var(--orange); }
+    .ol-tab-nos td { color: #fff; }
+    /* O "por ano" da última coluna do rodapé quebraria a linha em telas estreitas. */
+    .ol-tab tfoot td:last-child { font-size: 13px; white-space: nowrap; }
+  }
 
   /* Bloco da economia: o número que o visitante vai lembrar depois de fechar a aba. */
   .ol-econ { display: flex; align-items: center; gap: clamp(18px, 3vw, 34px); flex-wrap: wrap;
@@ -951,6 +1070,46 @@ const schemaFaq = {
   .ol-obj h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 10px; }
   .ol-obj p { font-size: 14.5px; line-height: 1.6; color: var(--text-mid); margin: 0; }
   @media (max-width: 880px) { .ol-objs { grid-template-columns: 1fr; } }
+
+  /* ---------- ISO 9001 ---------- */
+  /* Faixa do que deixa de existir. Riscado de propósito: é a leitura mais rápida do
+     benefício para quem hoje mantém o sistema de gestão à mão. */
+  .ol-iso-out { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 38px;
+    padding: 16px 20px; border-radius: var(--r-16);
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,244,221,0.12); }
+  .ol-iso-out > span { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(255,244,221,0.5); margin-right: 4px; }
+  .ol-iso-out em { font-style: normal; font-size: 14px; font-weight: 600; text-decoration: line-through;
+    text-decoration-color: var(--orange); text-decoration-thickness: 2px;
+    color: rgba(255,244,221,0.62); padding: 5px 12px; border-radius: 100px;
+    background: rgba(255,244,221,0.06); }
+
+  .ol-iso { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .ol-iso-row { display: flex; gap: 14px; padding: 20px 22px; border-radius: var(--r-16);
+    background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); }
+  .ol-iso-n { flex: none; width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+    font-size: 15px; font-weight: 800; color: var(--orange); background: rgba(255,89,37,0.14); }
+  .ol-iso-b { min-width: 0; }
+  .ol-iso-b strong { display: block; font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em;
+    color: var(--cream); line-height: 1.3; }
+  .ol-iso-vive { font-size: 13.5px; line-height: 1.5; color: rgba(255,244,221,0.76); margin: 6px 0 0; }
+  .ol-iso-sai { display: flex; gap: 6px; align-items: flex-start; font-size: 12.5px; line-height: 1.45;
+    color: rgba(255,244,221,0.45); margin: 8px 0 0; }
+  .ol-iso-sai iconify-icon { flex: none; font-size: 15px; color: #ff8a6b; margin-top: 1px; }
+  /* São 7 requisitos em 2 colunas: sem isto o último card fica sozinho na esquerda e
+     abre um buraco do tamanho de um card à direita. Esticado, lê como fechamento. */
+  .ol-iso-row:last-child { grid-column: 1 / -1; }
+  @media (max-width: 880px) { .ol-iso { grid-template-columns: 1fr; } }
+
+  .ol-iso-ganhos { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 24px; }
+  .ol-iso-ganho { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
+    color: rgba(255,244,221,0.86); }
+  .ol-iso-ganho iconify-icon { font-size: 18px; color: color-mix(in srgb, var(--orange) 58%, #ffffff); }
+
+  .ol-iso-nota { display: flex; gap: 10px; margin: 24px 0 0; font-size: 13px; line-height: 1.55;
+    color: rgba(255,244,221,0.6); }
+  .ol-iso-nota iconify-icon { flex: none; font-size: 17px; color: var(--orange); margin-top: 1px; }
+  .ol-iso-nota strong { color: rgba(255,244,221,0.9); }
 
   /* ---------- PREÇO ---------- */
   .ol-preco { margin-top: 40px; padding: clamp(28px, 4vw, 40px); border-radius: var(--r-24);
