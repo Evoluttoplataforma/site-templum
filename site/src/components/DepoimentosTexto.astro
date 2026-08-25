@@ -1,13 +1,22 @@
 ---
 // Depoimentos em texto — cards laranja (citação + estrelas + autor). Carrossel.
+// `tag`, `titulo` e `sub` são opcionais e existem para páginas cujo assunto não é
+// certificação (ex.: a LP do Templum OS, que vende consolidação de custo): os
+// depoimentos são os mesmos e reais, só o enquadramento muda. Sem props, o
+// componente segue idêntico ao que as páginas de certificação já usam.
 import { depoimentosTexto } from "../data/depoimentos-texto.js";
+const {
+  tag = "O que dizem nossos clientes",
+  titulo = null,
+  sub = "Depoimentos reais de empresas que organizaram a gestão e conquistaram a certificação.",
+} = Astro.props;
 ---
 
 <section class="dt section--cream" data-carousel>
   <div class="container xl dt-head">
-    <span class="tag-pill">O que dizem nossos clientes</span>
-    <h2>Quem certifica com a Templum <em class="accent">recomenda</em></h2>
-    <p>Depoimentos reais de empresas que organizaram a gestão e conquistaram a certificação.</p>
+    <span class="tag-pill">{tag}</span>
+    {titulo ? <h2 set:html={titulo} /> : <h2>Quem certifica com a Templum <em class="accent">recomenda</em></h2>}
+    <p>{sub}</p>
   </div>
 
   <div class="dt-stage">

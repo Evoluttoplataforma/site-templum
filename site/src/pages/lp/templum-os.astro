@@ -1,19 +1,23 @@
 ---
 // /lp/templum-os — LP de aquisição do Templum OS. Tráfego PAGO (Meta + Google).
 //
-// Por que esta página existe, e por que não é a /solucoes-de-ia:
-// a /solucoes-de-ia é uma página de ISO com a Olívia dentro — o hero fecha em
-// "acelerando o caminho até a certificação" e o hub orbital se chama "Uma certificação
-// ISO guiada por tecnologia". Serve para quem já quer certificar. O público desta LP é
-// outro (PROJETO-AQUISICAO-TEMPLUM-OS.md, seções 1 e 4): dono de empresa travado pela
-// desorganização, que não busca "ISO", busca parar de sofrer — e o profissional da
-// qualidade que quer ver a IA aplicada ao sistema de gestão que ele já opera.
-// Os dois entram pela mesma dor (a empresa depende de gente, não de processo) e a
-// certificação aparece como consequência possível, nunca como porta de entrada.
+// ⚠️ REPOSICIONAMENTO — 25/08/2026. A versão anterior desta página vendia
+// "sua empresa roda sem depender de você". Promessa não falseável, sem urgência e
+// sustentada por três números sem metodologia (40%/85%/65% — o próprio
+// PROJETO-AQUISICAO-TEMPLUM-OS.md, §4.3, marca isso como risco CDC/CONAR e de
+// reprovação no Meta). Em mercado parado, dor crônica de organização não fecha
+// assinatura: dói há dez anos e pode doer dez mais.
 //
-// Imagem e identidade reaproveitadas da /solucoes-de-ia de propósito (mesma foto da
-// Olívia, mesmos números, mesma paleta): reconhecimento de marca entre anúncio, LP e
-// produto é o que sustenta a taxa de conversão depois do clique.
+// A tese desta versão é econômica e datada: a IA não chegou para vender o sétimo
+// sistema, chegou para desligar seis. A Templum desligou Pipedrive, RD Station,
+// Mailchimp, ClickUp, Sólides e Omie — mais de R$ 200 mil/ano — e ficou com a
+// plataforma que ela mesma construiu. Corte de custo se vende em 1 call porque o
+// ROI é aritmética, não convencimento; isso ataca de lado o risco R11 do doc
+// (venda humana pesada não cabe em ticket de assinatura).
+//
+// A dor de organização NÃO saiu — foi rebaixada. Custo é a porta de entrada;
+// "a empresa roda sem você" é o que aparece depois e é o que sustenta a retenção.
+// Vender só preço traz churn de caçador de desconto.
 //
 // ⚠️ O QUE NÃO PROMETER AQUI: a garantia de 200% é da consultoria de certificação —
 // não existe "resultado acordado" em assinatura mensal (doc, seção 3, risco 3). A
@@ -33,24 +37,77 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 // O nome casa com o funil do CRM, que já se chama TEMPLUM OS.
 const CRM_PRODUTO = "Templum OS";
 
-// A coluna da direita é o gancho de mídia; a do meio é a entrega (doc, seção 4.2).
-// Mesma lista do OrbitPlatform.astro, reescrita na dor e não na feature.
-// NÃO cravar número de agentes em copy nenhuma: a plataforma ganha agente novo quase toda
-// semana, e "12 agentes" já está desatualizado no site. A lista abaixo pode crescer sem
-// obrigar a caçar o número em título, meta description e FAQ.
-const agentes = [
-  { icon: "solar:compass-bold", nome: "Estrategista", dor: "“Não sei para onde a empresa está indo”", entrega: "Análise de cenário, objetivos e o plano que desdobra em tarefas com responsável e prazo." },
-  { icon: "mdi:sitemap-outline", nome: "Processos", dor: "“Só eu sei como as coisas funcionam aqui”", entrega: "Mapeia, documenta e gera a instrução de trabalho de cada atividade." },
-  { icon: "solar:users-group-rounded-bold", nome: "Pessoas", dor: "“Contratei e a pessoa não sabe o que fazer”", entrega: "Descrição de cargo, avaliação e plano de desenvolvimento individual." },
-  { icon: "solar:square-academic-cap-bold", nome: "Treinamento", dor: "“Treino a equipe e ninguém aplica”", entrega: "Microlearning diário pelo WhatsApp, no nível de cada colaborador." },
-  { icon: "solar:chart-2-bold", nome: "Indicadores", dor: "“Decido por intuição, não por número”", entrega: "KPI em tempo real, tendência e hipótese de causa raiz do desvio." },
-  { icon: "solar:magnifer-bold", nome: "Pesquisa", dor: "“Não sei o que meu time e meu cliente pensam”", entrega: "Pesquisa de clima, satisfação e NPS com leitura pronta." },
-  { icon: "solar:shield-warning-bold", nome: "Riscos", dor: "“Vivo apagando incêndio”", entrega: "Identifica a ameaça antes de virar crise e propõe o plano de mitigação." },
-  { icon: "solar:lightbulb-bold", nome: "Oportunidades", dor: "“Sinto que estou deixando dinheiro na mesa”", entrega: "Cruza mercado e dado interno para apontar expansão e parceria." },
-  { icon: "solar:danger-triangle-bold", nome: "Problemas", dor: "“O mesmo erro acontece todo mês”", entrega: "Registra a não conformidade e conduz o PDCA até o fechamento." },
-  { icon: "solar:document-text-bold", nome: "Documentos", dor: "“Cada um usa uma versão da planilha”", entrega: "Padroniza, versiona e controla — todos na versão certa." },
-  { icon: "mdi:handshake-outline", nome: "Vendas", dor: "“Perco orçamento sem follow-up”", entrega: "CRM, funil e coaching comercial dentro da mesma plataforma." },
-  { icon: "solar:videocamera-record-bold", nome: "Reuniões", dor: "“Reunião não vira ação”", entrega: "Transcreve, extrai decisão e cria o plano de ação automaticamente." },
+// ---------------------------------------------------------------------------
+// PREÇO E MEMÓRIA DE CÁLCULO — o número é o produto desta página, então ele fica
+// em constante única e é reusado em copy, tabela, calculadora e schema. Mudou o
+// preço? Muda aqui.
+// ---------------------------------------------------------------------------
+const PRECO_MES = 1998;              // R$/mês, fixo até 50 usuários
+const PRECO_ANO = PRECO_MES * 12;    // R$ 23.976
+const LIMITE_USUARIOS = 50;
+
+// A fatura de referência. ⚠️ LEIA ANTES DE PUBLICAR:
+// - Os R$ 200 mil/ano são REAIS: é o que a Templum cortou ao desligar os seis.
+// - Os valores linha a linha NÃO são a nota fiscal da Templum: são preço público de
+//   tabela dos fornecedores, dimensionado para uma empresa de 50 pessoas (o mesmo
+//   corte do preço fixo do Templum OS, para a comparação ficar maçã com maçã).
+//   Isso está dito na página, em letra visível, de propósito — número de custo sem
+//   memória de cálculo é o tipo de coisa que o lead confere na call.
+// - Câmbio usado: R$ 5,50/US$. Fontes (ago/2026): Pipedrive Professional US$ 49/
+//   usuário/mês anual; ClickUp Business US$ 12/usuário/mês anual; RD Station
+//   Marketing Pro a partir de R$ 1.499/mês; Mailchimp Standard ~US$ 135/mês em 10 mil
+//   contatos; Omie Avançado R$ 295/mês (5 usuários) + módulos; Sólides sob consulta
+//   (faixa de mercado por colaborador).
+// - Rodrigo: confira cada linha contra a fatura real antes do deploy. Se alguma
+//   estourar ou faltar, o ajuste é só aqui.
+const fatura = [
+  { sistema: "Pipedrive",             cat: "CRM e funil de vendas",              base: "US$ 49 por usuário/mês · 10 comerciais", mes: 2695, agora: "CRM, funil, atividades e coaching comercial" },
+  { sistema: "ClickUp",               cat: "Tarefas, projetos e prazos",          base: "US$ 12 por usuário/mês · 50 usuários",   mes: 3300, agora: "Projetos, fases, tarefas, checklists e automações" },
+  { sistema: "RD Station Marketing",  cat: "Automação de marketing",              base: "Plano Pro, a partir de R$ 1.499/mês",    mes: 1499, agora: "Landing pages, réguas de relacionamento e WhatsApp" },
+  { sistema: "Mailchimp",             cat: "E-mail marketing",                    base: "Standard · base de 10 mil contatos",     mes: 742,  agora: "Disparo e sequência de e-mail na mesma base do CRM" },
+  { sistema: "Sólides",               cat: "RH e gestão de pessoas",              base: "Sob consulta · faixa por colaborador",   mes: 1500, agora: "Cargos, avaliação, PDI, teste comportamental e recrutamento" },
+  { sistema: "Omie",                  cat: "ERP e financeiro",                    base: "Avançado R$ 295/mês + módulos",          mes: 900,  agora: "Contas a pagar e receber, DRE, fluxo de caixa, NF-e e NFS-e" },
+];
+const faturaMes = fatura.reduce((s, f) => s + f.mes, 0);   // R$ 10.636
+const faturaAno = faturaMes * 12;                          // R$ 127.632
+const economiaAno = faturaAno - PRECO_ANO;                 // R$ 103.656
+const porPessoa = PRECO_MES / LIMITE_USUARIOS;             // R$ 39,96
+const brl = (n) => n.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+
+// O que a plataforma cobre, escrito na chave "o que sai da sua conta". Substituiu a
+// lista de agentes na dor: com a tese de consolidação, o leitor não quer saber o nome
+// do agente, quer saber qual assinatura ele cancela. NÃO cravar número de agentes nem
+// de módulos em copy: a plataforma ganha função nova quase toda semana.
+const desliga = [
+  { icon: "mdi:handshake-outline",              modulo: "CRM e vendas",                 subs: "Pipedrive, RD Station CRM, HubSpot" },
+  { icon: "solar:checklist-minimalistic-bold",  modulo: "Tarefas, projetos e prazos",   subs: "ClickUp, Asana, Monday, Trello" },
+  { icon: "solar:wallet-money-bold",            modulo: "Financeiro, DRE, NF-e e NFS-e", subs: "Omie, Conta Azul, Bling" },
+  { icon: "solar:letter-opened-bold",           modulo: "E-mail, landing page e régua", subs: "RD Station, Mailchimp" },
+  { icon: "solar:users-group-rounded-bold",     modulo: "RH, avaliação, PDI e vaga",    subs: "Sólides, Gupy" },
+  { icon: "solar:square-academic-cap-bold",     modulo: "Treinamento e trilha (LMS)",   subs: "plataforma de EAD avulsa" },
+  { icon: "solar:videocamera-record-bold",      modulo: "Reunião, transcrição e ata",   subs: "Zoom + Fireflies / Otter" },
+  { icon: "solar:document-add-bold",            modulo: "Documento e assinatura eletrônica", subs: "Drive solto + DocuSign / Clicksign" },
+  { icon: "solar:chart-2-bold",                 modulo: "Indicadores e painel",         subs: "Power BI + planilha" },
+  { icon: "solar:shield-check-bold",            modulo: "Processos, riscos e auditoria", subs: "software de SGI + planilha" },
+  { icon: "solar:chat-round-dots-bold",         modulo: "Chat interno da equipe",       subs: "Slack" },
+  { icon: "solar:cart-large-2-bold",            modulo: "Compras, cotação e fornecedor", subs: "planilha + caixa de e-mail" },
+  { icon: "solar:health-bold",                  modulo: "SESMT: ASO, EPI, CIPA, acidente", subs: "sistema de SST avulso" },
+  { icon: "solar:headphones-round-bold",        modulo: "Chamado interno e suporte",    subs: "Zendesk, Movidesk" },
+];
+
+// Linhas da calculadora. Mesmos valores da fatura de referência — o visitante edita
+// o que for diferente na realidade dele. O resultado vai para o campo `mensagem` do
+// lead (worker.js: `mensagem` → Supabase + nota no CRM + MENSAGEM no Mailchimp), ou
+// seja: o closer abre a call já sabendo o tamanho da conta.
+const calc = [
+  { id: "crm",  nome: "CRM / funil de vendas",        exemplo: "Pipedrive, HubSpot, RD CRM", val: 2695 },
+  { id: "task", nome: "Gestão de tarefas e projetos", exemplo: "ClickUp, Monday, Asana",     val: 3300 },
+  { id: "mkt",  nome: "Automação de marketing",       exemplo: "RD Station, HubSpot",        val: 1499 },
+  { id: "mail", nome: "E-mail marketing",             exemplo: "Mailchimp, ActiveCampaign",  val: 742 },
+  { id: "rh",   nome: "RH e gestão de pessoas",       exemplo: "Sólides, Gupy",              val: 1500 },
+  { id: "erp",  nome: "ERP / financeiro",             exemplo: "Omie, Conta Azul, Bling",    val: 900 },
+  { id: "doc",  nome: "Assinatura eletrônica e GED",  exemplo: "DocuSign, Clicksign",        val: 350 },
+  { id: "bi",   nome: "BI / painel de indicadores",   exemplo: "Power BI, Looker",           val: 400 },
 ];
 
 // Demonstração do que a Olívia responde. Cinco interações, uma por PAPEL — e o papel
@@ -63,7 +120,6 @@ const agentes = [
 // fazia o visitante rolar tudo sem nenhum ganhar destaque; separado por cargo, ele
 // reconhece o próprio papel. CEO/Proprietário leva duas trocas porque a pergunta do
 // dono e a do diretor ("o que um auditor encontraria") são o mesmo cargo na prática.
-// A Qualidade tem card próprio de propósito: é o segundo público-alvo da página.
 const conversa = [
   {
     papel: "CEO / Proprietário",
@@ -75,8 +131,8 @@ const conversa = [
         r: "Três: prazo de entrega (‑8%), retrabalho na produção (+12%) e satisfação do cliente (‑4 pts). O de retrabalho vem piorando há 4 meses — abri a análise de causa raiz e sugeri 2 ações.",
       },
       {
-        p: "O que um auditor encontraria hoje no meu sistema de gestão?",
-        r: "Quatro pontos: 2 não conformidades sem eficácia verificada, 1 documento vencido no controle e a matriz de partes interessadas sem revisão desde o ano passado.",
+        p: "Por que o retrabalho subiu se a produção não mudou?",
+        r: "O treinamento do novo procedimento está com 3 de 11 operadores concluídos, e as duas ocorrências desta semana são do turno com menor conclusão. Nenhum dos seus sistemas antigos cruzava esses dois dados.",
       },
     ],
   },
@@ -103,6 +159,17 @@ const conversa = [
     ],
   },
   {
+    papel: "Financeiro",
+    canal: "pelo painel",
+    icon: "solar:wallet-money-bold",
+    trocas: [
+      {
+        p: "Fecha o caixa da semana e me diz o que vence até sexta.",
+        r: "Entrou R$ 184 mil, saiu R$ 122 mil. Até sexta vencem 9 contas (R$ 41 mil) e 3 recebimentos estão atrasados há mais de 15 dias — dois deles do mesmo cliente, que também tem um negócio aberto no funil de vendas.",
+      },
+    ],
+  },
+  {
     papel: "Qualidade",
     canal: "pelo painel",
     icon: "solar:verified-check-bold",
@@ -116,35 +183,60 @@ const conversa = [
 ];
 
 const semOlivia = [
-  "A empresa para quando o dono viaja",
-  "Processo existe na cabeça das pessoas, não no papel",
-  "Indicador é planilha que ninguém atualiza",
-  "Reunião longa, decisão que não vira ação",
-  "Funcionário sai e leva o conhecimento embora",
-  "Auditoria vira correria de última hora",
+  "Seis assinaturas, seis logins, seis faturas",
+  "Cada sistema cobra por cabeça — cresceu o time, subiu a conta",
+  "A IA vem como add-on, cobrada por usuário e por token",
+  "Nenhum dos seis sabe o que acontece no outro",
+  "Relatório é exportar planilha de cada um e cruzar à mão",
+  "Renovação chega com reajuste e você descobre em fevereiro",
 ];
 const comOlivia = [
-  "O processo roda porque está escrito e atribuído",
-  "Instrução de trabalho gerada e versionada por agente de IA",
-  "Indicador com tendência e causa raiz sugerida",
-  "Reunião transcrita, decisão em tarefa com prazo",
-  "Conhecimento fica na plataforma, não na pessoa",
-  "Evidência pronta o ano inteiro, não na véspera",
+  "Uma assinatura, um login, uma fatura",
+  `R$ ${brl(PRECO_MES)} por mês fixo até ${LIMITE_USUARIOS} usuários`,
+  "IA inclusa: sem cobrança por agente e sem cobrança por token",
+  "Um banco de dados só — o dado de vendas conversa com o de produção",
+  "A Olívia responde a pergunta em vez de você montar o relatório",
+  "Sem fidelidade: você cancela quando quiser",
+];
+
+const objecoes = [
+  {
+    icon: "solar:database-bold",
+    q: "“Vou perder o histórico do meu CRM.”",
+    a: "Não. Cliente, contato, negócio e conta a receber entram por importação, e o histórico antigo é anexado ao registro. Na prática o sistema velho continua ligado em paralelo até você conferir que está tudo aqui — só então cancela.",
+  },
+  {
+    icon: "solar:users-group-two-rounded-bold",
+    q: "“Meu time acabou de aprender o sistema atual.”",
+    a: "Trocar ferramenta só compensa se o ganho for grande, e é por isso que a adoção aqui não depende de treinar 50 pessoas num painel novo: quem não gosta de abrir sistema pergunta e responde pelo WhatsApp, com a Olívia do outro lado.",
+  },
+  {
+    icon: "solar:layers-bold",
+    q: "“Um sistema só não é pior que seis especialistas?”",
+    a: "Em recurso de ponta, às vezes é. Em decisão, não: nenhum dos seis sabia que o retrabalho subiu porque o treinamento não foi aplicado. Se a sua empresa usa 100% de um CRM avançado, você não é nosso cliente — e a gente diz isso na auditoria.",
+  },
+  {
+    icon: "solar:calendar-mark-bold",
+    q: "“Preciso desligar tudo de uma vez?”",
+    a: "Não, e não recomendamos. Começa pelos dois sistemas mais caros, roda 30 dias em paralelo e desliga. O resto sai ao longo de 90 dias, na ordem que a auditoria mostrar que dá mais economia com menos risco.",
+  },
 ];
 
 const passos = [
-  { n: "01", t: "Conversa de 30 minutos", d: "Você conta como a empresa funciona hoje: quantas pessoas, o que trava, o que já é organizado." },
-  { n: "02", t: "A Olívia rodando no seu cenário", d: "O especialista cria a sua organização na plataforma e você vê os agentes trabalhando com o contexto da SUA empresa — não numa demo genérica." },
-  { n: "03", t: "Teste com o seu time", d: "Você recebe acesso para usar com a sua equipe antes de decidir. Se fizer sentido, começa; se não, encerra." },
+  { n: "01", t: "Auditoria do seu stack (30 min)", d: "Você manda a lista do que paga hoje — sistema, plano e valor. A gente devolve, na tela, o que sai da sua conta, o que fica de fora e quanto sobra por ano. Sem proposta nessa conversa." },
+  { n: "02", t: "A Olívia rodando no seu cenário", d: "O especialista cria a sua organização na plataforma e roda os agentes com o contexto da SUA empresa: processos, indicadores, funil, financeiro. Não é conta de demonstração." },
+  { n: "03", t: "Teste com o seu time e plano de desligamento", d: "Você usa com a equipe antes de decidir e sai com o cronograma de 90 dias: o que desliga primeiro, o que roda em paralelo, o que migra. Se não fizer sentido, encerra." },
 ];
 
 const faqs = [
-  { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma foi construída sobre o método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão: processos, pessoas, indicadores, riscos, documentos e vendas. Se um dia você quiser certificar, o caminho já estará 80% andado — a certificação passa a ser consequência, não pré-requisito." },
-  { q: "Quanto custa?", a: "A assinatura do Templum OS é de R$ 1.500 por mês, sem fidelidade — você cancela quando quiser. Não há cobrança por token de IA nem por agente: todos estão inclusos. Na conversa o especialista confirma o escopo para o seu porte antes de qualquer proposta." },
-  { q: "Consigo testar antes de assinar?", a: "Sim. Existe um período de teste gratuito e, na conversa, o especialista libera o acesso já com a sua organização criada — você usa com dados reais da sua empresa em vez de navegar numa conta de demonstração." },
-  { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa: quem tem dúvida em uma instrução de trabalho ou quer saber por que um indicador caiu pergunta para ela." },
-  { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É justamente o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
-  { q: "Sou da qualidade. O que muda no meu dia?", a: "O trabalho manual sai. A análise crítica pela direção deixa de ser garimpo de dado em oito lugares: os insumos ficam reunidos, com tendência e saída sugerida por item. O mesmo vale para não conformidade com PDCA, controle de documentos, matriz de riscos, pesquisa de satisfação e evidência de treinamento — tudo no mesmo lugar, pronto para auditoria." },
+  { q: "Quanto custa, exatamente?", a: `R$ ${brl(PRECO_MES)} por mês, fixo para até ${LIMITE_USUARIOS} usuários — não cobramos por assento, então entrar com 12 ou com ${LIMITE_USUARIOS} pessoas custa o mesmo. Não há cobrança por token de IA nem por agente: todos estão inclusos. Não há fidelidade — você cancela quando quiser. Acima de ${LIMITE_USUARIOS} usuários existe faixa por porte, e o especialista confirma a sua na auditoria.` },
+  { q: "O que exatamente eu consigo desligar?", a: "Depende do que você paga hoje. Na prática a plataforma cobre CRM e funil, tarefas e projetos, financeiro com emissão de NF-e e NFS-e, e-mail e landing page, RH com avaliação e recrutamento, treinamento, reunião com transcrição, documento com assinatura eletrônica, indicadores, processos e riscos, compras, SESMT, chamado interno e chat da equipe. A auditoria existe justamente para separar o que sai da sua conta do que não sai — e a gente diz o que não sai." },
+  { q: "Vou perder o histórico dos sistemas que eu cancelar?", a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O sistema atual continua ligado em paralelo enquanto você confere; só depois disso o cancelamento acontece. Ninguém desliga nada no dia da assinatura." },
+  { q: "Um sistema só não é pior que seis especialistas?", a: "Em recurso de ponta, às vezes é — e a gente fala isso abertamente. Mas o ganho aqui não é a função isolada, é o dado no mesmo lugar: nenhum dos seis sistemas que a Templum pagava sabia que o retrabalho subiu porque o treinamento não tinha sido aplicado. Se a sua operação usa a fundo um sistema muito específico, esse é o caso de manter só ele e desligar os outros." },
+  { q: "A Templum realmente desligou esses sistemas?", a: "Sim — Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa operação, e a soma que deixou de ser paga passa de R$ 200 mil por ano. A plataforma que você vai ver na demonstração é a mesma que roda a Templum todos os dias, e hoje ela está em mais de 200 empresas." },
+  { q: "Quem é a Olívia, exatamente?", a: "É a IA central do Templum OS. Ela coordena os agentes, conhece todo o seu sistema de gestão (processos, indicadores, documentos, tarefas, funil, financeiro) e responde por chat na plataforma e pelo WhatsApp. Na prática é o segundo cérebro da empresa — e é a parte que nenhum conjunto de sistemas separados entrega, porque ela só funciona com tudo no mesmo banco de dados." },
+  { q: "Preciso querer certificação ISO para usar o Templum OS?", a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um dia um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado — em vez de começar da estaca zero com prazo em cima." },
+  { q: "Minha equipe é pequena e nada é documentado. Dá para começar assim?", a: "É o cenário mais comum. Você não precisa chegar organizado: os agentes geram a primeira versão do planejamento, do mapa de processos, das instruções de trabalho e dos indicadores a partir do contexto da sua empresa — e você edita o que não fizer sentido. Começar do zero aqui é mais rápido do que partir de planilhas antigas." },
   { q: "Quanto tempo leva para estar rodando?", a: "A primeira estrutura (planejamento, departamentos, processos e indicadores) sai na própria demonstração, em minutos. O que leva tempo é a adoção pelo time — e é por isso que o teste acontece com a sua equipe dentro, não só com você." },
   { q: "Meus dados ficam seguros?", a: "Sim. A plataforma é da própria Templum, com controle de acesso por usuário e organização, e o tratamento de dados segue a LGPD. Cada organização é isolada: o que você cria não é visível para nenhum outro cliente." },
   { q: "Serve para mais de uma empresa ou unidade?", a: "Serve. A plataforma é multiorganização: grupos, filiais e unidades podem ter cada um o seu ambiente, e quem administra transita entre eles. Consultores usam exatamente esse recurso para atender vários clientes." },
@@ -157,10 +249,10 @@ const schemaSoftware = {
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:
-    "Plataforma de gestão com agentes de inteligência artificial coordenados pela Olívia: organiza planejamento estratégico, processos, pessoas, treinamento, indicadores, riscos, documentos, vendas e reuniões em um só lugar.",
-  offers: { "@type": "Offer", price: "1500.00", priceCurrency: "BRL", availability: "https://schema.org/InStock" },
+    "Plataforma de gestão com agentes de inteligência artificial coordenados pela Olívia. Reúne CRM, tarefas e projetos, financeiro, marketing, RH, treinamento, documentos, indicadores, processos e riscos em uma assinatura só, substituindo o conjunto de sistemas avulsos da empresa.",
+  offers: { "@type": "Offer", price: String(PRECO_MES) + ".00", priceCurrency: "BRL", availability: "https://schema.org/InStock" },
   provider: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
-  audience: { "@type": "Audience", audienceType: "Donos de empresa, diretores e profissionais da qualidade" },
+  audience: { "@type": "Audience", audienceType: "Donos de empresa, diretores, financeiro e profissionais da qualidade" },
 };
 
 const schemaFaq = {
@@ -171,28 +263,29 @@ const schemaFaq = {
 ---
 
 <LpBase
-  title="Templum OS — a plataforma de IA que organiza a gestão da sua empresa | Templum"
-  description="Agentes de inteligência artificial que mapeiam seus processos, definem quem faz o quê, treinam seu time e monitoram seus indicadores. Veja o Templum OS rodando no cenário da sua empresa."
+  title={`Templum OS — troque 6 sistemas por 1 e corte mais de R$ 100 mil por ano | Templum`}
+  description={`A Templum desligou Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie e cortou mais de R$ 200 mil por ano. No lugar ficou o Templum OS: gestão com agentes de IA por R$ ${brl(PRECO_MES)}/mês, fixo até ${LIMITE_USUARIOS} usuários.`}
   formAnchor="#demonstracao"
-  headerCta="Quero conhecer a Olívia"
+  headerCta="Auditoria do meu stack"
   schemas={[schemaSoftware, schemaFaq]}
 >
-  <!-- HERO — form na primeira dobra, à direita no desktop -->
+  <!-- HERO — a fatura na primeira dobra, form à direita no desktop -->
   <section class="ol-hero">
     <div class="ol-hero-bg" aria-hidden="true"></div>
     <div class="container xl ol-hero-grid">
       <div class="ol-hero-text">
         <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
-        <h1 class="ol-hero-title">O <em class="accent">Templum OS</em> faz a sua empresa rodar sem depender de você</h1>
+        <h1 class="ol-hero-title">Cortamos <em class="accent">R$ 200 mil por ano</em> em software. O que substituiu tudo custa R$ {brl(PRECO_MES)} por mês.</h1>
         <p class="ol-hero-sub">
-          São <strong>agentes de inteligência artificial</strong> que mapeiam seus processos, definem
-          quem faz o quê, treinam seu time pelo WhatsApp e monitoram seus indicadores — dentro de uma
-          plataforma só. A Olívia coordena todos eles e responde sobre a sua operação.
+          Pipedrive, RD Station, Mailchimp, ClickUp, Sólides e Omie saíram da nossa conta — todos
+          <strong>desligados</strong>. No lugar ficou o <strong>Templum OS</strong>: a plataforma de gestão com
+          agentes de inteligência artificial que a Templum construiu para si mesma e que hoje roda em
+          <strong>mais de 200 empresas</strong>.
         </p>
         <div class="ol-hero-chips">
-          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Até 40% menos tempo de execução</span>
-          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> 85% menos erros operacionais</span>
-          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> +2.000 empresas atendidas</span>
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Preço fixo até {LIMITE_USUARIOS} usuários</span>
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> IA inclusa, sem cobrança por token</span>
+          <span class="ol-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Sem fidelidade</span>
         </div>
       </div>
 
@@ -200,16 +293,16 @@ const schemaFaq = {
         <img src="/assets/img/olivia_templum.webp" alt="Olívia, a inteligência artificial do Templum OS" width="820" height="1230" fetchpriority="high" decoding="async" />
         <div class="ol-hero-quote">
           <span class="ol-hero-quote-n">Olívia</span>
-          <p>“Seu indicador de retrabalho piora há 4 meses. Quer ver a causa raiz?”</p>
+          <p>“Você paga dois sistemas que fazem e-mail. Quer ver a conta do ano?”</p>
         </div>
       </div>
 
       <div class="ol-hero-form" id="demonstracao">
         <LeadForm
           norma={CRM_PRODUTO}
-          titulo="Veja a Olívia na sua empresa"
-          sub="30 minutos, sem compromisso. O especialista roda os agentes no cenário real do seu negócio."
-          cta="Quero conhecer a Olívia"
+          titulo="Auditoria do seu stack"
+          sub="30 minutos. Você diz o que paga hoje, a gente mostra o que sai da conta — e o que não sai."
+          cta="Quero a auditoria gratuita"
           obrigado="/lp/templum-os-obrigado"
           simples={true}
           cargo={true}
@@ -219,59 +312,174 @@ const schemaFaq = {
     </div>
   </section>
 
-  <ClientLogos dark={true} titulo="Mais de 2.000 empresas já passaram pelo método que virou o Templum OS" />
+  <ClientLogos dark={true} titulo="Mais de 2.000 empresas passaram pelo método da Templum — e mais de 200 já rodam o Templum OS" />
 
-  <!-- DOIS PÚBLICOS — quem se identifica clica -->
+  <!-- A NOSSA FATURA — a prova que nenhum concorrente pode copiar: somos o case -->
   <section class="section section--cream">
     <div class="container xl">
       <div class="section-header">
-        <span class="tag-pill">Para quem é</span>
-        <h2>Duas dores diferentes, <em class="accent">a mesma origem</em></h2>
-        <p>A empresa depende de pessoas lembrarem, e não de um processo que roda. Escolha o lado da mesa em que você está.</p>
+        <span class="tag-pill">A conta que a gente cancelou</span>
+        <h2>Seis assinaturas, uma fatura só — <em class="accent">e o dinheiro que sobrou</em></h2>
+        <p>
+          A Templum pagava estes seis sistemas. Hoje não paga nenhum: tudo que eles faziam acontece
+          dentro do Templum OS. Abaixo, a mesma conta refeita para uma empresa de {LIMITE_USUARIOS} pessoas,
+          com preço público de tabela — para você comparar com a sua.
+        </p>
       </div>
-      <div class="ol-publicos">
-        <div class="ol-publico">
-          <span class="ol-publico-tag"><iconify-icon icon="solar:crown-bold"></iconify-icon> Dono ou diretor</span>
-          <h3>Tudo passa por você — e isso virou o teto do crescimento</h3>
-          <ul class="ol-lista">
-            <li>Você é consultado para decisão que a equipe deveria tomar sozinha</li>
-            <li>Não sabe dizer, com número, qual processo está travando o resultado</li>
-            <li>Contrata, treina, e três meses depois o padrão sumiu</li>
-            <li>Não consegue tirar duas semanas de férias sem a operação oscilar</li>
-          </ul>
-          <a href="#demonstracao" class="btn btn--primary">Quero ver isso resolvido <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+
+      <div class="ol-tab-wrap">
+        <table class="ol-tab">
+          <thead>
+            <tr>
+              <th>Sistema</th>
+              <th>O que fazia</th>
+              <th>Base do cálculo</th>
+              <th class="ol-tab-num">Por mês</th>
+              <th>Onde isso vive agora</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fatura.map((f) => (
+              <tr>
+                <td><strong class="ol-tab-sis">{f.sistema}</strong><span class="ol-tab-off"><iconify-icon icon="solar:close-circle-bold"></iconify-icon> desligado</span></td>
+                <td>{f.cat}</td>
+                <td class="ol-tab-base">{f.base}</td>
+                <td class="ol-tab-num">R$ {brl(f.mes)}</td>
+                <td class="ol-tab-agora">{f.agora}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr class="ol-tab-tot">
+              <td colspan="3">Total do stack</td>
+              <td class="ol-tab-num">R$ {brl(faturaMes)}</td>
+              <td>R$ {brl(faturaAno)} por ano</td>
+            </tr>
+            <tr class="ol-tab-nos">
+              <td colspan="3">Templum OS — tudo isso, uma assinatura</td>
+              <td class="ol-tab-num">R$ {brl(PRECO_MES)}</td>
+              <td>R$ {brl(PRECO_ANO)} por ano</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="ol-econ">
+        <div class="ol-econ-big">
+          <span class="ol-econ-lab">Sobra por ano, nesse cenário</span>
+          <strong>R$ {brl(economiaAno)}</strong>
         </div>
-        <div class="ol-publico">
-          <span class="ol-publico-tag"><iconify-icon icon="solar:medal-ribbon-star-bold"></iconify-icon> Qualidade e processos</span>
-          <h3>Você mantém o sistema de gestão vivo à mão, e ele consome o seu mês</h3>
-          <ul class="ol-lista">
-            <li>Junta indicador de oito lugares para montar uma ata que ninguém lê</li>
-            <li>Persegue evidência de treinamento e documento vencido na véspera da auditoria</li>
-            <li>Análise crítica pela direção sai fria, sem tendência e sem decisão</li>
-            <li>A alta direção não senta na mesa porque o dado não chega pronto</li>
-          </ul>
-          <a href="#demonstracao" class="btn btn--primary">Quero ver isso automatizado <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <p class="ol-econ-txt">
+          Você paga menos de <strong>um quinto</strong> do que o conjunto custava. E como o preço é fixo até
+          {LIMITE_USUARIOS} usuários, dá <strong>R$ {porPessoa.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} por pessoa/mês</strong> —
+          menos do que o gestor de tarefas cobrava sozinho por cabeça.
+        </p>
+        <a href="#demonstracao" class="btn btn--primary">Quero a conta da minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+
+      <p class="ol-nota">
+        <iconify-icon icon="solar:info-circle-bold"></iconify-icon>
+        <span>
+          <strong>Memória de cálculo.</strong> Os R$ 200 mil/ano são o corte real da Templum, no nosso porte.
+          A tabela acima usa <strong>preço público de tabela</strong> dos fornecedores (ago/2026), dimensionado para
+          uma empresa de {LIMITE_USUARIOS} pessoas e câmbio de R$ 5,50 — não é a nossa nota fiscal, é a conta que
+          você pode conferir no site de cada um. O seu número real sai na auditoria, com os seus planos.
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <!-- CALCULADORA — o visitante constrói o próprio argumento, e o valor vai no lead -->
+  <section class="section section--navy" id="calculadora">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Faça a sua conta</span>
+        <h2>Quanto a sua empresa paga por mês em <em class="accent">sistemas que ninguém usa por inteiro</em>?</h2>
+        <p>Marque o que você assina e ajuste os valores. A conta é sua — e ela vai junto com o seu pedido de auditoria.</p>
+      </div>
+
+      <div class="ol-calc">
+        <div class="ol-calc-rows">
+          {calc.map((c) => (
+            <label class="ol-calc-row">
+              <input type="checkbox" data-ol-on checked={c.id === "crm" || c.id === "task" || c.id === "mkt"} />
+              <span class="ol-calc-box"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
+              <span class="ol-calc-nome">{c.nome}<em>{c.exemplo}</em></span>
+              <span class="ol-calc-inp">
+                <span>R$</span>
+                <input type="number" inputmode="numeric" min="0" step="50" value={c.val} data-ol-val aria-label={`Valor mensal de ${c.nome}`} />
+                <span>/mês</span>
+              </span>
+            </label>
+          ))}
+        </div>
+
+        <div class="ol-calc-out">
+          <div class="ol-calc-line">
+            <span>Você paga hoje</span>
+            <strong data-ol-mes>—</strong>
+          </div>
+          <div class="ol-calc-line ol-calc-line--sm">
+            <span>No ano</span>
+            <strong data-ol-ano>—</strong>
+          </div>
+          <div class="ol-calc-line">
+            <span>Templum OS</span>
+            <strong>R$ {brl(PRECO_MES)}<em>/mês</em></strong>
+          </div>
+          <div class="ol-calc-eco">
+            <span>Sobra por ano</span>
+            <strong data-ol-econ>—</strong>
+          </div>
+          <p class="ol-calc-mult" data-ol-mult></p>
+          <button type="button" class="btn btn--primary btn--block" data-ol-levar>
+            Levar essa conta para a auditoria <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </button>
+          <p class="ol-calc-fine">Sua conta vai anexada ao pedido — o especialista abre a conversa já sabendo o tamanho do seu stack.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CONHEÇA A OLÍVIA — a demonstração da promessa do anúncio -->
+  <!-- O QUE VOCÊ DESLIGA — escopo, na chave da assinatura cancelada -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Escopo</span>
+        <h2>O que entra aqui — e <em class="accent">o que sai da sua conta</em></h2>
+        <p>Cada linha é uma categoria que a plataforma cobre por dentro, com agente de IA trabalhando em cima dela. E a lista não para de crescer.</p>
+      </div>
+      <div class="ol-agentes">
+        {desliga.map((d) => (
+          <div class="ol-agente reveal">
+            <span class="ol-agente-ico"><iconify-icon icon={d.icon}></iconify-icon></span>
+            <div>
+              <span class="ol-agente-nome">{d.modulo}</span>
+              <p class="ol-agente-subs">no lugar de <em>{d.subs}</em></p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- A OLÍVIA — o que seis sistemas separados nunca entregam -->
   <section class="section section--navy ol-chat-sec">
     <div class="container xl ol-chat-grid">
       <div class="ol-chat-text">
-        <span class="tag-pill tag-pill--glow">A Olívia por dentro</span>
-        <h2>Do dono ao operador: cada um pergunta, ela responde <em class="accent">com o dado da sua empresa</em>.</h2>
+        <span class="tag-pill tag-pill--glow">A parte que ninguém consegue montar juntando sistemas</span>
+        <h2>Consolidar corta custo. A Olívia é o que você <em class="accent">só consegue com tudo junto</em>.</h2>
         <p class="paragraph">
-          A Olívia não é um chat genérico com o nome da sua empresa colado em cima. Ela conhece o
-          planejamento, os processos, as instruções de trabalho, os indicadores, os riscos e as tarefas
-          que existem no seu Templum OS — e atende quem estiver perguntando: o dono no painel, o
-          operador pelo WhatsApp no meio do turno, o gerente cobrando pendência da própria área.
+          Seis sistemas separados nunca respondem uma pergunta de verdade, porque cada um só conhece o
+          seu próprio pedaço. A Olívia conhece o planejamento, os processos, as instruções de trabalho, os
+          indicadores, o funil, o financeiro e as tarefas que existem no seu Templum OS — e atende quem
+          estiver perguntando: o dono no painel, o operador pelo WhatsApp no meio do turno, o gerente
+          cobrando pendência da própria área.
         </p>
         <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Cruza dado que hoje mora em ferramentas diferentes</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Responde o funcionário com dúvida na instrução de trabalho</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Explica por que o indicador caiu, com tendência e causa raiz</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Prepara reunião e análise crítica com os insumos já reunidos</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Inclusa na assinatura: sem add-on de IA por usuário, sem cobrança por token</li>
         </ul>
       </div>
       <div class="ol-chat">
@@ -317,25 +525,40 @@ const schemaFaq = {
     </div>
   </section>
 
-  <!-- 12 AGENTES — cada linha é um gancho -->
+  <!-- POR QUE CABE NESSE PREÇO — antídoto ao "barato porque é ruim" -->
   <section class="section section--cream">
-    <div class="container xl">
+    <div class="container lg">
       <div class="section-header">
-        <span class="tag-pill">O time de IA</span>
-        <h2>Um agente <em class="accent">para cada coisa que trava</em></h2>
-        <p>Cada agente domina uma área e entrega trabalho pronto — e a lista não para de crescer. A Olívia costura tudo e mantém o contexto.</p>
+        <span class="tag-pill">A pergunta honesta</span>
+        <h2>Por que isso cabe em R$ {brl(PRECO_MES)} <em class="accent">e o conjunto não cabia</em></h2>
       </div>
-      <div class="ol-agentes">
-        {agentes.map((a) => (
-          <div class="ol-agente reveal">
-            <span class="ol-agente-ico"><iconify-icon icon={a.icon}></iconify-icon></span>
-            <div>
-              <span class="ol-agente-nome">{a.nome}</span>
-              <p class="ol-agente-dor">{a.dor}</p>
-              <p class="ol-agente-entrega">{a.entrega}</p>
-            </div>
-          </div>
-        ))}
+      <div class="ol-tres">
+        <div class="ol-tres-card reveal">
+          <span class="ol-tres-n">01</span>
+          <h3>É um banco de dados só</h3>
+          <p>
+            Não pagamos seis infraestruturas, seis times de produto e seis camadas de integração entre elas.
+            O dado de vendas, de produção e de treinamento nasce na mesma base — e é isso que derruba o custo
+            e, ao mesmo tempo, é o que faz a Olívia conseguir responder.
+          </p>
+        </div>
+        <div class="ol-tres-card reveal">
+          <span class="ol-tres-n">02</span>
+          <h3>A IA não é add-on</h3>
+          <p>
+            No mercado, inteligência artificial entra como módulo extra cobrado por usuário, e o consumo por
+            token vem na fatura no fim do mês. Aqui os agentes estão inclusos e não há medidor: a conta de
+            {" "}R$ {brl(PRECO_MES)} é a conta.
+          </p>
+        </div>
+        <div class="ol-tres-card reveal">
+          <span class="ol-tres-n">03</span>
+          <h3>Não cobramos por cabeça</h3>
+          <p>
+            Entrar com 12 pessoas ou com {LIMITE_USUARIOS} custa o mesmo. É a diferença que aparece quando a
+            empresa cresce: no modelo por assento, contratar é aumentar a fatura de todos os sistemas de uma vez.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -349,7 +572,7 @@ const schemaFaq = {
       </div>
       <div class="ol-vs">
         <div class="ol-vs-col ol-vs-bad">
-          <h3><iconify-icon icon="solar:close-circle-bold"></iconify-icon> Como está hoje</h3>
+          <h3><iconify-icon icon="solar:close-circle-bold"></iconify-icon> Seis assinaturas</h3>
           <ul>{semOlivia.map((s) => <li><iconify-icon icon="solar:close-circle-linear"></iconify-icon>{s}</li>)}</ul>
         </div>
         <div class="ol-vs-col ol-vs-good">
@@ -360,32 +583,74 @@ const schemaFaq = {
     </div>
   </section>
 
-  <!-- RESULTADOS -->
+  <!-- OBJEÇÕES / MIGRAÇÃO — é aqui que a venda de consolidação é ganha ou perdida -->
   <section class="section section--cream">
     <div class="container xl">
       <div class="section-header">
-        <span class="tag-pill">Resultado prático</span>
-        <h2>Números medidos <em class="accent">nos clientes que já usam</em></h2>
+        <span class="tag-pill">O que trava na hora de decidir</span>
+        <h2>“E os meus dados? <em class="accent">E o meu time?</em>”</h2>
+        <p>As quatro perguntas que aparecem em toda auditoria — respondidas antes de você precisar perguntar.</p>
       </div>
-      <div class="numbers-grid">
-        <div class="number-card reveal"><div class="value"><em>40%</em></div><div class="label">menos tempo na execução dos processos</div></div>
-        <div class="number-card reveal"><div class="value"><em>85%</em></div><div class="label">de redução em erros operacionais</div></div>
-        <div class="number-card reveal"><div class="value"><em>65%</em></div><div class="label">de ganho em produtividade das equipes</div></div>
-        <div class="number-card reveal"><div class="value"><em>+30</em></div><div class="label">anos de método de gestão por trás da plataforma</div></div>
+      <div class="ol-objs">
+        {objecoes.map((o) => (
+          <div class="ol-obj reveal">
+            <span class="ol-obj-ico"><iconify-icon icon={o.icon}></iconify-icon></span>
+            <h3>{o.q}</h3>
+            <p>{o.a}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <DepoimentosTexto />
+  <DepoimentosTexto
+    tag="Quem já está dentro"
+    titulo='Mais de <em class="accent">200 empresas</em> rodando o Templum OS'
+    sub="A plataforma que a Templum usa para operar a si mesma — e que estas empresas usam todos os dias."
+  />
+
+  <!-- PREÇO ABERTO -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Preço, sem "fale com o consultor"</span>
+        <h2>Uma assinatura. <em class="accent">Sem cobrança por usuário, sem token, sem fidelidade.</em></h2>
+      </div>
+      <div class="ol-preco">
+        <div class="ol-preco-val">
+          <span class="ol-preco-cifra">R$</span>
+          <strong>{brl(PRECO_MES)}</strong>
+          <span class="ol-preco-mes">/mês</span>
+        </div>
+        <p class="ol-preco-lim">fixo para até {LIMITE_USUARIOS} usuários · acima disso, faixa por porte</p>
+        <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Todos os módulos e todos os agentes de IA inclusos</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Sem cobrança por usuário e sem cobrança por token</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Período de teste com a sua equipe antes de decidir</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Sem fidelidade — cancele quando quiser</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Multiorganização: grupo, filial e unidade em ambientes separados</li>
+        </ul>
+        <p class="ol-preco-bonus">
+          <iconify-icon icon="solar:medal-ribbon-star-bold"></iconify-icon>
+          <span>
+            <strong>E o bônus que ninguém mais tem:</strong> a plataforma nasceu do método de certificação da
+            Templum. O mercado está exigindo menos ISO hoje — mas no dia em que um contrato exigir, você não
+            começa do zero com prazo em cima. O caminho já está andado por dentro.
+          </span>
+        </p>
+        <a href="#demonstracao" class="btn btn--primary btn--lg">Quero a auditoria do meu stack <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </div>
+  </section>
 
   <!-- COMO COMEÇA -->
-  <section class="section section--navy">
+  <section class="section section--cream">
     <div class="container lg">
       <div class="section-header">
-        <span class="tag-pill tag-pill--glow">Como começa</span>
-        <h2>Três passos até ver <em class="accent">a sua empresa dentro</em></h2>
+        <span class="tag-pill">Como começa</span>
+        <h2>Três passos — e o primeiro <em class="accent">não é uma proposta</em></h2>
       </div>
-      <div class="ol-passos">
+      <div class="ol-passos ol-passos--claro">
         {passos.map((p) => (
           <div class="ol-passo reveal">
             <span class="ol-passo-n">{p.n}</span>
@@ -401,24 +666,24 @@ const schemaFaq = {
   <section id="form" class="ol-form section--navy">
     <div class="container lg ol-form-grid">
       <div class="ol-form-pitch">
-        <span class="tag-pill tag-pill--glow">Comece agora</span>
-        <h2>Veja a Olívia trabalhando <em class="accent">com os dados da sua empresa</em></h2>
+        <span class="tag-pill tag-pill--glow">Comece pela conta</span>
+        <h2>Some o que você paga hoje. <em class="accent">A gente devolve a conta refeita.</em></h2>
         <p class="paragraph">
-          Em 30 minutos o especialista cria a sua organização na plataforma e roda os agentes no seu
-          contexto: planejamento, processos, indicadores e o que mais fizer sentido para o seu momento.
-          Você sai da conversa sabendo exatamente o que a plataforma faz por você — e o que não faz.
+          Em 30 minutos o especialista olha o seu stack, cria a sua organização na plataforma e roda os
+          agentes no seu contexto. Você sai da conversa sabendo três coisas: quanto sairia da sua fatura,
+          o que a plataforma faz por você — e o que ela não faz.
         </p>
         <ul class="check-list">
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Auditoria do stack, sem proposta na primeira conversa</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Demonstração na sua realidade, não em conta de exemplo</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Período de teste com a sua equipe antes de decidir</li>
-          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Assinatura mensal, sem fidelidade — cancele quando quiser</li>
+          <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Cronograma de desligamento em 90 dias, se fizer sentido</li>
         </ul>
       </div>
       <LeadForm
         norma={CRM_PRODUTO}
-        titulo="Agendar minha demonstração"
+        titulo="Auditoria do meu stack"
         sub="Resposta em até 1 dia útil. Sem compromisso."
-        cta="Quero conhecer a Olívia"
+        cta="Quero a auditoria gratuita"
         obrigado="/lp/templum-os-obrigado"
         simples={true}
         cargo={true}
@@ -432,7 +697,7 @@ const schemaFaq = {
     <div class="container md">
       <div class="section-header">
         <span class="tag-pill tag-pill--glow">Tire suas dúvidas</span>
-        <h2>Perguntas frequentes sobre <em class="accent">a Olívia e o Templum OS</em></h2>
+        <h2>Perguntas frequentes sobre <em class="accent">preço, migração e escopo</em></h2>
       </div>
       <div class="faq-list">
         {faqs.map((f) => (
@@ -448,9 +713,9 @@ const schemaFaq = {
   <!-- CTA FINAL -->
   <section class="cta-band">
     <div class="container md">
-      <h2>Sua empresa pode rodar <em>sem depender de você</em></h2>
-      <p>Conheça o Templum OS e a Olívia numa demonstração feita no cenário do seu negócio.</p>
-      <a href="#demonstracao" class="btn btn--dark btn--lg">Quero conhecer a Olívia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <h2>Some as suas assinaturas. <em>A gente devolve a conta.</em></h2>
+      <p>Trinta minutos, sem proposta: você mostra o que paga hoje e vê o Templum OS rodando no cenário da sua empresa.</p>
+      <a href="#demonstracao" class="btn btn--dark btn--lg">Quero a auditoria do meu stack <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
 </LpBase>
@@ -471,7 +736,9 @@ const schemaFaq = {
   .ol-hero-form { grid-area: form; }
   .ol-hero-text { max-width: 620px; }
   .ol-hero .tag-pill { margin-bottom: 18px; }
-  .ol-hero-title { font-size: clamp(31px, 4.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); }
+  /* O H1 desta versão é mais longo que o anterior (duas frases, uma delas com número):
+     o tamanho máximo baixou de 52px para 46px para não estourar quatro linhas no desktop. */
+  .ol-hero-title { font-size: clamp(29px, 3.7vw, 46px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); }
   .ol-hero-sub { font-size: 17px; line-height: 1.6; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 540px; }
   .ol-hero-sub strong { color: var(--cream); }
   .ol-hero-chips { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,244,221,0.14); }
@@ -498,23 +765,105 @@ const schemaFaq = {
      sobe ~110px, entrando na primeira tela junto do título dele. */
   @media (max-width: 600px) {
     .ol-hero { padding-top: 26px; }
-    .ol-hero-title { font-size: clamp(28px, 8vw, 34px); }
+    .ol-hero-title { font-size: clamp(26px, 7.2vw, 32px); }
     .ol-hero-sub { font-size: 15.5px; line-height: 1.5; margin-top: 14px; }
     .ol-hero-chips { gap: 8px 16px; margin-top: 16px; padding-top: 14px; }
     .ol-chip { font-size: 12.5px; }
     .ol-chip iconify-icon { font-size: 16px; }
   }
 
-  /* ---------- DOIS PÚBLICOS ---------- */
-  .ol-publicos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 42px; }
-  .ol-publico { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; display: flex; flex-direction: column; }
-  .ol-publico-tag { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange-ink, var(--orange)); background: rgba(255,89,37,0.10); border-radius: 100px; padding: 7px 14px; }
-  .ol-publico h3 { font-size: 21px; font-weight: 800; line-height: 1.22; letter-spacing: -0.02em; margin: 16px 0 14px; }
-  .ol-lista { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .ol-lista li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.55; color: var(--text-mid); }
-  .ol-lista li::before { content: "—"; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
-  .ol-publico .btn { align-self: flex-start; }
-  @media (max-width: 880px) { .ol-publicos { grid-template-columns: 1fr; } }
+  /* ---------- A FATURA (tabela) ----------
+     Tabela larga precisa rolar dentro do próprio contêiner: sem o wrapper com
+     overflow-x, o body da página ganha rolagem horizontal no celular. */
+  .ol-tab-wrap { margin-top: 42px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--border); border-radius: var(--r-20); background: var(--surface); }
+  .ol-tab { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14.5px; }
+  .ol-tab th { text-align: left; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-soft); padding: 16px 18px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .ol-tab td { padding: 16px 18px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; line-height: 1.45; }
+  .ol-tab tbody tr:last-child td { border-bottom: 1px solid var(--border); }
+  .ol-tab-sis { display: block; font-size: 15.5px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+  .ol-tab-off { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 11px;
+    font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #c2410c; }
+  .ol-tab-off iconify-icon { font-size: 14px; }
+  .ol-tab-base { font-size: 13px; color: var(--text-soft); }
+  .ol-tab-agora { font-size: 13.5px; }
+  .ol-tab-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; color: var(--text); }
+  .ol-tab-tot td { font-weight: 800; color: var(--text); background: rgba(34,40,49,0.04); font-size: 15px; }
+  .ol-tab-nos td { font-weight: 800; font-size: 15.5px; color: #fff; background: var(--orange); border-bottom: 0; }
+  .ol-tab-nos .ol-tab-num { color: #fff; }
+
+  /* Bloco da economia: o número que o visitante vai lembrar depois de fechar a aba. */
+  .ol-econ { display: flex; align-items: center; gap: clamp(18px, 3vw, 34px); flex-wrap: wrap;
+    margin-top: 26px; padding: 26px 28px; border-radius: var(--r-20);
+    background: var(--surface); border: 1px solid var(--border); }
+  .ol-econ-big { flex: none; }
+  .ol-econ-lab { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-soft); margin-bottom: 4px; }
+  .ol-econ-big strong { font-size: clamp(30px, 4.4vw, 44px); font-weight: 800; letter-spacing: -0.03em; color: var(--orange); line-height: 1; }
+  .ol-econ-txt { flex: 1 1 280px; margin: 0; font-size: 15px; line-height: 1.55; color: var(--text-mid); }
+  .ol-econ-txt strong { color: var(--text); }
+  .ol-econ .btn { flex: none; }
+
+  .ol-nota { display: flex; gap: 10px; margin: 18px 0 0; font-size: 13px; line-height: 1.55; color: var(--text-soft); }
+  .ol-nota iconify-icon { flex: none; font-size: 17px; color: var(--orange); margin-top: 1px; }
+  .ol-nota strong { color: var(--text-mid); }
+
+  /* ---------- CALCULADORA ---------- */
+  .ol-calc { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: clamp(20px, 3vw, 34px); margin-top: 42px; align-items: start; }
+  .ol-calc-rows { display: flex; flex-direction: column; gap: 8px; }
+  .ol-calc-row { position: relative; display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 14px;
+    padding: 13px 16px; border-radius: var(--r-16); cursor: pointer;
+    background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14);
+    transition: border-color 0.2s, background 0.2s; }
+  .ol-calc-row:hover { border-color: rgba(255,89,37,0.45); }
+  /* O checkbox real fica escondido mas focável — o quadrado visível é o irmão seguinte. */
+  .ol-calc-row > input[type="checkbox"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .ol-calc-box { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center;
+    font-size: 16px; color: transparent; background: rgba(255,244,221,0.08);
+    border: 1px solid rgba(255,244,221,0.26); transition: background 0.2s, color 0.2s, border-color 0.2s; }
+  .ol-calc-row > input:checked ~ .ol-calc-box { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .ol-calc-row > input:focus-visible ~ .ol-calc-box { outline: 2px solid var(--orange); outline-offset: 3px; }
+  .ol-calc-nome { font-size: 15px; font-weight: 700; color: var(--cream); line-height: 1.3; }
+  .ol-calc-nome em { display: block; font-size: 12.5px; font-weight: 500; font-style: normal; color: rgba(255,244,221,0.5); margin-top: 3px; }
+  .ol-calc-inp { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: rgba(255,244,221,0.6); }
+  .ol-calc-inp input { width: 84px; padding: 8px 10px; border-radius: 10px; font: inherit; font-size: 14.5px;
+    font-weight: 700; text-align: right; color: var(--cream); background: rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,244,221,0.22); -moz-appearance: textfield; }
+  .ol-calc-inp input:focus { outline: 2px solid var(--orange); outline-offset: 1px; }
+  .ol-calc-row > input:not(:checked) ~ .ol-calc-inp { opacity: 0.4; }
+
+  .ol-calc-out { position: sticky; top: 20px; padding: 26px 24px; border-radius: var(--r-20);
+    background: rgba(255,244,221,0.06); border: 1px solid rgba(255,89,37,0.4); }
+  .ol-calc-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,244,221,0.12); }
+  .ol-calc-line span { font-size: 13.5px; color: rgba(255,244,221,0.7); }
+  .ol-calc-line strong { font-size: 20px; font-weight: 800; color: var(--cream); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ol-calc-line strong em { font-size: 13px; font-weight: 600; font-style: normal; color: rgba(255,244,221,0.6); }
+  .ol-calc-line--sm { padding-bottom: 12px; }
+  .ol-calc-line--sm strong { font-size: 15px; color: rgba(255,244,221,0.75); }
+  .ol-calc-eco { display: flex; flex-direction: column; gap: 3px; padding: 16px 0 4px; }
+  .ol-calc-eco span { font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,244,221,0.6); }
+  .ol-calc-eco strong { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; letter-spacing: -0.03em; color: var(--orange); line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .ol-calc-mult { min-height: 20px; margin: 4px 0 16px; font-size: 13px; line-height: 1.5; color: rgba(255,244,221,0.72); }
+  .ol-calc-fine { margin: 12px 0 0; font-size: 12px; line-height: 1.45; color: rgba(255,244,221,0.5); }
+  @media (max-width: 900px) {
+    .ol-calc { grid-template-columns: 1fr; }
+    .ol-calc-out { position: static; }
+  }
+  @media (max-width: 520px) {
+    .ol-calc-row { grid-template-columns: 24px 1fr; row-gap: 10px; }
+    .ol-calc-inp { grid-column: 2; justify-content: flex-start; }
+  }
+
+  /* ---------- O QUE VOCÊ DESLIGA ---------- */
+  .ol-agentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 42px; }
+  .ol-agente { display: flex; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 18px 20px; }
+  .ol-agente-ico { width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.10); }
+  .ol-agente-nome { display: block; font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; }
+  .ol-agente-subs { font-size: 13px; line-height: 1.45; color: var(--text-soft); margin: 5px 0 0; }
+  .ol-agente-subs em { font-style: normal; font-weight: 700; color: var(--text-mid); }
+  @media (max-width: 980px) { .ol-agentes { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .ol-agentes { grid-template-columns: 1fr; } }
 
   /* ---------- CHAT DA OLÍVIA ---------- */
   .ol-chat-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(30px, 4vw, 56px); align-items: center; }
@@ -563,15 +912,13 @@ const schemaFaq = {
   .ol-chat .btn { margin-top: 6px; }
   @media (max-width: 980px) { .ol-chat-grid { grid-template-columns: 1fr; } }
 
-  /* ---------- 12 AGENTES ---------- */
-  .ol-agentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 42px; }
-  .ol-agente { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 20px; }
-  .ol-agente-ico { width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.10); }
-  .ol-agente-nome { display: block; font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em; }
-  .ol-agente-dor { font-size: 14px; font-style: italic; color: var(--text-mid); margin: 5px 0 6px; }
-  .ol-agente-entrega { font-size: 13.5px; line-height: 1.5; color: var(--text-soft); margin: 0; }
-  @media (max-width: 980px) { .ol-agentes { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .ol-agentes { grid-template-columns: 1fr; } }
+  /* ---------- POR QUE CABE NESSE PREÇO ---------- */
+  .ol-tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 42px; }
+  .ol-tres-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; }
+  .ol-tres-n { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--orange); margin-bottom: 12px; }
+  .ol-tres-card h3 { font-size: 18.5px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+  .ol-tres-card p { font-size: 14.5px; line-height: 1.6; color: var(--text-mid); margin: 0; }
+  @media (max-width: 880px) { .ol-tres { grid-template-columns: 1fr; } }
 
   /* ---------- ANTES / DEPOIS ---------- */
   .ol-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
@@ -585,12 +932,41 @@ const schemaFaq = {
   .ol-vs-good h3 iconify-icon, .ol-vs-good li iconify-icon { color: color-mix(in srgb, var(--orange) 62%, #ffffff); }
   @media (max-width: 880px) { .ol-vs { grid-template-columns: 1fr; } }
 
-  /* ---------- PASSOS ---------- */
+  /* ---------- OBJEÇÕES ---------- */
+  .ol-objs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 42px; }
+  .ol-obj { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; }
+  .ol-obj-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 14px; }
+  .ol-obj h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 10px; }
+  .ol-obj p { font-size: 14.5px; line-height: 1.6; color: var(--text-mid); margin: 0; }
+  @media (max-width: 880px) { .ol-objs { grid-template-columns: 1fr; } }
+
+  /* ---------- PREÇO ---------- */
+  .ol-preco { margin-top: 40px; padding: clamp(28px, 4vw, 40px); border-radius: var(--r-24);
+    background: rgba(255,244,221,0.06); border: 1px solid rgba(255,89,37,0.4); text-align: center; }
+  .ol-preco-val { display: flex; align-items: flex-start; justify-content: center; gap: 6px; color: var(--cream); }
+  .ol-preco-cifra { font-size: 22px; font-weight: 800; margin-top: 10px; color: var(--orange); }
+  .ol-preco-val strong { font-size: clamp(52px, 8vw, 82px); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .ol-preco-mes { font-size: 18px; font-weight: 700; align-self: flex-end; margin-bottom: 8px; color: rgba(255,244,221,0.7); }
+  .ol-preco-lim { margin: 10px 0 26px; font-size: 14.5px; color: rgba(255,244,221,0.72); }
+  .ol-preco .check-list { text-align: left; max-width: 520px; margin: 0 auto 26px; }
+  .ol-preco .check-item { color: rgba(255,244,221,0.86); }
+  .ol-preco-bonus { display: flex; gap: 12px; text-align: left; max-width: 620px; margin: 0 auto 28px;
+    padding: 18px 20px; border-radius: var(--r-16); background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,244,221,0.12); font-size: 14px; line-height: 1.6; color: rgba(255,244,221,0.78); }
+  .ol-preco-bonus iconify-icon { flex: none; font-size: 22px; color: var(--orange); }
+  .ol-preco-bonus strong { color: var(--cream); }
+
+  /* ---------- PASSOS ----------
+     A seção de passos migrou de fundo navy para creme nesta versão (o navy foi para o
+     preço, que fecha a página). O modificador --claro troca só as cores. */
   .ol-passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 42px; }
   .ol-passo { background: rgba(255,244,221,0.05); border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-20); padding: 26px 24px; }
   .ol-passo-n { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--orange); margin-bottom: 12px; }
   .ol-passo h3 { font-size: 18px; font-weight: 800; color: var(--cream); margin-bottom: 8px; letter-spacing: -0.01em; }
   .ol-passo p { font-size: 14.5px; line-height: 1.55; color: rgba(255,244,221,0.78); margin: 0; }
+  .ol-passos--claro .ol-passo { background: var(--surface); border-color: var(--border); }
+  .ol-passos--claro .ol-passo h3 { color: var(--text); }
+  .ol-passos--claro .ol-passo p { color: var(--text-mid); }
   @media (max-width: 880px) { .ol-passos { grid-template-columns: 1fr; } }
 
   /* ---------- FAQ EM FUNDO ESCURO ----------
@@ -612,7 +988,99 @@ const schemaFaq = {
   @media (max-width: 980px) { .ol-form-grid { grid-template-columns: 1fr; } }
 </style>
 
-<script>
+<script define:vars={{ PRECO_MES, PRECO_ANO }}>
+  // ---------------------------------------------------------------------------
+  // CALCULADORA DE STACK
+  // O resultado não fica só na tela: ele é escrito no campo `mensagem` dos
+  // formulários da página. O worker leva `mensagem` para o Supabase, para a nota do
+  // lead no CRM e para o merge field MENSAGEM do Mailchimp (worker.js:219, 344, 574),
+  // então o closer abre a call já sabendo o tamanho da conta — sem precisar de campo
+  // novo no CRM nem de mudança no payload do /api/lead.
+  // ---------------------------------------------------------------------------
+  (function () {
+    const calc = document.querySelector(".ol-calc");
+    if (!calc) return;
+
+    const rows = Array.from(calc.querySelectorAll(".ol-calc-row"));
+    const outMes = calc.querySelector("[data-ol-mes]");
+    const outAno = calc.querySelector("[data-ol-ano]");
+    const outEco = calc.querySelector("[data-ol-econ]");
+    const outMult = calc.querySelector("[data-ol-mult]");
+    const btn = calc.querySelector("[data-ol-levar]");
+
+    const brl = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+
+    // O texto do lead é montado aqui e injetado como input hidden `mensagem` em todos
+    // os formulários da página (o LeadForm não tem prop para isso, e não precisa ter).
+    function gravarNoLead(texto) {
+      document.querySelectorAll("form[data-trk-event]").forEach((form) => {
+        let campo = form.querySelector('input[name="mensagem"]');
+        if (!campo) {
+          campo = document.createElement("input");
+          campo.type = "hidden";
+          campo.name = "mensagem";
+          form.appendChild(campo);
+        }
+        campo.value = texto;
+      });
+    }
+
+    function recalcular() {
+      let mes = 0;
+      const itens = [];
+      rows.forEach((row) => {
+        const on = row.querySelector("[data-ol-on]");
+        const val = row.querySelector("[data-ol-val]");
+        const nome = row.querySelector(".ol-calc-nome");
+        if (!on || !val || !on.checked) return;
+        const v = Math.max(0, Number(val.value) || 0);
+        mes += v;
+        // childNodes[0] é o rótulo; o <em> com os exemplos fica de fora do texto do lead.
+        itens.push((nome.childNodes[0].textContent || "").trim() + " R$ " + Math.round(v).toLocaleString("pt-BR"));
+      });
+
+      const ano = mes * 12;
+      const eco = ano - PRECO_ANO;
+      outMes.textContent = brl(mes);
+      outAno.textContent = brl(ano);
+      outEco.textContent = eco > 0 ? brl(eco) : "—";
+
+      if (mes <= 0) {
+        outMult.textContent = "Marque o que você assina hoje para ver a conta.";
+      } else if (eco <= 0) {
+        outMult.textContent = "Nesse cenário a economia não é o argumento — o ganho aqui é ter tudo na mesma base, com a Olívia em cima. Vale a auditoria mesmo assim.";
+      } else {
+        const vezes = mes / PRECO_MES;
+        outMult.textContent = "Você paga hoje " + vezes.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) +
+          "× o valor do Templum OS — e nenhum desses sistemas conversa com o outro.";
+      }
+
+      gravarNoLead(
+        mes > 0
+          ? "STACK INFORMADO NA CALCULADORA: " + itens.join(" · ") +
+            " · TOTAL R$ " + Math.round(mes).toLocaleString("pt-BR") + "/mês (R$ " +
+            Math.round(ano).toLocaleString("pt-BR") + "/ano)" +
+            (eco > 0 ? " · economia estimada R$ " + Math.round(eco).toLocaleString("pt-BR") + "/ano" : "")
+          : ""
+      );
+    }
+
+    calc.addEventListener("change", recalcular);
+    calc.addEventListener("input", recalcular);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        recalcular();
+        const alvo = document.querySelector("#demonstracao") || document.querySelector("#form");
+        if (alvo) {
+          alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+          const primeiro = alvo.querySelector('input[name="nome"]');
+          if (primeiro) setTimeout(() => primeiro.focus({ preventScroll: true }), 520);
+        }
+      });
+    }
+    recalcular();
+  })();
+
   // Carrossel de papéis da seção "A Olívia por dentro". Sem autoplay de propósito:
   // é bloco de argumento, quem lê controla o ritmo — e um card que troca sozinho no
   // meio da leitura custa a conversão em vez de ajudar.
