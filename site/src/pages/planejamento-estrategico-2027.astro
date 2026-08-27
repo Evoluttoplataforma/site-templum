@@ -1,7 +1,7 @@
 ---
 import LpBase from "../layouts/LpBase.astro";
 
-const CHECKOUT = "https://www.asaas.com/c/c87t7y02ktlsq407";
+const OBRIGADO = "/obrigado-planejamento-estrategico-2027/";
 
 const construir = [
   {
@@ -70,7 +70,7 @@ const faqs = [
   },
   {
     q: "Como vou acessar o evento?",
-    a: "Ao vivo, em sala fechada no Zoom — só pra quem garantiu a vaga. Depois da confirmação da compra, você recebe as instruções de acesso por e-mail.",
+    a: "Ao vivo, em sala fechada no Zoom — só pra quem garantiu a vaga. Depois da inscrição, você recebe as instruções de acesso por e-mail e WhatsApp.",
   },
   {
     q: "Preciso instalar algo ou ter conta em algum sistema?",
@@ -81,8 +81,8 @@ const faqs = [
     a: "Cerca de 3 horas. É um workshop completo, não uma palestra rápida — reserve a tarde pra estar presente do início ao fim.",
   },
   {
-    q: "Como funciona o pagamento?",
-    a: "O checkout é processado com segurança pela Asaas. Depois da confirmação, você recebe a confirmação da sua vaga.",
+    q: "O workshop é pago?",
+    a: "Não. Esta edição é gratuita — basta preencher o formulário para garantir sua vaga. As vagas são limitadas porque o evento é mão na massa, com acompanhamento ao vivo.",
   },
 ];
 
@@ -102,21 +102,21 @@ const schemaEvent = {
   ],
   offers: {
     "@type": "Offer",
-    price: "197.00",
+    price: "0",
     priceCurrency: "BRL",
     availability: "https://schema.org/InStock",
-    url: CHECKOUT,
+    url: "https://templum.com.br/planejamento-estrategico-2027",
   },
-  isAccessibleForFree: false,
+  isAccessibleForFree: true,
 };
 ---
 
 <LpBase
   title="Planejamento Estratégico 2027 — Workshop ao vivo com Igor Furniel | Templum"
-  description="Workshop mão na massa de planejamento estratégico, ao vivo, com Igor Furniel. 10 de setembro, 15h. Valor de lançamento: R$197."
+  description="Workshop gratuito e mão na massa de planejamento estratégico, ao vivo, com Igor Furniel. 10 de setembro, 15h. Vagas limitadas."
   schemas={[schemaEvent]}
   formAnchor="#ingresso"
-  headerCta="Garantir minha vaga"
+  headerCta="Quero minha vaga gratuita"
 >
 
   <!-- ── HERO ── -->
@@ -127,7 +127,7 @@ const schemaEvent = {
         <div class="pe-copy">
           <div class="pe-badges">
             <span class="badge badge--orange-solid">Evento anual</span>
-            <span class="badge badge--cream">Ao vivo · Vagas limitadas</span>
+            <span class="badge badge--cream">Ao vivo · Gratuito · Vagas limitadas</span>
           </div>
 
           <h1>
@@ -179,12 +179,12 @@ const schemaEvent = {
         <div class="pe-price-col">
           <div class="pe-price-card" id="ingresso-hero">
             <span class="badge badge--orange">Vagas limitadas</span>
-            <div class="pe-price-now" id="pe-price-now-hero"><span class="pe-price-currency">R$</span>597<span class="pe-price-cents">,00</span></div>
-            <div class="pe-price-note">à vista ou em até 5x no cartão · vagas limitadas</div>
+            <div class="pe-price-now pe-price-now--free">Gratuito</div>
+            <div class="pe-price-note">participação sem custo · vagas limitadas</div>
             <a href="#ingresso" class="btn btn--primary btn--block btn--lg">
-              Garantir minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              Quero minha vaga <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
             </a>
-            <p class="pe-legal">Pagamento processado com segurança via Asaas.</p>
+            <p class="pe-legal">Inscrição em 1 minuto. Sem cartão de crédito.</p>
           </div>
         </div>
 
@@ -306,19 +306,8 @@ const schemaEvent = {
       </div>
       <div class="pe-price-card pe-price-card--lg">
         <span class="badge badge--orange">Vagas limitadas</span>
-        <div class="pe-price-now" id="pe-price-now">
-          <span class="pe-price-currency">R$</span><span id="pe-price-value">597</span><span class="pe-price-cents">,00</span>
-        </div>
-        <div class="pe-price-note">à vista ou em até 5x no cartão</div>
-
-        <div class="pe-coupon">
-          <label for="pe-cupom-input">Tem um cupom de desconto?</label>
-          <div class="pe-coupon-row">
-            <input class="input" type="text" id="pe-cupom-input" placeholder="Digite seu cupom" autocomplete="off" />
-            <button type="button" class="btn btn--outline" id="pe-cupom-btn">Aplicar</button>
-          </div>
-          <p class="pe-coupon-msg" id="pe-cupom-msg"></p>
-        </div>
+        <div class="pe-price-now pe-price-now--free">Gratuito</div>
+        <div class="pe-price-note">participação sem custo — só preencher e garantir a vaga</div>
 
         <ul class="check-list pe-price-list">
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Workshop ao vivo com Igor Furniel (~3h)</li>
@@ -326,7 +315,7 @@ const schemaEvent = {
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Acesso ao Templum OS durante o evento</li>
           <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>Sala fechada no Zoom — só pra quem garantiu a vaga</li>
         </ul>
-        <form class="pe-form" novalidate data-trk-event="planejamento-estrategico-2027" data-obrigado={CHECKOUT}>
+        <form class="pe-form" novalidate data-trk-event="planejamento-estrategico-2027" data-obrigado={OBRIGADO}>
           <div class="pe-field">
             <label for="pe-nome">Nome completo</label>
             <input class="input" type="text" id="pe-nome" name="nome" placeholder="Seu nome completo" required />
@@ -343,60 +332,15 @@ const schemaEvent = {
             <label for="pe-wpp">WhatsApp *</label>
             <input class="input" type="tel" id="pe-wpp" name="telefone" placeholder="(00) 00000-0000" required />
           </div>
-          <input type="hidden" name="status_pagamento" value="pendente" />
           <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
-            Ir para o pagamento <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            Garantir minha vaga gratuita <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
           </button>
         </form>
-        <p class="pe-legal">Vagas limitadas. Pagamento processado com segurança via Asaas.</p>
+        <p class="pe-legal">Vagas limitadas. Você recebe as instruções de acesso (Zoom) por e-mail e WhatsApp.</p>
       </div>
     </div>
   </section>
 
-  <script is:inline define:vars={{ CUPONS_VALIDOS: ["MENTORIADANI", "PE2027"], PRECO_CHEIO: 597, PRECO_COM_CUPOM: 197 }}>
-    (function () {
-      var input = document.getElementById("pe-cupom-input");
-      var btn = document.getElementById("pe-cupom-btn");
-      var msg = document.getElementById("pe-cupom-msg");
-      var valueEl = document.getElementById("pe-price-value");
-      var priceEl = document.getElementById("pe-price-now");
-      var priceHeroEl = document.getElementById("pe-price-now-hero");
-      if (!input || !btn || !msg || !valueEl || !priceEl) return;
-
-      var aplicado = false;
-
-      function aplicarCupom() {
-        if (aplicado) return;
-        var codigo = (input.value || "").trim().toUpperCase();
-        if (CUPONS_VALIDOS.indexOf(codigo) !== -1) {
-          aplicado = true;
-          var precoComDesconto =
-            '<span class="pe-price-strike">R$' + PRECO_CHEIO + ',00</span> ' +
-            '<span class="pe-price-currency">R$</span>' + PRECO_COM_CUPOM + '<span class="pe-price-cents">,00</span>';
-          priceEl.innerHTML = precoComDesconto;
-          if (priceHeroEl) priceHeroEl.innerHTML = precoComDesconto;
-          msg.textContent = "Cupom " + codigo + " aplicado — desconto de R$" + (PRECO_CHEIO - PRECO_COM_CUPOM) + ",00!";
-          msg.className = "pe-coupon-msg pe-coupon-msg--ok";
-          input.disabled = true;
-          btn.disabled = true;
-        } else {
-          msg.textContent = "Cupom inválido.";
-          msg.className = "pe-coupon-msg pe-coupon-msg--erro";
-        }
-      }
-
-      btn.addEventListener("click", aplicarCupom);
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") { e.preventDefault(); aplicarCupom(); }
-      });
-
-      var cupomUrl = new URLSearchParams(window.location.search).get("cupom");
-      if (cupomUrl) {
-        input.value = cupomUrl;
-        aplicarCupom();
-      }
-    })();
-  </script>
 
   <!-- ── FAQ ── -->
   <section class="section section--cream">
@@ -497,6 +441,7 @@ const schemaEvent = {
   }
   .pe-price-from { font-size: 14px; color: var(--text-mid); margin-top: 16px; text-decoration: line-through; text-decoration-color: var(--text-soft); }
   .pe-price-now { font-size: clamp(44px, 5vw, 58px); font-weight: 900; color: var(--orange-ink); line-height: 1; letter-spacing: -0.03em; margin: 6px 0 4px; }
+  .pe-price-now--free { font-size: clamp(38px, 4.4vw, 52px); text-transform: none; }
   .pe-price-currency, .pe-price-cents { font-size: 0.4em; font-weight: 800; vertical-align: super; }
   .pe-price-note { font-size: 13px; color: var(--text-mid); margin-bottom: 22px; }
   .pe-price-list { text-align: left; margin: 22px 0; }
@@ -509,15 +454,6 @@ const schemaEvent = {
 
   .pe-price-card--lg { max-width: 480px; margin: 0 auto; }
 
-  /* CUPOM */
-  .pe-coupon { text-align: left; margin: 20px 0 0; padding-top: 20px; border-top: 1px dashed var(--border, #e5e0d5); }
-  .pe-coupon label { display: block; font-size: 13px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
-  .pe-coupon-row { display: flex; gap: 8px; }
-  .pe-coupon-row .input { flex: 1; }
-  .pe-coupon-msg { font-size: 13px; font-weight: 700; margin: 8px 0 0; min-height: 1em; }
-  .pe-coupon-msg--ok { color: #1a7f37; }
-  .pe-coupon-msg--erro { color: #c62828; }
-  .pe-price-strike { font-size: 0.35em; font-weight: 700; color: var(--text-soft); text-decoration: line-through; vertical-align: middle; }
 
   /* STATS */
   .pe-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
