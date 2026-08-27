@@ -86,6 +86,31 @@ const faqs = [
   },
 ];
 
+// Cargos: mesmas strings do resto do site (LeadForm) onde há sobreposição, para o
+// CRM não ficar com dois vocabulários pro mesmo campo.
+const cargos = [
+  "Proprietário",
+  "Diretor / C-level",
+  "Gerente",
+  "Coordenador / Supervisor",
+  "Consultor",
+  "Outro",
+];
+
+const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
+
+// Desafios espelhando o que o workshop resolve (sem plano / plano sem execução /
+// indicadores / processos / pessoas / ritos) — servem de gancho pro time comercial.
+const desafios = [
+  "Não temos um plano estratégico definido",
+  "Temos o plano, mas não conseguimos executar",
+  "Faltam indicadores e metas claras",
+  "Processos desorganizados — tudo passa por mim",
+  "Time desalinhado, sem responsáveis e prazos",
+  "Crescer sem estrutura para acompanhar",
+  "Outro desafio",
+];
+
 const schemaEvent = {
   "@context": "https://schema.org",
   "@type": "Event",
@@ -331,6 +356,27 @@ const schemaEvent = {
           <div class="pe-field">
             <label for="pe-wpp">WhatsApp *</label>
             <input class="input" type="tel" id="pe-wpp" name="telefone" placeholder="(00) 00000-0000" required />
+          </div>
+          <div class="pe-field">
+            <label for="pe-cargo">Seu cargo</label>
+            <select class="select" id="pe-cargo" name="cargo" required>
+              <option value="">Selecione</option>
+              {cargos.map((c) => <option value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div class="pe-field">
+            <label for="pe-func">Nº de funcionários</label>
+            <select class="select" id="pe-func" name="funcionarios" required>
+              <option value="">Selecione</option>
+              {faixasFuncionarios.map((f) => <option value={f}>{f}</option>)}
+            </select>
+          </div>
+          <div class="pe-field">
+            <label for="pe-desafio">Maior desafio da empresa hoje</label>
+            <select class="select" id="pe-desafio" name="mensagem" required>
+              <option value="">Selecione</option>
+              {desafios.map((d) => <option value={d}>{d}</option>)}
+            </select>
           </div>
           <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:4px;">
             Garantir minha vaga gratuita <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
