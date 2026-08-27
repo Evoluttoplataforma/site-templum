@@ -535,6 +535,11 @@ async function saveToPipedrive(lead, env) {
 const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
+// Etiquetas do CRM por evento da LP (o POST /v1/leads grava `tags` direto no lead,
+// então a etiqueta pode ser aplicada no momento da criação — sem chamada extra).
+const ORBIT_EVENTO_TAGS = {
+  "planejamento-estrategico-2027": ["PE2027"],
+};
 // Campos personalizados do CRM (field_key obtido em CRM → Campos Personalizados)
 const ORBIT_FIELDS = {
   norma:        "cf_produto",
@@ -573,6 +578,9 @@ async function saveToOrbit(lead, env) {
   if (lead.empresa) body.company_name = lead.empresa;
   if (lead.mensagem) body.notes = lead.mensagem;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
+
+  const orbitTags = ORBIT_EVENTO_TAGS[lead.evento];
+  if (orbitTags && orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
 
