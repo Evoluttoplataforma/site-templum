@@ -177,6 +177,13 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
 .faq-question .faq-arrow { font-size: 24px; color: var(--orange); transition: transform .3s var(--ease-soft); flex-shrink: 0; line-height: 1; }
 .faq-item[open] .faq-question .faq-arrow { transform: rotate(45deg); }
 .faq-answer { padding: 0 0 24px; font-size: 15px; color: var(--text-2); line-height: 1.7; max-width: 760px; }
+/* variante escura — o FAQ nasceu para seção clara e herdava texto quase preto
+   (var(--text)) dentro de .section--navy, ficando ilegível. Vale para toda página
+   que põe .faq-list sobre navy (/solucoes-de-ia, /lp/templum-os). */
+.section--navy .faq-item { border-bottom-color: rgba(255,244,221,0.14); }
+.section--navy .faq-question { color: var(--cream); }
+.section--navy .faq-question:hover { color: var(--orange); }
+.section--navy .faq-answer { color: rgba(255,244,221,0.74); }
 
 /* ---------- Marquee ---------- */
 .marquee { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; background: var(--bg); }
