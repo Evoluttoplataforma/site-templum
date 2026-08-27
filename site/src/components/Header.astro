@@ -2,6 +2,12 @@
 // Header estilo G4: top-banner de oferta + nav + 2 CTAs + mega-menu de normas.
 import { normas } from "../data/normas.js";
 
+// `banner={false}` esconde a faixa da garantia de 200%. Existe para as páginas do
+// Templum OS: a garantia é da consultoria de certificação e NÃO se aplica a uma
+// assinatura mensal — anunciá-la no topo de uma página de preço de SaaS promete o
+// que o contrato não entrega (PROJETO-AQUISICAO-TEMPLUM-OS.md, seção 3, risco 3).
+const { banner = true } = Astro.props;
+
 const navLinks = [
   { label: "Certificações", href: "/consultoria/" },
   { label: "Auditorias", href: "/auditoria/" },
@@ -20,12 +26,14 @@ const navLinks = [
 ---
 
 <!-- TOP BANNER -->
+{banner && (
 <a href="/form/" class="top-banner">
   <iconify-icon icon="solar:fire-bold"></iconify-icon>
   <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
   <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
   <span class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
 </a>
+)}
 
 <header class="hd">
   <div class="hd-inner">

@@ -1,65 +1,584 @@
 ---
+// /solucoes-de-ia — PÁGINA DE PLANOS E PREÇOS do Templum OS.
+//
+// ⚠️ REPOSICIONAMENTO — 27/08/2026. A versão anterior desta URL era institucional
+// ("Uma certificação ISO guiada por tecnologia" + hub dos agentes) e terminava em
+// "agendar demonstração". Era uma página de ISO com o nome de Templum OS, e o
+// PROJETO-AQUISICAO-TEMPLUM-OS.md (§2.1) aponta isso como o buraco do vertical:
+// não existia nenhum ativo que vendesse o Templum OS como produto.
+//
+// Agora esta URL é a página de PREÇO, no padrão de SaaS (RD Station, Pipedrive,
+// Omie): o preço aparece na tela, sem formulário no meio do caminho. É ela que o
+// comercial manda para quem pede orçamento, e é o destino do item "Templum OS" no
+// menu. Quem quiser testar entra sozinho em app.templum.com.br/register.
+//
+// DIVISÃO DE PAPEL COM A /lp/templum-os:
+//   /lp/templum-os   → tráfego PAGO, tese de corte de custo, captura em formulário.
+//   /solucoes-de-ia  → quem JÁ quer comprar: planos, o que cada um inclui, teste.
+// Preço e stack vêm dos MESMOS arquivos de dados nas duas, de propósito.
+//
+// ⚠️ O QUE NÃO PROMETER AQUI: garantia de 200% (é da consultoria de certificação,
+// não existe em assinatura) e número fixo de agentes de IA (a lista cresce).
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
-import OrbitPlatform from "../components/OrbitPlatform.astro";
+import ClientLogos from "../components/ClientLogos.astro";
+import { planosCalc, brl, brl2, APP_REGISTER } from "../data/planos-os.js";
+import { fatura, faturaMes, faturaAno } from "../data/stack-os.js";
 
-const beneficios = [
-  { icon: "solar:bolt-circle-bold", t: "Decisões mais rápidas", d: "A Olívia cruza dados de toda a operação e entrega insights acionáveis em tempo real." },
-  { icon: "solar:checklist-minimalistic-bold", t: "Gestão sem planilhas", d: "Processos, responsáveis e prazos organizados em um só lugar, do diagnóstico à auditoria." },
-  { icon: "solar:shield-check-bold", t: "Conformidade contínua", d: "Os agentes monitoram riscos, indicadores e não conformidades antes que virem problema." },
+const essencial = planosCalc[0];
+// A comparação com o stack usa o preço MENSAL do Essencial (decisão de 27/08/2026):
+// o cliente compara com a fatura mensal que ele já paga, e comparar mensal com mensal
+// dispensa nota de rodapé. O desconto anual continua aparecendo nos cards, onde ele é
+// uma escolha — não embutido no número de manchete.
+const economiaStackMes = faturaMes - essencial.mes;
+const economiaStackAno = faturaAno - essencial.anoCheio;
+const vezesMaisCaro = Math.floor(faturaMes / essencial.mes);
+
+// O que a assinatura cobre, escrito na chave "qual assinatura eu cancelo". Mesma
+// lista da /lp/templum-os: é o que o comprador reconhece como linha de custo.
+const modulos = [
+  { icon: "mdi:handshake-outline",             modulo: "CRM, funil e coaching de vendas",     lugar: "Pipedrive, RD Station CRM, HubSpot" },
+  { icon: "solar:checklist-minimalistic-bold", modulo: "Tarefas, projetos e prazos",          lugar: "ClickUp, Asana, Monday, Trello" },
+  { icon: "solar:wallet-money-bold",           modulo: "Financeiro, DRE, NF-e e NFS-e",       lugar: "Omie, Conta Azul, Bling" },
+  { icon: "solar:letter-opened-bold",          modulo: "Landing page, régua e WhatsApp",      lugar: "RD Station Marketing" },
+  { icon: "solar:users-group-rounded-bold",    modulo: "RH, avaliação, PDI e recrutamento",   lugar: "Sólides, Gupy" },
+  { icon: "solar:square-academic-cap-bold",    modulo: "Treinamento e trilha de aprendizagem", lugar: "plataforma de EAD avulsa" },
+  { icon: "solar:videocamera-record-bold",     modulo: "Reunião, transcrição e ata",          lugar: "Zoom + Fireflies / Otter" },
+  { icon: "solar:document-add-bold",           modulo: "Documento e assinatura eletrônica",   lugar: "Drive solto + DocuSign / Clicksign" },
+  { icon: "solar:chart-2-bold",                modulo: "Indicadores, metas e painel",         lugar: "Power BI + planilha" },
+  { icon: "solar:shield-check-bold",           modulo: "Processos, riscos e auditoria",       lugar: "software de SGI + planilha" },
+  { icon: "solar:compass-bold",                modulo: "Planejamento estratégico, SWOT e OKR", lugar: "uma apresentação que ninguém revisa" },
+  { icon: "solar:cart-large-2-bold",           modulo: "Compras, cotação e fornecedor",       lugar: "planilha + caixa de e-mail" },
+  { icon: "solar:health-bold",                 modulo: "SESMT: ASO, EPI, CIPA e acidente",    lugar: "sistema de SST avulso" },
+  { icon: "solar:headphones-round-bold",       modulo: "Chamado interno e chat da equipe",    lugar: "Zendesk, Movidesk, Slack" },
 ];
+
+// Comparativo. A verdade comercial desta linha de produto é que os três planos
+// entregam O MESMO produto — muda a faixa de usuários e a prioridade no suporte.
+// Inventar trava de funcionalidade por plano aqui seria mentira que morre na demo.
+const comparativo = [
+  { rec: "Usuários incluídos",                            vals: ["Até 50", "Até 100", "Até 300"] },
+  { rec: "Todos os módulos de gestão",                    vals: [true, true, true] },
+  { rec: "Olívia e os agentes de IA",                     vals: [true, true, true] },
+  { rec: "Olívia no WhatsApp, para quem não abre sistema", vals: [true, true, true] },
+  { rec: "IA sem cobrança por token e sem cobrança por agente", vals: [true, true, true] },
+  { rec: "Importação dos dados dos sistemas atuais",      vals: [true, true, true] },
+  { rec: "Multiorganização (grupos, filiais e unidades)", vals: [true, true, true] },
+  { rec: "Módulos e funções novas durante o contrato",    vals: [true, true, true] },
+  { rec: "Suporte",                                       vals: ["Horário comercial", "Prioritário", "Prioritário"] },
+  { rec: "Custo por pessoa/mês (plano anual)",            vals: planosCalc.map((p) => "R$ " + brl2(p.porPessoaAno)) },
+];
+
+const passos = [
+  { n: "01", t: "Crie a conta e entre", d: "O cadastro é seu, direto na plataforma. Ninguém precisa te liberar acesso, agendar reunião ou mandar proposta antes." },
+  { n: "02", t: "Rode com o contexto da sua empresa", d: "Os agentes montam a primeira versão do planejamento, do mapa de processos, dos indicadores e das instruções a partir do que a sua empresa faz. Você edita o que não fizer sentido." },
+  { n: "03", t: "Chame o time antes de decidir", d: "Adoção é o que decide se a assinatura se paga. Coloque as pessoas que vão usar de verdade, e só então escolha o plano." },
+];
+
+const faqs = [
+  { q: "Quanto custa, exatamente?",
+    a: `Essencial R$ ${brl(essencial.mes)}/mês para até ${essencial.usuarios} usuários, Performance R$ ${brl(planosCalc[1].mes)}/mês para até ${planosCalc[1].usuarios} e Enterprise R$ ${brl(planosCalc[2].mes)}/mês para até ${planosCalc[2].usuarios}. No plano anual, 20% a menos: R$ ${brl(essencial.anoMes)}, R$ ${brl(planosCalc[1].anoMes)} e R$ ${brl(planosCalc[2].anoMes)} por mês. Não há cobrança por token de IA nem por agente — todos estão inclusos.` },
+  { q: "É cobrado por usuário?",
+    a: `Não. O preço é fixo por faixa: entrar com 12 ou com ${essencial.usuarios} pessoas no Essencial custa o mesmo. O "custo por pessoa" que aparece na página é uma conta derivada, para você comparar com CRM, gestor de tarefas e RH — esses sim cobram por cabeça, e a conta deles sobe toda vez que você contrata alguém.` },
+  { q: "Como funciona o teste?",
+    a: "Você cria a conta em app.templum.com.br/register e usa a plataforma. Sem passar por vendedor, sem proposta antes. Se fizer sentido, escolhe o plano; se não fizer, você não paga nada." },
+  { q: "Tem fidelidade?",
+    a: "No plano mensal, não: você cancela quando quiser. O plano anual é o que tem compromisso de 12 meses — é exatamente por isso que ele custa 20% menos. A escolha entre os dois é sua, e dá para começar no mensal e migrar depois." },
+  { q: "Posso trocar de plano depois?",
+    a: "Pode, a qualquer momento. Cresceu o time e passou da faixa, você sobe de plano e a diferença é ajustada na cobrança seguinte. O caminho contrário também existe." },
+  { q: "E se a minha empresa tiver mais de 300 usuários?",
+    a: "Aí existe faixa acima do Enterprise, e ela é definida pelo porte da operação, não por assento. Fale com o time comercial que a faixa sai na mesma conversa." },
+  { q: "Vou perder o histórico dos sistemas que eu cancelar?",
+    a: "Não. Clientes, contatos, negócios, contas a pagar e a receber entram por importação, e o histórico antigo fica anexado ao registro. O recomendado é rodar 30 dias em paralelo com o sistema atual e só cancelar depois de conferir que está tudo aqui." },
+  { q: "Preciso de equipe de TI para implantar?",
+    a: "Não. A plataforma é web, sem instalação e sem servidor da sua parte. O que a implantação pede da sua empresa é decisão de gestão — quem responde por cada processo — não configuração técnica." },
+  { q: "Preciso querer certificação ISO para usar?",
+    a: "Não. A plataforma nasceu do método que a Templum usa em certificação há mais de 30 anos, mas ela existe para organizar a gestão. O efeito colateral é útil: se um cliente exigir ISO 9001 no contrato, o caminho já está quase todo andado. A certificação em si depende de auditoria de organismo certificador e é contratada à parte." },
+  { q: "Meus dados ficam seguros?",
+    a: "Sim. A plataforma é da própria Templum, com controle de acesso por usuário e por organização, e o tratamento de dados segue a LGPD. Cada organização é isolada: o que você cria não é visível para nenhum outro cliente." },
+];
+
+// --- Schema.org: preço na tela vira preço no resultado de busca e nas respostas de IA
+const schemaSoftware = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Templum OS",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description:
+    "Plataforma de gestão com agentes de inteligência artificial coordenados pela Olívia. Reúne CRM, tarefas e projetos, financeiro, marketing, RH, treinamento, documentos, indicadores, processos e riscos em uma assinatura só.",
+  provider: { "@type": "Organization", name: "Templum Consultoria", url: "https://templum.com.br" },
+  offers: {
+    "@type": "AggregateOffer",
+    priceCurrency: "BRL",
+    lowPrice: String(essencial.mes),
+    highPrice: String(planosCalc[2].mes),
+    offerCount: planosCalc.length,
+    offers: planosCalc.map((p) => ({
+      "@type": "Offer",
+      name: `Templum OS ${p.nome}`,
+      price: String(p.mes) + ".00",
+      priceCurrency: "BRL",
+      availability: "https://schema.org/InStock",
+      url: "https://templum.com.br/solucoes-de-ia/",
+      eligibleQuantity: { "@type": "QuantitativeValue", maxValue: p.usuarios, unitText: "usuários" },
+    })),
+  },
+};
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 
 <Base
-  title="Soluções de IA — Olívia e o Templum OS | Templum"
-  description="Conheça a Olívia: 12 agentes de IA no Templum OS que organizam a gestão da sua empresa. Até 40% menos tempo de execução, 85% menos erros e 65% mais produtividade."
+  title={`Templum OS — planos e preços a partir de R$ ${brl(essencial.mes)}/mês | Templum`}
+  description={`Toda a gestão da empresa em uma assinatura: CRM, projetos, financeiro, RH, treinamento, documentos e indicadores com agentes de IA inclusos. Três planos, de R$ ${brl(essencial.mes)} a R$ ${brl(planosCalc[2].mes)} por mês, com 20% de desconto no anual. Teste sem falar com vendedor.`}
+  schemas={[schemaSoftware, schemaFaq]}
+  noBanner={true}
 >
-  <PageHero
-    tag="Soluções de IA · Olívia"
-    sub="A Olívia é o cérebro do Templum OS: 12 agentes de IA que trabalham juntos para mapear processos, treinar equipes, monitorar indicadores e antecipar riscos — acelerando o caminho até a certificação e além."
-    image="/assets/img/olivia_templum.webp"
-    badge="Olívia · IA"
-    icon="solar:cpu-bolt-bold"
-    chips={["12 agentes de IA", "Até 40% menos tempo", "85% menos erros"]}
-  >
-    <Fragment slot="title">Inteligência artificial que <em class="accent">organiza a sua gestão</em></Fragment>
-    <Fragment slot="cta">
-      <a href="/form/" class="btn btn--primary btn--lg">Quero conhecer a Olívia <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      <a href="/metodologia/" class="btn btn--onDark btn--lg">Ver o método</a>
-    </Fragment>
-  </PageHero>
 
-  <section class="section section--cream">
-    <div class="container">
-      <div class="section-header">
-        <span class="tag-pill">Por que IA na gestão</span>
-        <h2>Tecnologia a serviço do <em class="accent">seu resultado</em></h2>
+  <!-- ============ HERO ============ -->
+  <section class="pl-hero">
+    <div class="pl-hero-bg" aria-hidden="true"></div>
+    <div class="container xl pl-hero-grid">
+      <div class="pl-hero-text">
+        <span class="tag-pill tag-pill--glow"><iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon> Templum OS · Olívia</span>
+        <h1 class="pl-hero-title">
+          Toda a gestão da empresa em <em class="accent">uma assinatura</em> — a partir de R$&nbsp;{brl(essencial.mes)} por mês
+        </h1>
+        <p class="pl-hero-sub">
+          CRM, projetos, financeiro, RH, treinamento, documentos, processos e indicadores no mesmo
+          banco de dados — com a <strong>Olívia e os agentes de IA inclusos</strong>, sem cobrança por
+          token. É a plataforma que a Templum construiu para rodar a própria operação.
+        </p>
+        <div class="pl-hero-cta">
+          <a href={APP_REGISTER} class="btn btn--primary btn--lg" data-cta="teste-gratis">
+            Testar gratuitamente <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </a>
+          <a href="#planos" class="btn btn--onDark btn--lg">Ver os planos</a>
+        </div>
+        <div class="pl-hero-chips">
+          <span class="pl-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Você entra sozinho, sem falar com vendedor</span>
+          <span class="pl-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> IA inclusa, sem cobrança por token</span>
+          <span class="pl-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon> No mensal, sem fidelidade</span>
+        </div>
       </div>
-      <div class="ia-grid">
-        {beneficios.map((b) => (
-          <div class="eco-card">
-            <span class="ia-ico"><iconify-icon icon={b.icon}></iconify-icon></span>
-            <h3>{b.t}</h3>
-            <p>{b.d}</p>
+
+      <div class="pl-hero-provas">
+        <div class="pl-prova"><strong>+3.000</strong><span>empresas rodando a plataforma</span></div>
+        <div class="pl-prova"><strong>+20 mil</strong><span>usuários ativos</span></div>
+        <div class="pl-prova"><strong>+30 anos</strong><span>organizando a gestão de empresas</span></div>
+        <div class="pl-prova"><strong>2 países</strong><span>Brasil e Estados Unidos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <ClientLogos dark={true} titulo="Algumas das empresas atendidas pela Templum ao longo de mais de 30 anos" />
+
+  <!-- ============ PLANOS ============ -->
+  <section class="section section--cream" id="planos">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Planos e preços</span>
+        <h2>Os três planos entregam <em class="accent">o mesmo produto</em></h2>
+        <p>
+          Nenhuma função fica atrás de um plano mais caro. O que muda é quantas pessoas cabem dentro
+          da plataforma e a prioridade no suporte. Escolha pela sua faixa de usuários.
+        </p>
+      </div>
+
+      <div class="pl-switch">
+        <div class="pl-switch-inner" role="group" aria-label="Ciclo de cobrança">
+          <button type="button" id="plMensal" class="pl-sw-btn" aria-pressed="true">Mensal</button>
+          <button type="button" id="plAnual" class="pl-sw-btn" aria-pressed="false">Anual <span class="pl-off">-20%</span></button>
+        </div>
+      </div>
+
+      <div class="pl-grid" id="plGrid">
+        {planosCalc.map((p) => (
+          <article class={p.recomendado ? "pl-card pl-card--rec" : "pl-card"}>
+            {p.recomendado && <span class="pl-rec">Melhor escolha</span>}
+            <span class="pl-nome">{p.nome}</span>
+            <h3 class="pl-produto">Templum OS</h3>
+            <p class="pl-resumo">{p.resumo}</p>
+
+            <div class="pl-preco">
+              <span class="pl-de" data-de-anual={`R$ ${brl(p.anoCheio)}/ano`}></span>
+              <span class="pl-valor">
+                <span class="pl-num" data-mensal={`R$ ${brl(p.mes)}`} data-anual={`R$ ${brl(p.anoTotal)}`}>R$ {brl(p.mes)}</span>
+                <span class="pl-ciclo" data-ciclo-mensal="/por mês" data-ciclo-anual="/por ano">/por mês</span>
+              </span>
+              <span class="pl-equiv" data-equiv-anual={`Equivalente a R$ ${brl(p.anoMes)}/mês · economia de R$ ${brl(p.economiaAno)} no ano`}></span>
+            </div>
+
+            <div class="pl-seat">
+              <span class="pl-seat-users"><iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon> Até {p.usuarios} usuários</span>
+              <span class="pl-seat-pp" data-pp-mensal={`R$ ${brl2(p.porPessoaMes)} por pessoa`} data-pp-anual={`R$ ${brl2(p.porPessoaAno)} por pessoa`}>R$ {brl2(p.porPessoaMes)} por pessoa</span>
+            </div>
+
+            <a href={APP_REGISTER} class={p.recomendado ? "btn btn--primary btn--block" : "btn btn--ghost btn--block"} data-cta="teste-gratis">
+              Testar gratuitamente
+            </a>
+
+            <ul class="pl-lista">
+              {p.destaques.map((d) => (
+                <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> {d}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <p class="pl-nota">
+        Preços por organização, sem cobrança por assento. Acima de {planosCalc[2].usuarios} usuários existe
+        faixa por porte — <a href="/form/">fale com o time comercial</a> que ela sai na mesma conversa.
+        No plano mensal você cancela quando quiser; o anual é o que tem compromisso de 12 meses, e é por
+        isso que ele custa 20% menos.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ COMPARATIVO ============ -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Comparativo</span>
+        <h2>O que vem em cada plano</h2>
+        <p>A tabela é curta de propósito: quase tudo está nos três.</p>
+      </div>
+
+      <div class="pl-tab-wrap">
+        <table class="pl-tab">
+          <thead>
+            <tr>
+              <th scope="col">Recurso</th>
+              {planosCalc.map((p) => <th scope="col" class="pl-tab-c">{p.nome}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {comparativo.map((linha) => (
+              <tr>
+                <th scope="row">{linha.rec}</th>
+                {linha.vals.map((v, i) => (
+                  <td class="pl-tab-c" data-l={planosCalc[i].nome}>
+                    {v === true
+                      ? <iconify-icon class="pl-ok" icon="solar:check-circle-bold" aria-label="Incluso"></iconify-icon>
+                      : <span>{v}</span>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pl-tab-cta">
+        <a href={APP_REGISTER} class="btn btn--primary btn--lg" data-cta="teste-gratis">
+          Criar minha conta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+        </a>
+        <a href="/form/" class="btn btn--onDark btn--lg">Falar com um especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÓDULOS ============ -->
+  <section class="section section--cream">
+    <div class="container xl">
+      <div class="section-header">
+        <span class="tag-pill">Incluso nos três planos</span>
+        <h2>Cada linha aqui é <em class="accent">uma assinatura que você cancela</em></h2>
+        <p>
+          A plataforma não é mais um sistema ao lado dos que você já paga. Ela é o lugar para onde essas
+          funções mudam — com o dado de vendas conversando com o de produção, no mesmo banco.
+        </p>
+      </div>
+
+      <div class="pl-mods">
+        {modulos.map((m) => (
+          <div class="pl-mod">
+            <span class="pl-mod-ico"><iconify-icon icon={m.icon}></iconify-icon></span>
+            <div>
+              <h3>{m.modulo}</h3>
+              <p>No lugar de {m.lugar}</p>
+            </div>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <OrbitPlatform />
+  <!-- ============ A CONTA ============ -->
+  <section class="section section--navy">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Por que cabe nesse preço</span>
+        <h2>A Templum desligou seis sistemas — <em class="accent">esta era a conta</em></h2>
+        <p>
+          Pipedrive, RD Station, ClickUp, Sólides, Omie e Clicksign saíram da nossa operação. Abaixo, a
+          mesma conta refeita a preço público de tabela para uma empresa de {essencial.usuarios} pessoas —
+          o mesmo corte do plano Essencial, para a comparação ficar maçã com maçã.
+        </p>
+      </div>
 
+      <div class="pl-conta">
+        <ul class="pl-conta-lista">
+          {fatura.map((f) => (
+            <li>
+              <img class="pl-conta-logo" src={`/assets/img/stack/${f.logo}.png`} alt="" width="128" height="128" loading="lazy" decoding="async" />
+              <span class="pl-conta-nome"><strong>{f.sistema}</strong><small>{f.cat}</small></span>
+              <span class="pl-conta-val">R$ {brl(f.mes)}</span>
+            </li>
+          ))}
+          <li class="pl-conta-tot">
+            <span class="pl-conta-nome"><strong>Total do conjunto</strong><small>por mês</small></span>
+            <span class="pl-conta-val">R$ {brl(faturaMes)}</span>
+          </li>
+          <li class="pl-conta-nos">
+            <span class="pl-conta-nome"><strong>Templum OS Essencial</strong><small>tudo isso, em uma assinatura só</small></span>
+            <span class="pl-conta-val">R$ {brl(essencial.mes)}</span>
+          </li>
+        </ul>
+
+        <div class="pl-conta-econ">
+          <span class="pl-econ-lab">Sobra nesse cenário</span>
+          <strong class="pl-econ-num">R$ {brl(economiaStackAno)}</strong>
+          <span class="pl-econ-sub">por ano — R$ {brl(economiaStackMes)} por mês</span>
+          <p class="pl-econ-txt">
+            O conjunto custava mais de {vezesMaisCaro} vezes o preço da assinatura, com a IA cobrada por fora em vez de inclusa.
+            E como o preço não é por assento, contratar mais gente não sobe a fatura dentro da faixa.
+          </p>
+          <a href="/lp/templum-os#calculadora" class="btn btn--onDark">Fazer a conta da minha empresa</a>
+        </div>
+      </div>
+
+      <p class="pl-memoria">
+        <iconify-icon icon="solar:info-circle-bold"></iconify-icon>
+        <span>
+          <strong>Memória de cálculo.</strong> O desligamento dos seis é real e é o nosso caso. Os valores
+          linha a linha são <strong>preço público de tabela dos fornecedores</strong> (ago/2026),
+          dimensionados para {essencial.usuarios} pessoas e câmbio de R$ 5,50 — é a conta que você confere
+          no site de cada um, não a nossa nota fiscal. <strong>E o que não sai:</strong> e-mail marketing em
+          massa. A Templum manteve o Mailchimp, então essa não é uma conta que a gente promete cortar.
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ COMO COMEÇA ============ -->
+  <section class="section section--cream">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Como começa</span>
+        <h2>Sem proposta, sem reunião de descoberta, <em class="accent">sem esperar retorno</em></h2>
+        <p>Você entra na plataforma hoje e decide depois. O time comercial existe para quem prefere ser guiado — não como pedágio.</p>
+      </div>
+
+      <div class="step-grid pl-passos">
+        {passos.map((p) => (
+          <div class="step-card">
+            <span class="step-num">{p.n}</span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section section--navy">
+    <div class="container md">
+      <div class="section-header">
+        <span class="tag-pill tag-pill--glow">Tire suas dúvidas</span>
+        <h2>Perguntas sobre <em class="accent">preço, teste e migração</em></h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+            <div class="faq-answer">{f.a}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
   <section class="cta-band">
     <div class="container md">
-      <h2>Pronto para <em>colocar a IA</em> a trabalhar pela sua empresa?</h2>
-      <p>Fale com um especialista e veja a Olívia e o Templum OS na prática.</p>
-      <a href="/form/" class="btn btn--dark btn--lg">Agendar uma demonstração <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      <h2>A conta você já faz. <em>Falta abrir a plataforma.</em></h2>
+      <p>Crie a conta, rode os agentes com o contexto da sua empresa e chame o time antes de decidir.</p>
+      <a href={APP_REGISTER} class="btn btn--dark btn--lg" data-cta="teste-gratis">
+        Testar gratuitamente <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
     </div>
   </section>
 </Base>
 
 <style>
-  .ia-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
-  @media (max-width: 880px) { .ia-grid { grid-template-columns: 1fr; } }
-  .ia-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; color: var(--orange); background: rgba(255,89,37,0.10); margin-bottom: 16px; }
+  /* ---------- HERO ---------- */
+  .pl-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(44px, 5.5vw, 76px) 0; }
+  .pl-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(720px 460px at 10% 0%, rgba(255,89,37,0.28), transparent 60%),
+                radial-gradient(560px 380px at 100% 100%, rgba(255,89,37,0.14), transparent 60%); }
+  .pl-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(28px, 4vw, 56px); align-items: center; }
+  .pl-hero-text { max-width: 640px; }
+  .pl-hero .tag-pill { margin-bottom: 18px; display: inline-flex; align-items: center; gap: 7px; }
+  .pl-hero-title { font-size: clamp(31px, 4vw, 50px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .pl-hero-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; line-height: 1.62; }
+  .pl-hero-sub strong { color: var(--cream); }
+  .pl-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .pl-hero-chips { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .pl-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .pl-chip iconify-icon { color: var(--orange); font-size: 17px; }
+
+  .pl-hero-provas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pl-prova { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-16); padding: 20px 18px; }
+  .pl-prova strong { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -0.03em; color: var(--orange); line-height: 1.05; }
+  .pl-prova span { display: block; font-size: 13px; color: rgba(255,244,221,0.66); margin-top: 6px; line-height: 1.4; }
+
+  @media (max-width: 980px) {
+    .pl-hero-grid { grid-template-columns: 1fr; }
+    .pl-hero-provas { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 620px) { .pl-hero-provas { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- SWITCH MENSAL/ANUAL ---------- */
+  .pl-switch { display: flex; justify-content: center; margin-bottom: 34px; }
+  .pl-switch-inner { display: inline-flex; background: var(--surface); border: 1px solid var(--border-2); border-radius: 999px; padding: 5px; gap: 3px; box-shadow: var(--shadow-soft); }
+  .pl-sw-btn { font-family: var(--font-sans); font-weight: 700; font-size: 14px; color: var(--text-2); padding: 10px 24px; border-radius: 999px; transition: background .25s var(--ease-soft), color .25s var(--ease-soft); display: inline-flex; align-items: center; gap: 7px; }
+  .pl-sw-btn[aria-pressed="true"] { background: var(--orange-dark); color: #fff; }
+  .pl-sw-btn:hover:not([aria-pressed="true"]) { color: var(--text); }
+  .pl-sw-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .pl-off { font-size: 12px; font-weight: 800; color: var(--success); }
+  .pl-sw-btn[aria-pressed="true"] .pl-off { color: var(--peach-light); }
+
+  /* ---------- CARDS DE PLANO ---------- */
+  .pl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
+  .pl-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; transition: transform .35s var(--ease-soft), box-shadow .35s var(--ease-soft); }
+  .pl-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .pl-card--rec { border: 2px solid var(--orange); box-shadow: var(--shadow-card); }
+  .pl-rec { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--orange); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 16px; border-radius: 999px; white-space: nowrap; }
+  .pl-nome { font-size: 12px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange-ink); }
+  .pl-produto { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+  .pl-resumo { font-size: 14.5px; color: var(--text-mid); line-height: 1.55; min-height: 4.6em; }
+
+  .pl-preco { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .pl-de { font-size: 13px; color: var(--text-soft); text-decoration: line-through; min-height: 1.3em; }
+  .pl-valor { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .pl-num { font-size: clamp(30px, 3.2vw, 38px); font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .pl-ciclo { font-size: 14px; font-weight: 600; color: var(--text-mid); }
+  .pl-equiv { font-size: 13px; color: var(--text-2); line-height: 1.45; min-height: 1.4em; }
+
+  .pl-seat { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 10px 16px; font-size: 13px; font-weight: 700; }
+  .pl-seat-users { display: inline-flex; align-items: center; gap: 7px; color: var(--text); }
+  .pl-seat-users iconify-icon { color: var(--orange); font-size: 16px; }
+  .pl-seat-pp { color: var(--text-mid); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .pl-lista { display: flex; flex-direction: column; gap: 10px; margin-top: 2px; }
+  .pl-lista li { display: flex; align-items: flex-start; gap: 9px; font-size: 14.5px; color: var(--text-2); line-height: 1.5; }
+  .pl-lista iconify-icon { color: var(--orange); font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .pl-nota { text-align: center; max-width: 760px; margin: 30px auto 0; font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+  .pl-nota a { color: var(--orange-ink); font-weight: 700; text-decoration: underline; }
+
+  @media (max-width: 1024px) { .pl-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; } .pl-resumo { min-height: 0; } }
+
+  /* ---------- TABELA COMPARATIVA ---------- */
+  .pl-tab-wrap { overflow-x: auto; border: 1px solid rgba(255,244,221,0.14); border-radius: var(--r-20); background: rgba(255,255,255,0.04); }
+  .pl-tab { width: 100%; border-collapse: collapse; min-width: 640px; }
+  .pl-tab th, .pl-tab td { padding: 15px 20px; text-align: left; border-bottom: 1px solid rgba(255,244,221,0.10); font-size: 14.5px; }
+  .pl-tab thead th { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); background: rgba(0,0,0,0.18); }
+  .pl-tab tbody th { font-weight: 600; color: rgba(255,244,221,0.88); }
+  .pl-tab tbody td { color: rgba(255,244,221,0.7); font-variant-numeric: tabular-nums; }
+  .pl-tab tbody tr:last-child th, .pl-tab tbody tr:last-child td { border-bottom: none; }
+  .pl-tab-c { text-align: center; }
+  .pl-ok { color: var(--orange); font-size: 21px; }
+  .pl-tab-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+
+  @media (max-width: 700px) {
+    .pl-tab { min-width: 0; }
+    .pl-tab thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .pl-tab tbody tr { display: block; padding: 14px 0; border-bottom: 1px solid rgba(255,244,221,0.10); }
+    .pl-tab tbody tr:last-child { border-bottom: none; }
+    .pl-tab tbody th { display: block; border: none; padding: 0 18px 10px; }
+    .pl-tab tbody td { display: flex; justify-content: space-between; align-items: center; gap: 16px; border: none; padding: 5px 18px; text-align: right; }
+    .pl-tab tbody td::before { content: attr(data-l); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,244,221,0.5); }
+  }
+
+  /* ---------- MÓDULOS ---------- */
+  .pl-mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pl-mod { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 20px; }
+  .pl-mod-ico { width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center; font-size: 21px; color: var(--orange); background: rgba(255,89,37,0.10); }
+  .pl-mod h3 { font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; }
+  .pl-mod p { font-size: 13px; color: var(--text-mid); margin-top: 5px; line-height: 1.45; }
+  @media (max-width: 980px) { .pl-mods { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .pl-mods { grid-template-columns: 1fr; } }
+
+  /* ---------- A CONTA ---------- */
+  .pl-conta { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 26px; align-items: start; }
+  .pl-conta-lista { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); overflow: hidden; }
+  .pl-conta-lista li { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid rgba(255,244,221,0.09); }
+  .pl-conta-lista li:last-child { border-bottom: none; }
+  .pl-conta-logo { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; border-radius: 7px; background: #fff; padding: 3px; }
+  .pl-conta-nome { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pl-conta-nome strong { font-size: 15px; font-weight: 700; color: var(--cream); }
+  .pl-conta-nome small { font-size: 12.5px; color: rgba(255,244,221,0.55); }
+  .pl-conta-val { font-size: 15.5px; font-weight: 800; color: rgba(255,244,221,0.9); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pl-conta-tot { background: rgba(0,0,0,0.2); }
+  .pl-conta-tot .pl-conta-val { color: var(--cream); }
+  .pl-conta-nos { background: rgba(255,89,37,0.14); }
+  .pl-conta-nos .pl-conta-nome strong, .pl-conta-nos .pl-conta-val { color: var(--orange); }
+  .pl-conta-nos .pl-conta-val { font-size: 19px; }
+
+  .pl-conta-econ { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,89,37,0.35); border-radius: var(--r-20); padding: 26px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .pl-econ-lab { font-size: 11.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,244,221,0.6); }
+  .pl-econ-num { font-size: clamp(30px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.035em; color: var(--orange); line-height: 1.05; }
+  .pl-econ-sub { font-size: 13.5px; color: rgba(255,244,221,0.7); }
+  .pl-econ-txt { font-size: 14px; color: rgba(255,244,221,0.72); line-height: 1.6; margin: 12px 0 18px; }
+  .pl-conta-econ .btn { align-self: flex-start; }
+
+  .pl-memoria { display: flex; gap: 12px; align-items: flex-start; margin-top: 26px; padding: 18px 20px; background: rgba(0,0,0,0.18); border-radius: var(--r-16); font-size: 13.5px; line-height: 1.6; color: rgba(255,244,221,0.7); }
+  .pl-memoria iconify-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .pl-memoria strong { color: var(--cream); }
+
+  @media (max-width: 980px) { .pl-conta { grid-template-columns: 1fr; } }
+
+  /* ---------- PASSOS ---------- */
+  .pl-passos { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 880px) { .pl-passos { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+  // Toggle mensal/anual. Os valores já vêm renderizados em data-* no HTML (fonte:
+  // src/data/planos-os.js), então o script só troca texto — nenhuma conta é feita
+  // no cliente e não existe preço digitado em dois lugares.
+  const btnMensal = document.getElementById("plMensal");
+  const btnAnual = document.getElementById("plAnual");
+  const grid = document.getElementById("plGrid");
+
+  if (btnMensal && btnAnual && grid) {
+    const aplicar = (anual) => {
+      btnMensal.setAttribute("aria-pressed", String(!anual));
+      btnAnual.setAttribute("aria-pressed", String(anual));
+
+      grid.querySelectorAll(".pl-card").forEach((card) => {
+        const de = card.querySelector(".pl-de");
+        const num = card.querySelector(".pl-num");
+        const ciclo = card.querySelector(".pl-ciclo");
+        const equiv = card.querySelector(".pl-equiv");
+        const pp = card.querySelector(".pl-seat-pp");
+
+        de.textContent = anual ? de.dataset.deAnual : "";
+        equiv.textContent = anual ? equiv.dataset.equivAnual : "";
+        num.textContent = anual ? num.dataset.anual : num.dataset.mensal;
+        ciclo.textContent = anual ? ciclo.dataset.cicloAnual : ciclo.dataset.cicloMensal;
+        pp.textContent = anual ? pp.dataset.ppAnual : pp.dataset.ppMensal;
+      });
+    };
+
+    btnMensal.addEventListener("click", () => aplicar(false));
+    btnAnual.addEventListener("click", () => aplicar(true));
+  }
+</script>

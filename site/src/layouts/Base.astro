@@ -12,6 +12,7 @@ const {
   description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
   ogImage = "/assets/og/templum-og.jpg",
   noHeaderFooter = false,
+  noBanner = false,   // esconde a faixa da garantia de 200% no topo
   hideWpp = false,
   noindex = false,
   schemas = [],
@@ -157,7 +158,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <TrackingKit />
   </head>
   <body>
-    {!noHeaderFooter && <Header />}
+    {!noHeaderFooter && <Header banner={!noBanner} />}
     <main>
       <slot />
     </main>
