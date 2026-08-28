@@ -341,3 +341,17 @@
 /os  /lp/templum-os/  302
 /os/  /lp/templum-os/  302
 /os/*  /lp/templum-os/  302
+
+# ISO 9001 + ISO 14001 (dupla certificação) — a LP nasceu em 28/08/2026 e não tem
+# URL antiga. Estes redirects cobrem as variações previsíveis de quem digita, cola
+# num anúncio ou tira o "-lp" da URL — nenhuma delas pode cair em 404.
+/consultoria/iso-9001-iso-14001  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-iso-14001/  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-14001  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-14001/  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-14001-lp  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-14001-lp/  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-e-iso-14001  /consultoria/iso-9001-iso-14001-lp/  301
+/consultoria/iso-9001-e-iso-14001/  /consultoria/iso-9001-iso-14001-lp/  301
+/iso-9001-iso-14001  /consultoria/iso-9001-iso-14001-lp/  301
+/iso-9001-iso-14001/  /consultoria/iso-9001-iso-14001-lp/  301
