@@ -25,6 +25,9 @@ const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certific
 // filhos e sobraria um buraco — nesse caso a empresa vai em linha própria.
 const mostraFunc = !simples || funcionarios;
 const parQualif = mostraFunc && faturamento;
+// Quantos campos a 2ª linha realmente rende: se sobrar só um, a grade de 2
+// colunas deixaria metade da linha vazia — daí o modificador --solo.
+const camposLinha2 = (parQualif ? 0 : 1) + (mostraFunc ? 1 : 0) + (faturamento ? 1 : 0);
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 ---
@@ -42,7 +45,7 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
     {parQualif && (
       <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
     )}
-    <div class="form-row">
+    <div class={camposLinha2 === 1 ? "form-row form-row--solo" : "form-row"}>
       {!parQualif && (
         <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
       )}
@@ -66,7 +69,7 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
       )}
     </div>
     {(!simples || cargo) && (
-      <div class="form-row">
+      <div class={simples ? "form-row form-row--solo" : "form-row"}>
         <div class="field">
           <label>Seu cargo</label>
           <select class="select" name="cargo" aria-label="Seu cargo">
@@ -101,5 +104,8 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
 </div>
 
 <style>
+  /* cargo sozinho na linha (LPs com simples={true}): sem a urgência ao lado, a
+     grade 1fr 1fr deixaria metade da linha vazia. */
+  .form-row--solo { grid-template-columns: 1fr; }
   .lead-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 2px; }
 </style>
