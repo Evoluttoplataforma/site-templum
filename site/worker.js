@@ -217,6 +217,9 @@ async function handleLead(request, env, ctx) {
     funcionarios: body.funcionarios || "",
     faturamento: body.faturamento || "",
     mensagem: body.mensagem || "",
+    // "Maior desafio da empresa hoje" — select das LPs (ex.: /planejamento-estrategico-2027).
+    // Separado de `mensagem` (texto livre) para virar campo próprio no Supabase e no CRM.
+    desafio: body.desafio || "",
     status_pagamento: body.status_pagamento || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
@@ -290,6 +293,7 @@ async function saveToSupabase(lead, env) {
       empresa: lead.empresa, norma: lead.norma, cargo: lead.cargo,
       funcionarios: lead.funcionarios, urgencia: lead.urgencia,
       faturamento: lead.faturamento,
+      mensagem: lead.mensagem, desafio: lead.desafio,
       evento: lead.evento, pagina: lead.pagina,
       utm_source: lead.utm_source, utm_medium: lead.utm_medium,
       utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
@@ -341,7 +345,7 @@ async function saveToMailchimp(lead, env) {
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
           NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
-          FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
+          FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem || lead.desafio,
           ORIGEM: lead.pagina || lead.evento || "site",
           LT_SOURCE: lead.utm_source,    LT_MEDIUM: lead.utm_medium,
           LT_CAMP: lead.utm_campaign,    LT_CONTENT: lead.utm_content,
@@ -367,7 +371,7 @@ async function saveToMailchimp(lead, env) {
             merge_fields: {
               FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
               NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
-              FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem,
+              FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem || lead.desafio,
               ORIGEM: lead.pagina || lead.evento || "site",
               LT_SOURCE: lead.utm_source,    LT_MEDIUM: lead.utm_medium,
               LT_CAMP: lead.utm_campaign,    LT_CONTENT: lead.utm_content,
@@ -492,7 +496,7 @@ async function saveToPipedrive(lead, env) {
 
     // Campos customizados — só preenche se tiver valor
     for (const [field, key] of Object.entries(PD_FIELDS)) {
-      const val = lead[field] || (field === "necessidade" ? lead.mensagem : "");
+      const val = lead[field] || (field === "necessidade" ? (lead.mensagem || lead.desafio) : "");
       if (val) dealBody[key] = val;
     }
 
@@ -546,6 +550,7 @@ const ORBIT_FIELDS = {
   cargo:        "cf_cargo_do_contato",
   funcionarios: "cf_faixa_de_funcion_rios",
   faturamento:  "cf_faixa_de_faturamento",
+  desafio:      "cf_maior_desafio",
   pagina:       "cf_p_gina_de_convers_o",
   utm_source:   "cf_utm_source",
   utm_medium:   "cf_utm_medium",
@@ -576,7 +581,7 @@ async function saveToOrbit(lead, env) {
   };
   if (lead.telefone) body.contact_phone = lead.telefone;
   if (lead.empresa) body.company_name = lead.empresa;
-  if (lead.mensagem) body.notes = lead.mensagem;
+  if (lead.mensagem || lead.desafio) body.notes = lead.mensagem || lead.desafio;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
   const orbitTags = ORBIT_EVENTO_TAGS[lead.evento];
@@ -677,7 +682,7 @@ function manyChatFieldsFor(lead) {
     ["Empresa", lead.empresa],
     ["n_funcionarios", lead.funcionarios],
     ["faturamento_mensal", lead.faturamento],
-    ["necessidade", lead.mensagem],
+    ["necessidade", lead.mensagem || lead.desafio],
     ["produto", lead.norma],
     ["Urgência", lead.urgencia],
     ["url_cadastro", lead.pagina],
@@ -922,7 +927,7 @@ async function handleLeadsRead(request, env) {
 
   try {
     const res = await fetch(
-      `${sbUrl}/rest/v1/site_leads?select=id,created_at,nome,email,telefone,empresa,norma,cargo,pagina,evento,status_pagamento,valor_pago,data_pagamento,utm_source,utm_medium,utm_campaign,utm_content,utm_source_ft,utm_campaign_ft,gclid,fbclid&order=created_at.desc&limit=${limit}&offset=${offset}`,
+      `${sbUrl}/rest/v1/site_leads?select=id,created_at,nome,email,telefone,empresa,norma,cargo,desafio,mensagem,pagina,evento,status_pagamento,valor_pago,data_pagamento,utm_source,utm_medium,utm_campaign,utm_content,utm_source_ft,utm_campaign_ft,gclid,fbclid&order=created_at.desc&limit=${limit}&offset=${offset}`,
       {
         headers: {
           "apikey": sbKey,

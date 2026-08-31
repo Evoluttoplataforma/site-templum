@@ -227,6 +227,7 @@
     .pag-pago      { background: rgba(5,150,105,0.1);  color: #059669; }
     .pag-pendente  { background: rgba(217,119,6,0.1);  color: #d97706; }
     .td-pagina { font-size: 11px; color: var(--text-mid); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .td-desafio { font-size: 11px; color: var(--text-mid); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .td-utm { font-size: 11px; }
     .utm-block { display: flex; flex-direction: column; gap: 3px; }
     .utm-row { display: flex; gap: 6px; align-items: baseline; white-space: nowrap; }
@@ -411,6 +412,7 @@
           <th data-col="telefone">Telefone</th>
           <th data-col="empresa">Empresa</th>
           <th data-col="norma">Norma</th>
+          <th data-col="desafio">Desafio</th>
           <th data-col="pagina">Página</th>
           <th data-col="evento">Evento</th>
           <th data-col="status_pagamento">Pagamento</th>
@@ -681,6 +683,7 @@
         "<td class='td-tel'>" + (l.telefone ? "<a href='tel:" + esc(l.telefone) + "'>" + esc(l.telefone) + "</a>" : "—") + "</td>" +
         "<td>" + esc(l.empresa || "—") + "</td>" +
         "<td class='td-norma'>" + (l.norma ? "<span class='pill'>" + esc(l.norma) + "</span>" : "—") + "</td>" +
+        "<td class='td-desafio' title='" + esc(l.desafio || l.mensagem || "") + "'>" + esc(l.desafio || l.mensagem || "—") + "</td>" +
         "<td class='td-pagina' title='" + esc(l.pagina || "") + "'>" + esc(l.pagina || "—") + "</td>" +
         "<td class='td-evento' title='" + esc(l.evento || "") + "'>" + esc(l.evento || "—") + "</td>" +
         "<td>" + pagamentoCell(l) + "</td>" +
