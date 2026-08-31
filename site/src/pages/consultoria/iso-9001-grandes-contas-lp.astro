@@ -1,0 +1,575 @@
+---
+// LP de ISO 9001 com ângulo "acesso a grandes contas" — feita para o criativo
+// dos logos de grandes compradores (Meta, ago/2026).
+//
+// POR QUE ELA EXISTE (e é diferente da /consultoria/iso-9001-lp):
+// A LP genérica converteu 1,7% (58 cliques → 1 lead, CPL R$ 326). No mesmo
+// período, na mesma conta, as LPs de webinar converteram 39,8% e a de
+// planejamento estratégico 30,9%. As duas que pediam "agende uma reunião"
+// ficaram em ~1,5%. O gargalo é o TAMANHO DO PEDIDO, não o layout.
+// Daí a troca: o pedido principal aqui é um diagnóstico de 4 perguntas
+// (só cliques, nenhuma digitação) e o contato só é pedido DEPOIS de entregar
+// um resultado. As 4 respostas viram qualificação no CRM.
+//
+// SEGUNDO MOTIVO — otimização do Meta: a campanha antiga otimizava por um
+// evento que acontecia 1x a cada 4 dias, então o algoritmo nunca saía do
+// aprendizado. O quiz dispara eventos intermediários frequentes
+// (QuizStart → QuizStep2/3/4 → QuizComplete) para alimentar a entrega.
+//
+// ATENÇÃO — o criativo usa logos de Bosch/3M/IBM/Itaú/Petrobras. Aqui NÃO
+// reproduzimos essas marcas: implicaria que são clientes da Templum (não são,
+// são exemplos de COMPRADORES) e usaria marca de terceiro sem direito. A
+// continuidade é feita por categoria de comprador, que é verdadeiro e
+// defensável. Os logos do mural são clientes reais da Templum.
+import LpBase from "../../layouts/LpBase.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { baseConsultoria } from "../../data/consultoria/_base.js";
+
+const NORMA = "ISO 9001";
+
+// Perguntas do diagnóstico. `campo` é a coluna do lead que recebe a resposta —
+// porte/cargo/prazo caem em colunas reais (Supabase + Pipedrive + Orbit +
+// Mailchimp); a situação vai no `mensagem`, que o worker manda pro CRM como
+// nota/necessidade (o Supabase não guarda essa coluna, o CRM sim).
+// Os valores de `funcionarios` e `cargo` são IDÊNTICOS aos do LeadForm — mudar
+// o texto aqui quebra os filtros que o comercial já usa.
+const perguntas = [
+  {
+    campo: "situacao",
+    titulo: "Sua empresa já perdeu um contrato por não ter a ISO 9001?",
+    ajuda: "Ou deixou de disputar uma licitação por causa disso.",
+    opcoes: [
+      { v: "Já perdemos negócio por não ter o certificado", ico: "solar:sad-circle-bold", peso: 3 },
+      { v: "Um cliente está exigindo o certificado agora", ico: "solar:danger-triangle-bold", peso: 3 },
+      { v: "Ainda não, mas o risco existe", ico: "solar:eye-bold", peso: 2 },
+      { v: "Não, quero me antecipar ao mercado", ico: "solar:rocket-bold", peso: 1 },
+    ],
+  },
+  {
+    campo: "funcionarios",
+    titulo: "Quantos funcionários a sua empresa tem hoje?",
+    ajuda: "O porte define o cronograma e o esforço de implantação.",
+    opcoes: [
+      { v: "1 a 10", peso: 1 }, { v: "11 a 50", peso: 2 }, { v: "51 a 100", peso: 3 },
+      { v: "101 a 250", peso: 3 }, { v: "251 a 500", peso: 3 }, { v: "Mais de 500", peso: 3 },
+    ],
+    compacto: true,
+  },
+  {
+    campo: "cargo",
+    titulo: "Qual é o seu cargo na empresa?",
+    ajuda: "Para o especialista já chegar na conversa certa.",
+    opcoes: [
+      { v: "Proprietário", ico: "solar:crown-bold", peso: 3 },
+      { v: "Diretor / C-level", ico: "solar:user-id-bold", peso: 3 },
+      { v: "Consultor", ico: "solar:case-round-bold", peso: 2 },
+      { v: "Funcionário buscando informações", ico: "solar:user-bold", peso: 1 },
+      { v: "Só estou curioso", ico: "solar:magnifer-bold", peso: 0 },
+    ],
+  },
+  {
+    campo: "urgencia",
+    titulo: "Para quando você precisa do certificado em mãos?",
+    ajuda: "Dá para acelerar etapas quando existe prazo de cliente.",
+    opcoes: [
+      { v: "Tenho uma exigência com prazo definido", ico: "solar:alarm-bold", peso: 3 },
+      { v: "Nos próximos 6 meses", ico: "solar:calendar-bold", peso: 2 },
+      { v: "Ainda estou avaliando", ico: "solar:notebook-bold", peso: 1 },
+      { v: "Só pesquisando por enquanto", ico: "solar:book-bold", peso: 0 },
+    ],
+  },
+];
+
+// Quem realmente cobra o certificado. Categoria em vez de marca — ver nota no topo.
+const compradores = [
+  { ico: "solar:scale-bold", t: "Órgãos públicos e licitações", d: "Editais usam a ISO 9001 como critério de habilitação e de pontuação técnica." },
+  { ico: "solar:city-bold", t: "Multinacionais e montadoras", d: "Cadastro de fornecedor com auditoria de qualidade é pré-requisito para entrar na lista." },
+  { ico: "solar:fuel-bold", t: "Óleo, gás e energia", d: "Cadeias de alto risco exigem sistema de gestão auditado antes de qualquer contrato." },
+  { ico: "solar:cart-large-2-bold", t: "Grandes varejistas", d: "Homologação de fornecedor pede evidência de controle de processo e rastreabilidade." },
+  { ico: "solar:hospital-bold", t: "Saúde e laboratórios", d: "Compradores hospitalares e laboratoriais tratam a certificação como pré-condição." },
+  { ico: "solar:buildings-3-bold", t: "Construção e infraestrutura", d: "Contratantes de grande porte exigem qualidade certificada em toda a subcontratação." },
+];
+
+const metodo = [
+  { t: "Cronograma sob medida", d: "Calculamos seu cronograma conforme o diagnóstico da empresa e estruturamos o passo a passo para atender os requisitos." },
+  { t: "Documentos feitos por nós", d: "Nunca delegamos a você o que deve ser feito por nós. Elaboramos os documentos da forma mais útil para o seu negócio." },
+  { t: "Especialistas sempre disponíveis", d: "Todos os dias, em horário comercial, você tira dúvidas com seu consultor em tempo real." },
+  { t: "Garantia em contrato", d: "Se passar por todos os processos e ainda assim não certificar, devolvemos 200% do seu investimento." },
+];
+
+const faq = [
+  { q: "Quanto tempo leva para ter o certificado em mãos?", a: "Depende do porte e da maturidade da gestão. O cronograma sai do diagnóstico — e quando existe prazo de cliente ou edital, priorizamos as etapas que destravam a auditoria mais cedo." },
+  { q: "A ISO 9001 realmente é exigida em licitação?", a: "Não é obrigatória por lei, mas aparece com frequência em editais como critério de habilitação técnica ou de pontuação, e em cadastros de fornecedor de empresas de grande porte. É por isso que ela funciona como chave de acesso." },
+  { q: "Minha empresa é pequena. Faz sentido certificar?", a: "Sim — e costuma ser onde o certificado pesa mais, porque equipara sua empresa a concorrentes maiores no crivo do comprador. A norma se aplica a qualquer porte e setor." },
+  { q: "Como funciona a garantia de 200%?", a: "Está registrada em contrato: se você concluir todas as etapas do nosso método e ainda assim não obter a certificação, devolvemos o dobro do valor investido. Somos a única consultoria do Brasil que assume esse risco." },
+];
+---
+
+<LpBase
+  title="ISO 9001: a chave para vender para grandes contas | Templum"
+  description="Grandes compradores e licitações exigem ISO 9001 dos fornecedores. Responda 4 perguntas e descubra em 2 minutos se a sua empresa se qualifica. Garantia de 200% em contrato."
+  formAnchor="#diagnostico"
+  headerCta="Fazer o diagnóstico"
+>
+  <div class="gc">
+    <!-- ══ HERO + DIAGNÓSTICO (o pedido principal já na 1ª tela) ══ -->
+    <section class="gc-hero" id="diagnostico">
+      <div class="gc-hero-bg" aria-hidden="true"></div>
+      <div class="container xl gc-hero-grid">
+        <div class="gc-hero-text">
+          <span class="tag-pill tag-pill--glow">ISO 9001 · Acesso a grandes contas</span>
+          <h1 class="gc-title">A ISO 9001 é o que separa sua empresa das <span class="gc-hl">grandes contas.</span></h1>
+          <p class="gc-sub">Grandes compradores e licitações exigem o certificado dos fornecedores. Veja em 2 minutos onde a sua empresa está.</p>
+        </div>
+
+        <!-- Filha direta da grid (não da coluna de texto) só para poder ir
+             PARA DEPOIS do quiz no mobile — se ficar antes, empurra a 1ª
+             pergunta para fora da primeira tela. -->
+        <div class="gc-guarantee">
+          <span class="gc-guarantee-ico"><iconify-icon icon="solar:shield-check-bold"></iconify-icon></span>
+          <div>
+            <strong>Garantia de 200% em contrato</strong>
+            <span class="gc-guarantee-txt">Certifica com a Templum ou devolvemos o dobro do investimento.</span>
+          </div>
+        </div>
+
+        <!-- Diagnóstico. Sem .reveal de propósito: é o elemento de conversão e
+             não pode depender do IntersectionObserver para ficar visível. -->
+        <div class="gc-quiz-wrap">
+          <div class="gc-quiz" id="quiz" data-total={perguntas.length}>
+            <div class="gc-qz-head">
+              <div class="gc-qz-bar"><span class="gc-qz-fill" id="qzFill"></span></div>
+              <p class="gc-qz-count"><span id="qzNow">1</span> de {perguntas.length + 1} · leva 2 minutos</p>
+            </div>
+
+            {perguntas.map((p, i) => (
+              <div class={`gc-step${i === 0 ? " is-on" : ""}`} data-step={i} data-campo={p.campo}>
+                <h2 class="gc-q">{p.titulo}</h2>
+                <p class="gc-q-help">{p.ajuda}</p>
+                <div class={p.compacto ? "gc-opts gc-opts--grid" : "gc-opts"}>
+                  {p.opcoes.map((o) => (
+                    <button type="button" class="gc-opt" data-valor={o.v} data-peso={o.peso}>
+                      {o.ico && <iconify-icon icon={o.ico}></iconify-icon>}
+                      <span>{o.v}</span>
+                    </button>
+                  ))}
+                </div>
+                {i > 0 && <button type="button" class="gc-back" data-back>← Voltar</button>}
+              </div>
+            ))}
+
+            <!-- Passo final: resultado + captura. O resultado aparece ANTES do
+                 formulário — é o que paga o pedido de contato. -->
+            <div class="gc-step gc-final" data-step={perguntas.length}>
+              <span class="gc-verdict-tag" id="qzTag">Resultado</span>
+              <h2 class="gc-verdict" id="qzVerdict"></h2>
+              <p class="gc-verdict-sub" id="qzVerdictSub"></p>
+              <ul class="gc-recap">
+                <li><iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon><span>Porte</span><strong id="qzPorte">—</strong></li>
+                <li><iconify-icon icon="solar:user-id-bold"></iconify-icon><span>Seu cargo</span><strong id="qzCargo">—</strong></li>
+                <li><iconify-icon icon="solar:alarm-bold"></iconify-icon><span>Prazo</span><strong id="qzPrazo">—</strong></li>
+              </ul>
+
+              <form class="form gc-form" data-trk-event="lead" novalidate data-obrigado="/consultoria/iso-9001-obrigado">
+                <input type="hidden" name="norma" value={NORMA} />
+                <input type="hidden" name="funcionarios" id="fFunc" />
+                <input type="hidden" name="cargo" id="fCargo" />
+                <input type="hidden" name="urgencia" id="fUrg" />
+                <input type="hidden" name="mensagem" id="fMsg" />
+                <p class="gc-form-lead">Receba o diagnóstico completo com o caminho e o prazo estimado até o seu certificado.</p>
+                <div class="field"><label for="gcNome">Nome</label><input class="input" id="gcNome" name="nome" placeholder="Seu nome" required /></div>
+                <div class="field"><label for="gcTel">WhatsApp</label><input class="input" id="gcTel" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
+                <div class="field"><label for="gcMail">E-mail</label><input class="input" id="gcMail" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+                <div class="field"><label for="gcEmp">Empresa <span class="gc-opt-tag">opcional</span></label><input class="input" id="gcEmp" name="empresa" placeholder="Nome da empresa" /></div>
+                <button type="submit" class="btn btn--primary btn--block btn--lg">Receber meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+                <p class="lead-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
+              </form>
+              <button type="button" class="gc-back" data-back>← Voltar</button>
+            </div>
+          </div>
+
+          <div class="gc-trust">
+            <span><iconify-icon icon="solar:medal-star-bold"></iconify-icon> +30 anos</span>
+            <span><iconify-icon icon="solar:buildings-2-bold"></iconify-icon> +2.000 certificados</span>
+            <span><iconify-icon icon="solar:star-bold"></iconify-icon> 4,9 no Google</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ QUEM EXIGE O CERTIFICADO DE VOCÊ ══ -->
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">Quem cobra o certificado</span>
+          <h2>Do outro lado da mesa, a ISO 9001 é <em class="accent">filtro de entrada</em></h2>
+          <p>Antes de avaliar preço ou proposta, o comprador de grande porte checa se você está habilitado. Sem certificado, a conversa não começa.</p>
+        </div>
+        <div class="gc-buyers">
+          {compradores.map((c) => (
+            <div class="gc-buyer reveal">
+              <span class="gc-buyer-ico"><iconify-icon icon={c.ico}></iconify-icon></span>
+              <h3>{c.t}</h3>
+              <p>{c.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ PROVA: CLIENTES REAIS ══ -->
+    <ClientLogos dark={true} titulo="Empresas que certificaram a ISO 9001 com a Templum" />
+
+    <!-- ══ GARANTIA 200% ══ -->
+    <section class="section">
+      <div class="container xl">
+        <div class="split">
+          <div class="split-text">
+            <span class="tag-pill">Garantia de 200%</span>
+            <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
+            <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método. O risco do projeto é nosso, não seu.</p>
+            <a href="#contato" class="btn btn--primary btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          </div>
+          <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ COMO FUNCIONA (4 de 7 etapas — método completo no diagnóstico) ══ -->
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">Como funciona</span>
+          <h2>Nosso método faz o <em class="accent">trabalho pesado</em></h2>
+          <p>Quatro dos sete passos do método Templum — o cronograma completo sai no seu diagnóstico.</p>
+        </div>
+        <div class="gc-metodo">
+          {metodo.map((m, i) => (
+            <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ NÚMEROS ══ -->
+    <section class="section section--navy">
+      <div class="container xl">
+        <div class="numbers-grid gc-stats">
+          {baseConsultoria.stats.map((s) => (
+            <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ DEPOIMENTOS ══ -->
+    <DepoimentosTexto />
+
+    <!-- ══ FAQ CURTO (objeção comercial, não aula sobre a norma) ══ -->
+    <section class="section">
+      <div class="container md">
+        <div class="section-header"><span class="tag-pill">Dúvidas frequentes</span><h2>O que as empresas <em class="accent">perguntam antes</em></h2></div>
+        <div class="faq-list">
+          {faq.map((f) => (
+            <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FORM FINAL — caminho direto para quem já está pronto ══ -->
+    <section id="contato" class="gc-form-sec section--navy">
+      <div class="container lg gc-form-grid">
+        <div class="gc-form-pitch">
+          <span class="tag-pill tag-pill--glow">Comece agora</span>
+          <h2>Pronto para entrar na lista dos <em class="accent">fornecedores habilitados</em>?</h2>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <ul class="check-list">
+            {baseConsultoria.incluso.slice(0, 4).map((i) => (
+              <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>
+            ))}
+          </ul>
+        </div>
+        <LeadForm norma={NORMA} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" simples={true} />
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container md">
+        <h2>A ISO 9001 abre a porta. <em>A garantia tira o risco.</em></h2>
+        <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
+        <a href="#diagnostico" class="btn btn--dark btn--lg">Fazer o diagnóstico de 2 minutos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+    <!-- Barra fixa no mobile: leva de volta ao diagnóstico de qualquer altura. -->
+    <a href="#diagnostico" class="gc-sticky" id="gcSticky">
+      <span>Sua empresa se qualifica?</span>
+      <strong>Fazer o diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></strong>
+    </a>
+  </div>
+</LpBase>
+
+<script is:inline>
+  (function () {
+    var quiz = document.getElementById("quiz");
+    if (!quiz) return;
+
+    var steps = [].slice.call(quiz.querySelectorAll(".gc-step"));
+    var total = steps.length;              // 4 perguntas + tela de resultado
+    var fill = document.getElementById("qzFill");
+    var now = document.getElementById("qzNow");
+    var atual = 0;
+    var respostas = {};
+    var pesos = {};
+
+    // Eventos do Meta por passo. O objetivo é dar ao algoritmo um sinal
+    // FREQUENTE: a campanha antiga otimizava por um evento que acontecia 1x a
+    // cada 4 dias e nunca saía do aprendizado.
+    function track(nome, extra) {
+      try { if (window.fbq) fbq("trackCustom", nome, extra || {}); } catch (e) {}
+      try { if (window.gtag) gtag("event", nome, extra || {}); } catch (e) {}
+    }
+
+    function pintar(i) {
+      steps.forEach(function (s, k) { s.classList.toggle("is-on", k === i); });
+      if (fill) fill.style.width = ((i / (total - 1)) * 100).toFixed(1) + "%";
+      if (now) now.textContent = String(i + 1);
+      atual = i;
+    }
+
+    function irPara(i) {
+      pintar(i);
+      // Rola o card para o topo da janela apenas se ele saiu de vista — evita o
+      // "salto" irritante quando a pergunta seguinte já está visível.
+      var r = quiz.getBoundingClientRect();
+      if (r.top < 0 || r.top > window.innerHeight * 0.5) {
+        window.scrollTo({ top: window.scrollY + r.top - 78, behavior: "smooth" });
+      }
+      if (i > 0 && i < total - 1) track("QuizStep" + (i + 1));
+      if (i === total - 1) { montarResultado(); track("QuizComplete", { content_name: "iso-9001-grandes-contas" }); }
+    }
+
+    // Resultado: espelha o que a pessoa respondeu. Sem promessa numérica que a
+    // gente não possa sustentar — a régua é a urgência declarada, não um "score".
+    function montarResultado() {
+      var score = (pesos.situacao || 0) + (pesos.urgencia || 0);
+      var tag = document.getElementById("qzTag");
+      var v = document.getElementById("qzVerdict");
+      var vs = document.getElementById("qzVerdictSub");
+
+      var t, sub, tagTxt;
+      if (score >= 5) {
+        tagTxt = "Prioridade alta";
+        t = "A certificação já é um bloqueio comercial na sua empresa.";
+        sub = "Pelo que você respondeu, o certificado não é um projeto para depois: é o que está travando negócio agora. Dá para priorizar as etapas que destravam a auditoria mais cedo.";
+      } else if (score >= 3) {
+        tagTxt = "Zona de risco";
+        t = "Sua empresa está exposta — mas ainda com tempo de se antecipar.";
+        sub = "O risco de perder contrato por falta de certificado existe e tende a aparecer sem aviso, no meio de uma negociação. Certificar antes da exigência custa menos e corre melhor.";
+      } else {
+        tagTxt = "Movimento estratégico";
+        t = "Você está à frente da maioria dos seus concorrentes.";
+        sub = "Certificar antes de ser cobrado é a jogada mais barata: você entra nos cadastros de fornecedor com calma, sem prazo de cliente pressionando o cronograma.";
+      }
+      if (tag) tag.textContent = tagTxt;
+      if (v) v.textContent = t;
+      if (vs) vs.textContent = sub;
+
+      // Só o texto: as <li> vêm do template porque o CSS com escopo do Astro
+      // não alcança elemento criado por innerHTML em runtime.
+      var txt = function (id, val) { var el = document.getElementById(id); if (el) el.textContent = val || "—"; };
+      txt("qzPorte", respostas.funcionarios);
+      txt("qzCargo", respostas.cargo);
+      txt("qzPrazo", respostas.urgencia);
+
+      // Campos que o worker realmente persiste: porte/cargo/prazo em colunas
+      // próprias, e o resumo no `mensagem` (vira nota no Pipedrive/Orbit).
+      var set = function (id, val) { var el = document.getElementById(id); if (el) el.value = val || ""; };
+      set("fFunc", respostas.funcionarios);
+      set("fCargo", respostas.cargo);
+      set("fUrg", respostas.urgencia);
+      set("fMsg",
+        "Diagnóstico Grandes Contas (ISO 9001) — " + tagTxt +
+        " | Situação: " + (respostas.situacao || "-") +
+        " | Porte: " + (respostas.funcionarios || "-") +
+        " | Cargo: " + (respostas.cargo || "-") +
+        " | Prazo: " + (respostas.urgencia || "-"));
+
+      // Guarda o score p/ o evento de lead qualificado no submit.
+      quiz.dataset.score = String(score);
+    }
+
+    quiz.addEventListener("click", function (e) {
+      var opt = e.target.closest ? e.target.closest(".gc-opt") : null;
+      if (opt) {
+        var step = opt.closest(".gc-step");
+        var campo = step.getAttribute("data-campo");
+        respostas[campo] = opt.getAttribute("data-valor");
+        pesos[campo] = parseInt(opt.getAttribute("data-peso"), 10) || 0;
+
+        step.querySelectorAll(".gc-opt").forEach(function (b) { b.classList.remove("is-sel"); });
+        opt.classList.add("is-sel");
+
+        if (atual === 0) track("QuizStart");
+        // 180ms de folga só para a seleção ser vista antes de trocar de passo.
+        setTimeout(function () { irPara(Math.min(atual + 1, total - 1)); }, 180);
+        return;
+      }
+      var back = e.target.closest ? e.target.closest("[data-back]") : null;
+      if (back) pintar(Math.max(atual - 1, 0));
+    });
+
+    // Lead qualificado: evento próprio para a campanha otimizar/filtrar sem
+    // misturar com o LeadQualificado que o PBQP-H já usa.
+    document.addEventListener("tpl:lead-saved", function (ev) {
+      var score = parseInt(quiz.dataset.score || "0", 10);
+      var d = (ev.detail && ev.detail.data) || {};
+      var porteGrande = /^(51|101|251|Mais)/.test(d.funcionarios || "");
+      if (score >= 5 || porteGrande) {
+        track("LeadQualificadoGC", { content_name: "iso-9001-grandes-contas", value: score });
+      }
+    });
+
+    // A barra fixa some quando o diagnóstico está na tela (seria redundante).
+    var sticky = document.getElementById("gcSticky");
+    if (sticky && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        sticky.classList.toggle("is-off", entries[0].isIntersecting);
+      }, { threshold: 0.12 }).observe(quiz);
+    }
+  })();
+</script>
+
+<style>
+  /* Laranja/preto de propósito: dá continuidade ao criativo do Meta. A LP
+     genérica usa o azul da norma (--norm-iso9001) e o visitante não reconhecia
+     a página como destino do anúncio que acabou de ver. */
+  .gc { --accent: var(--orange); }
+  .gc .accent { color: var(--orange-ink); font-style: italic; }
+  .gc .section--navy .accent { color: var(--orange); }
+
+  /* ── HERO ── */
+  .gc-hero { position: relative; overflow: hidden; padding: clamp(28px, 4vw, 64px) 0 clamp(40px, 5vw, 72px); background: #0b0d10; color: var(--cream); scroll-margin-top: 64px; }
+  .gc-hero-bg { position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 8% -10%, rgba(255,89,37,0.34), transparent 62%),
+      radial-gradient(620px 420px at 96% 8%, rgba(255,170,60,0.16), transparent 60%),
+      radial-gradient(700px 500px at 60% 120%, rgba(255,89,37,0.14), transparent 62%); }
+  .gc-hero-grid { position: relative; z-index: 1; display: grid; gap: clamp(22px, 3vw, 30px) clamp(28px, 4vw, 56px);
+    grid-template-columns: 1fr 0.92fr; grid-template-areas: "texto quiz" "garantia quiz"; align-items: start; align-content: start; }
+  .gc-hero-text { grid-area: texto; max-width: 560px; padding-top: 6px; }
+  .gc-quiz-wrap { grid-area: quiz; }
+  .gc-guarantee { grid-area: garantia; }
+  .gc-hero .tag-pill { margin-bottom: 18px; }
+  .gc-title { font-size: clamp(29px, 4vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; color: var(--cream); }
+  .gc-hl { color: var(--orange); }
+  .gc-sub { font-size: clamp(15px, 1.6vw, 17.5px); color: rgba(255,244,221,0.8); margin-top: 16px; line-height: 1.55; }
+
+  .gc-guarantee { display: flex; gap: 13px; align-items: center; padding: 15px 18px; border-radius: var(--r-16); background: rgba(255,89,37,0.12); border: 1px solid rgba(255,89,37,0.42); }
+  /* !important porque `.gc-guarantee span` (tipo + classe) vence `.gc-guarantee-ico`
+     na especificidade e zerava o flex, jogando o ícone pro canto da caixa. */
+  .gc-guarantee-ico { width: 42px; height: 42px; min-width: 42px; border-radius: 12px; display: grid !important; place-items: center; font-size: 23px; color: #fff; background: var(--orange); }
+  .gc-guarantee strong { display: block; font-size: 15px; font-weight: 800; color: var(--cream); }
+  .gc-guarantee-txt { display: block; font-size: 13px; color: rgba(255,244,221,0.72); line-height: 1.45; margin-top: 2px; }
+
+  /* ── CARD DO DIAGNÓSTICO ── */
+  .gc-quiz { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(20px, 2.4vw, 30px); box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6); min-width: 0; }
+  .gc-qz-head { margin-bottom: 20px; }
+  .gc-qz-bar { height: 5px; border-radius: 999px; background: rgba(194,65,12,0.14); overflow: hidden; }
+  .gc-qz-fill { display: block; height: 100%; width: 0%; border-radius: 999px; background: var(--orange); transition: width .35s var(--ease-soft); }
+  .gc-qz-count { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); margin-top: 9px; }
+
+  .gc-step { display: none; }
+  .gc-step.is-on { display: block; animation: gcIn .28s var(--ease-soft); }
+  @keyframes gcIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .gc-step.is-on { animation: none; } }
+
+  .gc-q { font-size: clamp(19px, 2.1vw, 23px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.22; color: var(--text); }
+  .gc-q-help { font-size: 13.5px; color: var(--text-mid); margin-top: 7px; line-height: 1.5; }
+
+  .gc-opts { display: flex; flex-direction: column; gap: 9px; margin-top: 18px; }
+  .gc-opts--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .gc-opt { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 54px; padding: 13px 15px; text-align: left;
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r-12); cursor: pointer;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; color: var(--text); line-height: 1.35;
+    transition: border-color .18s, background .18s, transform .18s; }
+  .gc-opt iconify-icon { font-size: 21px; color: var(--orange-ink); flex-shrink: 0; }
+  .gc-opt:hover { border-color: var(--orange); background: rgba(255,89,37,0.06); transform: translateX(2px); }
+  .gc-opt.is-sel { border-color: var(--orange); background: rgba(255,89,37,0.12); }
+  .gc-opts--grid .gc-opt { justify-content: center; text-align: center; min-height: 50px; }
+
+  .gc-back { margin-top: 16px; background: none; border: 0; padding: 4px 0; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-soft); }
+  .gc-back:hover { color: var(--orange-ink); }
+
+  /* ── RESULTADO + CAPTURA ── */
+  .gc-verdict-tag { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; background: var(--orange-ink); padding: 5px 12px; border-radius: 6px; }
+  .gc-verdict { font-size: clamp(19px, 2.1vw, 23px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-top: 12px; color: var(--text); }
+  .gc-verdict-sub { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-top: 9px; }
+  .gc-recap { list-style: none; margin: 18px 0 4px; padding: 14px 16px; border-radius: var(--r-12); background: var(--bg); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 9px; }
+  .gc-recap li { display: flex; align-items: baseline; gap: 9px; font-size: 13.5px; color: var(--text-mid); }
+  .gc-recap li > span { flex-shrink: 0; }
+  .gc-recap iconify-icon { font-size: 18px; width: 18px; height: 18px; color: var(--orange-ink); flex-shrink: 0; align-self: center; }
+  .gc-recap strong { margin-left: auto; text-align: right; color: var(--text); font-weight: 700; }
+  .gc-form { margin-top: 18px; gap: 14px; }
+  .gc-form-lead { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+  .gc-opt-tag { font-weight: 500; color: var(--text-soft); font-size: 12px; }
+  /* .lead-legal vive no escopo do LeadForm.astro: aqui precisa da própria regra,
+     senão herda o creme do hero e desaparece no card branco. */
+  .gc-form .lead-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 2px; }
+
+  .gc-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-top: 18px; }
+  .gc-trust span { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: rgba(255,244,221,0.62); }
+  .gc-trust iconify-icon { font-size: 16px; color: var(--orange); }
+
+  /* ── QUEM COBRA ── */
+  .gc-buyers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .gc-buyer { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; }
+  .gc-buyer-ico { width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; font-size: 25px; color: var(--orange-ink); background: rgba(194,65,12,0.10); margin-bottom: 15px; }
+  .gc-buyer h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 7px; }
+  .gc-buyer p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+  .gc-metodo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .gc-stats { grid-template-columns: repeat(4, 1fr); }
+  .gc .section--navy .number-card { background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
+  .gc .section--navy .number-card .value { color: var(--cream); }
+  .gc .section--navy .number-card .value em { color: var(--orange); }
+  .gc .section--navy .number-card .label { color: rgba(255,244,221,0.66); }
+
+  /* ── FORM FINAL ── */
+  .gc-form-sec { padding: clamp(56px, 6vw, 84px) 0; }
+  .gc-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(30px, 4vw, 54px); align-items: center; }
+  .gc-form-pitch h2 { font-size: clamp(25px, 2.9vw, 36px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 15px 0 13px; line-height: 1.14; }
+  .gc-form-pitch > p { font-size: 15.5px; color: rgba(255,244,221,0.75); line-height: 1.6; margin-bottom: 20px; max-width: 460px; }
+  .gc-form-pitch .check-item { color: var(--cream); }
+
+  /* ── BARRA FIXA (mobile) ── */
+  .gc-sticky { display: none; }
+  @media (max-width: 900px) {
+    .gc-hero-grid { grid-template-columns: 1fr; grid-template-areas: "texto" "quiz" "garantia"; }
+    .gc-hero-text { max-width: none; }
+    .gc-buyers { grid-template-columns: 1fr 1fr; }
+    .gc-metodo { grid-template-columns: 1fr 1fr; }
+    .gc-form-grid { grid-template-columns: 1fr; }
+    .gc-stats { grid-template-columns: repeat(2, 1fr); }
+
+
+    .gc-sticky { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; border-radius: 999px; text-decoration: none;
+      background: var(--orange-ink); color: #fff; box-shadow: 0 14px 34px -10px rgba(0,0,0,0.55);
+      transition: transform .3s var(--ease-soft), opacity .3s; }
+    .gc-sticky span { font-size: 13px; font-weight: 600; opacity: 0.92; }
+    .gc-sticky strong { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 800; white-space: nowrap; }
+    .gc-sticky.is-off { transform: translateY(140%); opacity: 0; pointer-events: none; }
+  }
+  @media (max-width: 620px) {
+    .gc-buyers { grid-template-columns: 1fr; }
+    .gc-metodo { grid-template-columns: 1fr; }
+    .gc-sticky span { display: none; }
+    .gc-sticky { justify-content: center; }
+    .gc-opts--grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
