@@ -1,5 +1,7 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
+//                             Inscrição de evento (webinar/websérie/PE2027) NÃO vai pro CRM
+//                             (Pipedrive/Orbit) — ver isInscricaoEvento em handleLead.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
@@ -252,7 +254,15 @@ async function handleLead(request, env, ctx) {
     meta_content_name: body.meta_content_name || "",
   };
 
-  const isWebinar = lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie");
+  // Inscrição em evento (webinar, websérie, workshop de Planejamento Estratégico)
+  // NÃO é oportunidade comercial: vai pro Supabase/Mailchimp/ManyChat, mas fica
+  // fora do CRM. Em agosto/2026 as 59 inscrições da LP do PE2027 entraram no funil
+  // INBOUND e foram todas fechadas como perda por "interesse em conteúdo",
+  // inflando a taxa de perda do mês e poluindo a fila de qualificação.
+  const isInscricaoEvento =
+    lead.evento.startsWith("webinar") ||
+    lead.evento.startsWith("webserie") ||
+    lead.evento === "planejamento-estrategico-2027";
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
   // Mailchimp + Pipedrive + Meta CAPI rodam em background via ctx.waitUntil.
@@ -263,7 +273,7 @@ async function handleLead(request, env, ctx) {
     ["meta", sendMetaLead(lead, env, request)],
     ["manychat", saveToManyChat(lead, env)],
   ];
-  if (!isWebinar) {
+  if (!isInscricaoEvento) {
     bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
   }
@@ -541,9 +551,9 @@ const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 // Etiquetas do CRM por evento da LP (o POST /v1/leads grava `tags` direto no lead,
 // então a etiqueta pode ser aplicada no momento da criação — sem chamada extra).
-const ORBIT_EVENTO_TAGS = {
-  "planejamento-estrategico-2027": ["PE2027"],
-};
+// Vazio por ora: o único evento mapeado aqui era o PE2027, que passou a ser
+// tratado como inscrição de evento e não chega mais ao CRM (ver isInscricaoEvento).
+const ORBIT_EVENTO_TAGS = {};
 // Campos personalizados do CRM (field_key obtido em CRM → Campos Personalizados)
 const ORBIT_FIELDS = {
   norma:        "cf_produto",
