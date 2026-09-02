@@ -28,7 +28,7 @@ site/
 │   ├── styles/
 │   │   ├── tokens.css      # variáveis: cores da marca + cor por norma, sombras, raios
 │   │   └── global.css      # sistema (tipografia, botões, cards, faq, marquee, footer)
-│   ├── data/normas.js      # 12 normas: nome, cor da sub-marca, tagline, URL
+│   ├── data/normas.js      # normas: nome, cor da sub-marca, tagline, URL
 │   ├── layouts/Base.astro  # <head>, fontes, Iconify, reveal-on-scroll, header/footer
 │   ├── components/
 │   │   ├── Header.astro       # nav + mega-menu de normas + menu mobile

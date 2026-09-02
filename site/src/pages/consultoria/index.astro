@@ -9,14 +9,14 @@ const { stats, porques } = baseConsultoria;
 
 <Base
   title="Consultoria de Certificação ISO — Todas as normas | Templum"
-  description="Consultoria para ISO 9001, 14001, 27001, 45001, 37001, PBQP-H, SASSMAQ, FSSC 22000, HACCP, ESG, SGI e LGPD. Método próprio, 100% online e garantia de 200% em contrato."
+  description="Consultoria para ISO 9001, 14001, 27001, 42001, 45001, 37001, PBQP-H, SASSMAQ, FSSC 22000, HACCP, ESG, SGI e LGPD. Método próprio, 100% online e garantia de 200% em contrato."
 >
   <!-- HERO -->
   <PageHero
     tag="Consultoria Templum"
     sub="Há +30 anos implantamos sistemas de gestão do diagnóstico à auditoria, com método próprio, plataforma de gestão e a única garantia de 200% do mercado."
     image="/assets/img/hero/templum-consultoria-industria.webp"
-    badge="13 normas certificáveis"
+    badge={`${normas.length} normas certificáveis`}
     icon="solar:checklist-minimalistic-bold"
     chips={["+2.000 clientes certificados", "100% online", "Garantia de 200%"]}
   >

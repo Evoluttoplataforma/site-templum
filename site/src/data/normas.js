@@ -30,6 +30,15 @@ export const normas = [
     href: "/consultoria/iso-27001/",
   },
   {
+    slug: "iso-42001",
+    nome: "ISO 42001",
+    categoria: "Gestão de Inteligência Artificial",
+    tagline: "IA sob governança, decisão sob controle",
+    color: "var(--norm-iso42001)",
+    icon: "solar:cpu-bolt-bold",
+    href: "/consultoria/iso-42001/",
+  },
+  {
     slug: "iso-45001",
     nome: "ISO 45001",
     categoria: "Saúde e Segurança Ocupacional",

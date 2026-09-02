@@ -18,7 +18,7 @@ Reescrita do site da Templum (consultoria de certificações ISO), saindo do **F
 6. **Números oficiais:** +2.000 clientes · +1,5 mi interações · R$ 3,3 bi em ganhos · +30 anos · garantia 200%.
 
 ## Convenções técnicas (aprendizados)
-- Conversão de imagem: o `sips` do macOS NÃO faz webp — usar **`cwebp`** (`/opt/homebrew/bin`).
+- Conversão de imagem: o `sips` do macOS NÃO faz webp — usar **`cwebp`** (`/usr/local/bin/cwebp`).
 - **Não** colocar expressões `{...}` dentro de blocos `<style>` em `.astro` (quebra o build).
 - `overflow-x: clip` (não `hidden`) no html/body — `hidden` quebra `position: sticky` do header.
 - Seção que é componente próprio (não usa `.section`) precisa de `padding` explícito (ex.: `.selo`, `.nl`, `.orbit`) — senão fica "colada".

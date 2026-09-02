@@ -7,7 +7,8 @@ import { getCollection } from "astro:content";
 const artigos = await getCollection("blog");
 
 // LPs de campanha (tráfego pago) — 1 par LP + Obrigado por norma, exceto GERIC (página única).
-const lpsCampanha = normas.map((n) => ({
+const semLp = ["geric"];
+const lpsCampanha = normas.filter((n) => !semLp.includes(n.slug)).map((n) => ({
   nome: n.nome,
   color: n.color,
   lp: `/consultoria/${n.slug}-lp/`,
