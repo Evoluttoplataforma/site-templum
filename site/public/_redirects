@@ -19,8 +19,8 @@
 /certificacao-iso-9001-t01/  /consultoria/iso-9001/  301
 /consultoria-geric  /consultoria/geric/  301
 /consultoria-geric/  /consultoria/geric/  301
-/consultoria-pqta  /pqta/  301
-/consultoria-pqta/  /pqta/  301
+/consultoria-pqta  /consultoria/pqta/  301
+/consultoria-pqta/  /consultoria/pqta/  301
 /esg  /consultoria/esg/  301
 /esg/  /consultoria/esg/  301
 /fssc-22000  /consultoria/fssc-22000/  301
@@ -286,8 +286,9 @@
 # → /pqc
 /consultoria/pqc  /pqc/  301
 
-# → /pqta
-/consultoria/pqta  /pqta/  301
+# → /consultoria/pqta
+/pqta  /consultoria/pqta/  301
+/pqta/  /consultoria/pqta/  301
 
 # → /solucoes-de-ia
 /ia/genio-da-obra  /solucoes-de-ia/  301

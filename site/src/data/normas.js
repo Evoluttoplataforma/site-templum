@@ -66,6 +66,15 @@ export const normas = [
     href: "/consultoria/pbqp-h/",
   },
   {
+    slug: "pqta",
+    nome: "PQTA",
+    categoria: "Qualidade em Cartórios",
+    tagline: "Excelência na serventia notarial",
+    color: "var(--norm-pqta)",
+    icon: "solar:medal-ribbons-star-bold",
+    href: "/consultoria/pqta/",
+  },
+  {
     slug: "fssc-22000",
     nome: "FSSC 22000",
     categoria: "Segurança de Alimentos",
