@@ -100,6 +100,20 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // Verificação do Google Search Console (método "Arquivo HTML").
+    // A camada de assets do Workers derruba o ".html" da URL (307 p/
+    // /googleb02be000df71bc63), e o verificador do Google espera 200 na URL
+    // EXATA. Então servimos o próprio asset aqui, sem redirect.
+    if (url.pathname === "/googleb02be000df71bc63.html") {
+      const asset = new URL(request.url);
+      asset.pathname = "/googleb02be000df71bc63";
+      const res = await env.ASSETS.fetch(new Request(asset.toString(), request));
+      return new Response(res.body, {
+        status: 200,
+        headers: { "content-type": "text/html; charset=utf-8" },
+      });
+    }
+
     // /mapadosite — protegido por senha (Basic Auth). Página interna, não deve ficar pública.
     if (url.pathname === "/mapadosite" || url.pathname === "/mapadosite/") {
       const expected = env.MAPADOSITE_PASSWORD || "Tp3321@";
