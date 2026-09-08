@@ -19,3 +19,11 @@
 # /os/assets/*: o casamento do _headers é por prefixo de caminho.
 /os/assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Convite de calendário do PE2027. Com o nosniff acima, o content-type é o que
+# decide: sem text/calendar o iPhone e o Outlook abrem o .ics como texto puro
+# em vez de oferecer "adicionar ao calendário". Cache curto porque, se a data
+# ou o horário mudarem, o arquivo é reescrito.
+/pe2027.ics
+  Content-Type: text/calendar; charset=utf-8
+  Cache-Control: public, max-age=600

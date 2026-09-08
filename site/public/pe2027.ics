@@ -1,0 +1,45 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Templum Consultoria//Planejamento Estrategico 2027//PT-BR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:pe2027-workshop-20260910@templum.com.br
+DTSTAMP:20260908T170000Z
+DTSTART:20260910T180000Z
+DTEND:20260910T210000Z
+SEQUENCE:0
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+SUMMARY:Planejamento Estratégico 2027 — Workshop ao vivo
+LOCATION:Online — Zoom (sala fechada)
+URL:https://templum.com.br/planejamento-estrategico-2027
+DESCRIPTION:Workshop ao vivo e mão na massa com Igor Furniel.\n\nVocê v
+ ai construir o planejamento estratégico da sua empresa durante o evento\
+ , dentro do Templum OS: missão e visão\, análise SWOT com plano de aç
+ ão\, objetivos estratégicos (BSC)\, indicadores com metas\, processos\,
+  cargos e a cadência de reuniões que mantém o plano rodando em 2027.\n
+ \nAntes do evento:\n- Crie sua conta gratuita no Templum OS — leva 2 mi
+ nutos\, e o link chega por e-mail e WhatsApp\n- Participe pelo computador
+ \, não pelo celular\n- Reserve as 3 horas sem reunião em cima\n\nO link
+  do Zoom é enviado por e-mail e no grupo de WhatsApp dos inscritos.\n\nT
+ emplum Consultoria — https://templum.com.br
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:Amanhã é o workshop Planejamento Estratégico 2027. Sua con
+ ta no Templum OS já está criada?
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT1H
+DESCRIPTION:Em 1 hora começa o Planejamento Estratégico 2027. Abra o co
+ mputador.
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT15M
+DESCRIPTION:15 minutos para o workshop. Entre na sala do Zoom.
+END:VALARM
+END:VEVENT
+END:VCALENDAR
