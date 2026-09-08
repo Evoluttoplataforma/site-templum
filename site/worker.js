@@ -370,6 +370,14 @@ async function saveToMailchimp(lead, env) {
     env.MAILCHIMP_TAG || "site-templum",
     ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
   ];
+  // Agregado da série da ISO 9001: até aqui só existia a tag da data
+  // (webinar-gestao-treinamentos-0909 etc.), sem nada que juntasse a série
+  // inteira — o mesmo problema que o webserie_ISO9001 resolve no ManyChat.
+  // O Mailchimp casa tag por NOME: se o segmento "Webserie" já existir na
+  // audiência, o lead entra nele; se não, é criado no primeiro lead.
+  if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) {
+    mcTags.push("Webserie");
+  }
 
   try {
     const r = await fetch(`${mcBase}/members`, {
