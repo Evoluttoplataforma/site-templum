@@ -300,13 +300,25 @@ async function handleLead(request, env, ctx) {
       .catch((e) => console.error(`[lead:${name}] exception`, e && e.message))
   )));
 
+  // A resposta segue ok:true mesmo se o Supabase falhar — o lead ainda foi para
+  // Mailchimp/ManyChat/Meta (e CRM, quando não é evento), então não faz sentido
+  // mostrar erro para o visitante. Mas GRITA no log: foi exatamente esse
+  // ok:true silencioso que deixou a falha de 01/09 passar 7 dias sem ninguém ver.
+  if (supabase && supabase.ok === false) {
+    console.error("[lead:supabase] INSERT FALHOU", JSON.stringify(supabase));
+  }
+
   return json({ ok: true, supabase });
 }
 
 // ---- 1) Supabase -------------------------------------------------------
 async function saveToSupabase(lead, env) {
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  const sbKey = env.SUPABASE_ANON_KEY;
+  // SERVICE_KEY, não ANON_KEY: o insert acontece só aqui dentro do Worker, e em
+  // 01/09 o papel `anon` perdeu o GRANT INSERT em site_leads (a policy de RLS
+  // "insert livre" continuou lá, mas policy não substitui grant). Resultado: de
+  // 01/09 a 08/09 todo POST /api/lead falhou com 42501 e nenhum lead foi gravado.
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
   if (!sbKey) return { ok: false, reason: "not_configured" };
 
   try {
@@ -1102,7 +1114,10 @@ async function handleLeadDelete(request, env) {
 
 async function handleRaffleInsert(request, env) {
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  const sbKey = env.SUPABASE_ANON_KEY;
+  // Mesma razão de saveToSupabase: `anon` não insere mais. (A tabela
+  // webinar_raffle_entries também não existe mais no banco — esta rota é do
+  // sorteio do webinar do Nigel, 09/07, e hoje falharia de qualquer forma.)
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
   if (!sbKey) return json({ ok: false, error: "not_configured" }, 500);
 
   let body = {};
