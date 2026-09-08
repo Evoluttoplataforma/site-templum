@@ -707,6 +707,10 @@ function toE164BR(raw) {
 function manyChatTagsFor(lead) {
   const tags = [];
   if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) tags.push("webserie_ISO9001");
+  // Workshop de Planejamento Estratégico 2027: até aqui esse público entrava no
+  // ManyChat sem etiqueta nenhuma (não é webinar nem webserie, e a LP não manda
+  // norma), então não havia como disparar lembrete do evento por lá.
+  if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);
   return tags;
