@@ -59,6 +59,8 @@ window.__loadTrackingKit = function () {
     var s = document.createElement('script');
     s.async = false; s.src = BASE + file;
     if (cb) s.onload = cb;
+    // Sem o kit, o GA4 principal e o Ads ficariam sem `config` (ver Base.astro).
+    s.onerror = function () { if (typeof window.__gtagFallback === 'function') window.__gtagFallback(); };
     document.head.appendChild(s);
   }
   load('01-capture.js', function () {

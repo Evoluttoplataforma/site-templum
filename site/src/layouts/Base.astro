@@ -96,11 +96,23 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           // Google gtag (GA4 x2 + Ads)
           var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5";document.head.appendChild(g);
           gtag("js", new Date());
-          gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+          // G-2BW8QTYLB5 e AW-17896226473 já são configurados pelo 02-dispatch.js do
+          // tracking-kit (mesmos ids do TRACKING_CONFIG); configurá-los aqui também
+          // duplicava o `config` dos dois. No GA4 é inofensivo (ambos com
+          // send_page_view:false), mas o `config` de destino AW dispara o ping de página —
+          // eram dois ccm/collect por carregamento. Fica só G-FV41GWD427, que o kit não
+          // conhece. __gtagFallback() refaz os dois se o kit não carregar.
           gtag("config","G-FV41GWD427",{send_page_view:false});
-          gtag("config","AW-17896226473");
+          window.__gtagFallback = function () {
+            if (window.__gtagFbDone) return; window.__gtagFbDone = true;
+            gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+            gtag("config","AW-17896226473");
+          };
           // tracking-kit (definido em TrackingKit.astro)
           if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
+          else window.__gtagFallback();
+          // Meta Pixel: stub e fila já rodaram no <head>; aqui sai só o download.
+          if (typeof window.__loadMetaPixel === "function") window.__loadMetaPixel();
         }
         var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
         var opts = { once: true, passive: true, capture: true };
