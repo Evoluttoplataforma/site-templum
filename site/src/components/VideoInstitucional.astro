@@ -1,6 +1,18 @@
 ---
 // Vídeo institucional (YouTube) — thumbnail com play, carrega o iframe só ao clicar.
+//
+// A thumbnail é LOCAL (/assets/img/video/), não a maxresdefault.jpg do img.youtube.com.
+// Medido em 10/09/2026: a remota eram 103 KB de JPG com TTL de 2 h (o PageSpeed listava
+// como cache ineficiente) e uma origem a mais para resolver; local em webp são 45 KB no
+// 1280 e 22 KB no 640, com o cache do nosso próprio domínio.
+// `thumb` cai de volta na do YouTube se o id não for o do vídeo institucional — assim o
+// componente segue reutilizável sem exigir que alguém lembre de gerar o arquivo.
 const { youtubeId = "C3kCbqttWBU" } = Astro.props;
+const temLocal = youtubeId === "C3kCbqttWBU";
+const thumb = temLocal ? "/assets/img/video/institucional-1280.webp" : `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
+const thumbSrcset = temLocal
+  ? "/assets/img/video/institucional-640.webp 640w, /assets/img/video/institucional-1280.webp 1280w"
+  : undefined;
 ---
 
 <section class="vi section section--cream">
@@ -10,8 +22,8 @@ const { youtubeId = "C3kCbqttWBU" } = Astro.props;
       <h2>Conheça a <em class="accent">Templum</em></h2>
       <p class="paragraph">Mais de 30 anos organizando a gestão de empresas em todo o Brasil — veja como transformamos certificação em resultado real.</p>
     </div>
-    <button class="vi-thumb" data-vi-play aria-label="Assistir vídeo institucional da Templum">
-      <img src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`} alt="Vídeo institucional Templum" loading="lazy" />
+    <button class="vi-thumb" data-vi-play data-vi-id={youtubeId} aria-label="Assistir vídeo institucional da Templum">
+      <img src={thumb} srcset={thumbSrcset} sizes="(max-width: 900px) calc(100vw - 48px), 640px" alt="Vídeo institucional Templum" width="1280" height="720" loading="lazy" decoding="async" />
       <span class="vi-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
     </button>
   </div>
@@ -44,7 +56,11 @@ const { youtubeId = "C3kCbqttWBU" } = Astro.props;
 <script is:inline>
   document.querySelectorAll("[data-vi-play]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const id = btn.querySelector("img").src.match(/vi\/([^/]+)\//)[1];
+      // o id vem do data-attribute: a thumbnail agora é local e o src não tem mais
+        // /vi/<id>/ para casar. O match antigo fica de reserva para quem passar outro vídeo.
+        const m = btn.querySelector("img").src.match(/vi\/([^/]+)\//);
+        const id = btn.dataset.viId || (m && m[1]);
+        if (!id) return;
       btn.classList.add("is-playing");
       btn.insertAdjacentHTML(
         "beforeend",

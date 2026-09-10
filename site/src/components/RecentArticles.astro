@@ -56,7 +56,10 @@ const fmt = (d) => d ? new Date(d).toLocaleDateString("pt-BR", { day: "2-digit",
   .ra-exc { font-size: 14px; line-height: 1.55; color: var(--text-mid); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .ra-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
   .ra-meta time { font-size: 12.5px; color: var(--text-soft); }
-  .ra-read { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--orange); }
+  /* --orange-ink, não --orange: #FF5925 sobre branco dá 3,12:1 e reprova no WCAG AA
+     (o Lighthouse apontava justamente span.ra-read). O token ink existe no design
+     system para texto sobre fundo claro e dá 5,93:1, com a mesma leitura de marca. */
+  .ra-read { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--orange-ink); }
   .ra-card:hover .ra-read iconify-icon { transform: translateX(3px); }
   .ra-read iconify-icon { transition: transform .2s var(--ease-soft); }
   .ra-cta { text-align: center; margin-top: 44px; }

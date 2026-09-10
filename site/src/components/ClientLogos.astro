@@ -14,7 +14,7 @@ const loop = [...logos, ...logos];
   <div class="cl-marquee" aria-hidden="true">
     <div class="cl-track">
       {loop.map((src) => (
-        <span class="cl-item"><img src={src} alt="" loading="lazy" /></span>
+        <span class="cl-item"><img src={src} alt="" width="800" height="800" loading="lazy" decoding="async" /></span>
       ))}
     </div>
   </div>
