@@ -19,6 +19,17 @@ import { execFileSync } from "node:child_process";
 
 const DIR = "public/assets/img/consultoria";
 const LARGURAS = [400, 740];
+
+// Fotos fora da pasta de consultoria que também eram servidas em tamanho único.
+// Medido em 10/09/2026 (Lighthouse pós-deploy): a do hero desperdiçava 28 KiB no
+// celular e 38 KiB no desktop, e a da Olívia 53 KiB — as duas maiores sobras que
+// restaram depois do srcset das normas. O hero é o ELEMENTO LCP da home: encolher a
+// variante que o celular baixa é ganho direto de LCP, não só de bytes.
+const AVULSAS = [
+  ...readdirSync("public/assets/img/hero").filter((f) => f.endsWith(".webp") && !/-\d{3,4}\.webp$/.test(f))
+    .map((f) => ({ src: `public/assets/img/hero/${f}`, larguras: [900] })),
+  { src: "public/assets/img/olivia_templum.webp", larguras: [420] },
+];
 const kb = (n) => String(Math.round(n / 1024)).padStart(4);
 
 // O padrão da variante precisa citar as larguras: `-\d+` sozinho casaria com
@@ -39,4 +50,12 @@ for (const f of originais) {
     console.log(`${kb(statSync(src).size)}KB → ${kb(s)}KB  ${w}px  ${out.replace("public", "")}`);
   }
 }
-console.log(`\n${originais.length} fotos × ${LARGURAS.length} larguras · originais ${kb(antes)}KB → variantes ${kb(depois)}KB`);
+for (const a of AVULSAS) {
+  const base = a.src.replace(/\.webp$/, "");
+  for (const w of a.larguras) {
+    const out = `${base}-${w}.webp`;
+    execFileSync("cwebp", ["-quiet", "-q", "78", "-resize", String(w), "0", a.src, "-o", out]);
+    console.log(`${kb(statSync(a.src).size)}KB → ${kb(statSync(out).size)}KB  ${w}px  ${out.replace("public", "")}`);
+  }
+}
+console.log(`\n${originais.length} fotos × ${LARGURAS.length} larguras + ${AVULSAS.length} avulsas · originais ${kb(antes)}KB → variantes ${kb(depois)}KB`);
