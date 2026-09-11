@@ -7,10 +7,10 @@ const FORM_SRC =
 
 <LpBase
   title="Pesquisa — Planejamento Estratégico 2027 | Templum"
-  description="Conta pra gente como foi o workshop. O próximo passo é distribuir as tarefas e executar o plano — material de apoio e gravação após o formulário."
+  description="O workshop acabou. O trabalho mais importante começa agora: executar o plano. Preencha o formulário para acessar a gravação e o material de apoio."
   noindex={true}
   formAnchor="#pesquisa"
-  headerCta="Responder"
+  headerCta="Preencher formulário"
 >
 
   <section class="ps-hero">
@@ -24,14 +24,25 @@ const FORM_SRC =
           </div>
 
           <h1>
-            Conta pra gente como foi o workshop.<br />
-            <em>O próximo passo é distribuir as tarefas e executar o plano.</em>
+            O workshop acabou.<br />
+            <em>O trabalho mais importante começa agora.</em>
           </h1>
 
           <p class="ps-desc">
-            Para isso disponibilizamos o material de apoio com a gravação.
-            Preencha o formulário <span class="ps-where-desk">ao lado</span><span class="ps-where-mob">abaixo</span>.
-            São poucas perguntas, não leva nem 1 minuto.
+            O valor do que construímos no workshop não está apenas no plano.
+            Está no que sua equipe vai conseguir tirar do papel a partir dele.
+          </p>
+          <p class="ps-desc">
+            Por isso, preparamos a gravação e o material de apoio do encontro
+            para ajudar vocês a revisarem as decisões, distribuírem as
+            responsabilidades e avançarem na execução.
+          </p>
+          <p class="ps-desc">
+            Antes de liberar o acesso, queremos entender como foi sua
+            experiência no workshop.
+          </p>
+          <p class="ps-cta-line">
+            Preencha o formulário. É bem rápido, não leva nem 1 minuto.
           </p>
 
           <div class="ps-speakers-strip">
@@ -133,10 +144,17 @@ const FORM_SRC =
     font-size: 16px;
     color: rgba(255, 244, 221, 0.72);
     line-height: 1.75;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
     max-width: 540px;
   }
-  .ps-where-mob { display: none; }
+  .ps-cta-line {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.6;
+    margin: 4px 0 28px;
+    max-width: 540px;
+  }
 
   .ps-speakers-strip {
     display: flex;
@@ -180,9 +198,8 @@ const FORM_SRC =
 
   @media (max-width: 1020px) {
     .ps-hero-grid { grid-template-columns: 1fr; }
-    .ps-desc { max-width: 100%; }
+    .ps-desc,
+    .ps-cta-line { max-width: 100%; }
     .ps-form-card { max-width: 680px; margin: 0 auto; }
-    .ps-where-desk { display: none; }
-    .ps-where-mob { display: inline; }
   }
 </style>
