@@ -1,0 +1,153 @@
+---
+import LpBase from "../../layouts/LpBase.astro";
+
+const YT_ID = "EohgA_OkWNc";
+const MATERIAL =
+  "https://drive.google.com/uc?export=download&id=1PXVE1LXJMh1BdpcEECxtE1c50hSCupV-";
+---
+
+<LpBase
+  title="Replay — Planejamento Estratégico 2027 | Templum"
+  description="Assista ao replay do workshop Planejamento Estratégico 2027 com Igor Furniel e baixe o material de apoio."
+  noindex={true}
+  formAnchor="#material"
+  headerCta="Baixar material"
+>
+
+  <section class="rp-hero">
+    <div class="rp-glow"></div>
+    <div class="container md rp-inner">
+      <div class="rp-badges">
+        <span class="badge badge--orange-solid">Replay do workshop</span>
+        <span class="badge badge--cream">Planejamento Estratégico 2027</span>
+      </div>
+
+      <h1>
+        O plano não termina na live.<br />
+        <em>Agora é executar.</em>
+      </h1>
+
+      <p class="rp-lead">
+        Assista de novo ao workshop com <strong>Igor Furniel</strong> e baixe o
+        material de apoio para levar o planejamento da sua empresa para 2027.
+      </p>
+
+      <div class="rp-video">
+        <iframe
+          src={`https://www.youtube.com/embed/${YT_ID}?rel=0`}
+          title="Replay — Planejamento Estratégico 2027"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div class="rp-actions" id="material">
+        <a href={MATERIAL} class="btn btn--primary btn--lg" download>
+          <iconify-icon icon="solar:download-minimalistic-bold"></iconify-icon>
+          Baixar material de apoio
+        </a>
+        <p class="rp-hint">PDF para os participantes · use junto com o replay</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream rp-next">
+    <div class="container sm" style="text-align:center;">
+      <p class="label-caps" style="color:var(--orange);margin-bottom:12px;">Na prática</p>
+      <h2 class="h2" style="margin-bottom:16px;">
+        Da teoria à <em style="font-style:italic;color:var(--orange);">execução</em>
+      </h2>
+      <p class="paragraph" style="margin-bottom:28px;">
+        O material resume o que foi construído ao vivo: missão, SWOT, objetivos,
+        indicadores e a cadência para o plano não parar em fevereiro.
+      </p>
+      <a href={MATERIAL} class="btn btn--dark btn--lg" download>
+        <iconify-icon icon="solar:file-download-bold"></iconify-icon>
+        Baixar o PDF
+      </a>
+    </div>
+  </section>
+
+</LpBase>
+
+<style>
+  .rp-hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 7vw, 80px) 0 clamp(56px, 8vw, 96px);
+    text-align: center;
+  }
+  .rp-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(255,89,37,0.14) 0%, transparent 58%);
+    pointer-events: none;
+  }
+  .rp-inner { position: relative; z-index: 1; }
+  .rp-badges {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .rp-inner h1 {
+    font-size: clamp(28px, 4.2vw, 48px);
+    font-weight: 800;
+    color: var(--cream);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+  .rp-inner h1 em {
+    font-style: italic;
+    color: var(--orange);
+  }
+  .rp-lead {
+    font-size: 17px;
+    color: rgba(255,244,221,0.75);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .rp-lead strong { color: var(--cream); }
+
+  .rp-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,244,221,0.12);
+  }
+  .rp-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .rp-actions { margin-top: 32px; }
+  .rp-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rp-hint {
+    font-size: 13px;
+    color: rgba(255,244,221,0.4);
+    margin-top: 14px;
+  }
+
+  .rp-next { padding-top: 64px; padding-bottom: 72px; }
+  .rp-next .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>
