@@ -1,8 +1,8 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
 
-// Orbit: após enviar, redirecionar para
-// https://templum.com.br/planejamento-estrategico-2027/replay/
+// Orbit público NÃO tem redirect após envio (tela "Resposta enviada" é fixa).
+// Replay: https://templum.com.br/planejamento-estrategico-2027/replay/
 const SURVEY_SRC = "https://app.templum.com.br/s/survey_1789086074989_ry5zj0u4w";
 const REPLAY = "/planejamento-estrategico-2027/replay/";
 ---
@@ -11,134 +11,110 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
   title="Pesquisa — Planejamento Estratégico 2027 | Templum"
   description="Responda a pesquisa do workshop Planejamento Estratégico 2027 e acesse o replay e o material de apoio."
   noindex={true}
-  formAnchor="#pesquisa"
-  headerCta="Responder pesquisa"
+  formAnchor={REPLAY}
+  headerCta="Replay e material"
 >
 
-  <section class="ps-hero">
-    <div class="ps-glow"></div>
-    <div class="container md ps-inner">
-      <div class="ps-badges">
+  <section class="ps-page">
+    <div class="ps-intro">
+      <div class="container md">
         <span class="badge badge--orange-solid">Pós-evento</span>
-        <span class="badge badge--cream">Planejamento Estratégico 2027</span>
-      </div>
-
-      <h1>
-        Conta pra gente como foi.<br />
-        <em>O replay está na sequência.</em>
-      </h1>
-
-      <p class="ps-lead">
-        Leva poucos minutos. Ao terminar, você vai para o
-        <strong>replay do workshop</strong> com Igor Furniel e o material de apoio.
-      </p>
-
-      <div class="ps-fallback" id="pesquisa">
-        <a href={SURVEY_SRC} class="btn btn--primary btn--lg" target="_blank" rel="noopener noreferrer">
-          <iconify-icon icon="solar:clipboard-check-bold"></iconify-icon>
-          Abrir pesquisa
-        </a>
-        <p class="ps-hint">
-          Se o formulário não aparecer abaixo, use o botão.
-          Depois da resposta, vá para o
-          <a href={REPLAY}>replay e o material</a>.
+        <h1>Conta pra gente como foi</h1>
+        <p>
+          A pesquisa está aqui embaixo. Ao terminar, use
+          <strong>Replay e material</strong> no topo — ou o botão após enviar —
+          para o vídeo e o PDF.
         </p>
       </div>
+    </div>
 
-      <div class="ps-frame-wrap">
-        <iframe
-          src={SURVEY_SRC}
-          title="Pesquisa — Planejamento Estratégico 2027"
-          class="ps-frame"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allow="clipboard-write"
-        ></iframe>
-      </div>
+    <div class="ps-frame-wrap" id="pesquisa">
+      <iframe
+        id="pe-survey"
+        src={SURVEY_SRC}
+        title="Pesquisa — Planejamento Estratégico 2027"
+        class="ps-frame"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="clipboard-write"
+      ></iframe>
+    </div>
+
+    <div class="ps-after">
+      <a href={REPLAY} class="btn btn--primary btn--lg">
+        Já enviei — ir para o replay
+        <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+      </a>
     </div>
   </section>
+
+  <script is:inline>
+    (function () {
+      var REPLAY = "/planejamento-estrategico-2027/replay/";
+      function goReplay() {
+        try { window.top.location.href = REPLAY; }
+        catch (e) { window.location.href = REPLAY; }
+      }
+      window.addEventListener("message", function (e) {
+        var origin = e.origin || "";
+        if (origin.indexOf("app.templum.com.br") === -1 && origin.indexOf("templum.com.br") === -1) return;
+        var d = e.data;
+        var s = typeof d === "string" ? d : (d && (d.type || d.event || d.status) || "");
+        s = String(s).toLowerCase();
+        if (/submit|complete|thank|success|enviad|replay/.test(s)) goReplay();
+      });
+    })();
+  </script>
 
 </LpBase>
 
 <style>
-  .ps-hero {
-    background: var(--navy);
-    position: relative;
-    overflow: hidden;
-    padding: clamp(40px, 6vw, 72px) 0 clamp(48px, 7vw, 88px);
+  .ps-page { background: var(--navy); }
+  .ps-intro {
+    padding: 28px 0 20px;
     text-align: center;
   }
-  .ps-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center top, rgba(255,89,37,0.14) 0%, transparent 58%);
-    pointer-events: none;
-  }
-  .ps-inner { position: relative; z-index: 1; }
-  .ps-badges {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 22px;
-  }
-  .ps-inner h1 {
-    font-size: clamp(28px, 4.2vw, 48px);
+  .ps-intro h1 {
+    font-size: clamp(24px, 3.4vw, 36px);
     font-weight: 800;
     color: var(--cream);
-    line-height: 1.12;
     letter-spacing: -0.03em;
-    margin-bottom: 18px;
+    margin: 14px 0 10px;
   }
-  .ps-inner h1 em {
-    font-style: italic;
-    color: var(--orange);
-  }
-  .ps-lead {
-    font-size: 17px;
-    color: rgba(255,244,221,0.75);
-    line-height: 1.7;
+  .ps-intro p {
+    font-size: 15px;
+    color: rgba(255,244,221,0.72);
+    line-height: 1.6;
     max-width: 560px;
-    margin: 0 auto 28px;
+    margin: 0 auto;
   }
-  .ps-lead strong { color: var(--cream); }
-
-  .ps-fallback { margin-bottom: 24px; }
-  .ps-fallback .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .ps-hint {
-    font-size: 13px;
-    color: rgba(255,244,221,0.4);
-    margin-top: 14px;
-  }
-  .ps-hint a {
-    color: var(--orange);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
+  .ps-intro strong { color: var(--cream); }
 
   .ps-frame-wrap {
-    width: 100%;
-    background: var(--cream);
+    width: min(960px, calc(100% - 32px));
+    margin: 0 auto;
+    background: #fff;
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid rgba(255,244,221,0.12);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
-    min-height: 920px;
+    min-height: min(1100px, calc(100dvh - 160px));
   }
   .ps-frame {
     display: block;
     width: 100%;
-    height: 920px;
+    height: min(1100px, calc(100dvh - 160px));
+    min-height: 900px;
     border: 0;
     background: #fff;
   }
 
-  @media (min-width: 768px) {
-    .ps-frame-wrap,
-    .ps-frame { height: 1080px; min-height: 1080px; }
+  .ps-after {
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 48px;
+  }
+  .ps-after .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
   }
 </style>

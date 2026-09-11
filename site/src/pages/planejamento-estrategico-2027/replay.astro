@@ -14,6 +14,16 @@ const MATERIAL =
   headerCta="Baixar material"
 >
 
+  <script is:inline>
+    (function () {
+      try {
+        if (window.self !== window.top) {
+          window.top.location.replace(window.location.href);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <section class="rp-hero">
     <div class="rp-glow"></div>
     <div class="container md rp-inner">
