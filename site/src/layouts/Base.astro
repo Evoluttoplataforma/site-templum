@@ -17,6 +17,11 @@ const {
   noindex = false,
   schemas = [],
   preloadImage = "",
+  // Quando a imagem pré-carregada tem srcset, o preload PRECISA repetir srcset e sizes.
+  // Sem isso o navegador baixa a variante do href E a que o srcset escolher — foi o que
+  // aconteceu em 10/09/2026 ao dar srcset ao hero: o celular baixou 89 KB + 36 KB.
+  preloadImageSrcset = "",
+  preloadImageSizes = "",
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -161,7 +166,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
-    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} imagesrcset={preloadImageSrcset || undefined} imagesizes={preloadImageSizes || undefined} fetchpriority="high" />}
 
     <!-- Ícones (Iconify) — defer p/ não bloquear o render -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js" defer is:inline></script>
