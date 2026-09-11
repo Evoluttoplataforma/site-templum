@@ -7,7 +7,7 @@ const FORM_SRC =
 
 <LpBase
   title="Pesquisa — Planejamento Estratégico 2027 | Templum"
-  description="Responda como foi o workshop Planejamento Estratégico 2027. Ao enviar, você acessa a gravação da live e o material de apoio."
+  description="Conta pra gente como foi o workshop. O próximo passo é distribuir as tarefas e executar o plano — material de apoio e gravação após o formulário."
   noindex={true}
   formAnchor="#pesquisa"
   headerCta="Responder"
@@ -25,12 +25,13 @@ const FORM_SRC =
 
           <h1>
             Conta pra gente como foi o workshop.<br />
-            <em>O próximo passo é o material.</em>
+            <em>O próximo passo é distribuir as tarefas e executar o plano.</em>
           </h1>
 
           <p class="ps-desc">
-            São poucas perguntas. Ao enviar, liberamos a gravação da live com
-            <strong>Igor Furniel</strong> e o PDF de apoio.
+            Para isso disponibilizamos o material de apoio com a gravação.
+            Preencha o formulário <span class="ps-where-desk">ao lado</span><span class="ps-where-mob">abaixo</span>.
+            São poucas perguntas, não leva nem 1 minuto.
           </p>
 
           <div class="ps-speakers-strip">
@@ -135,7 +136,7 @@ const FORM_SRC =
     margin-bottom: 28px;
     max-width: 540px;
   }
-  .ps-desc strong { color: var(--cream); }
+  .ps-where-mob { display: none; }
 
   .ps-speakers-strip {
     display: flex;
@@ -181,5 +182,7 @@ const FORM_SRC =
     .ps-hero-grid { grid-template-columns: 1fr; }
     .ps-desc { max-width: 100%; }
     .ps-form-card { max-width: 680px; margin: 0 auto; }
+    .ps-where-desk { display: none; }
+    .ps-where-mob { display: inline; }
   }
 </style>
