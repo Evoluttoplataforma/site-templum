@@ -15,6 +15,21 @@ const {
   accent = "var(--orange)",
   chips = [],
 } = Astro.props;
+
+// Se a imagem é uma foto de norma (/assets/img/consultoria/x.webp), serve as variantes
+// geradas por scripts/imagens-responsivas.mjs. O slot aqui é a coluna 0.95fr do
+// .ph-grid (~460px num container xl de 1320) e vira largura cheia abaixo de 900px.
+// Nada de loading="lazy" nesta: é a imagem do hero, candidata natural a LCP.
+const mFoto = /^\/assets\/img\/consultoria\/([a-z0-9-]+)\.webp$/.exec(image || "");
+const heroSrcset = mFoto
+  ? `/assets/img/consultoria/${mFoto[1]}-400.webp 400w, /assets/img/consultoria/${mFoto[1]}-740.webp 740w, ${image} 1169w`
+  : undefined;
+const heroSizes = heroSrcset ? "(max-width: 900px) calc(100vw - 48px), 460px" : undefined;
+// width/height só quando sabemos as dimensões reais (as fotos de norma são 1169x1600).
+// O mesmo PageHero recebe imagens de /assets/img/hero/ (1774x887) e de outras pastas —
+// declarar 1169x1600 nelas seria proporção errada no atributo.
+const heroW = heroSrcset ? 1169 : undefined;
+const heroH = heroSrcset ? 1600 : undefined;
 ---
 
 <section class="ph-hero" style={`--accent:${accent}`}>
@@ -33,7 +48,7 @@ const {
     </div>
     <div class="ph-media">
       <div class="ph-media-fallback"><iconify-icon icon={icon}></iconify-icon></div>
-      {image && <img class="ph-media-img" src={image} alt={badge || tag} loading="eager" onerror="this.style.display='none'" />}
+      {image && <img class="ph-media-img" src={image} srcset={heroSrcset} sizes={heroSizes} alt={badge || tag} width={heroW} height={heroH} loading="eager" fetchpriority="high" decoding="async" onerror="this.style.display='none'" />}
       {badge && <span class="ph-media-badge"><iconify-icon icon={icon}></iconify-icon> {badge}</span>}
     </div>
   </div>

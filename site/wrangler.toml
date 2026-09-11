@@ -21,7 +21,7 @@ not_found_handling = "404-page"
 # correspondente em dist/) eram interceptadas pela camada de assets ANTES do
 # worker.js — GET caía no 404 estático cacheado, POST recebia 405 puro da
 # plataforma. Resultado: nenhum lead era salvo (bug ativo de 17/07 a 20/07).
-run_worker_first = ["/mapadosite", "/mapadosite/", "/api/*"]
+run_worker_first = ["/mapadosite", "/mapadosite/", "/api/*", "/googleb02be000df71bc63.html"]
 
 # Todas as variáveis/secrets do Worker são definidas no painel
 # (Settings → Variables and Secrets) como SECRET — assim persistem entre deploys

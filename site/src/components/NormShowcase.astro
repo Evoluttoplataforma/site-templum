@@ -1,4 +1,11 @@
 ---
+
+// srcset das fotos de norma (ver scripts/imagens-responsivas.mjs). Caminho montado em
+// runtime a partir do slug, então <Image> do astro:assets não se aplica — o srcset é
+// string. `sizes` sai do slot real do card: 368 CSS px no celular, clamp(260,23vw,320)
+// no desktop.
+const fotoSrcset = (slug) =>
+  `/assets/img/consultoria/${slug}-400.webp 400w, /assets/img/consultoria/${slug}-740.webp 740w, /assets/img/consultoria/${slug}.webp 1169w`;
 // Carrossel de normas estilo "mentores G4": cards grandes com FOTO, nome sobreposto,
 // linha colorida e tagline. Foto vem de /assets/img/normas/<slug>.webp (fallback: cor + ícone).
 import { normas } from "../data/normas.js";
@@ -21,7 +28,7 @@ import { normas } from "../data/normas.js";
         <a class="ns-card" href={n.href} style={`--c:${n.color}`}>
           <div class="ns-media">
             <span class="ns-icon-bg"><iconify-icon icon={n.icon}></iconify-icon></span>
-            <img src={`/assets/img/consultoria/${n.slug}.webp`} alt={n.nome} loading="lazy" onerror="this.style.display='none'" />
+            <img src={`/assets/img/consultoria/${n.slug}-740.webp`} srcset={fotoSrcset(n.slug)} sizes="(max-width: 700px) 368px, 320px" alt={n.nome} width="1169" height="1600" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             <span class="ns-grad"></span>
           </div>
           <div class="ns-content">
@@ -59,7 +66,8 @@ import { normas } from "../data/normas.js";
   .ns-head p { font-size: 16.5px; color: rgba(255,244,221,0.7); margin-top: 14px; }
 
   .ns-stage { position: relative; display: flex; align-items: center; }
-  .ns-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 8px clamp(24px, 5vw, 64px) 16px; width: 100%; scrollbar-width: none; cursor: grab; }
+  .ns-track { display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding: 8px clamp(24px, 5vw, 64px) 16px; width: 100%; scrollbar-width: none; cursor: grab; }
+  .ns-track.snap-on { scroll-snap-type: x mandatory; }
   .ns-track::-webkit-scrollbar { display: none; }
   .ns-track.dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
 
@@ -117,6 +125,18 @@ import { normas } from "../data/normas.js";
       const dotsBox = root.querySelector("[data-dots]");
       if (!track) return;
       const cards = track.querySelectorAll(".ns-card");
+      // O scroll snap só é ligado DEPOIS do load (classe .snap-on). Medido em
+      // 10/09/2026: um container com `scroll-snap-type` presente no primeiro layout faz o
+      // Chrome não nomear NENHUM candidato a LCP na página inteira — o trace mostra
+      // `firstContentfulPaint = 1` e `largestContentfulPaint::Candidate = 0`, e o
+      // PageSpeed devolve NO_LCP (sem nota de Desempenho, e sem Core Web Vitals de campo).
+      // Medição: com o snap no CSS base → 0 candidatos em 3 execuções; com ele adiado →
+      // a imagem do hero é nomeada nas 3. Trocar `mandatory` por `proximity` NÃO resolve.
+      // Para o usuário nada muda: quando ele chega a arrastar o carrossel, já carregou.
+      const ligaSnap = () => track.classList.add("snap-on");
+      if (document.readyState === "complete") requestAnimationFrame(ligaSnap);
+      else window.addEventListener("load", () => requestAnimationFrame(ligaSnap), { once: true });
+
       const cardW = () => (cards[0] ? cards[0].getBoundingClientRect().width + 20 : 320);
 
       // dots = páginas visíveis

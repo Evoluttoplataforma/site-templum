@@ -100,6 +100,20 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // Verificação do Google Search Console (método "Arquivo HTML").
+    // A camada de assets do Workers derruba o ".html" da URL (307 p/
+    // /googleb02be000df71bc63), e o verificador do Google espera 200 na URL
+    // EXATA. Então servimos o próprio asset aqui, sem redirect.
+    if (url.pathname === "/googleb02be000df71bc63.html") {
+      const asset = new URL(request.url);
+      asset.pathname = "/googleb02be000df71bc63";
+      const res = await env.ASSETS.fetch(new Request(asset.toString(), request));
+      return new Response(res.body, {
+        status: 200,
+        headers: { "content-type": "text/html; charset=utf-8" },
+      });
+    }
+
     // /mapadosite — protegido por senha (Basic Auth). Página interna, não deve ficar pública.
     if (url.pathname === "/mapadosite" || url.pathname === "/mapadosite/") {
       const expected = env.MAPADOSITE_PASSWORD || "Tp3321@";
@@ -286,13 +300,25 @@ async function handleLead(request, env, ctx) {
       .catch((e) => console.error(`[lead:${name}] exception`, e && e.message))
   )));
 
+  // A resposta segue ok:true mesmo se o Supabase falhar — o lead ainda foi para
+  // Mailchimp/ManyChat/Meta (e CRM, quando não é evento), então não faz sentido
+  // mostrar erro para o visitante. Mas GRITA no log: foi exatamente esse
+  // ok:true silencioso que deixou a falha de 01/09 passar 7 dias sem ninguém ver.
+  if (supabase && supabase.ok === false) {
+    console.error("[lead:supabase] INSERT FALHOU", JSON.stringify(supabase));
+  }
+
   return json({ ok: true, supabase });
 }
 
 // ---- 1) Supabase -------------------------------------------------------
 async function saveToSupabase(lead, env) {
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  const sbKey = env.SUPABASE_ANON_KEY;
+  // SERVICE_KEY, não ANON_KEY: o insert acontece só aqui dentro do Worker, e em
+  // 01/09 o papel `anon` perdeu o GRANT INSERT em site_leads (a policy de RLS
+  // "insert livre" continuou lá, mas policy não substitui grant). Resultado: de
+  // 01/09 a 08/09 todo POST /api/lead falhou com 42501 e nenhum lead foi gravado.
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
   if (!sbKey) return { ok: false, reason: "not_configured" };
 
   try {
@@ -344,6 +370,14 @@ async function saveToMailchimp(lead, env) {
     env.MAILCHIMP_TAG || "site-templum",
     ...(lead.evento && lead.evento !== "lead" ? [lead.evento] : []),
   ];
+  // Agregado da série da ISO 9001: até aqui só existia a tag da data
+  // (webinar-gestao-treinamentos-0909 etc.), sem nada que juntasse a série
+  // inteira — o mesmo problema que o webserie_ISO9001 resolve no ManyChat.
+  // O Mailchimp casa tag por NOME: se o segmento "Webserie" já existir na
+  // audiência, o lead entra nele; se não, é criado no primeiro lead.
+  if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) {
+    mcTags.push("Webserie");
+  }
 
   try {
     const r = await fetch(`${mcBase}/members`, {
@@ -681,6 +715,10 @@ function toE164BR(raw) {
 function manyChatTagsFor(lead) {
   const tags = [];
   if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) tags.push("webserie_ISO9001");
+  // Workshop de Planejamento Estratégico 2027: até aqui esse público entrava no
+  // ManyChat sem etiqueta nenhuma (não é webinar nem webserie, e a LP não manda
+  // norma), então não havia como disparar lembrete do evento por lá.
+  if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);
   return tags;
@@ -1088,7 +1126,10 @@ async function handleLeadDelete(request, env) {
 
 async function handleRaffleInsert(request, env) {
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
-  const sbKey = env.SUPABASE_ANON_KEY;
+  // Mesma razão de saveToSupabase: `anon` não insere mais. (A tabela
+  // webinar_raffle_entries também não existe mais no banco — esta rota é do
+  // sorteio do webinar do Nigel, 09/07, e hoje falharia de qualquer forma.)
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
   if (!sbKey) return json({ ok: false, error: "not_configured" }, 500);
 
   let body = {};

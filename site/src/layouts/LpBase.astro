@@ -47,10 +47,22 @@ const allSchemas = schemas;
           (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","sr5nwfj8jc");
           var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5";document.head.appendChild(g);
           gtag("js", new Date());
-          gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+          // G-2BW8QTYLB5 e AW-17896226473 já são configurados pelo 02-dispatch.js do
+          // tracking-kit (mesmos ids do TRACKING_CONFIG); configurá-los aqui também
+          // duplicava o `config` dos dois. No GA4 é inofensivo (ambos com
+          // send_page_view:false), mas o `config` de destino AW dispara o ping de página —
+          // eram dois ccm/collect por carregamento. Fica só G-FV41GWD427, que o kit não
+          // conhece. __gtagFallback() refaz os dois se o kit não carregar.
           gtag("config","G-FV41GWD427",{send_page_view:false});
-          gtag("config","AW-17896226473");
+          window.__gtagFallback = function () {
+            if (window.__gtagFbDone) return; window.__gtagFbDone = true;
+            gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+            gtag("config","AW-17896226473");
+          };
           if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
+          else window.__gtagFallback();
+          // Meta Pixel: stub e fila já rodaram no <head>; aqui sai só o download.
+          if (typeof window.__loadMetaPixel === "function") window.__loadMetaPixel();
         }
         var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
         var opts = { once: true, passive: true, capture: true };
@@ -96,7 +108,7 @@ const allSchemas = schemas;
     <header class="lp-header">
       <div class="lp-header-inner">
         <span class="lp-logo">
-          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-logo-img" />
+          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-logo-img" width="389" height="129" />
         </span>
         <div class="lp-header-right">
           <a href={formAnchor} class="btn btn--primary lp-cta-btn">
@@ -115,7 +127,7 @@ const allSchemas = schemas;
     <footer class="lp-footer">
       <div class="lp-footer-inner">
         <div class="lp-footer-brand">
-          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-footer-logo" />
+          <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-footer-logo" width="389" height="129" />
           <p>Certificação ISO com garantia de 200%</p>
         </div>
         <div class="lp-footer-links">

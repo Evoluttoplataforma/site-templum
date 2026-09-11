@@ -5,6 +5,13 @@ import { normas } from "../../data/normas.js";
 import { baseConsultoria } from "../../data/consultoria/_base.js";
 
 const { stats, porques } = baseConsultoria;
+
+// srcset das fotos de norma (ver scripts/imagens-responsivas.mjs). Caminho montado em
+// runtime a partir do slug, então <Image> do astro:assets não se aplica — o srcset é
+// string. `sizes` sai do slot real do card: 368 CSS px no celular, clamp(260,23vw,320)
+// no desktop.
+const fotoSrcset = (slug) =>
+  `/assets/img/consultoria/${slug}-400.webp 400w, /assets/img/consultoria/${slug}-740.webp 740w, /assets/img/consultoria/${slug}.webp 1169w`;
 ---
 
 <Base
@@ -55,7 +62,7 @@ const { stats, porques } = baseConsultoria;
           <a class="cn-card" href={n.href} style={`--c:${n.color}`}>
             <div class="cn-media">
               <span class="cn-ico"><iconify-icon icon={n.icon}></iconify-icon></span>
-              <img src={`/assets/img/consultoria/${n.slug}.webp`} alt={`Consultoria ${n.nome}`} loading="lazy" onerror="this.style.display='none'" />
+              <img src={`/assets/img/consultoria/${n.slug}-740.webp`} srcset={fotoSrcset(n.slug)} sizes="(max-width: 700px) 368px, 320px" alt={`Consultoria ${n.nome}`} width="1169" height="1600" loading="lazy" decoding="async" onerror="this.style.display='none'" />
               <span class="cn-grad"></span>
             </div>
             <div class="cn-body">

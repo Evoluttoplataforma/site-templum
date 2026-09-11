@@ -42,12 +42,19 @@ const trust = [
   { icon: "solar:shield-check-bold", v: "200%", l: "de garantia" },
 ];
 const hero = slides[0]; // hero estático: mensagem principal (garantia 200%)
+
+// A imagem do hero é o elemento LCP da home. Ela é full-bleed (object-fit: cover), então
+// o que o navegador precisa é a LARGURA da viewport: num celular de 412 CSS px com DPR
+// 1,75 são ~720 px, e ele estava baixando os 1774 do arquivo original. A variante de
+// 900 px (scripts/imagens-responsivas.mjs) cobre o celular; o desktop full-bleed segue
+// no original. width/height agora são os reais (1774x887) — estavam declarados 1600x900.
+const heroBgSrcset = `${hero.img.replace(/\.webp$/, "-900.webp")} 900w, ${hero.img} 1774w`;
 ---
 
 <!-- Hero ESTÁTICO (imagem única) — LCP estável e rápido. -->
 <section class="hero" id="hero">
   <div class="hero-bgs" aria-hidden="true">
-    <img class="hero-bg active" src={hero.img} alt="" fetchpriority="high" loading="eager" decoding="async" width="1600" height="900" />
+    <img class="hero-bg active" src={hero.img} srcset={heroBgSrcset} sizes="100vw" alt="" fetchpriority="high" loading="eager" decoding="async" width="1774" height="887" />
     <div class="hero-overlay"></div>
   </div>
 
