@@ -3,15 +3,14 @@ import LpBase from "../../layouts/LpBase.astro";
 
 const FORM_SRC =
   "https://app.templum.com.br/p/crm-form/V22Vs_RW8VbRffHsZ4DKPQ1I?embed=1";
-const REPLAY = "/planejamento-estrategico-2027/replay/";
 ---
 
 <LpBase
   title="Pesquisa — Planejamento Estratégico 2027 | Templum"
-  description="Responda a pesquisa do workshop Planejamento Estratégico 2027 e acesse o replay e o material de apoio."
+  description="Responda como foi o workshop Planejamento Estratégico 2027. Ao enviar, você acessa a gravação da live e o material de apoio."
   noindex={true}
   formAnchor="#pesquisa"
-  headerCta="Ir para a pesquisa"
+  headerCta="Responder"
 >
 
   <section class="ps-hero">
@@ -25,13 +24,13 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
           </div>
 
           <h1>
-            Conta pra gente como foi.<br />
-            <em>O replay está na sequência.</em>
+            Conta pra gente como foi o workshop.<br />
+            <em>O próximo passo é o material.</em>
           </h1>
 
           <p class="ps-desc">
-            Leva poucos minutos. Ao terminar, você acessa o
-            <strong>replay do workshop</strong> com Igor Furniel e o material de apoio.
+            São poucas perguntas. Ao enviar, liberamos a gravação da live com
+            <strong>Igor Furniel</strong> e o PDF de apoio.
           </p>
 
           <div class="ps-speakers-strip">
@@ -61,13 +60,6 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
 
       </div>
     </div>
-  </section>
-
-  <section class="ps-foot">
-    <a href={REPLAY} class="ps-replay-link">
-      Já enviei — ir para o replay
-      <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
-    </a>
   </section>
 
   <script is:inline>
@@ -184,23 +176,6 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
     overflow: hidden;
   }
   .ps-form-card .badge { margin-bottom: 8px; }
-
-  .ps-foot {
-    background: var(--cream, #fff4dd);
-    padding: 28px 24px 40px;
-    text-align: center;
-  }
-  .ps-replay-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--navy);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .ps-replay-link:hover { color: var(--orange); }
 
   @media (max-width: 1020px) {
     .ps-hero-grid { grid-template-columns: 1fr; }
