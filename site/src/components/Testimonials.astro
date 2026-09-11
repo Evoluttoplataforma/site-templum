@@ -135,8 +135,14 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
       // a imagem do hero é nomeada nas 3. Trocar `mandatory` por `proximity` NÃO resolve.
       // Para o usuário nada muda: quando ele chega a arrastar o carrossel, já carregou.
       const ligaSnap = () => track.classList.add("snap-on");
-      if (document.readyState === "complete") requestAnimationFrame(ligaSnap);
-      else window.addEventListener("load", () => requestAnimationFrame(ligaSnap), { once: true });
+      // Gatilho: o 1º GESTO no carrossel, não o load. Com o load, sob a CPU estrangulada
+      // do Lighthouse o snap voltava a existir antes da maior pintura e o NO_LCP
+      // reaparecia em ~1 de 2 execuções (medido em 11/09/2026). No gesto, o container de
+      // snap simplesmente não existe durante o carregamento — e o snap só tem função
+      // depois que alguém arrasta, clica na seta ou no ponto.
+      ["pointerdown", "touchstart", "keydown", "wheel"].forEach((ev) =>
+        root.addEventListener(ev, ligaSnap, { once: true, passive: true, capture: true })
+      );
 
       const card = track.querySelector(".tm-card");
       const step = () => (card ? (card.getBoundingClientRect().width + 22) * 2 : 600);
