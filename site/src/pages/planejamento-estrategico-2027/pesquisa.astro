@@ -1,8 +1,6 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
 
-// Orbit público NÃO tem redirect após envio (tela "Resposta enviada" é fixa).
-// Replay: https://templum.com.br/planejamento-estrategico-2027/replay/
 const SURVEY_SRC = "https://app.templum.com.br/s/survey_1789086074989_ry5zj0u4w";
 const REPLAY = "/planejamento-estrategico-2027/replay/";
 ---
@@ -11,8 +9,8 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
   title="Pesquisa — Planejamento Estratégico 2027 | Templum"
   description="Responda a pesquisa do workshop Planejamento Estratégico 2027 e acesse o replay e o material de apoio."
   noindex={true}
-  formAnchor={REPLAY}
-  headerCta="Replay e material"
+  formAnchor="#pesquisa"
+  headerCta="Ir para a pesquisa"
 >
 
   <section class="ps-page">
@@ -20,23 +18,31 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
       <div class="container md">
         <span class="badge badge--orange-solid">Pós-evento</span>
         <h1>Conta pra gente como foi</h1>
-        <p>
-          A pesquisa está aqui embaixo. Ao terminar, use
-          <strong>Replay e material</strong> no topo — ou o botão após enviar —
-          para o vídeo e o PDF.
-        </p>
+        <p>A pesquisa abre aqui nesta página. Leva poucos minutos.</p>
       </div>
     </div>
 
     <div class="ps-frame-wrap" id="pesquisa">
+      <p class="ps-loading" id="ps-loading">Carregando a pesquisa…</p>
       <iframe
         id="pe-survey"
         src={SURVEY_SRC}
         title="Pesquisa — Planejamento Estratégico 2027"
-        class="ps-frame"
-        referrerpolicy="strict-origin-when-cross-origin"
+        width="960"
+        height="1200"
+        loading="eager"
+        referrerpolicy="no-referrer"
         allow="clipboard-write"
+        style="display:block;width:100%;height:1200px;min-height:1200px;border:0;background:#ffffff;"
       ></iframe>
+    </div>
+
+    <div class="ps-blocked" id="ps-blocked" hidden>
+      <p>A pesquisa não apareceu neste quadro (o navegador ou o Orbit pode bloquear o embed).</p>
+      <p>Abra o link abaixo <strong>nesta mesma aba</strong> e, ao terminar, volte para o replay.</p>
+      <a href={SURVEY_SRC}>Continuar a pesquisa</a>
+      <span> · </span>
+      <a href={REPLAY}>Ir para o replay</a>
     </div>
 
     <div class="ps-after">
@@ -50,17 +56,41 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
   <script is:inline>
     (function () {
       var REPLAY = "/planejamento-estrategico-2027/replay/";
-      function goReplay() {
-        try { window.top.location.href = REPLAY; }
-        catch (e) { window.location.href = REPLAY; }
+      var iframe = document.getElementById("pe-survey");
+      var loading = document.getElementById("ps-loading");
+      var blocked = document.getElementById("ps-blocked");
+      var loaded = false;
+
+      function hideLoading() {
+        if (loading) loading.setAttribute("hidden", "");
       }
+      function showBlocked() {
+        hideLoading();
+        if (blocked) blocked.removeAttribute("hidden");
+      }
+
+      if (iframe) {
+        iframe.addEventListener("load", function () {
+          loaded = true;
+          hideLoading();
+          if (blocked) blocked.setAttribute("hidden", "");
+        });
+        iframe.addEventListener("error", showBlocked);
+      }
+      setTimeout(function () {
+        if (!loaded) showBlocked();
+        else hideLoading();
+      }, 8000);
+
       window.addEventListener("message", function (e) {
         var origin = e.origin || "";
-        if (origin.indexOf("app.templum.com.br") === -1 && origin.indexOf("templum.com.br") === -1) return;
+        if (origin.indexOf("app.templum.com.br") === -1) return;
         var d = e.data;
         var s = typeof d === "string" ? d : (d && (d.type || d.event || d.status) || "");
-        s = String(s).toLowerCase();
-        if (/submit|complete|thank|success|enviad|replay/.test(s)) goReplay();
+        if (/submit|complete|thank|success|enviad|replay/i.test(String(s))) {
+          try { window.top.location.href = REPLAY; }
+          catch (err) { window.location.href = REPLAY; }
+        }
       });
     })();
   </script>
@@ -68,7 +98,10 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
 </LpBase>
 
 <style>
-  .ps-page { background: var(--navy); }
+  .ps-page {
+    background: var(--cream, #fff4dd);
+    padding-bottom: 48px;
+  }
   .ps-intro {
     padding: 28px 0 20px;
     text-align: center;
@@ -76,18 +109,17 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
   .ps-intro h1 {
     font-size: clamp(24px, 3.4vw, 36px);
     font-weight: 800;
-    color: var(--cream);
+    color: var(--navy);
     letter-spacing: -0.03em;
     margin: 14px 0 10px;
   }
   .ps-intro p {
     font-size: 15px;
-    color: rgba(255,244,221,0.72);
+    color: var(--text-2, #3F424B);
     line-height: 1.6;
     max-width: 560px;
     margin: 0 auto;
   }
-  .ps-intro strong { color: var(--cream); }
 
   .ps-frame-wrap {
     width: min(960px, calc(100% - 32px));
@@ -95,22 +127,41 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
     background: #fff;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(255,244,221,0.12);
-    min-height: min(1100px, calc(100dvh - 160px));
+    border: 1px solid rgba(24, 25, 27, 0.1);
+    min-height: 1200px;
+    position: relative;
   }
-  .ps-frame {
-    display: block;
-    width: 100%;
-    height: min(1100px, calc(100dvh - 160px));
-    min-height: 900px;
-    border: 0;
+  .ps-loading {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #3F424B;
+    z-index: 1;
+    margin: 0;
+  }
+  .ps-loading[hidden] { display: none; }
+
+  .ps-blocked {
+    width: min(960px, calc(100% - 32px));
+    margin: 16px auto 0;
+    padding: 16px 18px;
     background: #fff;
+    border-radius: 12px;
+    border: 1px solid rgba(24, 25, 27, 0.12);
+    color: var(--navy);
+    font-size: 14px;
+    line-height: 1.5;
   }
+  .ps-blocked[hidden] { display: none; }
+  .ps-blocked a { color: var(--orange); font-weight: 700; }
 
   .ps-after {
     display: flex;
     justify-content: center;
-    padding: 28px 16px 48px;
+    padding: 28px 16px 0;
   }
   .ps-after .btn {
     display: inline-flex;
