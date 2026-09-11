@@ -1,7 +1,8 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
 
-const SURVEY_SRC = "https://app.templum.com.br/s/survey_1789086074989_ry5zj0u4w";
+const FORM_SRC =
+  "https://app.templum.com.br/p/crm-form/V22Vs_RW8VbRffHsZ4DKPQ1I?embed=1";
 const REPLAY = "/planejamento-estrategico-2027/replay/";
 ---
 
@@ -18,31 +19,20 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
       <div class="container md">
         <span class="badge badge--orange-solid">Pós-evento</span>
         <h1>Conta pra gente como foi</h1>
-        <p>A pesquisa abre aqui nesta página. Leva poucos minutos.</p>
+        <p>Preencha o formulário aqui nesta página. Leva poucos minutos.</p>
       </div>
     </div>
 
-    <div class="ps-frame-wrap" id="pesquisa">
-      <p class="ps-loading" id="ps-loading">Carregando a pesquisa…</p>
+    <div class="ps-card" id="pesquisa">
       <iframe
-        id="pe-survey"
-        src={SURVEY_SRC}
+        src={FORM_SRC}
         title="Pesquisa — Planejamento Estratégico 2027"
-        width="960"
-        height="1200"
+        width="100%"
+        height="720"
+        frameborder="0"
         loading="eager"
-        referrerpolicy="no-referrer"
-        allow="clipboard-write"
-        style="display:block;width:100%;height:1200px;min-height:1200px;border:0;background:#ffffff;"
+        style="border: none; width: 100%; max-width: 500px; height: 720px; background: #fff;"
       ></iframe>
-    </div>
-
-    <div class="ps-blocked" id="ps-blocked" hidden>
-      <p>A pesquisa não apareceu neste quadro (o navegador ou o Orbit pode bloquear o embed).</p>
-      <p>Abra o link abaixo <strong>nesta mesma aba</strong> e, ao terminar, volte para o replay.</p>
-      <a href={SURVEY_SRC}>Continuar a pesquisa</a>
-      <span> · </span>
-      <a href={REPLAY}>Ir para o replay</a>
     </div>
 
     <div class="ps-after">
@@ -52,48 +42,6 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
       </a>
     </div>
   </section>
-
-  <script is:inline>
-    (function () {
-      var REPLAY = "/planejamento-estrategico-2027/replay/";
-      var iframe = document.getElementById("pe-survey");
-      var loading = document.getElementById("ps-loading");
-      var blocked = document.getElementById("ps-blocked");
-      var loaded = false;
-
-      function hideLoading() {
-        if (loading) loading.setAttribute("hidden", "");
-      }
-      function showBlocked() {
-        hideLoading();
-        if (blocked) blocked.removeAttribute("hidden");
-      }
-
-      if (iframe) {
-        iframe.addEventListener("load", function () {
-          loaded = true;
-          hideLoading();
-          if (blocked) blocked.setAttribute("hidden", "");
-        });
-        iframe.addEventListener("error", showBlocked);
-      }
-      setTimeout(function () {
-        if (!loaded) showBlocked();
-        else hideLoading();
-      }, 8000);
-
-      window.addEventListener("message", function (e) {
-        var origin = e.origin || "";
-        if (origin.indexOf("app.templum.com.br") === -1) return;
-        var d = e.data;
-        var s = typeof d === "string" ? d : (d && (d.type || d.event || d.status) || "");
-        if (/submit|complete|thank|success|enviad|replay/i.test(String(s))) {
-          try { window.top.location.href = REPLAY; }
-          catch (err) { window.location.href = REPLAY; }
-        }
-      });
-    })();
-  </script>
 
 </LpBase>
 
@@ -121,42 +69,16 @@ const REPLAY = "/planejamento-estrategico-2027/replay/";
     margin: 0 auto;
   }
 
-  .ps-frame-wrap {
-    width: min(960px, calc(100% - 32px));
+  .ps-card {
+    width: min(560px, calc(100% - 32px));
     margin: 0 auto;
     background: #fff;
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid rgba(24, 25, 27, 0.1);
-    min-height: 1200px;
-    position: relative;
+    display: flex;
+    justify-content: center;
   }
-  .ps-loading {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 24px;
-    text-align: center;
-    font-size: 14px;
-    color: #3F424B;
-    z-index: 1;
-    margin: 0;
-  }
-  .ps-loading[hidden] { display: none; }
-
-  .ps-blocked {
-    width: min(960px, calc(100% - 32px));
-    margin: 16px auto 0;
-    padding: 16px 18px;
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid rgba(24, 25, 27, 0.12);
-    color: var(--navy);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .ps-blocked[hidden] { display: none; }
-  .ps-blocked a { color: var(--orange); font-weight: 700; }
 
   .ps-after {
     display: flex;
