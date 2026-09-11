@@ -3,11 +3,13 @@ import Base from "../layouts/Base.astro";
 import { normas } from "../data/normas.js";
 import { pages as iscas } from "../data/iscas.js";
 import { getCollection } from "astro:content";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const artigos = await getCollection("blog");
 
 // LPs de campanha (tráfego pago) — 1 par LP + Obrigado por norma, exceto GERIC (página única).
-const semLp = ["geric"];
+const semLp = ["geric", "pqta"];
 const lpsCampanha = normas.filter((n) => !semLp.includes(n.slug)).map((n) => ({
   nome: n.nome,
   color: n.color,
@@ -40,6 +42,7 @@ const grupos = [
       { t: "Canal de denúncias", h: "/contato/canal-de-denuncias/" },
       { t: "Falar com um especialista", h: "/form/" },
       { t: "Política de Privacidade", h: "/page/" },
+      { t: "Mapa do site (esta página)", h: "/mapadosite/" },
     ],
   },
   {
@@ -52,6 +55,7 @@ const grupos = [
       { t: "ISO 9001 — Campinas", h: "/iso-9001-campinas/" },
       { t: "ISO 9001 para Indústria", h: "/iso-9001-industria/" },
       { t: "ISO 9001 para Laboratórios", h: "/iso-9001-laboratorios/" },
+      { t: "ISO 9001 para Laboratórios — variação B", h: "/iso-9001-lab-b.html" },
       { t: "Gestão para Escritórios de Contabilidade (PQC)", h: "/pqc/" },
       { t: "Gestão para Cartórios (PQTA)", h: "/consultoria/pqta/" },
       { t: "GERIC", h: "/consultoria/geric/" },
@@ -59,6 +63,9 @@ const grupos = [
       { t: "Gestão Empresarial — Obrigado", h: "/gestao-empresarial-obrigado/" },
       { t: "Financiamento Caixa para Construtoras", h: "/lp/financiamento-caixa/" },
       { t: "Financiamento Caixa — Obrigado", h: "/lp/financiamento-caixa-obrigado/" },
+      { t: "ISO 9001 para Grandes Contas", h: "/consultoria/iso-9001-grandes-contas-lp/" },
+      { t: "ISO 9001 + ISO 14001 (dupla certificação)", h: "/consultoria/iso-9001-iso-14001-lp/" },
+      { t: "ISO 9001 + ISO 14001 — Obrigado", h: "/consultoria/iso-9001-iso-14001-obrigado/" },
     ],
   },
   {
@@ -93,10 +100,74 @@ const grupos = [
       { t: "Obrigado — Webinar Controle de Documentos", h: "/obrigado-webinar-controle-documentos/" },
       { t: "Websérie — ISO 9001:2026", h: "/webserie-iso-9001-2026/" },
       { t: "Obrigado — Websérie", h: "/obrigado-webserie/" },
+      { t: "Workshop — Planejamento Estratégico 2027", h: "/planejamento-estrategico-2027/" },
+      { t: "Obrigado — Planejamento Estratégico 2027", h: "/obrigado-planejamento-estrategico-2027/" },
+      { t: "Replay — Planejamento Estratégico 2027", h: "/planejamento-estrategico-2027/replay/" },
+      { t: "Pesquisa — Planejamento Estratégico 2027", h: "/planejamento-estrategico-2027/pesquisa/" },
+      { t: "Aula ao vivo ISO 9001", h: "/aula-iso-9001/" },
+      { t: "Aula ao vivo ISO 9001 — variação A", h: "/aula-iso-9001-a/" },
+      { t: "Aula ao vivo ISO 9001 — variação B", h: "/aula-iso-9001-b/" },
+      { t: "Obrigado — Aula ISO 9001 (B)", h: "/aula-iso-9001-b/obrigado/" },
+      { t: "Aula ao vivo ISO 9001 — variação C", h: "/aula-iso-9001-c/" },
+      { t: "Aula ao vivo ISO 9001 — variação D", h: "/aula-iso-9001-d/" },
       { t: "Obrigado (genérico)", h: "/obrigado/" },
     ],
   },
+  {
+    key: "campanhas",
+    label: "Campanhas e diagnósticos",
+    icon: "solar:rocket-2-bold",
+    color: "var(--norm-iso45001)",
+    links: [
+      { t: "Templum OS — plataforma de gestão", h: "/lp/templum-os/" },
+      { t: "Templum OS — Obrigado", h: "/lp/templum-os-obrigado/" },
+      { t: "Diagnóstico de Gestão", h: "/diagnostico-de-gestao/" },
+      { t: "Diagnóstico de Gestão — Obrigado", h: "/diagnostico-de-gestao-obrigado/" },
+      { t: "Raio-X gratuito", h: "/raio-x/" },
+      { t: "Saia da Idade da Pedra", h: "/saia-da-idade-da-pedra/" },
+    ],
+  },
+  {
+    key: "internas",
+    label: "Páginas internas (uso do time)",
+    icon: "solar:lock-keyhole-bold",
+    color: "var(--navy)",
+    links: [
+      { t: "Design System", h: "/design-system/" },
+      { t: "Leads (painel)", h: "/leads/" },
+      { t: "Relatório Inbound", h: "/relatorio-inbound/" },
+      { t: "Admin — Sorteio Webinar Nigel Croft", h: "/webinar-nigel-croft-admin/" },
+    ],
+  },
 ];
+// SAFETY NET — varre src/pages e lista qualquer rota estática que tenha ficado de
+// fora dos grupos acima. Assim, página nova sempre aparece no mapa (nem que seja
+// em "Outras páginas") mesmo que alguém esqueça de registrar aqui.
+const rotasAstro = Object.keys(import.meta.glob("./**/*.astro"))
+  .map((f) => f.replace(/^\.\//, "").replace(/\.astro$/, ""))
+  .filter((f) => !f.includes("[") && f !== "404")
+  .map((f) => (f === "index" ? "/" : `/${f.replace(/\/index$/, "")}/`));
+
+// Algumas LPs são HTML estático em public/ — não passam pelo glob de .astro.
+const dirPublic = fileURLToPath(new URL("../../public/", import.meta.url));
+const rotasPublic = fs
+  .readdirSync(dirPublic, { recursive: true })
+  .filter((f) => typeof f === "string" && f.endsWith(".html"))
+  .filter((f) => !/^google[0-9a-f]+\.html$/.test(f))
+  .map((f) => (f.endsWith("index.html") ? `/${f.replace(/index\.html$/, "")}` : `/${f}`));
+
+const rotasDeArquivo = [...new Set([...rotasAstro, ...rotasPublic])];
+
+const jaListadas = new Set([
+  ...grupos.flatMap((g) => g.links.map((l) => l.h)),
+  ...normas.map((n) => n.href),
+  ...lpsCampanha.flatMap((l) => [l.lp, l.obrigado]),
+]);
+
+const outras = rotasDeArquivo
+  .filter((r) => !jaListadas.has(r))
+  .sort()
+  .map((r) => ({ t: r, h: r }));
 ---
 
 <Base
@@ -197,6 +268,23 @@ const grupos = [
           ))}
         </ul>
       </div>
+
+      {outras.length > 0 && (
+        <div class="ms-grupo" style="--c: var(--norm-iso37001)">
+          <header class="ms-grupo-head">
+            <span class="ms-grupo-ico"><iconify-icon icon="solar:folder-with-files-bold"></iconify-icon></span>
+            <div>
+              <h2>Outras páginas</h2>
+              <span class="ms-grupo-sub">{outras.length} rotas ainda sem grupo definido</span>
+            </div>
+          </header>
+          <ul class="ms-list ms-list--cols">
+            {outras.map((o) => (
+              <li><a href={o.h}>{o.t}<iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   </section>
 
