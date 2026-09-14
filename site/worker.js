@@ -1,7 +1,10 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
-//                             Inscrição de evento (webinar/websérie/PE2027) NÃO vai pro CRM
-//                             (Pipedrive/Orbit) — ver isInscricaoEvento em handleLead.
+//                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
+//                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
+//                             (tag "webinar 9001:2026") via saveToMqlWebinar.
+//                             Isca digital (evento "isca" / "isca-resultado") também vai
+//                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
@@ -9,6 +12,11 @@
 //   POST /api/asaas-webhook → recebe webhook de pagamento do Asaas (eventos pagos, ex.:
 //                             Planejamento Estratégico) e marca status_pagamento='pago' no
 //                             lead correspondente em site_leads (rodar supabase-site-leads-pagamento.sql antes)
+//   POST /api/email-opt-out → descadastro de e-mail de marketing (LGPD). Grava a tag
+//                             email-opt-out em TODOS os cards do CRM com aquele e-mail.
+//                             Os Fluxos leem a tag e param. Transição: também unsub
+//                             Mailchimp enquanto as lives ainda saem de lá.
+//   GET  /api/email-opt-out → gera link assinado (?email=&token=LEADS_PASSWORD)
 //
 // Secrets/vars (Cloudflare → Worker → Settings → Variables and Secrets):
 //   SUPABASE_URL           (opcional) default já no código
@@ -56,7 +64,17 @@ export default {
 
     // Rotas de API têm prioridade — ANTES do redirect www, para não perder POST body.
     if (url.pathname === "/api/lead") {
-      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       return handleLead(request, env, ctx);
     }
     if (url.pathname === "/api/track") {
@@ -89,9 +107,21 @@ export default {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handlePipedriveBatch(request, env);
     }
+    if (url.pathname === "/api/webinar-mql-backfill") {
+      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleWebinarMqlBackfill(request, env);
+    }
     if (url.pathname === "/api/asaas-webhook") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleAsaasWebhook(request, env);
+    }
+    if (url.pathname === "/api/email-opt-out/status") {
+      return handleEmailOptOutStatus(request, env);
+    }
+    if (url.pathname === "/api/email-opt-out") {
+      if (request.method === "POST") return handleEmailOptOut(request, env);
+      if (request.method === "GET") return handleEmailOptOutLink(request, env);
+      return json({ ok: false, error: "method_not_allowed" }, 405);
     }
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -135,6 +165,56 @@ function json(data, status = 200) {
     status,
     headers: { "content-type": "application/json; charset=utf-8" },
   });
+}
+
+function corsJson(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "content-type",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+    },
+  });
+}
+
+function iscaSlugFrom(body) {
+  const raw = String(body.isca || body.slug || "").trim();
+  if (raw) return raw.replace(/^\/+|\/+$/g, "").split("/").pop();
+  const pag = String(body.pagina || "");
+  const m = pag.match(/\/presentes\/([^/?#]+)/i);
+  if (m) return m[1];
+  try {
+    const u = new URL(pag, "https://templum.com.br");
+    const parts = u.pathname.split("/").filter(Boolean);
+    return parts[parts.length - 1] || "";
+  } catch (_) {
+    return "";
+  }
+}
+
+function iscaNormaFromSlug(slug) {
+  const s = String(slug || "").toLowerCase();
+  if (/pbqp|pqo|obra|desempenho/.test(s)) return "PBQP-H";
+  if (/45001|perigos/.test(s)) return "ISO 45001";
+  if (/14001/.test(s)) return "ISO 14001";
+  if (/27001/.test(s)) return "ISO 27001";
+  if (/fssc|haccp|aliment/.test(s)) return "FSSC 22000";
+  if (/9001|tartaruga|sgi|processos/.test(s)) return "ISO 9001";
+  return "";
+}
+
+function orbitTag32(value) {
+  return String(value || "").trim().slice(0, 32);
+}
+
+function iscaOrbitTags(lead) {
+  const tags = ["isca"];
+  if (lead.norma) tags.push(orbitTag32(lead.norma));
+  if (lead.isca) tags.push(orbitTag32(lead.isca));
+  if (lead.evento === "isca-resultado") tags.push("diagnostico");
+  return [...new Set(tags.filter(Boolean))];
 }
 
 // Confere Basic Auth (usuário é ignorado, só a senha importa) contra `expected`.
@@ -217,11 +297,12 @@ function timed(promise, ms) {
 
 async function handleLead(request, env, ctx) {
   let body = {};
-  try { body = await request.json(); } catch (_) { return json({ ok: false, error: "invalid_json" }, 400); }
+  try { body = await request.json(); } catch (_) { return corsJson({ ok: false, error: "invalid_json" }, 400); }
 
   const email = (body.email || "").trim().toLowerCase();
-  if (!email || !email.includes("@")) return json({ ok: false, error: "invalid_email" }, 422);
+  if (!email || !email.includes("@")) return corsJson({ ok: false, error: "invalid_email" }, 422);
 
+  const iscaSlug = iscaSlugFrom(body);
   const lead = {
     nome: body.nome || "",
     email,
@@ -239,6 +320,7 @@ async function handleLead(request, env, ctx) {
     status_pagamento: body.status_pagamento || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
+    isca: iscaSlug,
     session_id: body.session_id || "",
     utm_source: body.utm_source || "",
     utm_medium: body.utm_medium || "",
@@ -268,28 +350,39 @@ async function handleLead(request, env, ctx) {
     meta_content_name: body.meta_content_name || "",
   };
 
-  // Inscrição em evento (webinar, websérie, workshop de Planejamento Estratégico)
-  // NÃO é oportunidade comercial: vai pro Supabase/Mailchimp/ManyChat, mas fica
-  // fora do CRM. Em agosto/2026 as 59 inscrições da LP do PE2027 entraram no funil
-  // INBOUND e foram todas fechadas como perda por "interesse em conteúdo",
-  // inflando a taxa de perda do mês e poluindo a fila de qualificação.
+  const isIsca =
+    lead.evento === "isca" ||
+    lead.evento === "isca-resultado" ||
+    /^\/presentes\//.test(lead.pagina);
+  if (isIsca && !lead.norma) lead.norma = iscaNormaFromSlug(lead.isca || lead.pagina);
+  if (isIsca && !lead.evento.startsWith("isca")) lead.evento = "isca";
+
+  // Inscrição em evento NÃO vai pro INBOUND/Pipedrive (em agosto/2026 as 59 da
+  // LP PE2027 inflaram perda). Webinar 9001 e isca digital vão ao funil MQL (nutrição).
   const isInscricaoEvento =
     lead.evento.startsWith("webinar") ||
     lead.evento.startsWith("webserie") ||
-    lead.evento === "planejamento-estrategico-2027";
+    lead.evento === "planejamento-estrategico-2027" ||
+    isIsca;
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
   // Mailchimp + Pipedrive + Meta CAPI rodam em background via ctx.waitUntil.
   const supabase = await timed(saveToSupabase(lead, env), 3000);
 
-  const bgTasks = [
-    ["mailchimp", saveToMailchimp(lead, env)],
-    ["meta", sendMetaLead(lead, env, request)],
-    ["manychat", saveToManyChat(lead, env)],
-  ];
+  const isResultado = lead.evento === "isca-resultado";
+  const bgTasks = [];
+  if (!isResultado) {
+    bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
+    bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
+    bgTasks.push(["manychat", saveToManyChat(lead, env)]);
+  }
   if (!isInscricaoEvento) {
     bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
+  } else if (lead.evento.startsWith("webinar")) {
+    bgTasks.push(["mql", saveToMqlWebinar(lead, env)]);
+  } else if (isIsca) {
+    bgTasks.push(["mql", saveToMqlIsca(lead, env)]);
   }
 
   // Loga falhas (ok:false ou exceção) de cada tarefa em background — sem isso,
@@ -308,7 +401,7 @@ async function handleLead(request, env, ctx) {
     console.error("[lead:supabase] INSERT FALHOU", JSON.stringify(supabase));
   }
 
-  return json({ ok: true, supabase });
+  return corsJson({ ok: true, supabase });
 }
 
 // ---- 1) Supabase -------------------------------------------------------
@@ -583,6 +676,11 @@ async function saveToPipedrive(lead, env) {
 const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
+const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
+const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
+const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
+const ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA = "122cd261-a6b9-42be-a498-655e4c6346c1";
+const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
 // Etiquetas do CRM por evento da LP (o POST /v1/leads grava `tags` direto no lead,
 // então a etiqueta pode ser aplicada no momento da criação — sem chamada extra).
 // Vazio por ora: o único evento mapeado aqui era o PE2027, que passou a ser
@@ -682,6 +780,204 @@ async function saveToOrbit(lead, env) {
   }
 }
 
+// Webinar ISO 9001 → funil MQL (não INBOUND). Dedup mora na edge function.
+async function saveToMqlWebinar(lead, env) {
+  if (!String(lead.evento || "").startsWith("webinar")) {
+    return { ok: true, skipped: true, reason: "not_webinar" };
+  }
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return { ok: false, reason: "not_configured" };
+  try {
+    const r = await fetch(`${sbUrl}/functions/v1/upsert-webinar-mql`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: "Bearer " + sbKey,
+        apikey: sbKey,
+      },
+      body: JSON.stringify({
+        nome: lead.nome,
+        email: lead.email,
+        telefone: lead.telefone,
+        empresa: lead.empresa,
+        cargo: lead.cargo,
+        evento: lead.evento,
+        pagina: lead.pagina,
+        utm_source: lead.utm_source,
+        utm_medium: lead.utm_medium,
+        utm_campaign: lead.utm_campaign,
+        utm_term: lead.utm_term,
+        utm_content: lead.utm_content,
+      }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || d.ok === false) {
+      return { ok: false, error: d.error || d.reason || ("http_" + r.status) };
+    }
+    return d;
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+function phoneDigits(raw) {
+  return String(raw || "").replace(/\D/g, "").replace(/^55/, "").slice(-11);
+}
+
+function isOpenCrmLead(lead) {
+  if (!lead || !lead.id) return false;
+  if (lead.stage_id === ORBIT_MQL_STAGE_DESCARTADO) return false;
+  const st = String(lead.status || lead.deal_status || "").toLowerCase();
+  if (st === "lost" || st === "descartado") return false;
+  return true;
+}
+
+function pickCrmLeadForIsca(leads) {
+  const open = (leads || []).filter(isOpenCrmLead);
+  const mql = open.filter((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID);
+  return mql[0] || open[0] || null;
+}
+
+async function crmSearchLeadsByTerm(token, term) {
+  if (!term) return [];
+  const r = await fetch(
+    `${ORBIT_BASE}/leads/search?term=${encodeURIComponent(term)}&limit=50`,
+    { headers: { authorization: "Bearer " + token, accept: "application/json" } },
+  );
+  if (!r.ok) return [];
+  const j = await r.json().catch(() => ({}));
+  return j.data || j.leads || [];
+}
+
+async function crmFindLeadsForIsca(token, email, telefone) {
+  const byEmail = email ? await crmSearchLeadsByEmail(token, email) : [];
+  if (byEmail.length) return byEmail;
+  const digits = phoneDigits(telefone);
+  if (digits.length < 10) return [];
+  const rows = await crmSearchLeadsByTerm(token, digits);
+  return rows.filter((l) => phoneDigits(l.contact_phone) === digits || phoneDigits(l.phone) === digits);
+}
+
+async function orbitPostLead(headers, body) {
+  let r = await fetch(`${ORBIT_BASE}/leads`, {
+    method: "POST", headers, body: JSON.stringify(body),
+  }).catch(() => null);
+  if (r && r.ok) return r;
+  if (body.custom_fields && body.custom_fields[ORBIT_FIELDS.norma]) {
+    const cf = { ...body.custom_fields };
+    delete cf[ORBIT_FIELDS.norma];
+    if (Object.keys(cf).length) {
+      r = await fetch(`${ORBIT_BASE}/leads`, {
+        method: "POST", headers, body: JSON.stringify({ ...body, custom_fields: cf }),
+      }).catch(() => null);
+      if (r && r.ok) return r;
+    }
+  }
+  const basicBody = { ...body };
+  delete basicBody.custom_fields;
+  return fetch(`${ORBIT_BASE}/leads`, {
+    method: "POST", headers, body: JSON.stringify(basicBody),
+  }).catch(() => null);
+}
+
+// Isca digital → funil MQL (não INBOUND). Dedup por e-mail/telefone: se já existe
+// card aberto (inclusive em outro funil), só soma tag/nota.
+async function saveToMqlIsca(lead, env) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const tags = iscaOrbitTags(lead);
+  const note = lead.mensagem || "";
+  const isResultado = lead.evento === "isca-resultado";
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+
+  try {
+    const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
+    const existing = pickCrmLeadForIsca(found);
+
+    if (existing) {
+      const patch = { tags: mergeLeadTags(existing.tags, tags) };
+      if (note) {
+        const prev = String(existing.notes || existing.note || "").trim();
+        patch.notes = prev && prev.indexOf(note) === -1 ? prev + "\n\n" + note : (prev || note);
+      }
+      const canAdvance =
+        isResultado &&
+        existing.pipeline_id === ORBIT_MQL_PIPELINE_ID &&
+        (existing.stage_id === ORBIT_MQL_STAGE_NOVO || existing.stage_id === ORBIT_MQL_STAGE_INCONSCIENTE);
+      if (canAdvance) patch.stage_id = ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA;
+
+      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
+        method: "PATCH", headers, body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
+      }
+      return { ok: true, lead_id: existing.id, updated: true, advanced: !!canAdvance };
+    }
+
+    const title = [lead.empresa || lead.nome || lead.email, lead.norma || "Isca"].filter(Boolean).join(" - ");
+    const custom_fields = {};
+    for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+      const val = lead[field];
+      if (val) custom_fields[key] = val;
+    }
+    const body = {
+      title,
+      pipeline_id: ORBIT_MQL_PIPELINE_ID,
+      stage_id: isResultado ? ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA : ORBIT_MQL_STAGE_NOVO,
+      contact_name: lead.nome || lead.email,
+      contact_email: lead.email,
+      source: "Isca digital",
+      tags,
+    };
+    if (lead.telefone) body.contact_phone = lead.telefone;
+    if (lead.empresa) body.company_name = lead.empresa;
+    if (note) body.notes = note;
+    if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
+
+    const r = await orbitPostLead(headers, body);
+    if (r && r.ok) {
+      const d = await r.json().catch(() => ({}));
+      return { ok: true, lead_id: d.data?.id, created: true };
+    }
+    const e = r ? await r.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(e).slice(0, 140) };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+async function handleWebinarMqlBackfill(request, env) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "not_configured" }, 500);
+
+  const limit = Math.max(1, Math.min(parseInt(url.searchParams.get("limit") || "25", 10) || 25, 80));
+  try {
+    const r = await fetch(`${sbUrl}/functions/v1/upsert-webinar-mql`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: "Bearer " + sbKey,
+        apikey: sbKey,
+      },
+      body: JSON.stringify({ mode: "backfill", limit }),
+    });
+    const d = await r.json().catch(() => ({}));
+    return json(d, r.ok ? 200 : 500);
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed" }, 500);
+  }
+}
+
 // ---- 4) ManyChat ---------------------------------------------------------
 // Cria/atualiza o subscriber do WhatsApp no ManyChat e aplica etiquetas por
 // produto (norma) e por série de webinar. Reaproveita os custom fields que já
@@ -719,6 +1015,7 @@ function manyChatTagsFor(lead) {
   // ManyChat sem etiqueta nenhuma (não é webinar nem webserie, e a LP não manda
   // norma), então não havia como disparar lembrete do evento por lá.
   if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
+  if (lead.evento === "isca" || lead.evento === "isca-resultado") tags.push("isca");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);
   return tags;
@@ -1525,4 +1822,228 @@ async function handleAsaasWebhook(request, env) {
   }
 
   return json({ ok: true, matched });
+}
+
+// ---- Descadastrar e-mail (Templum OS) --------------------------------------
+// Fonte da verdade: tag `email-opt-out` em todo card do CRM daquele e-mail.
+// Os Fluxos param na condicional de etiqueta. Página: /emails/descadastrar
+const EMAIL_OPT_OUT_TAG = "email-opt-out";
+
+function normalizeEmail(v) {
+  return String(v || "").trim().toLowerCase();
+}
+
+async function hmacHex(secret, msg) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(msg));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function timingSafeEqual(a, b) {
+  const x = String(a || "");
+  const y = String(b || "");
+  if (x.length !== y.length) return false;
+  let out = 0;
+  for (let i = 0; i < x.length; i++) out |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  return out === 0;
+}
+
+function mergeLeadTags(existing, incoming) {
+  const set = new Set((existing || []).map(String).filter(Boolean));
+  for (const t of incoming) if (t) set.add(t);
+  let tags = [...set];
+  if (tags.length > 20) {
+    const rest = tags.filter((t) => t !== EMAIL_OPT_OUT_TAG);
+    tags = [EMAIL_OPT_OUT_TAG, ...rest].slice(0, 20);
+  }
+  return tags;
+}
+
+async function verifyOptOutSig(env, email, sig) {
+  if (!sig) return true;
+  const secret = env.UNSUB_HMAC_SECRET || env.ORBIT_CRM_API_KEY || "";
+  if (!secret) return false;
+  const expected = await hmacHex(secret, normalizeEmail(email));
+  return timingSafeEqual(expected, String(sig).toLowerCase());
+}
+
+async function crmSearchLeadsByEmail(token, email) {
+  const r = await fetch(
+    `${ORBIT_BASE}/leads/search?term=${encodeURIComponent(email)}&limit=50`,
+    { headers: { authorization: "Bearer " + token, accept: "application/json" } },
+  );
+  if (!r.ok) return [];
+  const j = await r.json().catch(() => ({}));
+  const rows = j.data || j.leads || [];
+  const matched = rows.filter((l) => normalizeEmail(l.contact_email) === email);
+  const full = [];
+  for (const lead of matched) {
+    if (Array.isArray(lead.tags)) {
+      full.push(lead);
+      continue;
+    }
+    if (!lead.id) continue;
+    const one = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+      headers: { authorization: "Bearer " + token, accept: "application/json" },
+    });
+    if (!one.ok) {
+      full.push(lead);
+      continue;
+    }
+    const d = await one.json().catch(() => ({}));
+    full.push(d.data || d.lead || d);
+  }
+  return full;
+}
+
+async function tagCrmLeadsOptOut(token, leads) {
+  const headers = {
+    authorization: "Bearer " + token,
+    "content-type": "application/json",
+    accept: "application/json",
+  };
+  const tagged = [];
+  const errors = [];
+  for (const lead of leads) {
+    if (!lead.id) continue;
+    const tags = mergeLeadTags(lead.tags, [EMAIL_OPT_OUT_TAG]);
+    const res = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ tags }),
+    });
+    if (res.ok) tagged.push({ id: lead.id, pipeline_id: lead.pipeline_id || null });
+    else errors.push({ id: lead.id, status: res.status });
+  }
+  return { tagged, errors };
+}
+
+async function unsubMailchimp(email, env) {
+  if (!env.MAILCHIMP_API_KEY || !env.MAILCHIMP_LIST_ID) {
+    return { ok: false, skipped: true, reason: "not_configured" };
+  }
+  const dc = env.MAILCHIMP_API_KEY.split("-")[1];
+  if (!dc) return { ok: false, skipped: true, reason: "invalid_key" };
+  const hash = md5hex(email);
+  const auth = "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY);
+  try {
+    const r = await fetch(
+      `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members/${hash}`,
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json", authorization: auth },
+        body: JSON.stringify({ status: "unsubscribed" }),
+      },
+    );
+    if (r.ok) return { ok: true };
+    if (r.status === 404) return { ok: true, skipped: true, reason: "not_on_list" };
+    const e = await r.json().catch(() => ({}));
+    return { ok: false, error: e.title || "mailchimp_error" };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+// GET /api/email-opt-out?email=&token=  → link para colar no Fluxo (teste)
+async function handleEmailOptOutLink(request, env) {
+  const url = new URL(request.url);
+  const pass = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (pass !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+  const email = normalizeEmail(url.searchParams.get("email"));
+  if (!email.includes("@")) return json({ ok: false, error: "invalid_email" }, 400);
+  const secret = env.UNSUB_HMAC_SECRET || env.ORBIT_CRM_API_KEY || "";
+  if (!secret) return json({ ok: false, error: "missing_secret" }, 500);
+  const s = await hmacHex(secret, email);
+  const page = `https://templum.com.br/emails/descadastrar?e=${encodeURIComponent(email)}&s=${s}`;
+  return json({ ok: true, email, url: page, fluxos_sem_assinatura: `https://templum.com.br/emails/descadastrar?e={{email}}` });
+}
+
+// POST /api/email-opt-out  { email, s? }
+async function handleEmailOptOut(request, env) {
+  let body = {};
+  try {
+    body = await request.json();
+  } catch (_) {
+    body = {};
+  }
+  const url = new URL(request.url);
+  const email = normalizeEmail(body.email || url.searchParams.get("e"));
+  const sig = String(body.s || url.searchParams.get("s") || "").trim();
+  if (!email.includes("@")) return json({ ok: false, error: "invalid_email" }, 400);
+  if (!(await verifyOptOutSig(env, email, sig))) {
+    return json({ ok: false, error: "invalid_link" }, 403);
+  }
+
+  const token = env.ORBIT_CRM_API_KEY;
+  let crm = { tagged: [], errors: [], found: 0 };
+  if (token) {
+    const leads = await crmSearchLeadsByEmail(token, email);
+    const tagged = await tagCrmLeadsOptOut(token, leads);
+    crm = { found: leads.length, ...tagged };
+  }
+
+  const mailchimp = await unsubMailchimp(email, env);
+
+  return json({
+    ok: true,
+    tag: EMAIL_OPT_OUT_TAG,
+    crm,
+    mailchimp,
+  });
+}
+
+function leadHasOptOut(lead) {
+  return (lead.tags || []).map((t) => String(t).toLowerCase()).includes(EMAIL_OPT_OUT_TAG);
+}
+
+// GET/POST /api/email-opt-out/status — o Fluxo consulta isto ANTES de cada envio.
+// 200 = pode mandar. 409 = tem email-opt-out, o passo webhook falha e o fluxo para.
+async function handleEmailOptOutStatus(request, env) {
+  let body = {};
+  if (request.method === "POST") {
+    try {
+      body = await request.json();
+    } catch (_) {
+      body = {};
+    }
+  }
+  const url = new URL(request.url);
+  const email = normalizeEmail(
+    body.email || body.email_alt || body.contact_email || url.searchParams.get("e") || url.searchParams.get("email"),
+  );
+  const leadId = String(body.lead_id || body.id || url.searchParams.get("lead_id") || "").trim();
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return json({ ok: false, error: "not_configured" }, 500);
+
+  try {
+    let leads = [];
+    if (email.includes("@")) {
+      leads = await crmSearchLeadsByEmail(token, email);
+    } else if (leadId) {
+      const r = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+        headers: { authorization: "Bearer " + token, accept: "application/json" },
+      });
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        const one = j.data || j.lead || j;
+        if (one && one.id) leads = [one];
+      }
+    } else {
+      return json({ ok: true, allowed: true, skipped: true, reason: "no_email" });
+    }
+    if (leads.some(leadHasOptOut)) {
+      return json({ ok: true, allowed: false }, 409);
+    }
+    return json({ ok: true, allowed: true });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed" }, 500);
+  }
 }

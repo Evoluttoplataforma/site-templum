@@ -67,12 +67,12 @@ const planilhas = iscas.filter((i) => i.type === "planilha").length;
             {g.itens.map((i) => (
               <a class="pr-card" href={`/presentes/${i.slug}`}>
                 <span class="pr-type">
-                  <iconify-icon icon={i.type === "planilha" ? "solar:chart-square-bold" : "solar:book-bookmark-bold"}></iconify-icon>
-                  {i.type === "planilha" ? "Planilha" : "E-book"}
+                  <iconify-icon icon={i.type === "planilha" ? "solar:chart-square-bold" : i.type === "diagnostico" ? "solar:clipboard-check-bold" : "solar:book-bookmark-bold"}></iconify-icon>
+                  {i.type === "planilha" ? "Planilha" : i.type === "diagnostico" ? "Diagnóstico" : "E-book"}
                 </span>
                 <h3>{i.titulo}</h3>
                 <p>{i.desc}</p>
-                <span class="pr-link">Baixar grátis <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+                <span class="pr-link">{i.type === "diagnostico" ? "Fazer agora" : "Baixar grátis"} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
               </a>
             ))}
           </div>

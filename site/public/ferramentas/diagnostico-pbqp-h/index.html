@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico PBQP-H e GERIC · Templum</title>
+<meta name="description" content="Diagnóstico gratuito de pré-requisitos para PBQP-H, GERIC e Minha Casa, Minha Vida. Seis perguntas e o raio-x do que falta para certificar." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#1E252D" />
+<link rel="icon" href="/assets/logo/templum.png" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --bg:#1E252D;
+  --grid-line: rgba(61,88,113,0.22);
+  --surface:#2A323C;
+  --surface-raised:#323C47;
+  --border: rgba(255,255,255,0.09);
+  --accent:#FF5925;
+  --accent-ink:#1E252D;
+  --blueprint:#5C7A93;
+  --text:#F2EFE9;
+  --text-dim:#98A2AC;
+  --text-faint:#6B7480;
+  --success:#4FAE82;
+  --attention:#E2A63B;
+  --whatsapp:#25D366;
+  --whatsapp-ink:#0B2914;
+  --radius-card: 18px;
+  --radius-chip: 12px;
+  --shadow-card: 0 24px 60px -24px rgba(0,0,0,0.55);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 88px),
+    var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Sans', Arial, sans-serif;
+  min-height:100vh;
+  padding-block: 56px;
+}
+a{color:var(--accent);}
+a:hover{color:#ffb199;}
+h1,h2,h3{font-family:'Sora', system-ui, sans-serif; text-wrap:balance; margin:0;}
+.mono{font-family:'IBM Plex Mono', 'Courier New', monospace; font-variant-numeric:tabular-nums;}
+
+.page{
+  max-width:640px;
+  margin:0 auto;
+  padding-inline:20px;
+}
+
+.brandbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:30px;
+}
+.wordmark{font-family:'Sora',system-ui,sans-serif; font-weight:700; font-size:18px; color:var(--text);}
+.wordmark span{color:var(--accent);}
+.eyebrow-tag{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11.5px;
+  letter-spacing:.08em;
+  color:var(--blueprint);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 12px;
+}
+
+.ruler{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  margin-bottom:34px;
+}
+.ruler-step{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
+.ruler-tick{
+  width:100%;
+  height:4px;
+  border-radius:2px;
+  background:var(--surface-raised);
+  transition:background .3s ease;
+}
+.ruler-step.done .ruler-tick, .ruler-step.active .ruler-tick{background:var(--accent);}
+.ruler-num{font-size:11px; color:var(--text-faint);}
+.ruler-step.active .ruler-num{color:var(--accent); font-weight:600;}
+.ruler-step.done .ruler-num{color:var(--text-dim);}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-card);
+  box-shadow:var(--shadow-card);
+  padding:36px 32px;
+  position:relative;
+}
+.card::before, .card::after{
+  content:"";
+  position:absolute;
+  width:16px;height:16px;
+  border-color:var(--blueprint);
+  opacity:.55;
+}
+.card::before{top:12px;left:12px;border-top:1.4px solid;border-left:1.4px solid;}
+.card::after{bottom:12px;right:12px;border-bottom:1.4px solid;border-right:1.4px solid;}
+
+.panel{
+  display:none;
+  animation: rise .38s ease both;
+}
+.panel.active{display:block;}
+@media (prefers-reduced-motion: reduce){ .panel{animation:none;} }
+@keyframes rise{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+
+.intro-eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  letter-spacing:.14em;
+  color:var(--accent);
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.intro h1{font-size:28px; line-height:1.28; margin-bottom:18px;}
+.intro p{font-size:16.5px; line-height:1.6; color:var(--text-dim); margin:0 0 28px 0; max-width:52ch;}
+.intro-meta{
+  display:flex; gap:22px; margin-bottom:30px; flex-wrap:wrap;
+}
+.intro-meta div{font-size:13px; color:var(--text-faint); display:flex; align-items:center; gap:7px;}
+.intro-meta strong{color:var(--text-dim); font-weight:600;}
+
+.annotation{
+  border:1px dashed var(--blueprint);
+  border-radius:12px;
+  padding:16px 18px;
+  display:flex;
+  gap:12px;
+  margin-bottom:22px;
+  background: rgba(92,122,147,0.07);
+}
+.annotation svg{flex-shrink:0; margin-top:2px;}
+.annotation p{
+  margin:0;
+  font-size:14.5px;
+  line-height:1.55;
+  color:var(--text-dim);
+}
+.annotation .label{
+  display:block;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--blueprint);
+  margin-bottom:5px;
+}
+
+.q-title{font-size:21px; line-height:1.35; margin-bottom:20px;}
+
+.options{display:flex; flex-direction:column; gap:10px; margin-bottom:26px;}
+.opt{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  text-align:left;
+  width:100%;
+  padding:15px 18px;
+  border-radius:var(--radius-chip);
+  border:1.4px solid var(--border);
+  background:var(--surface-raised);
+  color:var(--text);
+  font-family:'IBM Plex Sans', Arial, sans-serif;
+  font-size:15.5px;
+  font-weight:500;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.opt:hover{border-color:var(--blueprint);}
+.opt .dot{
+  width:18px;height:18px;border-radius:50%;
+  border:1.6px solid var(--text-faint);
+  flex-shrink:0;
+  position:relative;
+}
+.opt.selected{border-color:var(--accent); background:rgba(255,89,37,0.09);}
+.opt.selected .dot{border-color:var(--accent);}
+.opt.selected .dot::after{
+  content:"";
+  position:absolute; inset:3px;
+  border-radius:50%;
+  background:var(--accent);
+}
+
+.nav-row{display:flex; justify-content:space-between; align-items:center; gap:14px;}
+.btn{
+  font-family:'IBM Plex Sans', Arial, sans-serif;
+  font-weight:700;
+  font-size:15px;
+  border:none;
+  border-radius:999px;
+  padding:14px 28px;
+  cursor:pointer;
+  transition:opacity .15s ease, transform .1s ease;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--accent); color:var(--accent-ink);}
+.btn-primary:disabled{opacity:.35; cursor:not-allowed;}
+.btn-ghost{background:transparent; color:var(--text-dim); padding:14px 6px;}
+.btn-full{width:100%;}
+.btn-as-link{
+  display:flex; align-items:center; justify-content:center;
+  text-decoration:none; box-sizing:border-box;
+}
+.btn-guide{background:#F2EFE9; color:var(--accent-ink); margin-bottom:10px;}
+.btn-consult{
+  background:transparent; color:var(--text);
+  border:1.4px solid var(--border);
+  margin-bottom:4px;
+}
+.cta-stack{display:flex; flex-direction:column; gap:0; margin-bottom:8px;}
+.btn-link-whatsapp{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; background:transparent; border:none;
+  font-family:'IBM Plex Sans', Arial, sans-serif;
+  font-size:13.5px; font-weight:600; color:var(--text-dim);
+  margin-top:16px; padding:8px; cursor:pointer;
+}
+.btn-link-whatsapp:hover{color:var(--text);}
+
+.stamp{
+  width:96px;height:96px;border-radius:50%;
+  border:3px solid var(--accent);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  margin:0 auto 22px auto;
+  transform:rotate(-6deg);
+}
+.stamp .n{font-family:'Sora',system-ui,sans-serif; font-weight:800; font-size:28px; color:var(--accent); line-height:1;}
+.stamp .d{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-faint); letter-spacing:.06em;}
+
+.result-head{text-align:center; margin-bottom:30px;}
+.result-head h2{font-size:23px; line-height:1.35; margin-bottom:8px;}
+.result-head p{color:var(--text-dim); font-size:15px; margin:0;}
+
+.checklist{display:flex; flex-direction:column; gap:0; margin-bottom:26px;}
+.check-row{
+  display:flex; align-items:flex-start; gap:14px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+.check-row:last-child{border-bottom:none;}
+.check-icon{flex-shrink:0; margin-top:1px;}
+.check-row .t{font-size:15.5px; font-weight:600; color:var(--text); margin-bottom:2px;}
+.check-row .s{font-size:13.5px; color:var(--text-dim); line-height:1.5;}
+
+.tailored{
+  background:rgba(255,89,37,0.08);
+  border-left:3px solid var(--accent);
+  border-radius:10px;
+  padding:18px 20px;
+  font-size:15px;
+  line-height:1.6;
+  color:var(--text);
+  margin-bottom:28px;
+}
+
+.contact{
+  border-top:1px solid var(--border);
+  padding-top:26px;
+}
+.contact label{
+  display:block;
+  font-size:13px;
+  color:var(--text-dim);
+  margin-bottom:8px;
+}
+.contact input{
+  width:100%;
+  background:var(--surface-raised);
+  border:1.4px solid var(--border);
+  border-radius:10px;
+  padding:13px 15px;
+  color:var(--text);
+  font-family:'IBM Plex Sans', Arial, sans-serif;
+  font-size:15px;
+  margin-bottom:18px;
+}
+.contact input:focus{outline:2px solid var(--blueprint); outline-offset:1px;}
+.contact input::placeholder{color:var(--text-faint);}
+.contact-lead-in{font-size:15px; line-height:1.55; color:var(--text); margin-bottom:20px;}
+.field-error{font-size:13px; color:var(--attention); margin:-8px 0 16px 0;}
+.disclaimer{font-size:12px; color:var(--text-faint); text-align:center; margin-top:14px; line-height:1.5;}
+
+.footer{
+  text-align:center;
+  margin-top:26px;
+  font-size:12px;
+  color:var(--text-faint);
+}
+
+@media (max-width:480px){
+  body{padding-block:32px;}
+  .card{padding:26px 20px;}
+  .intro h1{font-size:24px;}
+  .stamp{width:84px;height:84px;}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="brandbar">
+    <div class="wordmark">Templum<span>!</span></div>
+    <div class="eyebrow-tag">DIAGNÓSTICO GRATUITO</div>
+  </div>
+
+  <div class="ruler" id="ruler"></div>
+
+  <div class="card">
+    <div class="panel active" id="panel-intro"></div>
+    <div id="panels-questions"></div>
+    <div class="panel" id="panel-result"></div>
+  </div>
+
+  <div class="footer">templum.com.br</div>
+</div>
+
+<script>
+var DATA = {
+  "meta": {
+    "eyebrow": "PBQP-H · GERIC · Minha Casa, Minha Vida",
+    "title": "Sua construtora está pronta para o PBQP-H e o crédito GERIC?",
+    "subtitle": "6 perguntas rápidas. No final, você recebe um raio-x de quais pré-requisitos sua empresa já atende, e o que falta para destravar certificação e crédito.",
+    "duration": "2 min",
+    "startButton": "Começar diagnóstico"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "A Caixa Econômica Federal só aprova o crédito GERIC e a participação no Minha Casa, Minha Vida para construtoras com obra multifamiliar em andamento. Por isso começamos por aqui.",
+      "question": "Sua empresa tem uma obra multifamiliar em andamento (pública ou privada)?",
+      "options": [
+        { "value": "sim", "label": "Sim, tenho obra em andamento" },
+        { "value": "em_breve", "label": "Não, mas devo iniciar em breve" },
+        { "value": "sem_previsao", "label": "Não tenho previsão ainda" }
+      ]
+    },
+    {
+      "id": "qart",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "Além da obra em andamento, o organismo certificador confirma que existe uma ART (Anotação de Responsabilidade Técnica) registrada no nome da sua empresa. É esse documento que vincula formalmente o profissional responsável pela obra.",
+      "question": "Sua empresa possui ART registrada em seu nome para a obra em andamento?",
+      "options": [
+        { "value": "sim", "label": "Sim, tenho ART registrada" },
+        { "value": "nao", "label": "Não" },
+        { "value": "nao_sei", "label": "Não sei o que é ART" }
+      ]
+    },
+    {
+      "id": "q2",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "O registro no CREA (engenharia) ou no CAU (arquitetura) é o cadastro básico que credencia sua construtora perante os órgãos que liberam crédito e licitações.",
+      "question": "Sua construtora é registrada no CREA ou no CAU?",
+      "options": [
+        { "value": "sim", "label": "Sim" },
+        { "value": "nao", "label": "Não" },
+        { "value": "nao_sei", "label": "Não sei" }
+      ]
+    },
+    {
+      "id": "q3",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "O PBQP-H Nível A é o pré-requisito técnico que a Caixa exige tanto para o crédito via GERIC quanto para participar do Minha Casa, Minha Vida.",
+      "question": "Sua empresa já tem ou já iniciou a certificação PBQP-H Nível A?",
+      "options": [
+        { "value": "certificada", "label": "Já sou certificada" },
+        { "value": "em_processo", "label": "Já iniciei o processo" },
+        { "value": "nao_iniciei", "label": "Ainda não iniciei" }
+      ]
+    },
+    {
+      "id": "q4",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "A Caixa analisa o histórico fiscal dos últimos anos para definir o limite de crédito disponível. Não pedimos nenhum documento aqui: só uma faixa aproximada, para te dar um primeiro retrato.",
+      "question": "Qual foi o faturamento médio anual da sua construtora nos últimos 3 anos?",
+      "options": [
+        { "value": "ate_500k", "label": "Até R$ 500 mil" },
+        { "value": "500k_2mi", "label": "R$ 500 mil a R$ 2 milhões" },
+        { "value": "2mi_5mi", "label": "R$ 2 milhões a R$ 5 milhões" },
+        { "value": "acima_5mi", "label": "Acima de R$ 5 milhões" }
+      ]
+    },
+    {
+      "id": "q5",
+      "explanationLabel": "Por que perguntamos isso",
+      "explanation": "Isso nos ajuda a entender o seu momento, para direcionar a conversa certa com nosso especialista.",
+      "question": "O que motivou você a buscar isso agora?",
+      "options": [
+        { "value": "exigencia", "label": "Um cliente ou licitação exigiu" },
+        { "value": "financiamento", "label": "Quero acessar financiamento do MCMV" },
+        { "value": "diferenciacao", "label": "Quero me diferenciar da concorrência" },
+        { "value": "pesquisando", "label": "Ainda estou pesquisando" }
+      ],
+      "isLast": true
+    }
+  ],
+  "checklist": [
+    {
+      "key": "obra",
+      "questionId": "q1",
+      "okValue": "sim",
+      "title": "Obra multifamiliar em andamento",
+      "textOk": "Sua empresa atende esse requisito.",
+      "textByValue": {
+        "em_breve": "Ainda não, mas você sinalizou início em breve. Vale já se preparar em paralelo.",
+        "sem_previsao": "Esse é o primeiro ponto a resolver: sem obra em andamento, a Caixa não avança com o GERIC."
+      }
+    },
+    {
+      "key": "art",
+      "questionId": "qart",
+      "okValue": "sim",
+      "title": "ART em nome da empresa",
+      "textOk": "Documento técnico confirmado.",
+      "textByValue": {
+        "nao_sei": "Vale confirmar isso com seu engenheiro ou arquiteto responsável. É rápido de verificar.",
+        "nao": "Sem a ART registrada em nome da empresa, o organismo certificador não avança com a auditoria."
+      }
+    },
+    {
+      "key": "registro",
+      "questionId": "q2",
+      "okValue": "sim",
+      "title": "Registro no CREA ou CAU",
+      "textOk": "Cadastro básico confirmado.",
+      "textByValue": {
+        "nao": "Sem esse registro, nenhum outro passo avança. É rápido de resolver.",
+        "nao_sei": "Sem esse registro, nenhum outro passo avança. É rápido de resolver."
+      }
+    },
+    {
+      "key": "pbqph",
+      "questionId": "q3",
+      "okValue": "certificada",
+      "title": "Certificação PBQP-H Nível A",
+      "textOk": "Sua empresa já tem o principal pré-requisito técnico.",
+      "textByValue": {
+        "em_processo": "Você já está no caminho: o processo já foi iniciado.",
+        "nao_iniciei": "Esse é o ponto onde a Templum conduz sua construtora do zero até a certificação."
+      }
+    }
+  ],
+  "faturamentoLabels": {
+    "ate_500k": "até R$ 500 mil",
+    "500k_2mi": "entre R$ 500 mil e R$ 2 milhões",
+    "2mi_5mi": "entre R$ 2 milhões e R$ 5 milhões",
+    "acima_5mi": "acima de R$ 5 milhões"
+  },
+  "motivoLabels": {
+    "exigencia": "um cliente ou licitação exigiu",
+    "financiamento": "quero acessar financiamento do MCMV",
+    "diferenciacao": "quero me diferenciar da concorrência",
+    "pesquisando": "ainda estou pesquisando"
+  },
+  "resultTitles": {
+    "all": "Sua construtora está no caminho certo.",
+    "none": "Vamos começar do zero, com um plano claro.",
+    "partial": "Falta pouco para destravar o crédito."
+  },
+  "contact": {
+    "whatsappNumber": "5519993521270",
+    "email": "comercial@templum.com.br"
+  }
+};
+
+(function () {
+  "use strict";
+
+  var STEP_ORDER = [];
+  var answers = {};
+  var GUIDE_URL = "https://drive.google.com/file/d/1GH7fVrKl1IeEd5rjtdFJcUfXs-Yld-ZG/view?usp=sharing";
+  var OBRIGADO_URL = "https://templum.com.br/obrigado";
+
+  function qs(key) {
+    try { return new URLSearchParams(location.search).get(key) || ""; }
+    catch (_) { return ""; }
+  }
+
+  var ICON_INFO =
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none">' +
+    '<path d="M12 3l7 3v6c0 5-3.2 7.8-7 9-3.8-1.2-7-4-7-9V6l7-3z" stroke="#5C7A93" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '</svg>';
+
+  var ICON_CHECK_OK =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none">' +
+    '<circle cx="12" cy="12" r="9.25" stroke="#4FAE82" stroke-width="1.6"/>' +
+    '<path d="M8 12.3l2.6 2.6L16.2 9" stroke="#4FAE82" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
+    "</svg>";
+
+  var ICON_CHECK_NO =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none">' +
+    '<circle cx="12" cy="12" r="9.25" stroke="#E2A63B" stroke-width="1.6"/>' +
+    '<path d="M12 8v5" stroke="#E2A63B" stroke-width="1.9" stroke-linecap="round"/>' +
+    '<circle cx="12" cy="16" r="1" fill="#E2A63B"/>' +
+    "</svg>";
+
+  var ICON_WHATSAPP =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none">' +
+    '<path d="M12 3a9 9 0 00-7.8 13.5L3 21l4.7-1.2A9 9 0 1012 3z" stroke="#25D366" stroke-width="1.7" stroke-linejoin="round"/>' +
+    "</svg>";
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    attrs = attrs || {};
+    Object.keys(attrs).forEach(function (k) {
+      if (k === "class") node.className = attrs[k];
+      else if (k === "html") node.innerHTML = attrs[k];
+      else if (k === "text") node.textContent = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) {
+      if (c) node.appendChild(c);
+    });
+    return node;
+  }
+
+  function buildRuler() {
+    var ruler = document.getElementById("ruler");
+    ruler.innerHTML = "";
+    STEP_ORDER.forEach(function (id, i) {
+      var step = el("div", { class: "ruler-step", "data-step": String(i + 1) }, [
+        el("div", { class: "ruler-tick" }),
+        el("div", { class: "ruler-num mono", text: String(i + 1).padStart(2, "0") }),
+      ]);
+      ruler.appendChild(step);
+    });
+  }
+
+  function updateRuler(panelName) {
+    var idx = STEP_ORDER.indexOf(panelName);
+    document.querySelectorAll(".ruler-step").forEach(function (step) {
+      var n = parseInt(step.getAttribute("data-step"), 10);
+      step.classList.remove("active", "done");
+      if (idx === -1) return;
+      if (n < idx + 1) step.classList.add("done");
+      if (n === idx + 1) step.classList.add("active");
+    });
+  }
+
+  function showPanel(name) {
+    document.querySelectorAll(".panel").forEach(function (p) {
+      p.classList.remove("active");
+    });
+    var target =
+      name === "intro"
+        ? document.getElementById("panel-intro")
+        : name === "result"
+        ? document.getElementById("panel-result")
+        : document.getElementById("panel-" + name);
+    if (target) target.classList.add("active");
+    updateRuler(name);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function buildIntroPanel() {
+    var m = DATA.meta;
+    var wrap = el("div", { class: "intro" }, [
+      el("div", { class: "intro-eyebrow", text: m.eyebrow }),
+      el("h1", { text: m.title }),
+      el("p", { text: m.subtitle }),
+      el("div", { class: "intro-meta" }, [
+        el("div", { html: '<strong class="mono">' + m.duration + "</strong> de duração" }),
+        el("div", {
+          html: '<strong class="mono">' + DATA.questions.length + "</strong> perguntas",
+        }),
+        el("div", { html: "<strong>Sem</strong> compromisso" }),
+      ]),
+    ]);
+    var btn = el("button", { class: "btn btn-primary", text: m.startButton });
+    btn.addEventListener("click", function () {
+      showPanel(STEP_ORDER[0]);
+    });
+    wrap.appendChild(btn);
+    document.getElementById("panel-intro").appendChild(wrap);
+  }
+
+  function buildQuestionPanels() {
+    var host = document.getElementById("panels-questions");
+    DATA.questions.forEach(function (q) {
+      var panel = el("div", { class: "panel", id: "panel-" + q.id });
+
+      var annotation = el("div", { class: "annotation" }, [
+        el("div", { html: ICON_INFO }),
+        el("p", {
+          html: '<span class="label">' + q.explanationLabel + "</span>" + q.explanation,
+        }),
+      ]);
+
+      var optionsWrap = el("div", { class: "options", "data-q": q.id });
+      q.options.forEach(function (opt) {
+        var button = el("button", { class: "opt", "data-value": opt.value }, [
+          el("span", { class: "dot" }),
+        ]);
+        button.appendChild(document.createTextNode(opt.label));
+        button.addEventListener("click", function () {
+          optionsWrap.querySelectorAll(".opt").forEach(function (o) {
+            o.classList.remove("selected");
+          });
+          button.classList.add("selected");
+          answers[q.id] = opt.value;
+          nextBtn.disabled = false;
+        });
+        optionsWrap.appendChild(button);
+      });
+
+      var backBtn = el("button", { class: "btn btn-ghost", text: "Voltar" });
+      backBtn.addEventListener("click", goBack);
+
+      var nextBtn = el("button", {
+        class: "btn btn-primary",
+        text: q.isLast ? "Ver meu diagnóstico" : "Continuar",
+        disabled: "disabled",
+      });
+      nextBtn.addEventListener("click", function () {
+        goNext(q.id);
+      });
+
+      panel.appendChild(annotation);
+      panel.appendChild(el("div", { class: "q-title", text: q.question }));
+      panel.appendChild(optionsWrap);
+      panel.appendChild(el("div", { class: "nav-row" }, [backBtn, nextBtn]));
+      host.appendChild(panel);
+    });
+  }
+
+  function goNext(currentId) {
+    var idx = STEP_ORDER.indexOf(currentId);
+    if (idx === STEP_ORDER.length - 1) {
+      renderResult();
+      showPanel("result");
+    } else {
+      showPanel(STEP_ORDER[idx + 1]);
+    }
+  }
+
+  function goBack() {
+    var activePanel = document.querySelector(".panel.active");
+    var activeId = activePanel ? activePanel.id.replace("panel-", "") : "intro";
+    var idx = STEP_ORDER.indexOf(activeId);
+    if (idx <= 0) showPanel("intro");
+    else showPanel(STEP_ORDER[idx - 1]);
+  }
+
+  function computeChecklist() {
+    return DATA.checklist.map(function (item) {
+      var value = answers[item.questionId];
+      var ok = value === item.okValue;
+      var text = ok ? item.textOk : item.textByValue[value] || item.textByValue.default || "";
+      return { key: item.key, title: item.title, ok: ok, text: text };
+    });
+  }
+
+  function buildResultPanel() {
+    var panel = document.getElementById("panel-result");
+    panel.innerHTML = "";
+
+    var stamp = el("div", { class: "stamp" }, [
+      el("div", { class: "n mono", id: "score-n", text: "0/" + DATA.checklist.length }),
+      el("div", { class: "d", text: "REQUISITOS" }),
+    ]);
+    var head = el("div", { class: "result-head" }, [
+      el("h2", { id: "result-title", text: "Seu diagnóstico está pronto." }),
+      el("p", { text: "Veja quais pré-requisitos sua construtora já atende." }),
+    ]);
+    var checklistEl = el("div", { class: "checklist", id: "checklist" });
+    var tailored = el("div", { class: "tailored", id: "tailored-msg" });
+
+    var cta = el("div", { class: "cta-stack" }, [
+      el("a", {
+        class: "btn btn-primary btn-full btn-as-link btn-guide",
+        href: GUIDE_URL,
+        target: "_blank",
+        rel: "noopener",
+        text: "Baixar o guia PBQP-H e GERIC",
+      }),
+      el("a", {
+        class: "btn btn-full btn-as-link btn-consult",
+        href: OBRIGADO_URL,
+        text: "Falar com um especialista",
+      }),
+    ]);
+
+    panel.appendChild(stamp);
+    panel.appendChild(head);
+    panel.appendChild(checklistEl);
+    panel.appendChild(tailored);
+    panel.appendChild(cta);
+  }
+
+  function renderResult() {
+    var checks = computeChecklist();
+    var score = checks.filter(function (c) {
+      return c.ok;
+    }).length;
+    var total = checks.length;
+
+    document.getElementById("score-n").textContent = score + "/" + total;
+
+    var listHtml = checks
+      .map(function (c) {
+        return (
+          '<div class="check-row">' +
+          '<div class="check-icon">' +
+          (c.ok ? ICON_CHECK_OK : ICON_CHECK_NO) +
+          "</div>" +
+          '<div><div class="t">' +
+          c.title +
+          '</div><div class="s">' +
+          c.text +
+          "</div></div>" +
+          "</div>"
+        );
+      })
+      .join("");
+    document.getElementById("checklist").innerHTML = listHtml;
+
+    var title =
+      score === total
+        ? DATA.resultTitles.all
+        : score === 0
+        ? DATA.resultTitles.none
+        : DATA.resultTitles.partial;
+    document.getElementById("result-title").textContent = title;
+
+    var faturamentoLabel = DATA.faturamentoLabels[answers.q4] || "";
+    document.getElementById("tailored-msg").textContent =
+      "Com faturamento médio " +
+      faturamentoLabel +
+      " e " +
+      score +
+      " de " +
+      total +
+      " pré-requisitos atendidos, um especialista Templum consegue te dar, em uma conversa, o caminho mais curto até a certificação e o crédito GERIC, sem enrolação.";
+    patchCrmResult(score, total, checks);
+  }
+
+  function patchCrmResult(score, total, checks) {
+    var email = qs("e").trim().toLowerCase();
+    if (!email || email.indexOf("@") === -1) return;
+    var gaps = (checks || [])
+      .filter(function (c) { return !c.ok; })
+      .map(function (c) { return c.title; })
+      .join("; ");
+    var mensagem =
+      "Diagnóstico PBQP-H/GERIC: " +
+      score +
+      "/" +
+      total +
+      " requisitos. Gaps: " +
+      (gaps || "nenhum") +
+      ". Obra: " +
+      (answers.q1 || "") +
+      "; ART: " +
+      (answers.qart || "") +
+      "; CREA/CAU: " +
+      (answers.q2 || "") +
+      "; PBQP-H: " +
+      (answers.q3 || "") +
+      "; faturamento: " +
+      (answers.q4 || "") +
+      "; motivo: " +
+      (answers.q5 || "");
+    try {
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          nome: qs("n"),
+          email: email,
+          telefone: qs("t"),
+          empresa: qs("c") || "",
+          norma: "PBQP-H",
+          isca: qs("isca") || "e-book-guia-pbqp-h",
+          mensagem: mensagem,
+          evento: "isca-resultado",
+          pagina: location.pathname,
+        }),
+      }).catch(function () {});
+    } catch (_) {}
+  }
+
+  function init() {
+    STEP_ORDER = DATA.questions.map(function (q) {
+      return q.id;
+    });
+    buildRuler();
+    buildIntroPanel();
+    buildQuestionPanels();
+    buildResultPanel();
+    showPanel("intro");
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

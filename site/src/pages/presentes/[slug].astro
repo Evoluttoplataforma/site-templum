@@ -10,9 +10,14 @@ export function getStaticPaths() {
 const { isca } = Astro.props;
 const download = downloads[isca.slug] || "";
 const isPlanilha = isca.type === "planilha";
-const tipoLabel = isPlanilha ? "Planilha gratuita" : "E-book gratuito";
-const icon = isPlanilha ? "solar:chart-square-bold" : "solar:book-bookmark-bold";
-const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
+const isDiagnostico = isca.type === "diagnostico";
+const tipoLabel = isca.tipoLabel || (isPlanilha ? "Planilha gratuita" : isDiagnostico ? "Diagnóstico gratuito" : "E-book gratuito");
+const icon = isDiagnostico ? "solar:clipboard-check-bold" : isPlanilha ? "solar:chart-square-bold" : "solar:book-bookmark-bold";
+const ctaBtn = isca.ctaBtn || (isPlanilha ? "Quero a planilha" : isDiagnostico ? "Quero o diagnóstico" : "Quero o e-book");
+const leadSub = isca.leadSub || "Preencha os dados e o material abre na hora.";
+const insideLabel = isca.insideLabel || (isPlanilha ? "material" : "e-book");
+const successCta = isDiagnostico ? "Abrir diagnóstico" : "Abrir material";
+const ctaIcon = isDiagnostico ? "solar:clipboard-check-bold" : "solar:download-minimalistic-bold";
 ---
 
 <Base title={isca.title} description={isca.metaDescription}>
@@ -32,8 +37,8 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
       </div>
 
       <div class="lead-card isca-card">
-        <div class="lead-title">Receba agora — é grátis</div>
-        <p class="lead-sub">Preencha os dados e o material abre na hora.</p>
+        <div class="lead-title">Receba agora, é grátis</div>
+        <p class="lead-sub">{leadSub}</p>
         <form class="form" id="iscaForm" data-download={download} data-isca-slug={isca.slug} novalidate>
           <input type="hidden" name="isca" value={isca.slug} />
           <div class="field"><label for="i-nome">Nome</label><input class="input" id="i-nome" name="nome" placeholder="Seu nome" required /></div>
@@ -42,12 +47,12 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
             <div class="field"><label for="i-tel">WhatsApp</label><input class="input" type="tel" inputmode="numeric" id="i-tel" name="telefone" placeholder="(00) 00000-0000" /></div>
             <div class="field"><label for="i-emp">Empresa</label><input class="input" id="i-emp" name="empresa" placeholder="Sua empresa" /></div>
           </div>
-          <button type="submit" class="btn btn--primary btn--block btn--lg">{ctaBtn} <iconify-icon icon="solar:download-minimalistic-bold"></iconify-icon></button>
+          <button type="submit" class="btn btn--primary btn--block btn--lg">{ctaBtn} <iconify-icon icon={ctaIcon}></iconify-icon></button>
           <p class="isca-legal">Ao enviar, você concorda em receber contato da Templum. Seus dados são protegidos conforme a LGPD.</p>
         </form>
         <div class="form-success" id="iscaSuccess" hidden>
           <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-          <div><h4>Material liberado!</h4><p id="iscaSuccessMsg">Se o download não abrir, clique no botão abaixo.</p><a id="iscaDl" class="btn btn--primary btn--sm" href={download || "#"} target="_blank" rel="noopener" style="margin-top:12px">Abrir material</a></div>
+          <div><h4>{isDiagnostico ? "Diagnóstico liberado!" : "Material liberado!"}</h4><p id="iscaSuccessMsg">{isDiagnostico ? "Se a ferramenta não abrir, clique no botão abaixo." : "Se o download não abrir, clique no botão abaixo."}</p><a id="iscaDl" class="btn btn--primary btn--sm" href={download || "#"} target="_blank" rel="noopener" style="margin-top:12px">{successCta}</a></div>
         </div>
       </div>
     </div>
@@ -59,7 +64,7 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
       <div class="container xl">
         <div class="section-header">
           <span class="tag-pill">O que você vai encontrar</span>
-          <h2>Dentro do <em class="accent">{isPlanilha ? "material" : "e-book"}</em></h2>
+          <h2>Dentro do <em class="accent">{insideLabel}</em></h2>
         </div>
         <div class="step-grid">
           {isca.steps.map((s) => (
@@ -104,7 +109,7 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
   <section class="cta-band">
     <div class="container md">
       <h2>Quer ir <em>além do material</em>?</h2>
-      <p>Fale com um especialista e descubra como a Templum leva a sua empresa até a certificação — com garantia de 200%.</p>
+      <p>Fale com um especialista e descubra como a Templum leva a sua empresa até a certificação, com garantia de 200%.</p>
       <a href="/form/" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
     </div>
   </section>
@@ -141,21 +146,59 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
     var form = document.getElementById("iscaForm");
     if (!form) return;
     var success = document.getElementById("iscaSuccess");
+    var dlLink = document.getElementById("iscaDl");
     var dl = form.getAttribute("data-download") || "";
     var leadSent = false;
+
+    function iscaNorma(slug) {
+      var s = String(slug || "").toLowerCase();
+      if (/pbqp|pqo|obra|desempenho/.test(s)) return "PBQP-H";
+      if (/45001|perigos/.test(s)) return "ISO 45001";
+      if (/14001/.test(s)) return "ISO 14001";
+      if (/27001/.test(s)) return "ISO 27001";
+      if (/fssc|haccp|aliment/.test(s)) return "FSSC 22000";
+      if (/9001|tartaruga|sgi|processos/.test(s)) return "ISO 9001";
+      return "";
+    }
+
+    function giftUrl(base, d) {
+      if (!base) return "";
+      try {
+        var u = new URL(base, location.origin);
+        if (d.email) u.searchParams.set("e", d.email);
+        if (d.nome) u.searchParams.set("n", d.nome);
+        if (d.telefone) u.searchParams.set("t", d.telefone);
+        if (d.empresa) u.searchParams.set("c", d.empresa);
+        if (d.isca) u.searchParams.set("isca", d.isca);
+        return u.toString();
+      } catch (_) { return base; }
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      if (leadSent) return; // trava de disparo único
+      if (leadSent) return;
       leadSent = true;
       var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
+      var openUrl = giftUrl(dl, d);
+      if (dlLink && openUrl) dlLink.href = openUrl;
       if (window.trk && typeof window.trk.lead === "function") {
         try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
       }
       try {
         fetch("/api/lead", {
           method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
-          body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Isca: " + (d.isca || ""), evento: "isca", pagina: location.pathname }),
+          body: JSON.stringify({
+            nome: d.nome || "",
+            email: d.email || "",
+            telefone: d.telefone || "",
+            empresa: d.empresa || "",
+            norma: iscaNorma(d.isca),
+            isca: d.isca || "",
+            mensagem: "Isca: " + (d.isca || ""),
+            evento: "isca",
+            pagina: location.pathname
+          }),
         }).then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
         }).then(function (res) {
@@ -164,7 +207,7 @@ const ctaBtn = isPlanilha ? "Quero a planilha" : "Quero o e-book";
         }).catch(function () {});
       } catch (_) {}
       form.hidden = true; if (success) success.hidden = false;
-      if (dl) window.open(dl, "_blank", "noopener");
+      if (openUrl) window.open(openUrl, "_blank", "noopener");
     });
   })();
 </script>
