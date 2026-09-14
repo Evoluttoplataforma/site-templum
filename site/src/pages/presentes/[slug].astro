@@ -52,7 +52,11 @@ const ctaIcon = isDiagnostico ? "solar:clipboard-check-bold" : "solar:download-m
         </form>
         <div class="form-success" id="iscaSuccess" hidden>
           <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
-          <div><h4>{isDiagnostico ? "Diagnóstico liberado!" : "Material liberado!"}</h4><p id="iscaSuccessMsg">{isDiagnostico ? "Se a ferramenta não abrir, clique no botão abaixo." : "Se o download não abrir, clique no botão abaixo."}</p><a id="iscaDl" class="btn btn--primary btn--sm" href={download || "#"} target="_blank" rel="noopener" style="margin-top:12px">{successCta}</a></div>
+          <div>
+            <h4>{!download ? "Cadastro recebido!" : isDiagnostico ? "Diagnóstico liberado!" : "Material liberado!"}</h4>
+            <p id="iscaSuccessMsg">{!download ? "O material desta isca ainda está em produção. Assim que ficar pronto, a gente atualiza esta página." : isDiagnostico ? "Se a ferramenta não abrir, clique no botão abaixo." : "Se o download não abrir, clique no botão abaixo."}</p>
+            {download ? <a id="iscaDl" class="btn btn--primary btn--sm" href={download} target="_blank" rel="noopener" style="margin-top:12px">{successCta}</a> : <a id="iscaDl" hidden href="#"></a>}
+          </div>
         </div>
       </div>
     </div>

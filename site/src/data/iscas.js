@@ -287,6 +287,8 @@ export const pages = [
     metaDescription: "Como atender PBQP-H integrado à NBR 15575 (Norma de Desempenho), diferenças, sobreposições e plano único.",
     headlineHtml: "PBQP-H e Norma de<br>Desempenho, <em>juntas</em><br>no mesmo projeto.",
     subhead: "PBQP-H e NBR 15575 cobram coisas parecidas mas com lógicas diferentes. Esse guia ensina a estruturar projeto e obra atendendo as duas em paralelo, sem trabalhar duas vezes.",
+    leadSub: "Deixe seus dados. Avisamos quando o material estiver pronto.",
+    ctaBtn: "Quero receber o e-book",
     benefits: [
       "<strong>Pontes</strong> entre PBQP-H e NBR 15575.",
       "Como evitar <strong>retrabalho</strong> de projeto e documentação.",
