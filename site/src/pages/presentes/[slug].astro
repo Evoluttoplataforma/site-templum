@@ -165,6 +165,7 @@ const ctaIcon = isDiagnostico ? "solar:clipboard-check-bold" : "solar:download-m
       if (!base) return "";
       try {
         var u = new URL(base, location.origin);
+        if (u.hostname.indexOf("drive.google.com") !== -1) return base;
         if (d.email) u.searchParams.set("e", d.email);
         if (d.nome) u.searchParams.set("n", d.nome);
         if (d.telefone) u.searchParams.set("t", d.telefone);
