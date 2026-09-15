@@ -24,7 +24,6 @@ const c = norma.color || "var(--orange)";
 const foto = `/assets/img/consultoria/${slug}.webp`;
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
-const searchAds = ["iso-9001", "iso-27001", "pbqp-h"].includes(slug);
 // meta description ÚNICA por norma (evita duplicate meta description entre as consultorias)
 const metaDesc = `Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`;
 
@@ -66,8 +65,8 @@ if (faqItems.length) {
 }
 ---
 
-<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={metaDesc} schemas={pageSchemas} formCtaMobile={searchAds ? "#form" : ""}>
-  <div class={`cs-page${searchAds ? " cs-page--ads" : ""}`} style={`--accent:${c}`}>
+<Base title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`} description={metaDesc} schemas={pageSchemas} formCtaMobile="#form">
+  <div class="cs-page cs-page--ads" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
     <section class="cs-hero">
       <div class="cs-hero-bg" aria-hidden="true"></div>
@@ -78,17 +77,11 @@ if (faqItems.length) {
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
-          {searchAds && (
-            <a href="#form" class="btn btn--primary btn--block cs-hero-cta" data-cta="cta_hero_form">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-          )}
+          <a href="#form" class="btn btn--primary btn--block cs-hero-cta" data-cta="cta_hero_form">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
-          {searchAds ? (
-            <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
-          ) : (
-            <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
-          )}
+          <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
         </div>
-        <div class="cs-hero-form" id={searchAds ? "form" : undefined}>
+        <div class="cs-hero-form" id="form">
           <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" />
         </div>
       </div>
