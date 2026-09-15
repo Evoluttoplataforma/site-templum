@@ -19,7 +19,8 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
 <LpBase
   title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`}
   description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`}
-  formAnchor="#contato"
+  formAnchor="#form"
+  headerAnchorDesktop="#contato"
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -32,10 +33,11 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <a href="#form" class="btn btn--primary btn--block cs-hero-cta" data-cta="cta_hero_form">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
-          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+          <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
         </div>
-        <div class="cs-hero-form">
+        <div class="cs-hero-form" id="form">
           <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-27001-obrigado" simples={true} cargo={true} />
         </div>
       </div>
@@ -226,8 +228,9 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
-  .cs-hero-form { align-self: start; }
-  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
+  .cs-hero-cta { display: none; }
+  .cs-ver-metodo { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 500; color: rgba(255,244,221,0.45); text-decoration: underline; text-underline-offset: 3px; transition: color .2s; }
   .cs-ver-metodo:hover { color: var(--accent-lt); }
 
   .cs-stats { grid-template-columns: repeat(4, 1fr); }
@@ -276,9 +279,22 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   @media (max-width: 900px) {
     .cs-hero-grid { grid-template-columns: 1fr; }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .cs-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 20px;
+    }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
-    .cs-chips { gap: 12px; }
+    .cs-hero { padding: 28px 0 36px; }
+    .cs-hero .tag-pill { margin-bottom: 14px; }
+    .cs-title { font-size: 26px; }
+    .cs-sub { font-size: 15px; margin-top: 12px; }
+    .cs-guarantee { margin-top: 10px; font-size: 12.5px; }
+    .cs-chips { gap: 8px 12px; margin-top: 16px; padding-top: 14px; }
+    .cs-chip { font-size: 12.5px; }
   }
 </style>

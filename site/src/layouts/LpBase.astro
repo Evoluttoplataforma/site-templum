@@ -11,9 +11,13 @@ const {
   ogImage = "/assets/og/templum-og.jpg",
   noindex = true,
   formAnchor = "#form",
+  headerAnchorDesktop = "",
   headerCta = "Falar com especialista",
   schemas = [],
 } = Astro.props;
+
+const desktopAnchor = headerAnchorDesktop || formAnchor;
+const splitHeaderCta = desktopAnchor !== formAnchor;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -111,10 +115,23 @@ const allSchemas = schemas;
           <img src="/assets/logo/templum.png" alt="Templum Consultoria" class="lp-logo-img" width="389" height="129" />
         </span>
         <div class="lp-header-right">
-          <a href={formAnchor} class="btn btn--primary lp-cta-btn">
-            {headerCta}
-            <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
-          </a>
+          {splitHeaderCta ? (
+            <>
+              <a href={formAnchor} class="btn btn--primary lp-cta-btn lp-cta-btn--mobile" data-cta="cta_header_form">
+                {headerCta}
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </a>
+              <a href={desktopAnchor} class="btn btn--primary lp-cta-btn lp-cta-btn--desktop" data-cta="cta_header_form">
+                {headerCta}
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </a>
+            </>
+          ) : (
+            <a href={formAnchor} class="btn btn--primary lp-cta-btn" data-cta="cta_header_form">
+              {headerCta}
+              <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </a>
+          )}
         </div>
       </div>
     </header>
@@ -322,6 +339,29 @@ const allSchemas = schemas;
       });
     </script>
 
+    <!-- CTA / form_start nas LPs Search (GA4). Só dispara se o elemento existir. -->
+    <script is:inline>
+      (function () {
+        function send(name, params) {
+          if (typeof window.gtag !== "function") return;
+          try { window.gtag("event", name, params || {}); } catch (_) {}
+        }
+        document.addEventListener("click", function (e) {
+          var a = e.target && e.target.closest && e.target.closest("[data-cta]");
+          if (!a) return;
+          send(a.getAttribute("data-cta"), { page: location.pathname });
+        });
+        var form = document.getElementById("form");
+        if (!form) return;
+        var started = false;
+        form.addEventListener("focusin", function () {
+          if (started) return;
+          started = true;
+          send("form_start", { page: location.pathname });
+        });
+      })();
+    </script>
+
     <!-- Máscara telefone -->
     <script is:inline>
       document.addEventListener("input", function (e) {
@@ -379,6 +419,12 @@ const allSchemas = schemas;
   .lp-tel iconify-icon { font-size: 18px; color: var(--orange); }
   .lp-tel:hover { color: var(--cream); }
   .lp-cta-btn { font-size: 14px; padding: 10px 20px; white-space: nowrap; }
+  .lp-cta-btn--desktop { display: inline-flex; }
+  .lp-cta-btn--mobile { display: none; }
+  @media (max-width: 900px) {
+    .lp-cta-btn--desktop { display: none; }
+    .lp-cta-btn--mobile { display: inline-flex; }
+  }
   @media (max-width: 480px) {
     .lp-logo-img { height: 28px; }
     .lp-cta-btn { padding: 9px 14px; font-size: 13px; }
