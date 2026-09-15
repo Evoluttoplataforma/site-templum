@@ -6,7 +6,9 @@ import { normas } from "../data/normas.js";
 // Templum OS: a garantia é da consultoria de certificação e NÃO se aplica a uma
 // assinatura mensal — anunciá-la no topo de uma página de preço de SaaS promete o
 // que o contrato não entrega (PROJETO-AQUISICAO-TEMPLUM-OS.md, seção 3, risco 3).
-const { banner = true } = Astro.props;
+const { banner = true, formCta = "/form/", formCtaMobile = "" } = Astro.props;
+const ctaMobile = formCtaMobile || formCta;
+const splitCta = ctaMobile !== formCta;
 
 const navLinks = [
   { label: "Certificações", href: "/consultoria/" },
@@ -26,13 +28,29 @@ const navLinks = [
 ---
 
 <!-- TOP BANNER -->
-{banner && (
-<a href="/form/" class="top-banner">
+{banner && !splitCta && (
+<a href={formCta} class="top-banner">
   <iconify-icon icon="solar:fire-bold"></iconify-icon>
   <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
   <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
   <span class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
 </a>
+)}
+{banner && splitCta && (
+<>
+<a href={ctaMobile} class="top-banner top-banner--mobile" data-cta="cta_header_form">
+  <iconify-icon icon="solar:fire-bold"></iconify-icon>
+  <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
+  <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
+  <span class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+</a>
+<a href={formCta} class="top-banner top-banner--desktop" data-cta="cta_header_form">
+  <iconify-icon icon="solar:fire-bold"></iconify-icon>
+  <span class="tb-full"><strong>Garantia de 200%:</strong> certifique ou devolvemos o dobro do investimento.</span>
+  <span class="tb-short"><strong>Garantia de 200%</strong> — o dobro de volta</span>
+  <span class="tb-link">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></span>
+</a>
+</>
 )}
 
 <header class="hd">
@@ -77,7 +95,14 @@ const navLinks = [
 
     <div class="hd-actions">
       <a href="/contato/" class="btn btn--outline btn--sm hd-ghost">Quero me inscrever</a>
-      <a href="/form/" class="btn btn--dark btn--sm">Falar com especialista</a>
+      {splitCta ? (
+        <>
+          <a href={ctaMobile} class="btn btn--dark btn--sm hd-cta--mobile" data-cta="cta_header_form">Falar com especialista</a>
+          <a href={formCta} class="btn btn--dark btn--sm hd-cta--desktop" data-cta="cta_header_form">Falar com especialista</a>
+        </>
+      ) : (
+        <a href={formCta} class="btn btn--dark btn--sm">Falar com especialista</a>
+      )}
     </div>
 
     <button class="hd-burger" aria-label="Abrir menu" id="hdBurger">
@@ -93,7 +118,7 @@ const navLinks = [
       </Fragment>
     ))}</nav>
     <a href="/contato/" class="btn btn--outline btn--block">Quero me inscrever</a>
-    <a href="/form/" class="btn btn--primary btn--block">Falar com especialista</a>
+    <a href={ctaMobile} class="btn btn--primary btn--block" data-cta="cta_header_form">Falar com especialista</a>
   </div>
 </header>
 
@@ -176,6 +201,16 @@ const navLinks = [
   /* No topo fica só o CTA primário (o nav tem 9 itens). "Quero me inscrever"
      vive no menu mobile. */
   .hd-ghost { display: none; }
+  .hd-cta--desktop { display: inline-flex; }
+  .hd-cta--mobile { display: none; }
+  .top-banner--desktop { display: flex; }
+  .top-banner--mobile { display: none; }
+  @media (max-width: 900px) {
+    .hd-cta--desktop { display: none; }
+    .hd-cta--mobile { display: inline-flex; }
+    .top-banner--desktop { display: none; }
+    .top-banner--mobile { display: flex; }
+  }
   @media (max-width: 1320px) {
     .hd-nav { display: none; }
     .hd-burger { display: inline-flex; }

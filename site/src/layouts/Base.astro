@@ -17,6 +17,8 @@ const {
   noindex = false,
   schemas = [],
   preloadImage = "",
+  formCta = "/form/",
+  formCtaMobile = "",
   // Quando a imagem pré-carregada tem srcset, o preload PRECISA repetir srcset e sizes.
   // Sem isso o navegador baixa a variante do href E a que o srcset escolher — foi o que
   // aconteceu em 10/09/2026 ao dar srcset ao hero: o celular baixou 89 KB + 36 KB.
@@ -175,7 +177,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
     <TrackingKit />
   </head>
   <body>
-    {!noHeaderFooter && <Header banner={!noBanner} />}
+    {!noHeaderFooter && <Header banner={!noBanner} formCta={formCta} formCtaMobile={formCtaMobile} />}
     <main>
       <slot />
     </main>
@@ -403,6 +405,28 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         else { mask = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7); }
         el.value = mask;
       });
+    </script>
+
+    <script is:inline>
+      (function () {
+        function send(name, params) {
+          if (typeof window.gtag !== "function") return;
+          try { window.gtag("event", name, params || {}); } catch (_) {}
+        }
+        document.addEventListener("click", function (e) {
+          var a = e.target && e.target.closest && e.target.closest("[data-cta]");
+          if (!a) return;
+          send(a.getAttribute("data-cta"), { page: location.pathname });
+        });
+        var form = document.getElementById("form");
+        if (!form) return;
+        var started = false;
+        form.addEventListener("focusin", function () {
+          if (started) return;
+          started = true;
+          send("form_start", { page: location.pathname });
+        });
+      })();
     </script>
   </body>
 </html>
