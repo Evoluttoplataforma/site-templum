@@ -5,6 +5,17 @@ User-agent: *
 Allow: /
 Disallow: /design-system
 
+# Google Ads — liberação explícita (AdsBot ignora parte das regras, mas
+# a Ajuda do Google pede Allow claro p/ AdsBot-Google / Mediapartners-Google).
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
 # Crawlers de IA — liberados explicitamente (citação em ChatGPT/Perplexity/Gemini/etc.)
 User-agent: GPTBot
 Allow: /
