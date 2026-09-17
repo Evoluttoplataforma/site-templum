@@ -100,9 +100,9 @@ const metodo = [
 ];
 
 const faq = [
-  { q: "Quanto tempo leva para ter o certificado em mãos?", a: "Depende do porte e da maturidade da gestão. O cronograma sai do diagnóstico — e quando existe prazo de cliente ou edital, priorizamos as etapas que destravam a auditoria mais cedo." },
+  { q: "Quanto tempo leva para ter o certificado em mãos?", a: "Depende do porte e da maturidade da gestão. O cronograma sai do diagnóstico: quando existe prazo de cliente ou edital, priorizamos as etapas que destravam a auditoria mais cedo." },
   { q: "A ISO 9001 realmente é exigida em licitação?", a: "Não é obrigatória por lei, mas aparece com frequência em editais como critério de habilitação técnica ou de pontuação, e em cadastros de fornecedor de empresas de grande porte. É por isso que ela funciona como chave de acesso." },
-  { q: "Minha empresa é pequena. Faz sentido certificar?", a: "Sim — e costuma ser onde o certificado pesa mais, porque equipara sua empresa a concorrentes maiores no crivo do comprador. A norma se aplica a qualquer porte e setor." },
+  { q: "Minha empresa é pequena. Faz sentido certificar?", a: "Sim, e costuma ser onde o certificado pesa mais, porque equipara sua empresa a concorrentes maiores no crivo do comprador. A norma se aplica a qualquer porte e setor." },
   { q: "Como funciona a garantia de 200%?", a: "Está registrada em contrato: se você concluir todas as etapas do nosso método e ainda assim não obter a certificação, devolvemos o dobro do valor investido. Somos a única consultoria do Brasil que assume esse risco." },
 ];
 ---
@@ -110,8 +110,8 @@ const faq = [
 <LpBase
   title="ISO 9001: a chave para vender para grandes contas | Templum"
   description="Grandes compradores e licitações exigem ISO 9001 dos fornecedores. Responda 4 perguntas e descubra em 2 minutos se a sua empresa se qualifica. Garantia de 200% em contrato."
-  formAnchor="#diagnostico"
-  headerCta="Fazer o diagnóstico"
+  formAnchor="#quiz"
+  headerCta="Fazer diagnóstico"
 >
   <div class="gc">
     <!-- ══ HERO + DIAGNÓSTICO (o pedido principal já na 1ª tela) ══ -->
@@ -138,15 +138,16 @@ const faq = [
         <!-- Diagnóstico. Sem .reveal de propósito: é o elemento de conversão e
              não pode depender do IntersectionObserver para ficar visível. -->
         <div class="gc-quiz-wrap">
-          <div class="gc-quiz" id="quiz" data-total={perguntas.length}>
+          <div class="gc-quiz" id="quiz" data-total={perguntas.length} tabindex="-1">
             <div class="gc-qz-head">
+              <h2 class="gc-qz-title">Diagnóstico</h2>
               <div class="gc-qz-bar"><span class="gc-qz-fill" id="qzFill"></span></div>
-              <p class="gc-qz-count"><span id="qzNow">1</span> de {perguntas.length + 1} · leva 2 minutos</p>
+              <p class="gc-qz-count"><span id="qzNow">1</span> de {perguntas.length + 1}</p>
             </div>
 
             {perguntas.map((p, i) => (
               <div class={`gc-step${i === 0 ? " is-on" : ""}`} data-step={i} data-campo={p.campo}>
-                <h2 class="gc-q">{p.titulo}</h2>
+                <h3 class="gc-q">{p.titulo}</h3>
                 <p class="gc-q-help">{p.ajuda}</p>
                 <div class={p.compacto ? "gc-opts gc-opts--grid" : "gc-opts"}>
                   {p.opcoes.map((o) => (
@@ -163,8 +164,9 @@ const faq = [
             <!-- Passo final: resultado + captura. O resultado aparece ANTES do
                  formulário — é o que paga o pedido de contato. -->
             <div class="gc-step gc-final" data-step={perguntas.length}>
+              <p class="gc-final-kicker">Seu resultado</p>
               <span class="gc-verdict-tag" id="qzTag">Resultado</span>
-              <h2 class="gc-verdict" id="qzVerdict"></h2>
+              <p class="gc-verdict" id="qzVerdict"></p>
               <p class="gc-verdict-sub" id="qzVerdictSub"></p>
               <ul class="gc-recap">
                 <li><iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon><span>Porte</span><strong id="qzPorte">—</strong></li>
@@ -178,12 +180,12 @@ const faq = [
                 <input type="hidden" name="cargo" id="fCargo" />
                 <input type="hidden" name="urgencia" id="fUrg" />
                 <input type="hidden" name="mensagem" id="fMsg" />
-                <p class="gc-form-lead">Receba o diagnóstico completo com o caminho e o prazo estimado até o seu certificado.</p>
+                <p class="gc-form-lead">Receba o caminho e o prazo estimado com base neste diagnóstico.</p>
                 <div class="field"><label for="gcNome">Nome</label><input class="input" id="gcNome" name="nome" placeholder="Seu nome" required /></div>
                 <div class="field"><label for="gcTel">WhatsApp</label><input class="input" id="gcTel" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
                 <div class="field"><label for="gcMail">E-mail</label><input class="input" id="gcMail" type="email" name="email" placeholder="voce@empresa.com" required /></div>
                 <div class="field"><label for="gcEmp">Empresa <span class="gc-opt-tag">opcional</span></label><input class="input" id="gcEmp" name="empresa" placeholder="Nome da empresa" /></div>
-                <button type="submit" class="btn btn--primary btn--block btn--lg">Receber meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
+                <button type="submit" class="btn btn--primary btn--block btn--lg">Receber caminho e prazo <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
                 <p class="lead-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
               </form>
               <button type="button" class="gc-back" data-back>← Voltar</button>
@@ -243,7 +245,7 @@ const faq = [
         <div class="section-header">
           <span class="tag-pill">Como funciona</span>
           <h2>Nosso método faz o <em class="accent">trabalho pesado</em></h2>
-          <p>Quatro dos sete passos do método Templum — o cronograma completo sai no seu diagnóstico.</p>
+          <p>Quatro dos sete passos do método Templum. O cronograma completo sai no seu diagnóstico.</p>
         </div>
         <div class="gc-metodo">
           {metodo.map((m, i) => (
@@ -285,7 +287,7 @@ const faq = [
         <div class="gc-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
           <h2>Pronto para entrar na lista dos <em class="accent">fornecedores habilitados</em>?</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado, sem compromisso.</p>
           <ul class="check-list">
             {baseConsultoria.incluso.slice(0, 4).map((i) => (
               <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>
@@ -300,14 +302,14 @@ const faq = [
       <div class="container md">
         <h2>A ISO 9001 abre a porta. <em>A garantia tira o risco.</em></h2>
         <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <a href="#diagnostico" class="btn btn--dark btn--lg">Fazer o diagnóstico de 2 minutos <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#quiz" class="btn btn--dark btn--lg">Fazer diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
     <!-- Barra fixa no mobile: leva de volta ao diagnóstico de qualquer altura. -->
-    <a href="#diagnostico" class="gc-sticky" id="gcSticky">
+    <a href="#quiz" class="gc-sticky" id="gcSticky">
       <span>Sua empresa se qualifica?</span>
-      <strong>Fazer o diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></strong>
+      <strong>Fazer diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></strong>
     </a>
   </div>
 </LpBase>
@@ -324,6 +326,7 @@ const faq = [
     var atual = 0;
     var respostas = {};
     var pesos = {};
+    var focusTimer = null;
 
     // Eventos do Meta por passo. O objetivo é dar ao algoritmo um sinal
     // FREQUENTE: a campanha antiga otimizava por um evento que acontecia 1x a
@@ -332,6 +335,30 @@ const faq = [
       try { if (window.fbq) fbq("trackCustom", nome, extra || {}); } catch (e) {}
       try { if (window.gtag) gtag("event", nome, extra || {}); } catch (e) {}
     }
+
+    // CTA do header/sticky/band: o quiz já está no hero, então #âncora sozinha
+    // parece botão morto. Scroll + destaque deixam o clique "fazer algo".
+    function destacarQuiz() {
+      var r = quiz.getBoundingClientRect();
+      var precisaRolar = r.top < 64 || r.bottom > window.innerHeight || r.top > window.innerHeight * 0.45;
+      if (precisaRolar) {
+        window.scrollTo({ top: window.scrollY + r.top - 78, behavior: "smooth" });
+      }
+      quiz.classList.remove("is-focus");
+      void quiz.offsetWidth;
+      quiz.classList.add("is-focus");
+      try { quiz.focus({ preventScroll: true }); } catch (e) { try { quiz.focus(); } catch (e2) {} }
+      if (focusTimer) clearTimeout(focusTimer);
+      focusTimer = setTimeout(function () { quiz.classList.remove("is-focus"); }, 1600);
+    }
+
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest ? e.target.closest('a[href="#quiz"], a[href="#diagnostico"]') : null;
+      if (!a) return;
+      e.preventDefault();
+      destacarQuiz();
+      if (history.replaceState) history.replaceState(null, "", "#quiz");
+    });
 
     function pintar(i) {
       steps.forEach(function (s, k) { s.classList.toggle("is-on", k === i); });
@@ -367,7 +394,7 @@ const faq = [
         sub = "Pelo que você respondeu, o certificado não é um projeto para depois: é o que está travando negócio agora. Dá para priorizar as etapas que destravam a auditoria mais cedo.";
       } else if (score >= 3) {
         tagTxt = "Zona de risco";
-        t = "Sua empresa está exposta — mas ainda com tempo de se antecipar.";
+        t = "Sua empresa está exposta, mas ainda com tempo de se antecipar.";
         sub = "O risco de perder contrato por falta de certificado existe e tende a aparecer sem aviso, no meio de uma negociação. Certificar antes da exigência custa menos e corre melhor.";
       } else {
         tagTxt = "Movimento estratégico";
@@ -392,7 +419,7 @@ const faq = [
       set("fCargo", respostas.cargo);
       set("fUrg", respostas.urgencia);
       set("fMsg",
-        "Diagnóstico Grandes Contas (ISO 9001) — " + tagTxt +
+        "Diagnóstico Grandes Contas (ISO 9001) · " + tagTxt +
         " | Situação: " + (respostas.situacao || "-") +
         " | Porte: " + (respostas.funcionarios || "-") +
         " | Cargo: " + (respostas.cargo || "-") +
@@ -476,8 +503,27 @@ const faq = [
   .gc-guarantee-txt { display: block; font-size: 13px; color: rgba(255,244,221,0.72); line-height: 1.45; margin-top: 2px; }
 
   /* ── CARD DO DIAGNÓSTICO ── */
-  .gc-quiz { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(20px, 2.4vw, 30px); box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6); min-width: 0; }
-  .gc-qz-head { margin-bottom: 20px; }
+  .gc-quiz { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: clamp(20px, 2.4vw, 30px); box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6); min-width: 0; scroll-margin-top: 78px; outline: 2px solid transparent; outline-offset: 4px; transition: outline-color .35s var(--ease-soft), box-shadow .35s var(--ease-soft); }
+  .gc-quiz:focus { outline: none; }
+  .gc-quiz.is-focus { outline-color: var(--orange); box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6), 0 0 0 6px rgba(255,89,37,0.22); }
+  @media (prefers-reduced-motion: reduce) { .gc-quiz { transition: none; } }
+  .gc-qz-head { margin-bottom: 18px; }
+  .gc-qz-title {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 0 14px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--orange-ink);
+    color: #fff;
+    font-size: clamp(15px, 1.6vw, 17px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-align: left;
+  }
   .gc-qz-bar { height: 5px; border-radius: 999px; background: rgba(194,65,12,0.14); overflow: hidden; }
   .gc-qz-fill { display: block; height: 100%; width: 0%; border-radius: 999px; background: var(--orange); transition: width .35s var(--ease-soft); }
   .gc-qz-count { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); margin-top: 9px; }
@@ -487,8 +533,9 @@ const faq = [
   @keyframes gcIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .gc-step.is-on { animation: none; } }
 
-  .gc-q { font-size: clamp(19px, 2.1vw, 23px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.22; color: var(--text); }
+  .gc-q { font-size: clamp(19px, 2.1vw, 23px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.22; color: var(--text); margin: 0; }
   .gc-q-help { font-size: 13.5px; color: var(--text-mid); margin-top: 7px; line-height: 1.5; }
+  .gc-final-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); margin: 0 0 10px; }
 
   .gc-opts { display: flex; flex-direction: column; gap: 9px; margin-top: 18px; }
   .gc-opts--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
