@@ -1,0 +1,201 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Descadastrar e-mails — Templum Consultoria"
+  description="Pare de receber e-mails de relacionamento da Templum Consultoria."
+  noindex={true}
+  noHeaderFooter={true}
+  hideWpp={true}
+>
+  <section class="unsub">
+    <div class="unsub-card" id="unsub-card">
+      <p class="unsub-brand">Templum <span>Consultoria</span></p>
+      <div id="unsub-panel">
+        <h1>Sair da lista de e-mails</h1>
+        <p id="unsub-copy">
+          Ao confirmar, paramos os e-mails de relacionamento da Templum (trial, lives, planejamento e demais réguas).
+          Avisos da sua conta, contrato ou nota, se houver, continuam.
+        </p>
+        <p id="unsub-thanks" hidden></p>
+        <p id="unsub-bye" hidden></p>
+        <p id="unsub-email" class="unsub-email" hidden></p>
+        <form id="unsub-form" class="unsub-form">
+          <label for="unsub-input" id="unsub-label">Seu e-mail</label>
+          <input id="unsub-input" name="email" type="email" autocomplete="email" placeholder="seu@email.com" />
+          <button type="submit" class="unsub-btn" id="unsub-btn">Confirmar descadastro</button>
+        </form>
+        <p id="unsub-err" class="unsub-err" hidden></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  body:has(.unsub) {
+    background: #f4f4f4;
+  }
+  .unsub {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: #f4f4f4;
+  }
+  .unsub-card {
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 40px 32px;
+    text-align: left;
+  }
+  .unsub-brand {
+    margin: 0 0 22px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #222831;
+    letter-spacing: -0.4px;
+  }
+  .unsub-brand span { color: #ff5925; }
+  .unsub-card h1 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 800;
+    color: #222831;
+  }
+  .unsub-card p {
+    margin: 0 0 18px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #444;
+  }
+  .unsub-email {
+    font-weight: 700;
+    color: #222831 !important;
+    word-break: break-all;
+  }
+  .unsub-form { margin: 0; }
+  .unsub-form label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .unsub-form input {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #222831;
+    box-sizing: border-box;
+  }
+  .unsub-form input:not([hidden]) { display: block; }
+  .unsub-form label[hidden],
+  .unsub-form input[hidden],
+  .unsub-email[hidden],
+  .unsub-err[hidden],
+  #unsub-thanks[hidden],
+  #unsub-bye[hidden] { display: none !important; }
+  .unsub-btn {
+    display: inline-block;
+    background: #5c5c5c;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .unsub-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .unsub-err { color: #b42318 !important; font-size: 14px !important; }
+</style>
+
+<script is:inline>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var raw = (params.get("e") || params.get("email") || "").trim();
+    var email = looksLikeEmail(raw) ? raw.toLowerCase() : "";
+    var sig = (params.get("s") || "").trim();
+    var form = document.getElementById("unsub-form");
+    var input = document.getElementById("unsub-input");
+    var shown = document.getElementById("unsub-email");
+    var err = document.getElementById("unsub-err");
+    var btn = document.getElementById("unsub-btn");
+    var copy = document.getElementById("unsub-copy");
+    var thanks = document.getElementById("unsub-thanks");
+    var bye = document.getElementById("unsub-bye");
+
+    function looksLikeEmail(v) {
+      var s = String(v || "").trim().toLowerCase();
+      if (!s || s.indexOf("{{") >= 0 || s.charAt(0) === "{") return false;
+      var at = s.indexOf("@");
+      if (at < 1 || at !== s.lastIndexOf("@")) return false;
+      var domain = s.slice(at + 1);
+      var dot = domain.lastIndexOf(".");
+      return dot > 0 && dot < domain.length - 1 && domain.indexOf(" ") < 0;
+    }
+
+    input.required = true;
+    if (email) input.value = email;
+
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      err.hidden = true;
+      var typed = (input.value || "").trim().toLowerCase();
+      var value = looksLikeEmail(typed) ? typed : email;
+      if (!looksLikeEmail(value)) {
+        err.hidden = false;
+        err.textContent = "Informe um e-mail válido.";
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Confirmando…";
+      fetch("/api/email-opt-out", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: value, s: sig || undefined }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok || !res.d.ok) {
+            btn.disabled = false;
+            btn.textContent = "Confirmar descadastro";
+            err.hidden = false;
+            err.textContent = res.d && res.d.error === "invalid_link"
+              ? "Este link não é válido. Use o descadastrar do próprio e-mail."
+              : "Não conseguimos agora. Tente de novo em instantes.";
+            return;
+          }
+          document.querySelector(".unsub-card h1").textContent = "Descadastro confirmado.";
+          copy.textContent = "Você não receberá mais nossos e-mails de relacionamento.";
+          thanks.hidden = false;
+          thanks.textContent = "Obrigada por acompanhar a Templum até aqui.";
+          bye.hidden = false;
+          bye.textContent = "Até uma próxima.";
+          shown.hidden = true;
+          form.hidden = true;
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = "Confirmar descadastro";
+          err.hidden = false;
+          err.textContent = "Não conseguimos agora. Tente de novo em instantes.";
+        });
+    });
+  })();
+</script>
