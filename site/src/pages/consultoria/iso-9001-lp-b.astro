@@ -1,5 +1,5 @@
 ---
-import LpBase from "../../layouts/LpBase.astro";
+import Base from "../../layouts/Base.astro";
 import SeloImplementando from "../../components/SeloImplementando.astro";
 import Especialistas from "../../components/Especialistas.astro";
 import Testimonials from "../../components/Testimonials.astro";
@@ -9,7 +9,8 @@ import LeadForm from "../../components/LeadForm.astro";
 import { normas } from "../../data/normas.js";
 import dBase from "../../data/consultoria/iso-9001.js";
 
-// Variante B do teste A/B (Google Ads): só o hero muda. Resto = LP A.
+// Variante B do teste A/B (Google Ads). Mesma página de /consultoria/iso-9001/,
+// só o texto do hero à esquerda muda. Formulario e resto iguais ao original.
 const d = {
   ...dBase,
   hero: {
@@ -27,16 +28,48 @@ const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const metaDesc = `Consultoria ${norma.nome} com a Templum${norma.categoria ? ": " + norma.categoria : ""}: mais de 2.000 empresas, método próprio, 100% online e garantia de 200% em contrato.`;
+
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const faqItems = (d.detalhes && d.detalhes.faq) || [];
+const pageSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Consultoria ${norma.nome}`,
+    serviceType: `Consultoria para certificação ${norma.nome}`,
+    description: d.hero.sub,
+    category: norma.categoria,
+    provider: { "@id": `${SITE}/#organization` },
+    areaServed: { "@type": "Country", name: "Brasil" },
+    url: `${SITE}/consultoria/iso-9001-lp-b`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "Certificações", item: `${SITE}/consultoria` },
+      { "@type": "ListItem", position: 3, name: `${norma.nome} (variante B)`, item: `${SITE}/consultoria/iso-9001-lp-b` },
+    ],
+  },
+];
+if (faqItems.length) {
+  pageSchemas.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  });
+}
 ---
 
-<LpBase
-  title={`Consultoria ${norma.nome} com a Templum: certificação com quem entende`}
-  description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? ": " + norma.categoria : ""}: mais de 2.000 empresas, método próprio, 100% online e garantia de 200% em contrato.`}
-  formAnchor="#form"
-  headerAnchorDesktop="#contato"
->
-  <div class="cs-page" style={`--accent:${c}`}>
-    <!-- HERO (escuro, foto da norma) — variante B -->
+<Base title={`Consultoria ${norma.nome} com a Templum: certificação com quem entende`} description={metaDesc} schemas={pageSchemas} formCtaMobile="#form" noindex={true}>
+  <div class="cs-page cs-page--ads" style={`--accent:${c}`}>
+    <!-- HERO (escuro) — variante B: só o texto à esquerda muda -->
     <section class="cs-hero">
       <div class="cs-hero-bg" aria-hidden="true"></div>
       <div class="container xl cs-hero-grid">
@@ -47,16 +80,17 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
           {d.hero.sub2 && <p class="cs-sub cs-sub--follow">{d.hero.sub2}</p>}
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <a href="#form" class="btn btn--primary btn--block cs-hero-cta" data-cta="cta_hero_form">Falar com especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
-          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+          <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" />
         </div>
       </div>
     </section>
 
-    <!-- MOTIVOS + BENEFÍCIOS (claro) -->
+    <!-- MOTIVOS + BENEFÍCIOS (claro) — renderiza só se houver dados na norma -->
     {d.motivos && d.motivos.length > 0 && (
       <section class="section section--cream">
         <div class="container xl">
@@ -140,7 +174,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- DEPOIMENTOS EM VÍDEO + NOTA GOOGLE (claro) -->
-    <Testimonials nota="4,9" ctaTexto="Quero Certificar minha empresa" ctaHref="#contato" />
+    <Testimonials nota="4,9" />
 
     <!-- DEPOIMENTOS EM TEXTO (cards laranja) -->
     <DepoimentosTexto />
@@ -194,7 +228,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
+        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." />
       </div>
     </section>
 
@@ -207,16 +241,22 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       </div>
     </section>
   </div>
-</LpBase>
+</Base>
 
 <style>
+  /* fundo escuro = navy neutro (igual em todas). A cor da norma aparece pura
+     nos elementos: badge, ícones, números, acentos e seções claras. */
+
+  /* versão clareada da cor da norma → usada em fundo escuro (legível) */
   .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
 
+  /* FUNDO escuro tingido com a cor da norma (não só os acentos) */
   .cs-page .cs-cover,
   .cs-page .cs-form,
   .cs-page .section--navy { background: color-mix(in srgb, var(--accent) 22%, #0f1216); }
   .cs-page .cs-hero { background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 42%, #0c0e12) 0%, color-mix(in srgb, var(--accent) 20%, #0c0e12) 48%, #0c0e12 100%); }
 
+  /* identidade por norma: cor da norma SÓ em fundo claro */
   .cs-page .section:not(.section--navy) .accent { color: var(--accent); font-style: italic; }
   .cs-page .section:not(.section--navy) .tag-pill { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
   .cs-page .section:not(.section--navy) .number-card .value em { color: var(--accent); }
@@ -226,6 +266,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
   .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
 
+  /* HERO */
   .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
@@ -239,23 +280,30 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
   .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
   .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .cs-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
-  .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
+
+  .cs-hero-form { align-self: start; }
+  .cs-page--ads .cs-hero-form { scroll-margin-top: 80px; }
+  .cs-hero-cta { display: none; }
   .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-page--ads .cs-ver-metodo { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 500; color: rgba(255,244,221,0.45); text-decoration: underline; text-underline-offset: 3px; }
   .cs-ver-metodo:hover { color: var(--accent-lt); }
 
   .cs-stats { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .cs-stats { grid-template-columns: 1fr; } }
 
+  /* por que */
   .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .why-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 26px; }
   .why-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 28px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 18px; }
   .why-card h3 { font-size: 19px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
   .why-card p { font-size: 14.5px; color: rgba(255,244,221,0.7); line-height: 1.6; }
 
+  /* 3 motivos + benefícios */
   .cs-motivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 12px; }
   @media (max-width: 880px) { .cs-motivos { grid-template-columns: 1fr; } }
   .cs-motivo { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
@@ -267,6 +315,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
   @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
 
+  /* cobertura */
   .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
   .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
   .cs-cover .container { position: relative; z-index: 1; }
@@ -275,6 +324,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 600px; margin: 14px auto 0; line-height: 1.6; }
   .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
 
+  /* para quem + incluso */
   .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
   .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .cs-pq-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-12); padding: 14px 16px; font-size: 14.5px; font-weight: 600; color: var(--text); }
@@ -282,6 +332,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-incluso { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px; box-shadow: var(--shadow-card); }
   @media (max-width: 880px) { .cs-pqi { grid-template-columns: 1fr; } .cs-pq-grid { grid-template-columns: 1fr; } }
 
+  /* formulário */
   .cs-form { padding: 88px 0; position: relative; overflow: hidden; }
   .cs-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; position: relative; z-index: 1; }
   .cs-form-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.12; }
@@ -292,9 +343,23 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   @media (max-width: 900px) {
     .cs-hero-grid { grid-template-columns: 1fr; }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .cs-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 20px;
+    }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
+    .cs-page--ads .cs-hero { padding: 28px 0 36px; }
+    .cs-page--ads .cs-hero .tag-pill { margin-bottom: 14px; }
+    .cs-page--ads .cs-title { font-size: 26px; }
+    .cs-page--ads .cs-sub { font-size: 15px; margin-top: 12px; }
+    .cs-page--ads .cs-guarantee { margin-top: 10px; font-size: 12.5px; }
     .cs-chips { gap: 12px; }
+    .cs-page--ads .cs-chips { gap: 8px 12px; margin-top: 16px; padding-top: 14px; }
+    .cs-page--ads .cs-chip { font-size: 12.5px; }
   }
 </style>
