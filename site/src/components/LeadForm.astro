@@ -18,6 +18,7 @@ const {
   labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
   cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
   funcionarios = false, // true → mostra "Nº de funcionários" mesmo com simples={true}
+  colapsavel = false, // true → só nome/telefone/e-mail visíveis; resto atrás de toggle
 } = Astro.props;
 const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário buscando informações", "Só estou curioso"];
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
@@ -30,9 +31,10 @@ const parQualif = mostraFunc && faturamento;
 const camposLinha2 = (parQualif ? 0 : 1) + (mostraFunc ? 1 : 0) + (faturamento ? 1 : 0);
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
+const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa;
 ---
 
-<div class="lead-card">
+<div class="lead-card" data-lead-colapsavel={colapsavel ? "1" : undefined}>
   <div class="lead-title">{titulo}</div>
   <p class="lead-sub">{sub}</p>
   <form class="form" data-trk-event="lead" novalidate data-obrigado={obrigado || undefined}>
@@ -42,70 +44,152 @@ const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a 
       <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
     </div>
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
-    {parQualif && (
-      <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
+
+    {colapsavel && (
+      <button
+        type="button"
+        class="lead-more-toggle"
+        aria-expanded="false"
+        data-lead-more-toggle
+      >
+        <span class="lead-more-toggle__text">Quer adiantar o diagnóstico? Preencha os campos abaixo.</span>
+        <iconify-icon icon="solar:alt-arrow-down-linear" class="lead-more-toggle__icon" aria-hidden="true"></iconify-icon>
+      </button>
     )}
-    <div class={camposLinha2 === 1 ? "form-row form-row--solo" : "form-row"}>
-      {!parQualif && (
-        <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa} /></div>
+
+    <div class="lead-more" data-lead-more hidden={colapsavel || undefined}>
+      {parQualif && (
+        <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={empresaPlaceholder} /></div>
       )}
-      {mostraFunc && (
-        <div class="field">
-          <label>Nº de funcionários</label>
-          <select class="select" name="funcionarios" aria-label="Nº de funcionários">
-            <option value="">Selecione</option>
-            {faixasFuncionarios.map((f) => <option value={f}>{f}</option>)}
-          </select>
-        </div>
-      )}
-      {faturamento && (
-        <div class="field">
-          <label>Faturamento mensal</label>
-          <select class="select" name="faturamento" aria-label="Faturamento mensal" required={faturamentoObrigatorio || undefined}>
-            <option value="">Selecione</option>
-            {faturamentos.map((f) => <option value={f}>{f}</option>)}
-          </select>
-        </div>
-      )}
-    </div>
-    {(!simples || cargo) && (
-      <div class={simples ? "form-row form-row--solo" : "form-row"}>
-        <div class="field">
-          <label>Seu cargo</label>
-          <select class="select" name="cargo" aria-label="Seu cargo">
-            <option value="">Selecione</option>
-            {cargos.map((c) => <option value={c}>{c}</option>)}
-          </select>
-        </div>
-        {!simples && (
+      <div class={camposLinha2 === 1 ? "form-row form-row--solo" : "form-row"}>
+        {!parQualif && (
+          <div class="field"><label>{labelEmpresa}</label><input class="input" name="empresa" placeholder={empresaPlaceholder} /></div>
+        )}
+        {mostraFunc && (
           <div class="field">
-            <label>Qual sua urgência?</label>
-            <select class="select" name="urgencia" aria-label="Qual sua urgência?">
+            <label>Nº de funcionários</label>
+            <select class="select" name="funcionarios" aria-label="Nº de funcionários">
               <option value="">Selecione</option>
-              {urgencias.map((u) => <option value={u}>{u}</option>)}
+              {faixasFuncionarios.map((f) => <option value={f}>{f}</option>)}
+            </select>
+          </div>
+        )}
+        {faturamento && (
+          <div class="field">
+            <label>Faturamento mensal</label>
+            <select class="select" name="faturamento" aria-label="Faturamento mensal" required={faturamentoObrigatorio || undefined}>
+              <option value="">Selecione</option>
+              {faturamentos.map((f) => <option value={f}>{f}</option>)}
             </select>
           </div>
         )}
       </div>
-    )}
-    {!norma && (
-      <div class="field">
-        <label>Qual norma você busca?</label>
-        <select class="select" name="norma" aria-label="Qual norma você busca?">
-          <option value="">Selecione (ou não sei ainda)</option>
-          {normas.map((n) => <option value={n.nome}>{n.nome} — {n.categoria}</option>)}
-          <option value="Outra / não sei ainda">Outra / não sei ainda</option>
-        </select>
-      </div>
-    )}
+      {(!simples || cargo) && (
+        <div class={simples ? "form-row form-row--solo" : "form-row"}>
+          <div class="field">
+            <label>Seu cargo</label>
+            <select class="select" name="cargo" aria-label="Seu cargo">
+              <option value="">Selecione</option>
+              {cargos.map((c) => <option value={c}>{c}</option>)}
+            </select>
+          </div>
+          {!simples && (
+            <div class="field">
+              <label>Qual sua urgência?</label>
+              <select class="select" name="urgencia" aria-label="Qual sua urgência?">
+                <option value="">Selecione</option>
+                {urgencias.map((u) => <option value={u}>{u}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+      {!norma && (
+        <div class="field">
+          <label>Qual norma você busca?</label>
+          <select class="select" name="norma" aria-label="Qual norma você busca?">
+            <option value="">Selecione (ou não sei ainda)</option>
+            {normas.map((n) => <option value={n.nome}>{n.nome}: {n.categoria}</option>)}
+            <option value="Outra / não sei ainda">Outra / não sei ainda</option>
+          </select>
+        </div>
+      )}
+    </div>
+
     <button type="submit" class="btn btn--primary btn--block btn--lg">{cta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></button>
     <p class="lead-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>
   </form>
 </div>
+
+{colapsavel && (
+  <script>
+    document.querySelectorAll("[data-lead-colapsavel='1']").forEach(function (card) {
+      if (card.dataset.leadMoreBound) return;
+      card.dataset.leadMoreBound = "1";
+      var toggle = card.querySelector("[data-lead-more-toggle]");
+      var panel = card.querySelector("[data-lead-more]");
+      if (!toggle || !panel) return;
+      toggle.addEventListener("click", function () {
+        var open = toggle.getAttribute("aria-expanded") === "true";
+        var next = !open;
+        toggle.setAttribute("aria-expanded", next ? "true" : "false");
+        panel.hidden = !next;
+        toggle.classList.toggle("is-open", next);
+      });
+    });
+  </script>
+)}
 
 <style>
   /* cargo sozinho na linha (LPs com simples={true}): sem a urgência ao lado, a
      grade 1fr 1fr deixaria metade da linha vazia. */
   .form-row--solo { grid-template-columns: 1fr; }
   .lead-legal { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin-top: 2px; }
+
+  .lead-more {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .lead-more[hidden] { display: none; }
+
+  .lead-more-toggle {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    color: var(--text-mid);
+  }
+  .lead-more-toggle__text {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-2);
+  }
+  .lead-more-toggle__icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--orange);
+    margin-top: 1px;
+    transition: transform .2s var(--ease-soft, ease);
+  }
+  .lead-more-toggle.is-open .lead-more-toggle__icon {
+    transform: rotate(180deg);
+  }
+  .lead-more-toggle:hover .lead-more-toggle__text {
+    color: var(--orange);
+  }
+  .lead-more-toggle:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 </style>
