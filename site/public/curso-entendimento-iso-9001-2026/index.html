@@ -9,6 +9,18 @@
   <title>Curso de Entendimento da ISO 9001:2026 | Templum</title>
   <link rel="canonical" href="https://templum.com.br/curso-entendimento-iso-9001-2026/">
   <link rel="icon" type="image/png" href="/favicon.png">
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1265191353683807');
+    fbq('init', '4177249519256900');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1" alt=""></noscript>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=4177249519256900&ev=PageView&noscript=1" alt=""></noscript>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
@@ -744,6 +756,37 @@
     var CHECKOUT_URL = "https://www.asaas.com/c/ye9ae55vyn59gzmk";
     var LEAD_API = "https://templum.com.br/api/lead";
     var EVENTO = "curso-entendimento-iso-9001-2026";
+    var PIXEL_IDS = ["1265191353683807", "4177249519256900"];
+
+    function cookieVal(name) {
+      var m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[-.]/g, "\\$&") + "=([^;]*)"));
+      return m ? decodeURIComponent(m[1]) : "";
+    }
+    function eventId() {
+      try { return crypto.randomUUID(); }
+      catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+    }
+    function attrib() {
+      var p = new URLSearchParams(location.search);
+      var keys = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid"];
+      var out = {};
+      keys.forEach(function (k) { var v = p.get(k); if (v) out[k] = v; });
+      out.fbp = cookieVal("_fbp");
+      out.fbc = cookieVal("_fbc");
+      return out;
+    }
+    function fireMetaLead(data, leadEventId) {
+      if (typeof fbq !== "function") return;
+      var email = (data.email || "").trim().toLowerCase().replace(/\s+/g, "");
+      var digits = (data.telefone || "").replace(/\D/g, "");
+      var phone = digits ? "55" + digits : "";
+      try {
+        PIXEL_IDS.forEach(function (id) {
+          fbq("init", id, { em: email || undefined, ph: phone || undefined });
+        });
+        fbq("track", "Lead", { content_name: EVENTO }, { eventID: leadEventId });
+      } catch (_) {}
+    }
 
     var modal = document.getElementById("lead-modal");
     var form = document.getElementById("lead-form");
@@ -816,7 +859,8 @@
       submitBtn.disabled = true;
       statusEl.textContent = "Enviando...";
 
-      var payload = {
+      var leadEventId = eventId();
+      var payload = Object.assign({
         nome: nome,
         email: email,
         telefone: telefone,
@@ -824,8 +868,12 @@
         evento: EVENTO,
         status_pagamento: "pendente",
         pagina: location.pathname,
+        landing: location.href,
+        referrer: document.referrer || "",
         mensagem: "Lead Curso de Entendimento ISO 9001:2026",
-      };
+        meta_event_id: leadEventId,
+        meta_content_name: EVENTO,
+      }, attrib());
 
       var done = false;
       function finish() {
@@ -842,7 +890,11 @@
         keepalive: true,
         body: JSON.stringify(payload),
       })
-        .then(function () { clearTimeout(fallback); finish(); })
+        .then(function () {
+          fireMetaLead(payload, leadEventId);
+          clearTimeout(fallback);
+          finish();
+        })
         .catch(function () { clearTimeout(fallback); finish(); });
     });
   })();
