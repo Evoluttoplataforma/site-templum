@@ -130,6 +130,14 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    if (
+      url.pathname === "/programa-transicao-iso-9001-2026" ||
+      url.pathname === "/programa-transicao-iso-9001-2026/"
+    ) {
+      url.pathname = "/curso-entendimento-iso-9001-2026/";
+      return Response.redirect(url.toString(), 301);
+    }
+
     // Verificação do Google Search Console (método "Arquivo HTML").
     // A camada de assets do Workers derruba o ".html" da URL (307 p/
     // /googleb02be000df71bc63), e o verificador do Google espera 200 na URL

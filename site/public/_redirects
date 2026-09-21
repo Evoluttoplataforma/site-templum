@@ -9,6 +9,8 @@
 # ---- 301 (templum.com.br) — URLs antigas → destino final ----
 # Apontam direto para o destino FINAL (sem cadeia). Com e sem barra final.
 # Query string / UTM são preservadas automaticamente pelo Cloudflare.
+/programa-transicao-iso-9001-2026  /curso-entendimento-iso-9001-2026/  301
+/programa-transicao-iso-9001-2026/  /curso-entendimento-iso-9001-2026/  301
 /canal-de-denuncias  /contato/canal-de-denuncias/  301
 /canal-de-denuncias/  /contato/canal-de-denuncias/  301
 /planejamento-estrategico-2026  /planejamento-estrategico-2027/  301
