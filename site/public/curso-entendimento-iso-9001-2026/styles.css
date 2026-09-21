@@ -332,11 +332,7 @@ strong, b { font-weight: 600; }
   position: relative;
   width: 100%;
   margin: 0;
-  overflow: hidden;
-  border: 1px solid rgba(255,89,37,.12);
-  border-radius: 32px;
-  background: var(--surface);
-  box-shadow: 0 30px 70px -28px rgba(79,37,27,.38);
+  background: transparent;
 }
 .hero-media picture {
   position: relative;
@@ -345,16 +341,8 @@ strong, b { font-weight: 600; }
 .hero-media img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-.hero-media figcaption {
-  padding: 12px 18px 14px;
-  color: var(--text-mid);
-  background: rgba(255,255,255,.94);
-  border-top: 1px solid var(--border);
-  font-size: 13px;
-  font-weight: 500;
+  height: auto;
+  object-fit: contain;
 }
 .media-frame {
   margin: 0;
