@@ -3,6 +3,8 @@
 //                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar.
+//                             Curso de Entendimento ISO 9001:2026 vai ao funil
+//                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
@@ -384,7 +386,16 @@ async function handleLead(request, env, ctx) {
     bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
   }
-  if (!isInscricaoEvento) {
+  const isCursoAluno =
+    lead.evento === "curso-entendimento-iso-9001-2026" ||
+    String(lead.evento || "").startsWith("curso-");
+
+  if (isCursoAluno) {
+    bgTasks.push(["orbit", saveToOrbit(lead, env, {
+      pipeline_id: ORBIT_ATIVACAO_PIPELINE_ID,
+      stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
+    })]);
+  } else if (!isInscricaoEvento) {
     bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
   } else if (lead.evento.startsWith("webinar")) {
@@ -684,6 +695,8 @@ async function saveToPipedrive(lead, env) {
 const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
+const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
+const ORBIT_ATIVACAO_STAGE_IGNICAO = "1fec2ce2-2a71-47ce-8717-ea9746e98ecd";
 const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
@@ -693,7 +706,9 @@ const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
 // então a etiqueta pode ser aplicada no momento da criação — sem chamada extra).
 // Vazio por ora: o único evento mapeado aqui era o PE2027, que passou a ser
 // tratado como inscrição de evento e não chega mais ao CRM (ver isInscricaoEvento).
-const ORBIT_EVENTO_TAGS = {};
+const ORBIT_EVENTO_TAGS = {
+  "curso-entendimento-iso-9001-2026": ["iso-9001-2026-curso"],
+};
 // Campos personalizados do CRM (field_key obtido em CRM → Campos Personalizados)
 const ORBIT_FIELDS = {
   norma:        "cf_produto",
@@ -709,7 +724,7 @@ const ORBIT_FIELDS = {
   utm_content:  "cf_utm_content",
 };
 
-async function saveToOrbit(lead, env) {
+async function saveToOrbit(lead, env, dest) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
@@ -723,8 +738,8 @@ async function saveToOrbit(lead, env) {
 
   const body = {
     title,
-    pipeline_id: ORBIT_PIPELINE_ID,
-    stage_id: ORBIT_STAGE_ID,
+    pipeline_id: (dest && dest.pipeline_id) || ORBIT_PIPELINE_ID,
+    stage_id: (dest && dest.stage_id) || ORBIT_STAGE_ID,
     contact_name: lead.nome || lead.email,
     contact_email: lead.email,
     source: "site",
