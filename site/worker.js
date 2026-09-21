@@ -3,6 +3,8 @@
 //                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar.
+//                             Gestão com IA + LSC One (gestao-ia-pratica-lsc-one) vai ao
+//                             MQL Novo Lead com tag "Parceria LSC One".
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
@@ -373,6 +375,7 @@ async function handleLead(request, env, ctx) {
     lead.evento.startsWith("webinar") ||
     lead.evento.startsWith("webserie") ||
     lead.evento === "planejamento-estrategico-2027" ||
+    lead.evento === EVENTO_GESTAO_IA_LSC ||
     isIsca;
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
@@ -400,6 +403,8 @@ async function handleLead(request, env, ctx) {
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
   } else if (lead.evento.startsWith("webinar")) {
     bgTasks.push(["mql", saveToMqlWebinar(lead, env)]);
+  } else if (lead.evento === EVENTO_GESTAO_IA_LSC) {
+    bgTasks.push(["mql", saveToMqlParceriaLsc(lead, env)]);
   } else if (isIsca) {
     bgTasks.push(["mql", saveToMqlIsca(lead, env)]);
   }
@@ -490,6 +495,7 @@ async function saveToMailchimp(lead, env) {
   if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) {
     mcTags.push("Webserie");
   }
+  if (lead.evento === EVENTO_GESTAO_IA_LSC) mcTags.push(ORBIT_TAG_PARCERIA_LSC);
 
   try {
     const r = await fetch(`${mcBase}/members`, {
@@ -697,6 +703,8 @@ const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
 const ORBIT_ATIVACAO_STAGE_IGNICAO = "1fec2ce2-2a71-47ce-8717-ea9746e98ecd";
+const EVENTO_GESTAO_IA_LSC = "gestao-ia-pratica-lsc-one";
+const ORBIT_TAG_PARCERIA_LSC = "Parceria LSC One";
 const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
@@ -973,6 +981,57 @@ async function saveToMqlIsca(lead, env) {
   }
 }
 
+// Encontro Gestão com IA + LSC One → funil MQL / Novo Lead, tag Parceria LSC One.
+// Não abre card no INBOUND. Dedup por e-mail/telefone: se já existe card aberto,
+// só soma a tag.
+async function saveToMqlParceriaLsc(lead, env) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const tags = [ORBIT_TAG_PARCERIA_LSC];
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+
+  try {
+    const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
+    const existing = pickCrmLeadForIsca(found);
+
+    if (existing) {
+      const patch = { tags: mergeLeadTags(existing.tags, tags) };
+      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
+        method: "PATCH", headers, body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
+      }
+      return { ok: true, lead_id: existing.id, updated: true };
+    }
+
+    const title = [lead.empresa || lead.nome || lead.email, "Gestão com IA"].filter(Boolean).join(" - ");
+    const body = {
+      title,
+      pipeline_id: ORBIT_MQL_PIPELINE_ID,
+      stage_id: ORBIT_MQL_STAGE_NOVO,
+      contact_name: lead.nome || lead.email,
+      contact_email: lead.email,
+      source: ORBIT_TAG_PARCERIA_LSC,
+      tags,
+    };
+    if (lead.telefone) body.contact_phone = lead.telefone;
+    if (lead.empresa) body.company_name = lead.empresa;
+
+    const r = await orbitPostLead(headers, body);
+    if (r && r.ok) {
+      const d = await r.json().catch(() => ({}));
+      return { ok: true, lead_id: d.data?.id, created: true };
+    }
+    const e = r ? await r.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(e).slice(0, 140) };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
 async function handleWebinarMqlBackfill(request, env) {
   const url = new URL(request.url);
   const token = url.searchParams.get("token") || "";
@@ -1038,6 +1097,7 @@ function manyChatTagsFor(lead) {
   // ManyChat sem etiqueta nenhuma (não é webinar nem webserie, e a LP não manda
   // norma), então não havia como disparar lembrete do evento por lá.
   if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
+  if (lead.evento === EVENTO_GESTAO_IA_LSC) tags.push(ORBIT_TAG_PARCERIA_LSC);
   if (lead.evento === "isca" || lead.evento === "isca-resultado") tags.push("isca");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);

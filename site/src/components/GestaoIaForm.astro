@@ -1,0 +1,27 @@
+---
+const { idPrefix = "", eventName, obrigado } = Astro.props;
+---
+
+<form novalidate data-trk-event={eventName} data-obrigado={obrigado}>
+  <div class="field">
+    <label for={`${idPrefix}nome`}>Nome</label>
+    <input class="input" id={`${idPrefix}nome`} name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome" />
+  </div>
+  <div class="field">
+    <label for={`${idPrefix}email`}>E-mail</label>
+    <input class="input" id={`${idPrefix}email`} name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+  </div>
+  <div class="field">
+    <label for={`${idPrefix}telefone`}>WhatsApp</label>
+    <input class="input" id={`${idPrefix}telefone`} name="telefone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000" />
+  </div>
+  <div class="field">
+    <label for={`${idPrefix}empresa`}>Empresa</label>
+    <input class="input" id={`${idPrefix}empresa`} name="empresa" type="text" autocomplete="organization" required minlength="2" placeholder="Nome da empresa" />
+  </div>
+  <button type="submit" class="btn btn--primary btn--block btn--lg">
+    Quero participar
+    <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+  </button>
+</form>
+<p class="gia-legal">Usamos estes dados para confirmar a vaga. O grupo do WhatsApp e a pesquisa chegam no seu e-mail.</p>

@@ -1,0 +1,90 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+import GestaoIaLockup from "../components/GestaoIaLockup.astro";
+import "../styles/gestao-ia-pratica.css";
+---
+
+<LpBase
+  title="Vaga garantida | Gestão com IA na Prática"
+  description="Sua inscrição no encontro Gestão com IA na Prática está confirmada."
+  noindex={true}
+>
+
+  <header class="gia-header">
+    <div class="gia-header-inner">
+      <GestaoIaLockup href="/gestao-ia-pratica/" />
+    </div>
+  </header>
+
+  <section class="gia-ob-hero gia-ob">
+    <div class="gia-ob-glow"></div>
+    <div class="container sm gia-ob-inner">
+      <div class="gia-ob-check">
+        <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+      </div>
+      <span class="gia-ob-badge">Vaga garantida</span>
+      <h1>Você está dentro!<br /><em>Salve a data.</em></h1>
+      <p class="gia-ob-lead">
+        No dia <strong>08/10 às 17h</strong> você vê, no Templum OS, como a IA amarra prioridade, execução, responsável e número.
+        Enviamos um e-mail com o grupo do WhatsApp e uma pesquisa rápida.
+      </p>
+
+      <div class="gia-event-card">
+        <div class="gia-event-row">
+          <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+          <span><strong>08 de outubro de 2026</strong></span>
+        </div>
+        <div class="gia-event-row">
+          <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+          <span><strong>17h às 20h (horário de Brasília)</strong></span>
+        </div>
+        <div class="gia-event-row">
+          <iconify-icon icon="solar:video-frame-bold"></iconify-icon>
+          <span>Online · Gratuito</span>
+        </div>
+      </div>
+
+      <div class="gia-ob-divider"></div>
+      <p class="gia-ob-share">Bloqueie sua agenda:</p>
+      <div class="gia-cal-btns">
+        <a
+          href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Gest%C3%A3o%20com%20IA%20na%20Pr%C3%A1tica%20%7C%20Templum%20%2B%20LSC%20One&dates=20261008T200000Z/20261008T230000Z&details=Encontro%20online.%20O%20grupo%20do%20WhatsApp%20e%20a%20pesquisa%20est%C3%A3o%20no%20e-mail%20de%20confirma%C3%A7%C3%A3o.&location=Online"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="gia-btn-cal"
+        >
+          <iconify-icon icon="mdi:google"></iconify-icon> Google Calendar
+        </a>
+        <a
+          href="https://outlook.live.com/calendar/0/deeplink/compose?subject=Gest%C3%A3o%20com%20IA%20na%20Pr%C3%A1tica%20%7C%20Templum%20%2B%20LSC%20One&startdt=2026-10-08T17:00:00-03:00&enddt=2026-10-08T20:00:00-03:00&body=Encontro%20online.%20O%20grupo%20do%20WhatsApp%20e%20a%20pesquisa%20est%C3%A3o%20no%20e-mail%20de%20confirma%C3%A7%C3%A3o."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="gia-btn-cal"
+        >
+          <iconify-icon icon="mdi:microsoft-outlook"></iconify-icon> Outlook
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
+
+</LpBase>

@@ -1,0 +1,150 @@
+---
+import LpBase from "../layouts/LpBase.astro";
+import GestaoIaLockup from "../components/GestaoIaLockup.astro";
+import GestaoIaForm from "../components/GestaoIaForm.astro";
+import "../styles/gestao-ia-pratica.css";
+
+const EVENTO = "gestao-ia-pratica-lsc-one";
+const OBRIGADO = "/obrigado-gestao-ia-pratica/";
+---
+
+<LpBase
+  title="Gestão com IA na Prática | Templum + LSC One"
+  description="Encontro online de 08 de outubro, das 17h às 20h. Veja como usar IA para conectar estratégia, processos, pessoas e indicadores."
+  noindex={true}
+  formAnchor="#inscricao"
+  headerCta="Quero participar"
+>
+
+  <header class="gia-header">
+    <div class="gia-header-inner">
+      <GestaoIaLockup />
+      <a href="#inscricao" class="btn btn--primary" data-cta="cta_header_form">Quero participar</a>
+    </div>
+  </header>
+
+  <section class="gia-hero">
+    <div class="container xl">
+      <div class="gia-hero-grid">
+        <div>
+          <span class="gia-eyebrow">Templum + LSC One apresentam</span>
+          <p class="gia-name">Gestão com IA na Prática</p>
+          <h1>Menos improviso. Mais clareza para gerir sua empresa.</h1>
+          <p class="gia-desc">Hoje a gestão vive no WhatsApp, na memória e na planilha. Em três horas você vê, no Templum OS, como a IA amarra prioridade, execução, responsável e número.</p>
+          <p class="gia-note">Online, gratuito e mão na massa. Não é palestra de ferramenta.</p>
+
+          <div class="gia-date-bar">
+            <div class="gia-date-item">
+              <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+              <div>
+                <span class="gia-date-label">Data</span>
+                <span class="gia-date-val">08 de outubro</span>
+              </div>
+            </div>
+            <div class="gia-date-divider"></div>
+            <div class="gia-date-item">
+              <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
+              <div>
+                <span class="gia-date-label">Horário</span>
+                <span class="gia-date-val">17h às 20h</span>
+              </div>
+            </div>
+            <div class="gia-date-divider"></div>
+            <div class="gia-date-item">
+              <iconify-icon icon="mdi:video-outline"></iconify-icon>
+              <div>
+                <span class="gia-date-label">Formato</span>
+                <span class="gia-date-val">Online · Gratuito</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="gia-form-card" id="inscricao">
+          <div class="gia-form-bar">
+            <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+            <span>08 de outubro · 17h · Online · Gratuito</span>
+          </div>
+          <div class="gia-form-title">Quero participar</div>
+          <p class="gia-form-sub">Preencha seus dados.</p>
+          <GestaoIaForm idPrefix="gia-" eventName={EVENTO} obrigado={OBRIGADO} />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" id="pratica">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">O que você vai ver</span>
+        <h2>Da estratégia ao número que vira decisão.</h2>
+        <p>Você acompanha as quatro áreas no mesmo sistema, e vê como a IA tira o trabalho do caderno, do WhatsApp e da planilha solta.</p>
+      </div>
+      <div class="gia-topics">
+        <article class="gia-topic">
+          <div class="gia-topic-ico"><iconify-icon icon="solar:target-bold"></iconify-icon></div>
+          <h3>Estratégia</h3>
+          <p>Objetivo vira prioridade, prazo e plano de ação. Não fica como frase no slide.</p>
+        </article>
+        <article class="gia-topic">
+          <div class="gia-topic-ico"><iconify-icon icon="solar:widget-4-bold"></iconify-icon></div>
+          <h3>Processos</h3>
+          <p>Cada atividade ganha dono e sequência. A equipe sabe o que fazer sem te perguntar.</p>
+        </article>
+        <article class="gia-topic">
+          <div class="gia-topic-ico"><iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon></div>
+          <h3>Pessoas</h3>
+          <p>Responsável, competência e acompanhamento no mesmo lugar. Menos "eu achei que era com o outro".</p>
+        </article>
+        <article class="gia-topic">
+          <div class="gia-topic-ico"><iconify-icon icon="solar:graph-up-bold"></iconify-icon></div>
+          <h3>Indicadores</h3>
+          <p>O número avisa quando sai da meta. A decisão deixa de esperar a reunião do mês.</p>
+        </article>
+      </div>
+      <p class="gia-topics-foot">Tudo conectado no Templum OS. Você sai enxergando por onde começar na sua empresa, não só com uma lista de ideias.</p>
+    </div>
+  </section>
+
+  <section class="section section--white" id="para-quem">
+    <div class="container lg">
+      <div class="section-header">
+        <span class="tag-pill">Para quem é</span>
+        <h2>Se a gestão ainda depende de você, este encontro é para a sua empresa.</h2>
+      </div>
+      <div class="gia-who">
+        <p>A empresa cresce. A operação ainda anda no improviso. É nesse ponto que a IA deixa de ser assunto e vira rotina.</p>
+        <ul class="gia-who-list">
+          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon><span>Você é dono, líder ou gestor e precisa da operação andando sem estar em tudo.</span></li>
+          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon><span>O time executa, mas a prioridade muda conforme o dia.</span></li>
+          <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon><span>Existe indicador, ou pelo menos a vontade de ter, e ele ainda não vira decisão.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gia-footer-cta" id="inscricao-final">
+    <div class="container sm">
+      <div class="section-header">
+        <span class="tag-pill">Inscrição</span>
+        <h2>Reserve a tarde do dia 08.</h2>
+        <p>Três horas para ver a gestão com IA acontecendo de ponta a ponta. Sem custo de inscrição.</p>
+      </div>
+      <div class="gia-form-card">
+        <div class="gia-form-bar">
+          <iconify-icon icon="solar:calendar-bold"></iconify-icon>
+          <span>08 de outubro · 17h às 20h · Online · Gratuito</span>
+        </div>
+        <div class="gia-form-title">Quero participar</div>
+        <p class="gia-form-sub">Preencha seus dados.</p>
+        <GestaoIaForm idPrefix="gia2-" eventName={EVENTO} obrigado={OBRIGADO} />
+      </div>
+    </div>
+  </section>
+
+  <footer class="gia-footer">
+    <GestaoIaLockup />
+    <p>Encontro online · 08 de outubro · 17h às 20h</p>
+  </footer>
+
+</LpBase>
