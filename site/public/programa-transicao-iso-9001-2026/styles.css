@@ -1519,7 +1519,7 @@ body.no-scroll { overflow: hidden; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  max-width: 480px;
+  max-width: 560px;
   margin: -8px auto 28px;
   padding: 12px 16px;
   border-radius: 12px;
@@ -1532,6 +1532,189 @@ body.no-scroll { overflow: hidden; }
 .price-date iconify-icon {
   flex-shrink: 0;
   font-size: 20px;
+}
+
+/* Objetivos da imersão */
+.outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+.outcome-grid li {
+  padding: 22px 20px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 15px;
+  line-height: 1.5;
+  box-shadow: var(--shadow-soft);
+}
+.outcome-grid li::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  background: var(--orange);
+}
+
+/* Grade detalhada */
+.grade-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 100%;
+}
+.grade-intro h2,
+.grade-intro .ds-lede {
+  max-width: none;
+  width: 100%;
+}
+.grade-intro .ds-lede {
+  margin-bottom: 36px;
+}
+.grade-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 0;
+}
+.grade-day {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.grade-day summary {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 22px 24px;
+}
+.grade-day summary::-webkit-details-marker { display: none; }
+.grade-day__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.grade-day summary strong {
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+.grade-day__hours {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+.grade-day summary iconify-icon {
+  font-size: 22px;
+  color: var(--orange);
+  transition: transform .3s var(--ease-soft);
+}
+.grade-day[open] summary iconify-icon { transform: rotate(45deg); }
+.grade-day__body {
+  padding: 0 24px 28px;
+  display: grid;
+  gap: 28px;
+  overflow-x: auto;
+}
+.grade-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.grade-schedule caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-mid);
+}
+.grade-schedule th,
+.grade-schedule td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.grade-schedule th {
+  background: #F7F7F8;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-mid);
+}
+.grade-schedule td:first-child {
+  width: 160px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.grade-schedule tr:last-child td { border-bottom: 0; }
+.grade-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.grade-topics article {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #FFFAEB;
+}
+.grade-topics h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+.grade-topics li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.grade-topics li::before {
+  content: "";
+  position: absolute;
+  top: .62em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--orange);
+}
+
+@media (max-width: 900px) {
+  .outcome-grid { grid-template-columns: 1fr; }
+  .grade-day summary {
+    grid-template-columns: 1fr auto;
+  }
+  .grade-day summary strong {
+    grid-column: 1;
+    font-size: 18px;
+  }
+  .grade-day__hours {
+    grid-column: 1;
+  }
+  .grade-day summary iconify-icon {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+  .grade-topics { grid-template-columns: 1fr; }
+  .grade-schedule td:first-child { width: auto; white-space: normal; }
 }
 
 @media (max-width: 900px) {
