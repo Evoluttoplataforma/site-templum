@@ -12,17 +12,15 @@ import d from "../../data/consultoria/iso-9001.js";
 const slug = "iso-9001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
-const heroGarantiaTitulo = "Garantia de 200% do valor investido";
-const heroGarantia = "Concluiu todas as etapas e ainda assim não obteve a certificação? Devolvemos 200% do valor investido.";
 const heroChips = ["+2.000 empresas certificadas", "30 anos de experiência", "Sem limite de horas"];
-const heroTitulo = ["Consultoria ISO 9001 com ", "garantia em contrato", ""];
-const heroSub = "Do diagnóstico à certificação, com consultores experientes e tecnologia em cada etapa.";
+const heroTitulo = ["Consultoria ISO 9001 para uma\u00A0certificação ", "mais simples e ágil", ""];
+const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a\u00A0certificação.";
 const heroCta = "Solicitar diagnóstico";
 ---
 
 <LpBase
-  title="Consultoria ISO 9001 com garantia em contrato"
-  description="Do diagnóstico à certificação, com consultores experientes e tecnologia em cada etapa. Solicite um diagnóstico."
+  title="Consultoria ISO 9001 para uma certificação mais simples e ágil"
+  description="Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a certificação. Solicite um diagnóstico."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta={heroCta}
@@ -33,22 +31,15 @@ const heroCta = "Solicitar diagnóstico";
       <div class="cs-hero-bg" aria-hidden="true"></div>
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
-          <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
+          <span class="tag-pill tag-pill--glow">Garantia de 200% em contrato</span>
           <h1 class="cs-title">{heroTitulo[0]}<span class="cs-hl">{heroTitulo[1]}</span>{heroTitulo[2]}</h1>
           <p class="cs-sub">{heroSub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
-          <div class="cs-guarantee">
-            <iconify-icon icon="solar:shield-check-bold"></iconify-icon>
-            <div>
-              <strong class="cs-guarantee-t">{heroGarantiaTitulo}</strong>
-              <p>{heroGarantia}</p>
-            </div>
-          </div>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
-          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+          <a href="#nova-forma" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
+          <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
         </div>
       </div>
     </section>
@@ -76,6 +67,46 @@ const heroCta = "Solicitar diagnóstico";
         </div>
       </section>
     )}
+
+    <!-- NOVA FORMA (claro) -->
+    <section id="nova-forma" class="section cs-nova">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">O jeito Templum</span>
+          <h2>Uma nova forma de conquistar a&nbsp;<em class="accent">ISO&nbsp;9001</em></h2>
+          <p>Especialistas de verdade. Tecnologia própria. Um time de agentes de IA trabalhando junto com sua empresa.</p>
+        </div>
+        <p class="cs-nova-lead">Na Templum, sua empresa não recebe apenas a orientação de um consultor. Você tem especialistas conduzindo a certificação, o Templum OS organizando toda a jornada e um time de agentes de IA apoiando sua equipe para fazer as coisas acontecerem.</p>
+        <img
+          class="cs-nova-img"
+          src="/assets/img/templum-os-notebook.webp"
+          alt="Templum OS no notebook e no celular, com números-chave, produtos e o espaço da equipe"
+          width="1600"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="cs-nova-cards">
+          <article class="cs-nova-card reveal">
+            <h3>Especialistas conduzem</h3>
+            <p>Orientam sua empresa e conduzem cada etapa até&nbsp;a&nbsp;certificação.</p>
+          </article>
+          <article class="cs-nova-card reveal">
+            <h3>Templum OS organiza</h3>
+            <p>Centraliza tarefas, processos, documentos e a implementação em um só lugar.</p>
+          </article>
+          <article class="cs-nova-card reveal">
+            <h3>
+              <span class="cs-nova-title-full">Time de agentes de IA ajuda a executar</span>
+              <span class="cs-nova-title-short">Agentes de IA executam</span>
+            </h3>
+            <p>Apoia sua equipe em diferentes áreas da gestão e na execução do dia&nbsp;a&nbsp;dia.</p>
+          </article>
+        </div>
+        <p class="cs-nova-close">Menos complexidade, mais clareza e agilidade em cada etapa até&nbsp;a&nbsp;certificação.</p>
+        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
 
     <!-- SELO (escuro) -->
     <SeloImplementando />
@@ -184,14 +215,14 @@ const heroCta = "Solicitar diagnóstico";
         <div class="cs-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
           <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado, sem compromisso.</p>
           <ul class="check-list">
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
+        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
       </div>
     </section>
 
@@ -200,7 +231,7 @@ const heroCta = "Solicitar diagnóstico";
       <div class="container md">
         <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
         <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#contato" class="btn btn--dark btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
   </div>
@@ -226,17 +257,12 @@ const heroCta = "Solicitar diagnóstico";
   .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-  .cs-hero-text { max-width: 600px; }
+  .cs-hero-text { max-width: 640px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
   .cs-hl { color: var(--accent-lt); }
-  .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
+  .cs-sub { font-size: clamp(18px, 2.1vw, 22px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 20px; max-width: 580px; line-height: 1.45; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
-  .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
-  .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
-  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 2px; }
-  .cs-guarantee-t { display: block; font-size: 14.5px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
-  .cs-guarantee p { margin: 0; }
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
@@ -264,6 +290,28 @@ const heroCta = "Solicitar diagnóstico";
   .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
   .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
   @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
+
+  .cs-nova { text-align: center; scroll-margin-top: 88px; }
+  .cs-nova .section-header h2 { text-wrap: balance; }
+  .cs-nova-lead { max-width: 720px; margin: 0 auto 28px; font-size: 17px; line-height: 1.65; color: var(--text-mid); }
+  .cs-nova-img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto 40px; }
+  .cs-nova-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; margin-bottom: 36px; }
+  .cs-nova-card {
+    background: var(--cream);
+    border: 1px solid color-mix(in srgb, #c9a86a 28%, var(--cream));
+    border-radius: var(--r-20);
+    padding: 30px 26px;
+    box-shadow: var(--shadow-card);
+  }
+  .cs-nova-card h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; color: var(--text); }
+  .cs-nova-title-short { display: none; }
+  .cs-nova-card p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+  .cs-nova-close { max-width: 640px; margin: 0 auto 28px; font-size: 18px; font-weight: 600; line-height: 1.5; text-wrap: balance; }
+  @media (max-width: 880px) {
+    .cs-nova-cards { grid-template-columns: 1fr; }
+    .cs-nova-title-full { display: none; }
+    .cs-nova-title-short { display: inline; }
+  }
 
   .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
   .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
