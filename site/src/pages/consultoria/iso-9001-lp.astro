@@ -12,16 +12,17 @@ import d from "../../data/consultoria/iso-9001.js";
 const slug = "iso-9001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
-const heroGarantia = "Ao concluir todas as etapas da consultoria e ainda assim não obter a certificação, devolvemos 200% do valor investido.";
-const heroChips = ["30 anos de experiência", "Sem limite de horas", "+2.000 empresas certificadas"];
+const heroGarantiaTitulo = "Garantia de 200% do valor investido";
+const heroGarantia = "Concluiu todas as etapas e ainda assim não obteve a certificação? Devolvemos 200% do valor investido.";
+const heroChips = ["+2.000 empresas certificadas", "30 anos de experiência", "Sem limite de horas"];
 const heroTitulo = ["Consultoria ISO 9001 com ", "garantia em contrato", ""];
-const heroSub = "Consultores experientes e tecnologia que aceleram cada etapa: do diagnóstico à certificação.";
+const heroSub = "Do diagnóstico à certificação, com consultores experientes e tecnologia em cada etapa.";
 const heroCta = "Solicitar diagnóstico";
 ---
 
 <LpBase
   title="Consultoria ISO 9001 com garantia em contrato"
-  description="Consultores experientes e tecnologia que aceleram cada etapa: do diagnóstico à certificação. Solicite um diagnóstico."
+  description="Do diagnóstico à certificação, com consultores experientes e tecnologia em cada etapa. Solicite um diagnóstico."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta={heroCta}
@@ -36,7 +37,13 @@ const heroCta = "Solicitar diagnóstico";
           <h1 class="cs-title">{heroTitulo[0]}<span class="cs-hl">{heroTitulo[1]}</span>{heroTitulo[2]}</h1>
           <p class="cs-sub">{heroSub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
-          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <div class="cs-guarantee">
+            <iconify-icon icon="solar:shield-check-bold"></iconify-icon>
+            <div>
+              <strong class="cs-guarantee-t">{heroGarantiaTitulo}</strong>
+              <p>{heroGarantia}</p>
+            </div>
+          </div>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
           <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
@@ -227,7 +234,9 @@ const heroCta = "Solicitar diagnóstico";
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
   .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
   .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
-  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 2px; }
+  .cs-guarantee-t { display: block; font-size: 14.5px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .cs-guarantee p { margin: 0; }
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
