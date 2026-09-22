@@ -14,13 +14,17 @@ const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const heroTitulo = ["Consultoria ", "ISO 9001", " para sua empresa conquistar a certificação"];
+const heroSub = "Do diagnóstico à preparação para auditoria, com consultores experientes e tecnologia que acelera cada etapa.";
+const heroCta = "Solicitar diagnóstico";
 ---
 
 <LpBase
-  title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`}
-  description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`}
+  title="Consultoria ISO 9001 para sua empresa conquistar a certificação"
+  description="Do diagnóstico à preparação para auditoria, com consultores experientes e tecnologia que acelera cada etapa. Solicite um diagnóstico."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
+  headerCta={heroCta}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -29,15 +33,15 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
-          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
-          <p class="cs-sub">{d.hero.sub}</p>
+          <h1 class="cs-title">{heroTitulo[0]}<span class="cs-hl">{heroTitulo[1]}</span>{heroTitulo[2]}</h1>
+          <p class="cs-sub">{heroSub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
           <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} />
         </div>
       </div>
     </section>
