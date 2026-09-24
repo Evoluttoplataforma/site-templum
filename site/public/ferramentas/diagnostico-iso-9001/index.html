@@ -383,11 +383,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5 11.2 12.8a1.7 1.7 0 0 0 1.6 0L20 7.5"/></svg>
         <div>
           <span class="crm-eyebrow">Templum OS</span>
-          <div class="crm-box-title">Vincular ao lead, se já existir</div>
+          <div class="crm-box-title">Vincular ao lead, se quiser</div>
         </div>
       </div>
       <div class="crm-search-row">
-        <input class="crm-input" id="leadEmail" name="email" type="email" autocomplete="email" placeholder="e-mail do cliente" required>
+        <input class="crm-input" id="leadEmail" name="email" type="email" autocomplete="email" placeholder="e-mail do cliente (opcional)">
         <button class="btn-orbit" id="searchLeadBtn" type="submit">Buscar no Templum OS</button>
       </div>
       <div class="crm-status" id="leadError"></div>
@@ -715,8 +715,13 @@
   }
   function searchLead() {
     var email = document.getElementById('leadEmail').value.trim();
+    if (!email) {
+      lead = null;
+      document.getElementById('leadError').innerHTML = '';
+      return Promise.resolve();
+    }
     if (email.indexOf('@') === -1) {
-      showLeadError('Digite o e-mail do cliente.');
+      showLeadError('Esse e-mail não parece válido. Deixe em branco para seguir sem vincular.');
       return Promise.resolve();
     }
     if (lead && lead.email === email) return Promise.resolve();
@@ -736,12 +741,20 @@
   }
   function startDiagnostic() {
     var email = document.getElementById('leadEmail').value.trim();
+    if (!email) {
+      lead = null;
+      document.getElementById('leadError').innerHTML = '';
+      beginQuiz();
+      return;
+    }
     if (email.indexOf('@') === -1) {
-      showLeadError('Digite o e-mail do cliente para começar.');
+      showLeadError('Esse e-mail não parece válido. Deixe em branco para seguir sem vincular.');
       return;
     }
     var ready = lead && lead.email === email;
-    (ready ? Promise.resolve() : searchLead()).then(beginQuiz);
+    (ready ? Promise.resolve() : searchLead()).then(function() {
+      if (lead && lead.email === email) beginQuiz();
+    });
   }
   document.getElementById('leadForm').addEventListener('submit', function(e) {
     e.preventDefault();
