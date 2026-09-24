@@ -7,6 +7,40 @@ export const pages = [
   // EBOOKS, ISO 9001 / Processos
   // ============================================================
   {
+    slug: "diagnostico-iso-9001",
+    type: "diagnostico",
+    title: "Diagnóstico ISO 9001 · Templum",
+    metaDescription: "Diagnóstico gratuito de maturidade em qualidade. 12 perguntas, 7 frentes, e o que a ISO 9001 resolve em cada gap.",
+    headlineHtml: "Em 5 minutos,<br>veja em que ponto está<br>a <em>qualidade</em> da sua empresa.",
+    subhead: "12 perguntas em 7 frentes. No final, a nota de cada frente e o que a ISO 9001 organiza naquele gap.",
+    tipoLabel: "Diagnóstico gratuito",
+    ctaBtn: "Quero o diagnóstico",
+    leadSub: "Interativo · 5 minutos · o resultado abre na hora.",
+    insideLabel: "diagnóstico",
+    benefits: [
+      "<strong>Nota geral</strong> de maturidade, de inicial a avançado.",
+      "Pontuação em <strong>7 frentes</strong>: estratégia, riscos, processos, pessoas, indicadores, IA e cliente.",
+      "O que a <strong>ISO 9001 resolve</strong> em cada gap.",
+      "Leitura para decidir o <strong>próximo passo</strong>, com ou sem certificação.",
+    ],
+    marqueeItems: ["ISO 9001", { text: "Diagnóstico", orange: true }, "7 frentes", { text: "Maturidade", orange: true }, "Processos", { text: "Indicadores", orange: true }],
+    steps: [
+      { num: "01", title: "Estratégia", text: "Objetivos documentados, desdobrados em plano, responsável e prazo." },
+      { num: "02", title: "Riscos e oportunidades", text: "O que é mapeado de verdade e o que ainda vira incêndio." },
+      { num: "03", title: "Processos", text: "Mapa, procedimento e tratativa de falha, ou conhecimento na cabeça das pessoas." },
+      { num: "04", title: "Pessoas", text: "Função definida, treinamento e se o treinamento gerou resultado." },
+      { num: "05", title: "Indicadores", text: "Meta, desvio e se a causa raiz foi tratada." },
+      { num: "06", title: "Cliente e melhoria", text: "Satisfação medida e o uso de IA com dono e resultado." },
+    ],
+    ctaTitle: "Qualidade que <em>aparece</em><br>no dia a dia, não só na pasta.",
+    ctaCopy: "O diagnóstico mostra onde a gestão ainda depende de memória e onde já existe método. A Templum usa essa leitura para priorizar o que implementar primeiro.",
+    ctaItems: ["12 perguntas, cerca de 5 minutos", "Serve para quem já tem ISO e para quem ainda vai certificar", "Sem custo · sem compromisso"],
+    faqItems: [
+      { q: "Isso substitui uma auditoria?", a: "Não. É um raio-x de maturidade para a reunião de decisão. A certificação continua com um organismo certificador." },
+      { q: "Preciso já ter a ISO 9001?", a: "Não. As perguntas valem para quem está começando e para quem já é certificado e quer ver onde o sistema ficou informal." },
+    ],
+  },
+  {
     slug: "como-medir-processos-na-iso-9001",
     type: "ebook",
     title: "Como Medir Processos na ISO 9001 · Templum",

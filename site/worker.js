@@ -81,6 +81,20 @@ export default {
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       return handleLead(request, env, ctx);
     }
+    if (url.pathname === "/api/crm-lead") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleCrmLeadLookup(request, env);
+    }
     if (url.pathname === "/api/track") {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleTrack(request, env);
@@ -306,6 +320,29 @@ function timed(promise, ms) {
 // =====================================================================
 // LEAD: 3 destinos independentes — Supabase, Mailchimp, Pipedrive
 // =====================================================================
+
+async function handleCrmLeadLookup(request, env) {
+  let body = {};
+  try { body = await request.json(); } catch (_) {}
+  const email = normalizeEmail(body.email || "");
+  if (!email || email.indexOf("@") === -1) return corsJson({ ok: false, error: "email" }, 400);
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return corsJson({ ok: true, found: false });
+  try {
+    const found = await crmFindLeadsForIsca(token, email, "");
+    const lead = pickCrmLeadForIsca(found);
+    if (!lead) return corsJson({ ok: true, found: false });
+    return corsJson({
+      ok: true,
+      found: true,
+      nome: lead.contact_name || "",
+      empresa: lead.company_name || lead.title || "",
+      telefone: lead.contact_phone || "",
+    });
+  } catch (_) {
+    return corsJson({ ok: true, found: false });
+  }
+}
 
 async function handleLead(request, env, ctx) {
   let body = {};
