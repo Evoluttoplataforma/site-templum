@@ -725,13 +725,9 @@ strong, b { font-weight: 600; }
   margin: 0 auto;
   text-align: center;
 }
-.price-panel .official {
-  font-size: 15px; color: var(--text-mid); margin-bottom: 8px;
-}
-.price-panel .official strong {
-  text-decoration: line-through;
-  color: var(--text-soft);
-  font-weight: 600;
+.price-panel .price-times {
+  font-size: 16px; font-weight: 600; color: var(--text-2);
+  margin: 0;
 }
 .price-panel .big-price {
   font-size: clamp(56px, 8vw, 80px);
@@ -739,11 +735,11 @@ strong, b { font-weight: 600; }
   letter-spacing: -0.04em;
   color: var(--orange);
   line-height: 1;
-  margin: 8px 0 6px;
+  margin: 8px 0 10px;
 }
-.price-panel .parcelas {
-  font-size: 15px; font-weight: 500; color: var(--text-2);
-  margin-bottom: 28px;
+.price-panel .price-cash {
+  font-size: 15px; font-weight: 500; color: var(--text-mid);
+  margin: 0 0 28px;
 }
 .price-checklist {
   text-align: left;
