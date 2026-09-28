@@ -322,7 +322,11 @@ strong, b { font-weight: 600; }
   text-transform: uppercase; letter-spacing: 0.06em;
 }
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.price-chip .cash {
+  font-size: 14px; font-weight: 500; color: var(--text-2);
+}
+
+.hero-actions { display: flex; flex-direction: column; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .hero-disclaimer { font-size: 12px; color: var(--text-soft); line-height: 1.5; max-width: 480px; }
 
 .hero-visual {
@@ -389,6 +393,7 @@ strong, b { font-weight: 600; }
   .media-frame--hero { border-radius: var(--r-24); }
   .hero-actions .btn--arrowbox { width: 100%; }
   .hero-actions .btn--arrowbox .btn-textBox { flex: 1; }
+  .price-chip { width: 100%; }
 }
 
 /* QUESTIONS */
@@ -656,6 +661,7 @@ strong, b { font-weight: 600; }
 .include-card p { font-size: 14px; line-height: 1.5; color: var(--text-2); }
 @media (max-width: 700px) {
   .include-grid { grid-template-columns: 1fr; }
+  .price-chip { width: 100%; }
 }
 
 /* BONUS */
