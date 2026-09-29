@@ -1,0 +1,385 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import "../styles/gestao-financeira.css";
+
+const EVENTO = "intervalo-tecnico-gestao-financeira";
+const OBRIGADO = "/obrigado-gestao-financeira/";
+---
+
+<CampanhaIsolada
+  title="Intervalo Técnico | Gestão Financeira na Prática | Academia de Combate"
+  description="Live gratuita de gestão financeira na prática. 20 de outubro de 2026, 16h (horário de Brasília), online. Receita, custos, margem e caixa."
+>
+
+<header class="header">
+    <div class="header-inner">
+      <a href="#topo" aria-label="Academia de Combate">
+        <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+      </a>
+      <a class="btn-reserve" href="#inscricao">
+        <span class="btn-long">Reserve seu lugar</span>
+        <span class="btn-short">Reserve</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="topo">
+    <section class="hero">
+      <div class="hero-lights" aria-hidden="true"></div>
+      <div class="ropes" aria-hidden="true"></div>
+      <div class="container-hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-text">
+              <p class="eyebrow">Academia de Combate&nbsp;apresenta</p>
+              <h1>Gestão Financeira na&nbsp;Prática</h1>
+              <p class="hero-line">Antes do próximo round,<br /><em>reveja os&nbsp;números.</em></p>
+              <p class="lede">Uma live gratuita para empresários que querem entender se a empresa está realmente dando resultado, para onde o dinheiro está indo e quais números acompanhar antes de tomar as próximas&nbsp;decisões.</p>
+              <div class="date-bar">
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+                  <div>
+                    <span class="date-label">Data</span>
+                    <span class="date-val">20 de outubro</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>
+                  <div>
+                    <span class="date-label">Horário</span>
+                    <span class="date-val">16h, Brasília</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 18v2M16 18v2M3 10h18"/></svg>
+                  <div>
+                    <span class="date-label">Formato</span>
+                    <span class="date-val">Ao vivo</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.2 4.6L19 8.2l-3.5 3.4.8 4.9L12 14.8 7.7 16.5l.8-4.9L5 8.2l4.8-.6L12 3z"/></svg>
+                  <div>
+                    <span class="date-label">Inscrição</span>
+                    <span class="date-val">Gratuito</span>
+                  </div>
+                </div>
+              </div>
+              <p class="seal">Intervalo Técnico</p>
+            </div>
+          </div>
+
+          <aside class="form-card" id="inscricao">
+              <p class="price-badge">Vagas limitadas</p>
+              <p class="price-free">Gratuito</p>
+              <p class="price-note">Só preencher e garantir a&nbsp;vaga.</p>
+              <p class="form-bar">20 de outubro · 16h · Ao vivo</p>
+              <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
+                <div class="field">
+                  <label for="nome">Nome completo</label>
+                  <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
+                </div>
+                <div class="field">
+                  <label for="email">E-mail</label>
+                  <input class="input" id="email" name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+                </div>
+                <div class="field">
+                  <label for="empresa">Empresa</label>
+                  <input class="input" id="empresa" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" />
+                </div>
+                <div class="field">
+                  <label for="telefone">WhatsApp *</label>
+                  <input class="input" id="telefone" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000" />
+                </div>
+                <div class="field">
+                  <label for="cargo">Seu cargo</label>
+                  <select class="select" id="cargo" name="cargo" required>
+                    <option value="">Selecione</option>
+                    <option>Proprietário</option>
+                    <option>Diretor / C-level</option>
+                    <option>Gerente</option>
+                    <option>Coordenador / Supervisor</option>
+                    <option>Consultor</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="funcionarios">Nº de funcionários</label>
+                  <select class="select" id="funcionarios" name="funcionarios" required>
+                    <option value="">Selecione</option>
+                    <option>1 a 10</option>
+                    <option>11 a 50</option>
+                    <option>51 a 100</option>
+                    <option>101 a 250</option>
+                    <option>251 a 500</option>
+                    <option>Mais de 500</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="desafio">Maior desafio da empresa hoje</label>
+                  <select class="select" id="desafio" name="desafio" required>
+                    <option value="">Selecione</option>
+                    <option>Não temos um plano estratégico definido</option>
+                    <option>Temos o plano, mas não conseguimos executar</option>
+                    <option>Faltam indicadores e metas claras</option>
+                    <option>Processos desorganizados: tudo passa por mim</option>
+                    <option>Time desalinhado, sem responsáveis e prazos</option>
+                    <option>Crescer sem estrutura para acompanhar</option>
+                    <option>Outro desafio</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn-reserve btn-block">
+                  Garantir minha vaga&nbsp;gratuita
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </form>
+              <p class="legal">Vagas limitadas. As instruções de acesso chegam por e-mail e&nbsp;WhatsApp.</p>
+          </aside>
+        </div>
+        <div class="outcomes">
+          <p class="outcomes-lead">Ao final deste Intervalo Técnico, você terá uma visão mais clara&nbsp;de:</p>
+          <ul class="outcomes-list">
+            <li><strong>Receita</strong> O que o crescimento das vendas realmente está&nbsp;produzindo.</li>
+            <li><strong>Custos</strong> Onde o resultado pode estar sendo&nbsp;consumido.</li>
+            <li><strong>Margem</strong> Quanto do esforço comercial efetivamente vira&nbsp;resultado.</li>
+            <li><strong>Caixa</strong> Por que dinheiro disponível e lucro não contam exatamente a mesma&nbsp;história.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="placar">
+      <div class="container">
+        <div class="placar-grid">
+        <div>
+        <div class="section-head">
+          <span class="kicker">O placar</span>
+          <h2>Faturar é importante.<br /><em>Entender o placar é&nbsp;indispensável.</em></h2>
+          <p>Seu negócio está em campo todos os dias. A pergunta é se você sabe o que o placar financeiro está&nbsp;dizendo.</p>
+        </div>
+        <p class="prose">Vender mais não significa, necessariamente, ter uma empresa financeiramente mais&nbsp;forte.</p>
+        <p class="prose">Quando os números são acompanhados sem contexto, ou apenas quando surge um problema, fica mais difícil perceber desperdícios, antecipar riscos e tomar boas&nbsp;decisões.</p>
+        </div>
+        <div>
+        <p class="prose"><strong>O resultado?</strong></p>
+        <ul class="fight-card">
+          <li>A empresa continua&nbsp;jogando.</li>
+          <li>O time continua&nbsp;correndo.</li>
+          <li>O faturamento pode até&nbsp;crescer.</li>
+          <li class="fight-card-hit">Mas ninguém sabe exatamente<br />se está ganhando o&nbsp;jogo.</li>
+        </ul>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="intervalo">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">O intervalo</span>
+          <h2>O intervalo não existe<br />para parar o&nbsp;jogo.</h2>
+          <p>Existe para olhar o placar, entender o que está acontecendo e ajustar a estratégia antes de voltar para o&nbsp;campo.</p>
+        </div>
+        <p class="prose">Na gestão financeira deveria ser&nbsp;igual.</p>
+        <p class="prose">O Intervalo Técnico é uma live gratuita criada para colocar os números da empresa no centro da conversa e mostrar como uma leitura mais consciente do cenário financeiro pode apoiar melhores&nbsp;decisões.</p>
+        <ol class="rounds">
+          <li class="round">
+            <span>Round 01</span>
+            <strong>Olhar o&nbsp;placar</strong>
+            <p>Parar um momento e colocar receita, custos, margem e caixa no mesmo&nbsp;quadro.</p>
+          </li>
+          <li class="round">
+            <span>Round 02</span>
+            <strong>Ler o que ele&nbsp;diz</strong>
+            <p>Sair do número isolado e enxergar o que ele sinaliza sobre a saúde do&nbsp;negócio.</p>
+          </li>
+          <li class="round">
+            <span>Round 03</span>
+            <strong>Ajustar e&nbsp;voltar</strong>
+            <p>Usar essa leitura para orientar o próximo movimento, em vez de só&nbsp;reagir.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="pauta">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">A live</span>
+          <h2>O módulo financeiro do Templum&nbsp;OS.</h2>
+          <p>Igor mostra os gargalos que travam empresário e diretor, e como o Templum OS resolve, com a central de inteligência acoplada e todo o contexto num único&nbsp;lugar.</p>
+        </div>
+        <div class="topics">
+          <article class="topic">
+            <span class="topic-num">01</span>
+            <h3>O lucro chega&nbsp;tarde</h3>
+            <p>Saber se sobrou só quando o mês fecha. No módulo, o resultado fica à vista de quem&nbsp;decide.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">02</span>
+            <h3>O caixa não&nbsp;espera</h3>
+            <p>A venda entrou e a conta vence antes. Pagar, receber e fluxo de&nbsp;caixa mostram o que cabe&nbsp;agora.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">03</span>
+            <h3>Cada área, um&nbsp;número</h3>
+            <p>Comercial comemora e o financeiro aperta. No Templum OS, o&nbsp;contexto fica num único&nbsp;lugar.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">04</span>
+            <h3>A central lê&nbsp;junto</h3>
+            <p>O diretor vê o número e caça o significado. A inteligência está acoplada e lê o cenário da própria&nbsp;empresa.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="para-quem">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Para quem é</span>
+          <h2>Para quem o placar<br />ainda está no&nbsp;escuro.</h2>
+          <p>Fundadores, empresários, decisores, diretores e gestores que querem uma visão mais clara da empresa e decisões menos dependentes de&nbsp;percepção.</p>
+        </div>
+        <div class="who-grid">
+          <blockquote>Estamos vendendo, mas estamos realmente ganhando&nbsp;dinheiro?</blockquote>
+          <blockquote>Para onde está indo o resultado da&nbsp;empresa?</blockquote>
+          <blockquote>Quais números eu deveria acompanhar de&nbsp;verdade?</blockquote>
+          <blockquote>Estou tomando decisões com dados ou apenas reagindo ao que&nbsp;acontece?</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="comando">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="kicker">20 de outubro de 2026 · 16h</span>
+          <h2>Marque esse jogo <em>na&nbsp;agenda.</em></h2>
+          <p>Online e gratuito. Uma conversa para parar um momento, olhar para o placar e entender melhor o que os números estão dizendo sobre a&nbsp;empresa.</p>
+        </div>
+        <div class="final-grid">
+          <article class="host">
+            <img class="host-photo" src="/assets/gestao-financeira/igor.jpg" alt="Igor Furniel" />
+            <div>
+              <span class="kicker">Quem conduz</span>
+              <h3>Igor Furniel</h3>
+              <p class="host-role">Sócio-fundador · Templum</p>
+              <p>Empreendedor há mais de 24 anos, Igor já conduziu centenas de planejamentos estratégicos, de pequenos negócios a franquias que faturam mais de R$ 300 milhões por&nbsp;ano.</p>
+            </div>
+          </article>
+
+          <aside class="form-card" id="inscricao-final">
+            <p class="price-badge">Vagas limitadas</p>
+            <p class="price-free">Gratuito</p>
+            <p class="price-note">Só preencher e garantir a&nbsp;vaga.</p>
+            <p class="form-bar">20 de outubro · 16h · Online</p>
+            <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
+              <div class="field">
+                <label for="nome-2">Nome completo</label>
+                <input class="input" id="nome-2" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
+              </div>
+              <div class="field">
+                <label for="email-2">E-mail</label>
+                <input class="input" id="email-2" name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+              </div>
+              <div class="field">
+                <label for="empresa-2">Empresa</label>
+                <input class="input" id="empresa-2" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" />
+              </div>
+              <div class="field">
+                <label for="telefone-2">WhatsApp *</label>
+                <input class="input" id="telefone-2" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000" />
+              </div>
+              <div class="field">
+                <label for="cargo-2">Seu cargo</label>
+                <select class="select" id="cargo-2" name="cargo" required>
+                  <option value="">Selecione</option>
+                  <option>Proprietário</option>
+                  <option>Diretor / C-level</option>
+                  <option>Gerente</option>
+                  <option>Coordenador / Supervisor</option>
+                  <option>Consultor</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="funcionarios-2">Nº de funcionários</label>
+                <select class="select" id="funcionarios-2" name="funcionarios" required>
+                  <option value="">Selecione</option>
+                  <option>1 a 10</option>
+                  <option>11 a 50</option>
+                  <option>51 a 100</option>
+                  <option>101 a 250</option>
+                  <option>251 a 500</option>
+                  <option>Mais de 500</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="desafio-2">Maior desafio da empresa hoje</label>
+                <select class="select" id="desafio-2" name="desafio" required>
+                  <option value="">Selecione</option>
+                  <option>Não temos um plano estratégico definido</option>
+                  <option>Temos o plano, mas não conseguimos executar</option>
+                  <option>Faltam indicadores e metas claras</option>
+                  <option>Processos desorganizados: tudo passa por mim</option>
+                  <option>Time desalinhado, sem responsáveis e prazos</option>
+                  <option>Crescer sem estrutura para acompanhar</option>
+                  <option>Outro desafio</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-reserve btn-block">
+                Garantir minha vaga&nbsp;gratuita
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </form>
+            <p class="legal">Vagas limitadas. As instruções de acesso chegam por e-mail e&nbsp;WhatsApp.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Dúvidas</span>
+          <h2>Perguntas <em>frequentes.</em></h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Preciso ter uma empresa para participar? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Sim. A live é para quem conduz ou decide na empresa e quer ler receita, custos, margem e caixa antes da próxima&nbsp;decisão.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Preciso ter conhecimento prévio de finanças? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Não. A conversa começa do número que a empresa já tem. Não é uma aula de&nbsp;contabilidade.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Como vou acessar a live? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Online, no dia 20 de outubro de 2026, às 16h (horário de Brasília). Depois da inscrição, as instruções chegam por e-mail e&nbsp;WhatsApp.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Preciso instalar algum programa? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Não. Nada para instalar. Você acompanha pelo&nbsp;navegador.</p>
+          </details>
+          <details class="faq-item">
+            <summary>A live é paga? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Não. A participação é gratuita. Basta preencher o formulário para reservar o&nbsp;lugar.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+      <p>Uma live da Templum · 20 de outubro de 2026 · 16h · online ·&nbsp;gratuito</p>
+    </div>
+  </footer>
+
+</CampanhaIsolada>

@@ -1,0 +1,65 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import "../styles/gestao-financeira.css";
+---
+
+<CampanhaIsolada
+  title="Vaga reservada | Intervalo Técnico"
+  description="Sua inscrição no Intervalo Técnico está reservada. Live gratuita de gestão financeira em 20 de outubro de 2026."
+>
+
+<header class="header">
+    <div class="header-inner">
+      <a href="/gestao-financeira/" aria-label="Voltar para a página do Intervalo Técnico">
+        <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+      </a>
+    </div>
+  </header>
+
+  <main class="ob-main">
+    <div class="container">
+      <article class="ob-card">
+        <div class="ob-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+        </div>
+        <p class="seal">Intervalo Técnico</p>
+        <h1>Seu lugar <em>está&nbsp;reservado.</em></h1>
+        <p class="lede">No dia 20 de outubro de 2026, às 16h (horário de Brasília), você olha receita, custos, margem e caixa antes do próximo&nbsp;round.</p>
+
+        <ul class="ob-facts">
+          <li><strong>20 de outubro de 2026, 16h</strong></li>
+          <li>Online e gratuito · horário de&nbsp;Brasília</li>
+          <li>Com Igor Furniel, sócio-fundador&nbsp;da&nbsp;Templum</li>
+        </ul>
+
+        <span class="btn-wpp" aria-disabled="true">Entrar no grupo do&nbsp;WhatsApp</span>
+        <p class="ob-hint">O grupo entra aqui quando o link estiver pronto. Até lá, as instruções chegam por e-mail e&nbsp;WhatsApp.</p>
+
+        <div class="ob-cal">
+          <a class="btn-cal" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Intervalo%20T%C3%A9cnico%20%7C%20Gest%C3%A3o%20Financeira%20na%20Pr%C3%A1tica&amp;dates=20261020T160000/20261020T170000&amp;ctz=America/Sao_Paulo&amp;details=Live%20gratuita%20e%20online%20da%20Academia%20de%20Combate.%2016h%2C%20hor%C3%A1rio%20de%20Bras%C3%ADlia.&amp;location=Online" target="_blank" rel="noopener noreferrer">Google Calendar</a>
+          <a class="btn-cal" href="https://outlook.live.com/calendar/0/action/compose?rru=addevent&amp;subject=Intervalo%20T%C3%A9cnico%20%7C%20Gest%C3%A3o%20Financeira%20na%20Pr%C3%A1tica&amp;startdt=2026-10-20T19:00:00Z&amp;enddt=2026-10-20T20:00:00Z&amp;location=Online&amp;body=Live%20gratuita%20e%20online.%2016h%2C%20hor%C3%A1rio%20de%20Bras%C3%ADlia." target="_blank" rel="noopener noreferrer">Outlook</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
+</CampanhaIsolada>

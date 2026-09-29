@@ -1,0 +1,308 @@
+---
+import TrackingKit from "../components/TrackingKit.astro";
+import MetaPixel from "../components/MetaPixel.astro";
+import OaiqPixel from "../components/OaiqPixel.astro";
+import ClarityDiag from "../components/ClarityDiag.astro";
+
+const {
+  title = "Templum Consultoria",
+  description = "Há +30 anos a Templum organiza a gestão da sua empresa do diagnóstico à auditoria, com método próprio e garantia de 200%: certificação ou o dobro do dinheiro de volta.",
+  ogImage = "/assets/og/templum-og.jpg",
+  noindex = true,
+  schemas = [],
+} = Astro.props;
+
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+
+const allSchemas = schemas;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
+    <MetaPixel />
+
+    <!-- Pixel da OpenAI: base em todas as páginas, conversão só nas de obrigado. -->
+    <OaiqPixel />
+
+    <!-- Diagnóstico: dá nome ao dono do erro de JS que aparece no Clarity. -->
+    <ClarityDiag />
+
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ dataLayer.push(arguments); };
+      (function () {
+        var done = false;
+        function boot() {
+          if (done) return; done = true;
+          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","sr5nwfj8jc");
+          var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id=G-2BW8QTYLB5";document.head.appendChild(g);
+          gtag("js", new Date());
+          // G-2BW8QTYLB5 e AW-17896226473 já são configurados pelo 02-dispatch.js do
+          // tracking-kit (mesmos ids do TRACKING_CONFIG); configurá-los aqui também
+          // duplicava o `config` dos dois. No GA4 é inofensivo (ambos com
+          // send_page_view:false), mas o `config` de destino AW dispara o ping de página —
+          // eram dois ccm/collect por carregamento. Fica só G-FV41GWD427, que o kit não
+          // conhece. __gtagFallback() refaz os dois se o kit não carregar.
+          gtag("config","G-FV41GWD427",{send_page_view:false});
+          window.__gtagFallback = function () {
+            if (window.__gtagFbDone) return; window.__gtagFbDone = true;
+            gtag("config","G-2BW8QTYLB5",{send_page_view:false});
+            gtag("config","AW-17896226473");
+          };
+          if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
+          else window.__gtagFallback();
+          // Meta Pixel: stub e fila já rodaram no <head>; aqui sai só o download.
+          if (typeof window.__loadMetaPixel === "function") window.__loadMetaPixel();
+        }
+        var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
+        var opts = { once: true, passive: true, capture: true };
+        function once(){ evs.forEach(function(e){ window.removeEventListener(e, once, opts); }); boot(); }
+        evs.forEach(function(e){ window.addEventListener(e, once, opts); });
+        window.addEventListener("load", function(){
+          var idle = window.requestIdleCallback || function(cb){ return setTimeout(cb, 6000); };
+          idle(function(){ setTimeout(boot, 6000); });
+        });
+      })();
+    </script>
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Templum Consultoria" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content="pt_BR" />
+
+    {allSchemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <TrackingKit />
+  </head>
+  <body>
+    <slot />
+
+    <!-- Atribuição UTM + click-ids -->
+    <script is:inline>
+      (function () {
+        var KEYS = ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","gbraid","wbraid","gad_source","gad_campaignid","msclkid","ttclid"];
+        function uuid() { try { return crypto.randomUUID(); } catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); } }
+        function cookie(n) { var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)"); return m ? decodeURIComponent(m.pop()) : ""; }
+        try {
+          var p = new URLSearchParams(location.search), cur = {}, now = Date.now();
+          KEYS.forEach(function (k) { var v = p.get(k); if (v) cur[k] = v; });
+          if (!localStorage.getItem("tpl_first")) {
+            localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "", first_seen: now }, cur)));
+          }
+          if (Object.keys(cur).length) localStorage.setItem("tpl_last", JSON.stringify(cur));
+          if (!localStorage.getItem("tpl_cid")) localStorage.setItem("tpl_cid", uuid());
+          if (!sessionStorage.getItem("tpl_sid")) { sessionStorage.setItem("tpl_sid", uuid()); sessionStorage.setItem("tpl_sstart", String(now)); sessionStorage.setItem("tpl_spages", "0"); }
+          sessionStorage.setItem("tpl_spages", String((parseInt(sessionStorage.getItem("tpl_spages") || "0", 10)) + 1));
+        } catch (_) {}
+        window.__tplAttrib = function () {
+          var f = {}, l = {};
+          try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
+          try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
+          function g(k) { return l[k] || f[k] || ""; }
+          function ft(k) { return f[k] || ""; }
+          var sa = {
+            device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop",
+            language: navigator.language || "",
+            screen: (screen.width || 0) + "x" + (screen.height || 0),
+            landing: f.landing || location.pathname,
+            referrer: f.referrer || document.referrer || "",
+            first_seen: f.first_seen || "",
+            session_start: sessionStorage.getItem("tpl_sstart") || "",
+            page_count: sessionStorage.getItem("tpl_spages") || "1",
+          };
+          return {
+            client_id: localStorage.getItem("tpl_cid") || "",
+            session_id: sessionStorage.getItem("tpl_sid") || "",
+            utm_source: g("utm_source"), utm_medium: g("utm_medium"), utm_campaign: g("utm_campaign"),
+            utm_term: g("utm_term"), utm_content: g("utm_content"),
+            gclid: g("gclid"), fbclid: g("fbclid"), gbraid: g("gbraid"), wbraid: g("wbraid"),
+            gad_source: g("gad_source"), gad_campaignid: g("gad_campaignid"),
+            msclkid: g("msclkid"), ttclid: g("ttclid"),
+            utm_source_ft: ft("utm_source"), utm_medium_ft: ft("utm_medium"), utm_campaign_ft: ft("utm_campaign"),
+            utm_term_ft: ft("utm_term"), utm_content_ft: ft("utm_content"),
+            gclid_ft: ft("gclid"), fbclid_ft: ft("fbclid"), gbraid_ft: ft("gbraid"), wbraid_ft: ft("wbraid"),
+            gad_source_ft: ft("gad_source"), gad_campaignid_ft: ft("gad_campaignid"),
+            msclkid_ft: ft("msclkid"), ttclid_ft: ft("ttclid"),
+            fbp: cookie("_fbp"), fbc: cookie("_fbc"),
+            referrer: f.referrer || document.referrer || "", landing: f.landing || location.pathname,
+            session_attributes: sa,
+          };
+        };
+      })();
+    </script>
+
+    <!-- Meta Pixel — Lead: único ponto de disparo (ver handler de submit abaixo).
+         content_name deriva automaticamente da rota atual. Mesmos IDs do MetaPixel.astro. -->
+    <script is:inline>
+      window.__tplContentName = function (pathname) {
+        var parts = (pathname || location.pathname).split("/").filter(Boolean);
+        if (!parts.length) return "home";
+        return parts[parts.length - 1].replace(/-lp$/, "");
+      };
+      // crypto.randomUUID() não existe em Safari < 15.4 / WebView antigo — sem
+      // fallback, o Lead do Meta morria no throw dentro do try.
+      window.__tplUuid = function () {
+        try { return crypto.randomUUID(); }
+        catch (_) { return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+      };
+      // eventId vem de fora (mesmo valor enviado ao worker em meta_event_id) para
+      // o Meta DEDUPLICAR o Lead do navegador com o Lead do CAPI. Sem isso o mesmo
+      // cadastro era contado 2x.
+      window.fireMetaLead = function (data, contentName, eventId) {
+        if (!window.fbq) return;
+        data = data || {};
+        var email = (data.email || "").trim().toLowerCase().replace(/\s+/g, "");
+        var digits = (data.phone || data.telefone || "").replace(/\D/g, "");
+        var phone = digits ? "55" + digits : "";
+        try {
+          ["1265191353683807", "4177249519256900"].forEach(function (id) {
+            fbq("init", id, { em: email || undefined, ph: phone || undefined });
+          });
+          fbq("track", "Lead", { content_name: contentName || window.__tplContentName() }, { eventID: eventId || window.__tplUuid() });
+        } catch (_) {}
+      };
+    </script>
+
+    <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
+         depois de confirmar que o Supabase salvou o cadastro. trk.lead()
+         continua na /obrigado, tratando GA4/Ads/TikTok (inalterado). -->
+    <script is:inline>
+      document.addEventListener("submit", function (e) {
+        var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
+        if (!form) return;
+        e.preventDefault();
+        if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
+        var evt = form.getAttribute("data-trk-event");
+        var d = {};
+        new FormData(form).forEach(function (v, k) { d[k] = v; });
+
+        // Trava de disparo único: o mesmo form não processa 2x.
+        if (form.dataset.leadSubmitted === "1") return;
+        form.dataset.leadSubmitted = "1";
+
+        try {
+          sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+            email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
+          }));
+        } catch (_) {}
+        var btn = form.querySelector('[type="submit"]');
+        if (btn) { btn.disabled = true; }
+        var destino = form.getAttribute("data-obrigado") || "/obrigado";
+        var _rDone = false;
+        function _go() { if (!_rDone) { _rDone = true; window.location.href = destino; } }
+        var _t = setTimeout(_go, 5000); // fallback: redireciona em no máximo 5s
+        var contentName = window.__tplContentName(location.pathname);
+        // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
+        // é o que permite o Meta deduplicar em vez de contar 2 leads.
+        var leadEventId = window.__tplUuid();
+        try {
+          // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual
+          var _attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
+          var _urlP = new URLSearchParams(location.search);
+          ["utm_source","utm_medium","utm_campaign","utm_term","utm_content",
+           "gclid","fbclid","gad_source","gad_campaignid","msclkid","ttclid","gbraid","wbraid"
+          ].forEach(function(k) { if (!_attrib[k] && _urlP.get(k)) _attrib[k] = _urlP.get(k); });
+          fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            keepalive: true,
+            body: JSON.stringify(Object.assign({
+              nome: d.nome || "", email: d.email || "", telefone: d.telefone || "",
+              empresa: d.empresa || "", norma: d.norma || "", mensagem: d.mensagem || "",
+              desafio: d.desafio || "",
+              cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
+              faturamento: d.faturamento || "",
+              status_pagamento: d.status_pagamento || "",
+              evento: evt, pagina: location.pathname,
+              meta_event_id: leadEventId, meta_content_name: contentName,
+            }, _attrib)),
+          }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
+          }).then(function (res) {
+            var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+            clearTimeout(_t);
+            if (saved) {
+              window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
+              // Gancho p/ eventos extras da campanha (ex.: lead qualificado por
+              // faturamento). A LP escuta e dispara o que precisar ANTES dos 400ms
+              // de folga do redirect.
+              try {
+                document.dispatchEvent(new CustomEvent("tpl:lead-saved", {
+                  detail: { data: d, contentName: contentName, eventId: leadEventId },
+                }));
+              } catch (_) {}
+              // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
+              // forma assíncrona e o navegador CANCELA requisição em andamento na
+              // navegação — redirecionar no mesmo tick fazia o evento se perder.
+              setTimeout(_go, 400);
+            } else { _go(); }
+          }).catch(function() { clearTimeout(_t); _go(); });
+        } catch (_) { clearTimeout(_t); _go(); }
+      });
+    </script>
+
+    <!-- CTA / form_start nas LPs Search (GA4). Só dispara se o elemento existir. -->
+    <script is:inline>
+      (function () {
+        function send(name, params) {
+          if (typeof window.gtag !== "function") return;
+          try { window.gtag("event", name, params || {}); } catch (_) {}
+        }
+        document.addEventListener("click", function (e) {
+          var a = e.target && e.target.closest && e.target.closest("[data-cta]");
+          if (!a) return;
+          send(a.getAttribute("data-cta"), { page: location.pathname });
+        });
+        var form = document.getElementById("form");
+        if (!form) return;
+        var started = false;
+        form.addEventListener("focusin", function () {
+          if (started) return;
+          started = true;
+          send("form_start", { page: location.pathname });
+        });
+      })();
+    </script>
+
+    <!-- Máscara telefone -->
+    <script is:inline>
+      document.addEventListener("input", function (e) {
+        var el = e.target;
+        if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
+        var d = el.value.replace(/\D/g, "").substring(0, 11);
+        var len = d.length;
+        var mask = "";
+        if (len === 0) { el.value = ""; return; }
+        if (len <= 2) { mask = "(" + d; }
+        else if (len <= 6) { mask = "(" + d.slice(0,2) + ") " + d.slice(2); }
+        else if (len <= 10) { mask = "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6); }
+        else { mask = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7); }
+        el.value = mask;
+      });
+    </script>
+
+  </body>
+</html>
