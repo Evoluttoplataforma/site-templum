@@ -342,6 +342,20 @@
   .cta-banner .btn{margin-top:18px;position:relative;z-index:1;background:#fff;color:var(--orange-ink);}
   .cta-banner .btn:hover{background:var(--bg-alt);}
 
+  .share-box{
+    margin-top:22px;padding:18px 18px 16px;border-radius:18px;
+    background:var(--bg-alt);border:1px solid var(--border);
+  }
+  .share-kicker{
+    margin:0;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange-ink);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .share-kicker{color:var(--peach-light);}}
+  :root[data-theme="dark"] .share-kicker{color:var(--peach-light);}
+  .share-copy{margin:6px 0 0;font-size:13.5px;color:var(--text-2);font-weight:500;}
+  .share-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .share-actions .btn{padding:12px 20px;font-size:13.5px;}
+  .share-status{margin:10px 0 0;font-size:12.5px;color:var(--text-2);font-weight:600;}
+
   .restart-row{text-align:center;margin-top:18px;}
   .restart-row button{
     background:none;border:none;font-family:inherit;font-size:12.5px;font-weight:700;
@@ -446,6 +460,16 @@
     </div>
 
     <div class="cat-results" id="catResults"></div>
+
+    <div class="share-box">
+      <p class="share-kicker">Enviar para o cliente</p>
+      <p class="share-copy">PDF com o resultado geral, o percentual de cada frente e a resposta marcada.</p>
+      <div class="share-actions">
+        <button type="button" class="btn btn-primary" id="pdfBtn">Baixar PDF</button>
+        <button type="button" class="btn btn-outline" id="waBtn">Enviar no WhatsApp</button>
+      </div>
+      <p class="share-status" id="shareStatus" hidden></p>
+    </div>
 
     <div class="cta-banner">
       <h3>Vamos estruturar isso juntos?</h3>
@@ -927,6 +951,198 @@
     });
     postLead(lines.join('\n'), 'isca-resultado').catch(function(){});
   }
+
+  function levelHex(pct) {
+    if (pct < 26) return { bg: '#B23C0C', fg: '#fff' };
+    if (pct < 51) return { bg: '#FDB73F', fg: '#18191B' };
+    if (pct < 76) return { bg: '#1167E4', fg: '#fff' };
+    return { bg: '#16A34A', fg: '#fff' };
+  }
+  function setShareStatus(msg) {
+    var el = document.getElementById('shareStatus');
+    if (!msg) { el.hidden = true; el.textContent = ''; return; }
+    el.hidden = false;
+    el.textContent = msg;
+  }
+  function pdfFileName() {
+    var base = 'Diagnostico-ISO-9001';
+    var who = lead && (lead.empresa || lead.nome);
+    if (who) {
+      var slug = String(who).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+      if (slug) base += '-' + slug;
+    }
+    return base + '.pdf';
+  }
+  function loadHtml2Pdf() {
+    if (window.html2pdf) return Promise.resolve();
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      s.onload = function() { resolve(); };
+      s.onerror = function() { reject(new Error('pdf')); };
+      document.head.appendChild(s);
+    });
+  }
+  function elStyle(tag, css, text) {
+    var node = document.createElement(tag);
+    node.style.cssText = css;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  function buildPdfSheet() {
+    var overall = levelHex(lastResults.overallPct);
+    var logoSrc = (document.querySelector('.brand-logo img') || {}).src || '';
+    var sheet = elStyle('div', 'width:794px;background:#FFFAEB;color:#18191B;font-family:Montserrat,sans-serif;');
+    var head = elStyle('div', 'background:#222831;padding:26px 40px;display:flex;justify-content:space-between;align-items:center;');
+    if (logoSrc) {
+      var logo = document.createElement('img');
+      logo.src = logoSrc;
+      logo.alt = 'Templum';
+      logo.style.cssText = 'height:22px;width:auto;background:#fff;padding:8px 12px;border-radius:10px;';
+      head.appendChild(logo);
+    } else {
+      head.appendChild(elStyle('div', 'color:#fff;font-weight:800;font-size:18px;', 'Templum'));
+    }
+    head.appendChild(elStyle('div', 'color:#FDD88C;font-size:11px;font-weight:800;letter-spacing:.16em;', 'DIAGNÓSTICO ISO 9001'));
+    sheet.appendChild(head);
+
+    var hero = elStyle('div', 'padding:32px 40px 8px;');
+    hero.appendChild(elStyle('div', 'font-size:11px;font-weight:800;letter-spacing:.16em;color:#B23C0C;', 'RESULTADO'));
+    var row = elStyle('div', 'display:flex;align-items:flex-end;gap:18px;margin-top:8px;');
+    row.appendChild(elStyle('div', 'font-size:76px;font-weight:900;line-height:.9;letter-spacing:-.04em;', lastResults.overallPct + '%'));
+    var side = elStyle('div', 'padding-bottom:8px;');
+    var pill = elStyle('span', 'display:inline-block;background:' + overall.bg + ';color:' + overall.fg + ';border-radius:999px;padding:6px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;', lastResults.overallLevel);
+    side.appendChild(pill);
+    side.appendChild(elStyle('div', 'margin-top:8px;color:#3F424B;font-size:14px;font-weight:500;max-width:360px;', 'Maturidade geral em gestão da qualidade, nas 7 frentes.'));
+    row.appendChild(side);
+    hero.appendChild(row);
+    var meta = [];
+    if (lead && lead.empresa) meta.push(lead.empresa);
+    else if (lead && lead.nome) meta.push(lead.nome);
+    meta.push(new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }));
+    hero.appendChild(elStyle('div', 'margin-top:14px;color:#3F424B;font-size:13px;font-weight:600;', meta.join(' · ')));
+    sheet.appendChild(hero);
+
+    var list = elStyle('div', 'padding:18px 40px 8px;');
+    var currentCat = -1;
+    var card = null;
+    QUESTIONS.forEach(function(q, i) {
+      var idx = answers[i] === null ? 0 : answers[i];
+      if (q.cat !== currentCat) {
+        currentCat = q.cat;
+        var pct = lastResults.catPcts[q.cat];
+        var lvl = levelInfo(pct);
+        var hex = levelHex(pct);
+        card = elStyle('div', 'break-inside:avoid;page-break-inside:avoid;background:#fff;border:1px solid rgba(24,25,27,.08);border-radius:16px;padding:16px 18px;margin-bottom:12px;');
+        card.className = 'pdf-front';
+        var top = elStyle('div', 'display:flex;justify-content:space-between;align-items:baseline;gap:12px;');
+        top.appendChild(elStyle('div', 'font-size:16px;font-weight:800;', CATEGORIES[q.cat].name));
+        top.appendChild(elStyle('div', 'font-size:20px;font-weight:900;color:' + hex.bg + ';', pct + '%'));
+        card.appendChild(top);
+        var track = elStyle('div', 'height:6px;background:#F3E6C8;border-radius:99px;margin:10px 0 8px;overflow:hidden;');
+        track.appendChild(elStyle('div', 'height:6px;width:' + pct + '%;background:' + hex.bg + ';border-radius:99px;'));
+        card.appendChild(track);
+        card.appendChild(elStyle('span', 'display:inline-block;background:' + hex.bg + ';color:' + hex.fg + ';border-radius:999px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;', lvl.label));
+        list.appendChild(card);
+      }
+      card.appendChild(elStyle('p', 'margin:10px 0 0;font-size:13px;line-height:1.45;font-weight:500;color:#3F424B;', q.opts[idx]));
+    });
+    sheet.appendChild(list);
+
+    var foot = elStyle('div', 'margin-top:8px;padding:18px 40px 28px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(24,25,27,.08);color:#3F424B;font-size:11px;font-weight:600;');
+    foot.appendChild(elStyle('span', '', 'Templum · Consultoria em certificações ISO'));
+    foot.appendChild(elStyle('span', '', 'templum.com.br'));
+    sheet.appendChild(foot);
+    return sheet;
+  }
+  function makePdfBlob() {
+    return loadHtml2Pdf().then(function() {
+      var sheet = buildPdfSheet();
+      sheet.style.position = 'fixed';
+      sheet.style.left = '0';
+      sheet.style.top = '0';
+      sheet.style.zIndex = '-1';
+      document.body.appendChild(sheet);
+      return window.html2pdf().set({
+        margin: [8, 0, 8, 0],
+        image: { type: 'jpeg', quality: 0.96 },
+        html2canvas: { scale: 2, backgroundColor: '#FFFAEB', useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], avoid: '.pdf-front' }
+      }).from(sheet).outputPdf('blob').then(function(blob) {
+        sheet.remove();
+        return blob;
+      }).catch(function(err) {
+        sheet.remove();
+        throw err;
+      });
+    });
+  }
+  function downloadBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+  }
+  function waDigits() {
+    if (!lead || !lead.telefone) return '';
+    var d = String(lead.telefone).replace(/\D/g, '');
+    if (d.length === 10 || d.length === 11) d = '55' + d;
+    if (d.length < 12) return '';
+    return d;
+  }
+  function waText() {
+    var who = lead && lead.empresa ? ' da ' + lead.empresa : '';
+    return 'Olá. Segue o diagnóstico de maturidade em gestão da qualidade' + who + '.\n\nResultado geral: ' + lastResults.overallPct + '% (' + lastResults.overallLevel + ').';
+  }
+  function withPdfButtons(fn) {
+    var pdfBtn = document.getElementById('pdfBtn');
+    var waBtn = document.getElementById('waBtn');
+    pdfBtn.disabled = true;
+    waBtn.disabled = true;
+    setShareStatus('Gerando o PDF…');
+    return fn().catch(function() {
+      setShareStatus('Não foi possível gerar o PDF agora. Tente de novo.');
+    }).then(function() {
+      pdfBtn.disabled = false;
+      waBtn.disabled = false;
+    });
+  }
+  document.getElementById('pdfBtn').addEventListener('click', function() {
+    if (!lastResults) return;
+    withPdfButtons(function() {
+      return makePdfBlob().then(function(blob) {
+        downloadBlob(blob, pdfFileName());
+        setShareStatus('');
+      });
+    });
+  });
+  document.getElementById('waBtn').addEventListener('click', function() {
+    if (!lastResults) return;
+    withPdfButtons(function() {
+      return makePdfBlob().then(function(blob) {
+        var file = new File([blob], pdfFileName(), { type: 'application/pdf' });
+        var text = waText();
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          return navigator.share({ files: [file], text: text, title: 'Diagnóstico ISO 9001' }).then(function() {
+            setShareStatus('');
+          }).catch(function(err) {
+            if (err && err.name === 'AbortError') { setShareStatus(''); return; }
+            throw err;
+          });
+        }
+        downloadBlob(blob, pdfFileName());
+        var url = 'https://wa.me/' + waDigits() + '?text=' + encodeURIComponent(text + '\n\nO PDF foi baixado. Anexe o arquivo nesta conversa.');
+        window.open(url, '_blank', 'noopener');
+        setShareStatus('O PDF foi baixado. No WhatsApp, anexe o arquivo na conversa.');
+      });
+    });
+  });
+
   document.getElementById('restartBtn').addEventListener('click', function(){
     answers = new Array(QUESTIONS.length).fill(null);
     current = 0;
