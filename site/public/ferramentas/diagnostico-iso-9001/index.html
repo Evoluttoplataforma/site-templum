@@ -912,11 +912,20 @@
 
   function postResult() {
     if (!lead || !lead.linked || !lastResults) return;
-    var parts = ['Diagnóstico ISO 9001: ' + lastResults.overallPct + '% (' + lastResults.overallLevel + ').'];
-    CATEGORIES.forEach(function(cat, i) {
-      parts.push(cat.name + ': ' + lastResults.catPcts[i] + '%');
+    var lines = ['Diagnóstico ISO 9001: ' + lastResults.overallPct + '% (' + lastResults.overallLevel + ')'];
+    var currentCat = -1;
+    QUESTIONS.forEach(function(q, i) {
+      var idx = answers[i] === null ? 0 : answers[i];
+      if (q.cat !== currentCat) {
+        currentCat = q.cat;
+        var pct = lastResults.catPcts[q.cat];
+        var lvl = levelInfo(pct);
+        lines.push('');
+        lines.push(CATEGORIES[q.cat].name + ': ' + pct + '% (' + lvl.label + ')');
+      }
+      lines.push(q.opts[idx]);
     });
-    postLead(parts.join(' '), 'isca-resultado').catch(function(){});
+    postLead(lines.join('\n'), 'isca-resultado').catch(function(){});
   }
   document.getElementById('restartBtn').addEventListener('click', function(){
     answers = new Array(QUESTIONS.length).fill(null);
