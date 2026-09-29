@@ -6,7 +6,9 @@
 //                             Gestão com IA + LSC One (gestao-ia-pratica-lsc-one) vai ao
 //                             MQL Novo Lead com tag "Parceria LSC One".
 //                             Intervalo Técnico (intervalo-tecnico-gestao-financeira)
-//                             vai ao MQL Novo Lead com tag "Intervalo Técnico".
+//                             vai ao MQL Novo Lead. O título do card é o nome da pessoa.
+//                             A tag do CRM aceita no máximo 32 caracteres, então entram
+//                             duas: "intervalo técnico" e "gestão financeira".
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
@@ -538,7 +540,9 @@ async function saveToMailchimp(lead, env) {
     mcTags.push("Webserie");
   }
   if (lead.evento === EVENTO_GESTAO_IA_LSC) mcTags.push(ORBIT_TAG_PARCERIA_LSC);
-  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) mcTags.push("Intervalo Técnico");
+  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) {
+    mcTags.push("intervalo técnico", "gestão financeira");
+  }
 
   try {
     const r = await fetch(`${mcBase}/members`, {
@@ -1088,7 +1092,7 @@ async function saveToMqlIntervaloFinanceiro(lead, env) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
-  const tags = ["Intervalo Técnico"];
+  const tags = ["intervalo técnico", "gestão financeira"];
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
 
   try {
@@ -1107,7 +1111,7 @@ async function saveToMqlIntervaloFinanceiro(lead, env) {
       return { ok: true, lead_id: existing.id, updated: true };
     }
 
-    const title = [lead.empresa || lead.nome || lead.email, "Intervalo Técnico"].filter(Boolean).join(" - ");
+    const title = (lead.nome || lead.email || "").trim();
     const body = {
       title,
       pipeline_id: ORBIT_MQL_PIPELINE_ID,
@@ -1205,7 +1209,7 @@ function manyChatTagsFor(lead) {
   // norma), então não havia como disparar lembrete do evento por lá.
   if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
   if (lead.evento === EVENTO_GESTAO_IA_LSC) tags.push(ORBIT_TAG_PARCERIA_LSC);
-  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) tags.push("Intervalo Técnico");
+  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) tags.push("intervalo técnico", "gestão financeira");
   if (lead.evento === "isca" || lead.evento === "isca-resultado") tags.push("isca");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);
