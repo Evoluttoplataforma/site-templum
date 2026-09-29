@@ -791,7 +791,12 @@ async function saveToOrbit(lead, env, dest) {
   };
   if (lead.telefone) body.contact_phone = lead.telefone;
   if (lead.empresa) body.company_name = lead.empresa;
-  if (lead.mensagem || lead.desafio) body.notes = lead.mensagem || lead.desafio;
+  const notes = [
+    lead.mensagem,
+    lead.desafio,
+    lead.urgencia ? "Urgência: " + lead.urgencia : "",
+  ].filter(Boolean).join("\n");
+  if (notes) body.notes = notes;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
   const orbitTags = ORBIT_EVENTO_TAGS[lead.evento];
