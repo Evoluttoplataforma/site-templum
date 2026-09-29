@@ -352,6 +352,12 @@
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .share-kicker{color:var(--peach-light);}}
   :root[data-theme="dark"] .share-kicker{color:var(--peach-light);}
   .share-copy{margin:6px 0 0;font-size:13.5px;color:var(--text-2);font-weight:500;}
+  .share-company{display:block;margin-top:12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);}
+  .share-company input{
+    display:block;width:100%;margin-top:6px;text-transform:none;letter-spacing:0;
+    font-family:inherit;font-size:14px;font-weight:600;color:var(--text);
+    background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;padding:11px 12px;
+  }
   .share-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
   .share-actions .btn{padding:12px 20px;font-size:13.5px;}
   .share-status{margin:10px 0 0;font-size:12.5px;color:var(--text-2);font-weight:600;}
@@ -464,6 +470,9 @@
     <div class="share-box">
       <p class="share-kicker">Enviar para o cliente</p>
       <p class="share-copy">PDF com o resultado geral, o percentual de cada frente e a resposta marcada.</p>
+      <label class="share-company">Nome da empresa
+        <input id="pdfCompany" type="text" placeholder="Aparece no cabeçalho do PDF" autocomplete="organization">
+      </label>
       <div class="share-actions">
         <button type="button" class="btn btn-primary" id="pdfBtn">Baixar PDF</button>
         <button type="button" class="btn btn-outline" id="waBtn">Enviar no WhatsApp</button>
@@ -932,6 +941,8 @@
     });
 
     postResult();
+    var companyInput = document.getElementById('pdfCompany');
+    if (companyInput && !companyInput.value.trim() && lead && lead.empresa) companyInput.value = lead.empresa;
   }
 
   function postResult() {
@@ -966,7 +977,7 @@
   }
   function pdfFileName() {
     var base = 'Diagnostico-ISO-9001';
-    var who = lead && (lead.empresa || lead.nome);
+    var who = companyName() || (lead && lead.nome);
     if (who) {
       var slug = String(who).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
       if (slug) base += '-' + slug;
@@ -999,120 +1010,193 @@
     if (text != null) node.textContent = text;
     return node;
   }
-  function buildPdfSheet() {
-    var overall = levelHex(lastResults.overallPct);
-    var logoSrc = (document.querySelector('.brand-logo img') || {}).src || '';
-    var sheet = elStyle('div', 'width:794px;background:#FFFAEB;color:#18191B;font-family:Montserrat,sans-serif;');
-    var head = elStyle('div', 'background:#222831;padding:26px 40px;display:flex;justify-content:space-between;align-items:center;');
+  function companyName() {
+    var input = document.getElementById('pdfCompany');
+    var typed = input ? input.value.trim() : '';
+    if (typed) return typed;
+    return (lead && lead.empresa) ? lead.empresa : '';
+  }
+  function pdfLogoSrc() {
+    return (document.querySelector('.brand-logo img') || {}).src || '';
+  }
+  function pdfHeader(company) {
+    var head = elStyle('div', 'background:#222831;padding:20px 36px;display:flex;justify-content:space-between;align-items:center;gap:16px;');
+    var logoSrc = pdfLogoSrc();
     if (logoSrc) {
       var logo = document.createElement('img');
       logo.src = logoSrc;
       logo.alt = 'Templum';
-      logo.style.cssText = 'height:22px;width:auto;background:#fff;padding:8px 12px;border-radius:10px;';
+      logo.style.cssText = 'height:54px;width:auto;background:#fff;padding:12px 18px;border-radius:14px;flex:none;';
       head.appendChild(logo);
     } else {
       head.appendChild(elStyle('div', 'color:#fff;font-weight:800;font-size:18px;', 'Templum'));
     }
-    head.appendChild(elStyle('div', 'color:#FDD88C;font-size:11px;font-weight:800;letter-spacing:.16em;', 'DIAGNÓSTICO ISO 9001'));
-    sheet.appendChild(head);
-
-    var hero = elStyle('div', 'padding:32px 40px 8px;');
-    hero.appendChild(elStyle('div', 'font-size:11px;font-weight:800;letter-spacing:.16em;color:#B23C0C;', 'RESULTADO'));
-    var row = elStyle('div', 'display:flex;align-items:flex-end;gap:18px;margin-top:8px;');
-    row.appendChild(elStyle('div', 'font-size:76px;font-weight:900;line-height:.9;letter-spacing:-.04em;', lastResults.overallPct + '%'));
-    var side = elStyle('div', 'padding-bottom:8px;');
-    var pill = elStyle('span', 'display:inline-block;background:' + overall.bg + ';color:' + overall.fg + ';border-radius:999px;padding:6px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;', lastResults.overallLevel);
-    side.appendChild(pill);
-    side.appendChild(elStyle('div', 'margin-top:8px;color:#3F424B;font-size:14px;font-weight:500;max-width:360px;', 'Maturidade geral em gestão da qualidade, nas 7 frentes.'));
-    row.appendChild(side);
-    hero.appendChild(row);
-    var meta = [];
-    if (lead && lead.empresa) meta.push(lead.empresa);
-    else if (lead && lead.nome) meta.push(lead.nome);
-    meta.push(new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }));
-    hero.appendChild(elStyle('div', 'margin-top:14px;color:#3F424B;font-size:13px;font-weight:600;', meta.join(' · ')));
-    sheet.appendChild(hero);
-
-    var list = elStyle('div', 'padding:18px 40px 8px;');
-    var currentCat = -1;
-    var card = null;
+    var side = elStyle('div', 'text-align:right;min-width:0;');
+    if (company) side.appendChild(elStyle('div', 'color:#FFFAEB;font-size:16px;font-weight:800;line-height:1.25;', company));
+    side.appendChild(elStyle('div', 'color:#FDD88C;font-size:11px;font-weight:800;letter-spacing:.14em;margin-top:4px;', 'DIAGNÓSTICO ISO 9001'));
+    head.appendChild(side);
+    return head;
+  }
+  function pdfFrontCard(catIndex) {
+    var pct = lastResults.catPcts[catIndex];
+    var lvl = levelInfo(pct);
+    var hex = levelHex(pct);
+    var card = elStyle('div', 'background:#fff;border:1px solid rgba(24,25,27,.08);border-radius:16px;padding:16px 18px;margin:0 36px 12px;');
+    var top = elStyle('div', 'display:flex;justify-content:space-between;align-items:baseline;gap:12px;');
+    top.appendChild(elStyle('div', 'font-size:16px;font-weight:800;', CATEGORIES[catIndex].name));
+    top.appendChild(elStyle('div', 'font-size:20px;font-weight:900;color:' + hex.bg + ';', pct + '%'));
+    card.appendChild(top);
+    var track = elStyle('div', 'height:6px;background:#F3E6C8;border-radius:99px;margin:10px 0 8px;overflow:hidden;');
+    track.appendChild(elStyle('div', 'height:6px;width:' + Math.max(pct, 0) + '%;background:' + hex.bg + ';border-radius:99px;'));
+    card.appendChild(track);
+    card.appendChild(elStyle('span', 'display:inline-block;background:' + hex.bg + ';color:' + hex.fg + ';border-radius:999px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;', lvl.label));
     QUESTIONS.forEach(function(q, i) {
+      if (q.cat !== catIndex) return;
       var idx = answers[i] === null ? 0 : answers[i];
-      if (q.cat !== currentCat) {
-        currentCat = q.cat;
-        var pct = lastResults.catPcts[q.cat];
-        var lvl = levelInfo(pct);
-        var hex = levelHex(pct);
-        card = elStyle('div', 'break-inside:avoid;page-break-inside:avoid;background:#fff;border:1px solid rgba(24,25,27,.08);border-radius:16px;padding:16px 18px;margin-bottom:12px;');
-        card.className = 'pdf-front';
-        var top = elStyle('div', 'display:flex;justify-content:space-between;align-items:baseline;gap:12px;');
-        top.appendChild(elStyle('div', 'font-size:16px;font-weight:800;', CATEGORIES[q.cat].name));
-        top.appendChild(elStyle('div', 'font-size:20px;font-weight:900;color:' + hex.bg + ';', pct + '%'));
-        card.appendChild(top);
-        var track = elStyle('div', 'height:6px;background:#F3E6C8;border-radius:99px;margin:10px 0 8px;overflow:hidden;');
-        track.appendChild(elStyle('div', 'height:6px;width:' + pct + '%;background:' + hex.bg + ';border-radius:99px;'));
-        card.appendChild(track);
-        card.appendChild(elStyle('span', 'display:inline-block;background:' + hex.bg + ';color:' + hex.fg + ';border-radius:999px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;', lvl.label));
-        list.appendChild(card);
-      }
       card.appendChild(elStyle('p', 'margin:10px 0 0;font-size:13px;line-height:1.45;font-weight:500;color:#3F424B;', q.opts[idx]));
     });
-    sheet.appendChild(list);
-
-    var foot = elStyle('div', 'margin-top:8px;padding:18px 40px 28px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(24,25,27,.08);color:#3F424B;font-size:11px;font-weight:600;');
+    return card;
+  }
+  function pdfHero() {
+    var overall = levelHex(lastResults.overallPct);
+    var hero = elStyle('div', 'padding:28px 36px 8px;');
+    hero.appendChild(elStyle('div', 'font-size:11px;font-weight:800;letter-spacing:.16em;color:#B23C0C;', 'RESULTADO'));
+    var row = elStyle('div', 'display:flex;align-items:flex-end;gap:18px;margin-top:8px;');
+    row.appendChild(elStyle('div', 'font-size:72px;font-weight:900;line-height:.9;letter-spacing:-.04em;', lastResults.overallPct + '%'));
+    var side = elStyle('div', 'padding-bottom:8px;');
+    side.appendChild(elStyle('span', 'display:inline-block;background:' + overall.bg + ';color:' + overall.fg + ';border-radius:999px;padding:6px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;', lastResults.overallLevel));
+    side.appendChild(elStyle('div', 'margin-top:8px;color:#3F424B;font-size:14px;font-weight:500;max-width:340px;', 'Maturidade geral em gestão da qualidade, nas 7 frentes.'));
+    row.appendChild(side);
+    hero.appendChild(row);
+    hero.appendChild(elStyle('div', 'margin-top:12px;color:#3F424B;font-size:13px;font-weight:600;', new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })));
+    return hero;
+  }
+  function pdfCta() {
+    var box = elStyle('div', 'margin:18px 36px 4px;background:#FF5925;color:#fff;border-radius:24px;padding:28px 26px;text-align:center;');
+    box.appendChild(elStyle('div', 'font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.15;', 'Vamos estruturar isso juntos?'));
+    box.appendChild(elStyle('div', 'font-size:13.5px;font-weight:500;line-height:1.5;margin:10px auto 0;max-width:480px;', 'Os gaps acima são o que um Sistema de Gestão da Qualidade ISO 9001 organiza: método, prazo e um consultor em cada etapa. A Templum já ajudou mais de 2.000 empresas, com garantia de 200%.'));
+    var btn = elStyle('div', 'display:inline-block;margin-top:18px;background:#fff;color:#B23C0C;font-weight:800;font-size:14px;border-radius:50px;padding:14px 28px;', 'Falar com um especialista');
+    btn.setAttribute('data-pdf-cta', '1');
+    box.appendChild(btn);
+    return box;
+  }
+  function pdfFoot() {
+    var foot = elStyle('div', 'margin:8px 36px 0;padding:16px 0 8px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(24,25,27,.08);color:#3F424B;font-size:11px;font-weight:600;');
     foot.appendChild(elStyle('span', '', 'Templum · Consultoria em certificações ISO'));
     foot.appendChild(elStyle('span', '', 'templum.com.br'));
-    sheet.appendChild(foot);
-    return sheet;
+    return foot;
+  }
+  function measureNode(node) {
+    var host = elStyle('div', 'position:absolute;left:0;top:0;width:794px;visibility:hidden;pointer-events:none;');
+    host.appendChild(node);
+    document.body.appendChild(host);
+    var h = node.offsetHeight;
+    host.remove();
+    return h;
+  }
+  function buildPdfPages() {
+    var company = companyName();
+    var headerH = measureNode(pdfHeader(company));
+    var hero = pdfHero();
+    var heroH = measureNode(hero);
+    var cards = [];
+    CATEGORIES.forEach(function(_, i) {
+      var card = pdfFrontCard(i);
+      cards.push({ node: card, h: measureNode(card) });
+    });
+    var cta = pdfCta();
+    var ctaH = measureNode(cta);
+    var foot = pdfFoot();
+    var footH = measureNode(foot);
+    var pageH = 1123;
+    var limit = pageH - headerH;
+    var pages = [];
+    var blocks = [];
+    var used = heroH;
+    blocks.push(hero);
+    cards.forEach(function(card, i) {
+      var reserve = i === cards.length - 1 ? ctaH + footH + 28 : 0;
+      if (used + card.h + reserve > limit && blocks.length) {
+        pages.push(blocks);
+        blocks = [];
+        used = 0;
+      }
+      blocks.push(card.node);
+      used += card.h;
+    });
+    if (used + ctaH + footH + 28 > limit && blocks.length) {
+      pages.push(blocks);
+      blocks = [];
+    }
+    blocks.push(cta);
+    blocks.push(foot);
+    pages.push(blocks);
+    return pages.map(function(pageBlocks) {
+      var sheet = elStyle('div', 'width:794px;height:1123px;background:#FFFAEB;overflow:hidden;color:#18191B;font-family:Montserrat,sans-serif;');
+      sheet.appendChild(pdfHeader(company));
+      pageBlocks.forEach(function(block) {
+        if (block.parentNode) block.parentNode.removeChild(block);
+        sheet.appendChild(block);
+      });
+      return sheet;
+    });
+  }
+  function canvasPage(sheet) {
+    sheet.style.position = 'absolute';
+    sheet.style.left = '0';
+    sheet.style.top = window.scrollY + 'px';
+    sheet.style.zIndex = '99999';
+    document.body.appendChild(sheet);
+    var link = null;
+    var ctaBtn = sheet.querySelector('[data-pdf-cta]');
+    if (ctaBtn) {
+      var sheetBox = sheet.getBoundingClientRect();
+      var btnBox = ctaBtn.getBoundingClientRect();
+      link = {
+        x: (btnBox.left - sheetBox.left) / sheetBox.width * 210,
+        y: (btnBox.top - sheetBox.top) / sheetBox.height * 297,
+        w: btnBox.width / sheetBox.width * 210,
+        h: btnBox.height / sheetBox.height * 297
+      };
+    }
+    var width = sheet.offsetWidth;
+    var height = sheet.offsetHeight;
+    return window.html2canvas(sheet, {
+      scale: 2,
+      backgroundColor: '#FFFAEB',
+      useCORS: true,
+      width: width,
+      height: height,
+      windowWidth: width,
+      windowHeight: height
+    }).then(function(canvas) {
+      sheet.remove();
+      return { canvas: canvas, link: link };
+    }).catch(function(err) {
+      if (sheet.parentNode) sheet.remove();
+      throw err;
+    });
   }
   function makePdfBlob() {
     return loadHtml2Pdf().then(function() {
-      var sheet = buildPdfSheet();
-      sheet.style.position = 'absolute';
-      sheet.style.left = '0';
-      sheet.style.top = window.scrollY + 'px';
-      sheet.style.zIndex = '99999';
-      sheet.style.background = '#FFFAEB';
-      document.body.appendChild(sheet);
-      var width = sheet.offsetWidth;
-      var height = sheet.offsetHeight;
-      if (!width || !height) {
-        sheet.remove();
-        return Promise.reject(new Error('empty'));
-      }
-      return window.html2canvas(sheet, {
-        scale: 2,
-        backgroundColor: '#FFFAEB',
-        useCORS: true,
-        width: width,
-        height: height,
-        windowWidth: width,
-        windowHeight: height
-      }).then(function(canvas) {
-        sheet.remove();
-        if (!canvas.width || !canvas.height) throw new Error('empty');
-        var JsPDF = window.jspdf && window.jspdf.jsPDF;
-        if (!JsPDF) throw new Error('pdf');
-        var pdf = new JsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-        var pageWidth = 210;
-        var pageHeight = 297;
-        var imgHeight = canvas.height * pageWidth / canvas.width;
-        var img = canvas.toDataURL('image/jpeg', 0.95);
-        var heightLeft = imgHeight;
-        var position = 0;
-        pdf.addImage(img, 'JPEG', 0, position, pageWidth, imgHeight);
-        heightLeft -= pageHeight;
-        while (heightLeft > 1) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(img, 'JPEG', 0, position, pageWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-        return pdf.output('blob');
-      }).catch(function(err) {
-        if (sheet.parentNode) sheet.remove();
-        throw err;
+      var JsPDF = window.jspdf && window.jspdf.jsPDF;
+      if (!JsPDF) return Promise.reject(new Error('pdf'));
+      var pages = buildPdfPages();
+      var pdf = new JsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      var chain = Promise.resolve();
+      pages.forEach(function(sheet, index) {
+        chain = chain.then(function() {
+          return canvasPage(sheet).then(function(page) {
+            if (!page.canvas.width || !page.canvas.height) throw new Error('empty');
+            if (index > 0) pdf.addPage();
+            pdf.addImage(page.canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+            if (page.link) {
+              pdf.link(page.link.x, page.link.y, page.link.w, page.link.h, { url: 'https://templum.com.br/form/?utm_source=isca&utm_medium=diagnostico&utm_campaign=diagnostico-iso-9001' });
+            }
+          });
+        });
       });
+      return chain.then(function() { return pdf.output('blob'); });
     });
   }
   function downloadBlob(blob, name) {
@@ -1133,7 +1217,7 @@
     return d;
   }
   function waText() {
-    var who = lead && lead.empresa ? ' da ' + lead.empresa : '';
+    var who = companyName() ? ' da ' + companyName() : '';
     return 'Olá. Segue o diagnóstico de maturidade em gestão da qualidade' + who + '.\n\nResultado geral: ' + lastResults.overallPct + '% (' + lastResults.overallLevel + ').';
   }
   function withPdfButtons(fn) {
