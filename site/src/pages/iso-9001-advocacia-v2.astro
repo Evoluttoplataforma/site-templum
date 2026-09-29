@@ -430,9 +430,25 @@ const schemaFaq = {
     .cta-band p { color: rgba(255,255,255,.92); font-size: 17px; max-width: 560px; margin: 0 auto 28px; }
     .cta-band .btn--dark { background: var(--navy); }
     @media (max-width: 900px) {
-      .form-split, .beneficios-wrap, .feature, .dores-grid, .cards-3, .numbers-grid, .step-grid { grid-template-columns: 1fr; }
+      .beneficios-wrap, .feature, .dores-grid, .cards-3, .numbers-grid, .step-grid { grid-template-columns: 1fr; }
       .tm-arrow { display: none; }
       .tm-card { flex-basis: clamp(280px, 82vw, 360px); }
-      .form-row { grid-template-columns: 1fr; }
+      .hero { padding: 12px 0 36px; }
+      .form-split { display: flex; flex-direction: column; gap: 12px; }
+      .form-copy { display: contents; }
+      .form-copy .tag-pill { order: 1; letter-spacing: .05em; font-size: 11px; line-height: 1.35; }
+      .form-copy h1 { order: 2; font-size: clamp(22px, 6.4vw, 28px); line-height: 1.15; margin: 0; }
+      .form-copy .lead { order: 4; font-size: 15px; }
+      .form-selos { order: 5; margin-top: 4px; }
+      .hero :global(.lead-card) { order: 3; padding: 16px 14px 14px; }
+      .hero :global(.lead-card .lead-title) { font-size: 18px; margin-bottom: 2px; }
+      .hero :global(.lead-card .lead-sub) { font-size: 13px; margin-bottom: 10px; line-height: 1.35; }
+      .hero :global(.lead-card .form) { gap: 10px; }
+      .hero :global(.lead-card .field) { gap: 4px; }
+      .hero :global(.lead-card .field > label) { font-size: 12px; line-height: 1.25; }
+      .hero :global(.lead-card .form-row) { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .hero :global(.lead-card .input),
+      .hero :global(.lead-card .select) { padding: 10px 12px; font-size: 14px; }
+      .hero :global(.lead-card .btn--lg) { padding: 13px 16px; }
     }
 </style>
