@@ -735,9 +735,8 @@ h2 em { font-style: normal; color: var(--gold); }
   font-family: var(--display);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0.55;
-  cursor: not-allowed;
 }
+.btn-wpp:hover { filter: brightness(1.08); }
 .ob-hint { margin-top: 10px; color: var(--soft); font-size: 14px; }
 .ob-cal {
   display: flex;
