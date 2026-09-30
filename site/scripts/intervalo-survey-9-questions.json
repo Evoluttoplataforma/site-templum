@@ -1,0 +1,112 @@
+{
+  "survey_id": "3a292484-aea8-420f-89ae-2d9ef94b0300",
+  "replace_existing": true,
+  "questions": [
+    {
+      "type": "single_choice",
+      "title": "Você já conhece o Templum OS?",
+      "required": true,
+      "options": [
+        { "label": "Sim, já uso ou estou testando", "value": "ja_uso" },
+        { "label": "Sim, conheço e me interessa", "value": "conheco_interessa" },
+        { "label": "Ouvi falar, mas não sei bem o que faz", "value": "ouvi_falar" },
+        { "label": "É a primeira vez que ouço falar", "value": "primeira_vez" },
+        { "label": "Conheço, mas não é o que precisamos agora", "value": "conheco_nao_precisamos" }
+      ]
+    },
+    {
+      "type": "single_choice",
+      "title": "Como a empresa controla as informações financeiras hoje?",
+      "required": true,
+      "options": [
+        { "label": "Tudo em planilhas, de forma desorganizada", "value": "planilhas_desorganizadas" },
+        { "label": "Planilhas e alguns dados em sistemas separados", "value": "planilhas_sistemas" },
+        { "label": "Sistema financeiro, mas sem integração com a operação", "value": "sistema_sem_integracao" },
+        { "label": "Sistema integrado, mas lento ou desatualizado", "value": "sistema_integrado_lento" },
+        { "label": "Já usamos Templum OS ou solução parecida", "value": "ja_usamos_templum" },
+        { "label": "Não queremos mexer nisso agora", "value": "nao_queremos_mudar" }
+      ]
+    },
+    {
+      "type": "multiple_choice",
+      "title": "Hoje, o que mais te atrapalha quando olha para os números da empresa?",
+      "required": true,
+      "options": [
+        { "label": "Não consigo ver a situação financeira em tempo real", "value": "sem_visao_tempo_real" },
+        { "label": "Cada pessoa tem uma versão dos números", "value": "versoes_diferentes" },
+        { "label": "Demoro mais de 10 dias para saber como foi o mês", "value": "demora_relatórios" },
+        { "label": "Não consigo calcular a margem real por produto ou serviço", "value": "sem_calculo_margem_real" },
+        { "label": "Preciso estruturar processos primeiro; depois penso em ferramenta", "value": "estrutura_primeiro" },
+        { "label": "Não vejo isso como urgente agora", "value": "nao_e_urgente" }
+      ]
+    },
+    {
+      "type": "multiple_choice",
+      "title": "O que você mais quer sair sabendo depois da live?",
+      "required": true,
+      "options": [
+        { "label": "Como visualizar minha situação financeira em tempo real", "value": "visao_tempo_real" },
+        { "label": "Como organizar os dados em uma única fonte de verdade", "value": "fonte_unica_verdade" },
+        { "label": "Como calcular a margem real dos meus produtos ou serviços", "value": "calculo_margem_real" },
+        { "label": "Como usar números para tomar melhores decisões", "value": "decisoes_melhores" },
+        { "label": "Conhecer ferramentas que resolvem esse tipo de problema", "value": "ferramentas_solucao" },
+        { "label": "Entender se a empresa está realmente lucrando", "value": "entender_lucro" },
+        { "label": "Ver como outras empresas lidam com isso", "value": "benchmarking" },
+        { "label": "Ainda não sei; quero descobrir assistindo", "value": "descobrir_assistindo" }
+      ]
+    },
+    {
+      "type": "single_choice",
+      "title": "Se pudesse resolver uma coisa nos próximos meses, qual seria a prioridade?",
+      "required": true,
+      "options": [
+        { "label": "Ter visão financeira e operação no mesmo lugar", "value": "visao_financeira_operacional" },
+        { "label": "Organizar processos e gestão (certificação/consultoria)", "value": "organizar_processos" },
+        { "label": "Os dois: processo e plataforma juntos", "value": "ambos_processo_plataforma" },
+        { "label": "Só entender melhor; ainda sem projeto definido", "value": "so_entender_melhor" }
+      ]
+    },
+    {
+      "type": "likert",
+      "title": "Qual faixa descreve melhor a receita anual da empresa?",
+      "required": true,
+      "options": [
+        { "label": "Até R$ 500 mil por ano", "value": "1" },
+        { "label": "R$ 500 mil a R$ 2 milhões", "value": "2" },
+        { "label": "R$ 2 milhões a R$ 5 milhões", "value": "3" },
+        { "label": "R$ 5 milhões a R$ 20 milhões", "value": "4" },
+        { "label": "Acima de R$ 20 milhões", "value": "5" },
+        { "label": "Prefiro não informar", "value": "nao_informar" }
+      ]
+    },
+    {
+      "type": "likert",
+      "title": "Nos próximos 12 meses, a empresa costuma investir em ferramenta ou consultoria para gestão?",
+      "required": true,
+      "options": [
+        { "label": "Sim, já temos verba reservada ou aprovada", "value": "1" },
+        { "label": "Sim, mas ainda precisamos aprovar internamente", "value": "2" },
+        { "label": "Talvez, depende do que virmos na live", "value": "3" },
+        { "label": "Não, no momento é só estudo", "value": "4" },
+        { "label": "Não sei / prefiro não responder", "value": "5" }
+      ]
+    },
+    {
+      "type": "multiple_choice",
+      "title": "Quando você gostaria de ter uma solução funcionando na prática?",
+      "required": true,
+      "options": [
+        { "label": "Urgente: nos próximos 30 dias", "value": "urgente_30_dias" },
+        { "label": "Importante: até o final de outubro de 2026", "value": "importante_outubro_2026" },
+        { "label": "Importante: até o final de 2026", "value": "importante_fim_2026" },
+        { "label": "Estou explorando, sem urgência imediata", "value": "explorando" },
+        { "label": "Não sei ainda; depende do que eu ver na live", "value": "depende_live" }
+      ]
+    },
+    {
+      "type": "long_text",
+      "title": "Gostaria de adicionar algum comentário ou sugestão do que mais gostaria de ver na live de Gestão Financeira?",
+      "required": false
+    }
+  ]
+}

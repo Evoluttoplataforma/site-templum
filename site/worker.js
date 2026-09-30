@@ -35,6 +35,7 @@
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
+//   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook E0 Intervalo Técnico (Orbit → Fluxos)
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
 //   MAPADOSITE_PASSWORD    senha (Basic Auth) para /mapadosite (default: Tp3321@)
@@ -746,6 +747,9 @@ async function saveToPipedrive(lead, env) {
 // ---- 3b) CRM Orbit ---------------------------------------------------------
 // Pipeline INBOUND ("Importado do Pipedrive") → Stage NOVO LEAD
 const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
+/** Fluxo E0 Intervalo Técnico (webhook_inbound no Orbit). Secret: INTERVALO_E0_FLUXOS_SECRET no Worker. */
+const FLUXOS_INTERVALO_E0_WEBHOOK_URL =
+  "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound/intervalo-tecnico-gestao-financeira-e0";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
@@ -1085,6 +1089,29 @@ async function saveToMqlParceriaLsc(lead, env) {
   }
 }
 
+// Dispara automação CRM E0 (e-mail + pesquisa) após tag intervalo técnico no MQL.
+async function triggerIntervaloE0Fluxo(leadId, env) {
+  const secret = env.INTERVALO_E0_FLUXOS_SECRET;
+  if (!secret || !leadId) return { ok: false, reason: "not_configured" };
+  try {
+    const res = await fetch(FLUXOS_INTERVALO_E0_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "X-Fluxos-Secret": secret,
+      },
+      body: JSON.stringify({ lead_id: leadId }),
+    });
+    if (!res.ok) {
+      const e = await res.text().catch(() => "");
+      return { ok: false, error: String(e).slice(0, 200) };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
 // Intervalo Técnico / Gestão Financeira na Prática → funil MQL / Novo Lead.
 // Não abre card no INBOUND. Dedup por e-mail/telefone: se já existe card aberto,
 // só soma a tag.
@@ -1108,7 +1135,8 @@ async function saveToMqlIntervaloFinanceiro(lead, env) {
         const e = await res.text().catch(() => "");
         return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
       }
-      return { ok: true, lead_id: existing.id, updated: true };
+      const fluxo = await triggerIntervaloE0Fluxo(existing.id, env);
+      return { ok: true, lead_id: existing.id, updated: true, fluxo_e0: fluxo };
     }
 
     const title = (lead.nome || lead.email || "").trim();
@@ -1134,7 +1162,9 @@ async function saveToMqlIntervaloFinanceiro(lead, env) {
     const r = await orbitPostLead(headers, body);
     if (r && r.ok) {
       const d = await r.json().catch(() => ({}));
-      return { ok: true, lead_id: d.data?.id, created: true };
+      const leadId = d.data?.id;
+      const fluxo = leadId ? await triggerIntervaloE0Fluxo(leadId, env) : { ok: false, reason: "no_lead_id" };
+      return { ok: true, lead_id: leadId, created: true, fluxo_e0: fluxo };
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
