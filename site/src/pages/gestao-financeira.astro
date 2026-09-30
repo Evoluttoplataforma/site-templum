@@ -6,12 +6,22 @@ const EVENTO = mqlCampaignSlug("intervalo_gf_2026_10");
 import "../styles/gestao-financeira.css";
 
 const OBRIGADO = "/obrigado-gestao-financeira/";
+
+const desafios = [
+  "Não sei se a empresa está realmente lucrando",
+  "Vendo mais, mas o caixa não acompanha",
+  "Não consigo ver margem real por produto ou serviço",
+  "Números espalhados em planilhas e sistemas que não conversam",
+  "Cada área enxerga um número diferente",
+  "Fecho o mês tarde demais para decidir com segurança",
+  "Outro desafio",
+];
 ---
 
 <CampanhaIsolada
   leadEvento={EVENTO}
-  title="Intervalo Técnico | Gestão Financeira na Prática | Academia de Combate"
-  description="Live gratuita de gestão financeira na prática. 20 de outubro de 2026, 16h (horário de Brasília), online. Receita, custos, margem e caixa."
+  title="Intervalo Técnico | Gestão Financeira com IA na Prática | Academia de Combate"
+  description="Live gratuita de gestão financeira com IA na prática. 20 de outubro de 2026, 16h (horário de Brasília), online. Receita, custos, margem e caixa."
 >
 
 <header class="header">
@@ -35,7 +45,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
           <div class="hero-copy">
             <div class="hero-text">
               <p class="eyebrow">Academia de Combate&nbsp;apresenta</p>
-              <h1>Gestão Financeira na&nbsp;Prática</h1>
+              <h1>Gestão Financeira com IA na&nbsp;Prática</h1>
               <p class="hero-line">Antes do próximo round,<br /><em>reveja os&nbsp;números.</em></p>
               <p class="lede">Uma live gratuita para empresários que querem entender se a empresa está realmente dando resultado, para onde o dinheiro está indo e quais números acompanhar antes de tomar as próximas&nbsp;decisões.</p>
               <div class="date-bar">
@@ -82,7 +92,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
               <p class="form-bar">20 de outubro · 16h · Ao vivo</p>
               <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
               <input type="hidden" name="evento" value={EVENTO} />
-              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
+              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira com IA na Prática | 20/10/2026 16h Brasília" />
                 <div class="field">
                   <label for="nome">Nome completo</label>
                   <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
@@ -127,13 +137,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
                   <label for="desafio">Maior desafio da empresa hoje</label>
                   <select class="select" id="desafio" name="desafio" required>
                     <option value="">Selecione</option>
-                    <option>Não temos um plano estratégico definido</option>
-                    <option>Temos o plano, mas não conseguimos executar</option>
-                    <option>Faltam indicadores e metas claras</option>
-                    <option>Processos desorganizados: tudo passa por mim</option>
-                    <option>Time desalinhado, sem responsáveis e prazos</option>
-                    <option>Crescer sem estrutura para acompanhar</option>
-                    <option>Outro desafio</option>
+                    {desafios.map((d) => <option value={d}>{d}</option>)}
                   </select>
                 </div>
                 <button type="submit" class="btn-reserve btn-block">
@@ -283,7 +287,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
             <p class="form-bar">20 de outubro · 16h · Online</p>
             <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
               <input type="hidden" name="evento" value={EVENTO} />
-              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
+              <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira com IA na Prática | 20/10/2026 16h Brasília" />
               <div class="field">
                 <label for="nome-2">Nome completo</label>
                 <input class="input" id="nome-2" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
@@ -328,13 +332,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
                 <label for="desafio-2">Maior desafio da empresa hoje</label>
                 <select class="select" id="desafio-2" name="desafio" required>
                   <option value="">Selecione</option>
-                  <option>Não temos um plano estratégico definido</option>
-                  <option>Temos o plano, mas não conseguimos executar</option>
-                  <option>Faltam indicadores e metas claras</option>
-                  <option>Processos desorganizados: tudo passa por mim</option>
-                  <option>Time desalinhado, sem responsáveis e prazos</option>
-                  <option>Crescer sem estrutura para acompanhar</option>
-                  <option>Outro desafio</option>
+                  {desafios.map((d) => <option value={d}>{d}</option>)}
                 </select>
               </div>
               <button type="submit" class="btn-reserve btn-block">
