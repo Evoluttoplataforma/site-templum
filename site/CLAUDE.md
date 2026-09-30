@@ -18,6 +18,10 @@
 - Commit de IA termina com: `Co-Authored-By: Claude <noreply@anthropic.com>`
 - Push rejeitado (“fetch first”)? → `git pull --rebase origin main` e push de novo.
 
+## Campanhas LP → MQL (lives, intervalos, inscrições recorrentes)
+
+Cadastro único: `config/mql-campaigns.json`. Checklist e fluxo: **`docs/campanhas-mql.md`**.
+
 ## Dados (Supabase)
 - A home lê **artigos recentes** do Supabase no build (`src/lib/blog.js`) e o `/historias`
   lê `blog_templum_historias`. Schema/dados **não** vão por git — são geridos no Supabase.

@@ -1,0 +1,22 @@
+---
+/**
+ * TEMPLATE de obrigado (pasta _templates, não publica).
+ * Copiar para src/pages/obrigado-<sua-campanha>.astro
+ * Referência: obrigado-gestao-financeira.astro
+ */
+import CampanhaIsolada from "../../layouts/CampanhaIsolada.astro";
+import "../../styles/gestao-financeira.css";
+
+const OBRIGADO_TITLE = "Inscrição confirmada | Nome da live";
+const OBRIGADO_DESCRIPTION = "Próximos passos: e-mail, WhatsApp, agenda.";
+---
+
+<CampanhaIsolada title={OBRIGADO_TITLE} description={OBRIGADO_DESCRIPTION}>
+  <main class="obrigado">
+    <div class="container">
+      <h1>Inscrição confirmada</h1>
+      <p>Confira o e-mail e entre no grupo do WhatsApp quando receber o link.</p>
+      <p><a href="/gestao-financeira/">Voltar para a página da live</a></p>
+    </div>
+  </main>
+</CampanhaIsolada>

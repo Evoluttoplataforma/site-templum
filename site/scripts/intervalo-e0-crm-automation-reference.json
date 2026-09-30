@@ -6,7 +6,7 @@
   "webhook_url": "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound/intervalo-tecnico-gestao-financeira-e0",
   "webhook_id": "86c06ba5-24f1-45b8-af39-9c428fea8233",
   "worker_env": "INTERVALO_E0_FLUXOS_SECRET",
-  "worker_calls_after": "saveToMqlIntervaloFinanceiro (lead novo ou tag atualizada)",
+  "worker_calls_after": "saveToMqlInscricao (lead novo ou tag atualizada no MQL)",
   "post_body": { "lead_id": "<uuid do lead MQL>" },
   "survey_public_url": "https://app.templum.com.br/p/survey/survey_1790776678332_5xsdnb6hi",
   "email_html_file": "intervalo-e0-email-body.html",

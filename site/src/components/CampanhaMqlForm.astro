@@ -1,0 +1,115 @@
+---
+/**
+ * Formulário padrão de inscrição em campanha/evento → funil MQL.
+ * Usado nas LPs novas e no template _templates/campanha-mql.astro.
+ */
+const {
+  evento,
+  obrigado,
+  idPrefix = "",
+  formBar = "",
+  hiddenMensagem = "",
+  submitLabel = "Garantir minha vaga gratuita",
+} = Astro.props;
+
+const pid = (name) => (idPrefix ? `${idPrefix}${name}` : name);
+---
+
+<form data-trk-event={evento} data-obrigado={obrigado}>
+  <input type="hidden" name="evento" value={evento} />
+  {hiddenMensagem ? <input type="hidden" name="mensagem" value={hiddenMensagem} /> : null}
+  {formBar ? <p class="form-bar">{formBar}</p> : null}
+  <div class="field">
+    <label for={pid("nome")}>Nome completo</label>
+    <input
+      class="input"
+      id={pid("nome")}
+      name="nome"
+      type="text"
+      autocomplete="name"
+      required
+      minlength={2}
+      placeholder="Seu nome completo"
+    />
+  </div>
+  <div class="field">
+    <label for={pid("email")}>E-mail</label>
+    <input
+      class="input"
+      id={pid("email")}
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+      placeholder="voce@empresa.com"
+    />
+  </div>
+  <div class="field">
+    <label for={pid("empresa")}>Empresa</label>
+    <input
+      class="input"
+      id={pid("empresa")}
+      name="empresa"
+      type="text"
+      autocomplete="organization"
+      placeholder="Nome da empresa"
+    />
+  </div>
+  <div class="field">
+    <label for={pid("telefone")}>WhatsApp</label>
+    <input
+      class="input"
+      id={pid("telefone")}
+      name="telefone"
+      type="tel"
+      inputmode="numeric"
+      autocomplete="tel"
+      required
+      placeholder="(00) 00000-0000"
+    />
+  </div>
+  <div class="field">
+    <label for={pid("cargo")}>Seu cargo</label>
+    <select class="select" id={pid("cargo")} name="cargo" required>
+      <option value="">Selecione</option>
+      <option>Proprietário</option>
+      <option>Diretor / C-level</option>
+      <option>Gerente</option>
+      <option>Coordenador / Supervisor</option>
+      <option>Consultor</option>
+      <option>Outro</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for={pid("funcionarios")}>Nº de funcionários</label>
+    <select class="select" id={pid("funcionarios")} name="funcionarios" required>
+      <option value="">Selecione</option>
+      <option>1 a 10</option>
+      <option>11 a 50</option>
+      <option>51 a 100</option>
+      <option>101 a 250</option>
+      <option>251 a 500</option>
+      <option>Mais de 500</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for={pid("desafio")}>Maior desafio da empresa hoje</label>
+    <select class="select" id={pid("desafio")} name="desafio" required>
+      <option value="">Selecione</option>
+      <option>Não temos um plano estratégico definido</option>
+      <option>Temos o plano, mas não conseguimos executar</option>
+      <option>Faltam indicadores e metas claras</option>
+      <option>Processos desorganizados: tudo passa por mim</option>
+      <option>Time desalinhado, sem responsáveis e prazos</option>
+      <option>Crescer sem estrutura para acompanhar</option>
+      <option>Outro desafio</option>
+    </select>
+  </div>
+  <button type="submit" class="btn-reserve btn-block">
+    {submitLabel}
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"
+      ><path d="M5 12h14M13 6l6 6-6 6"></path></svg
+    >
+  </button>
+</form>
+<p class="legal">Vagas limitadas. As instruções de acesso chegam por e-mail e WhatsApp.</p>

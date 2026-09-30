@@ -2,9 +2,10 @@
 import LpBase from "../layouts/LpBase.astro";
 import GestaoIaLockup from "../components/GestaoIaLockup.astro";
 import GestaoIaForm from "../components/GestaoIaForm.astro";
-import "../styles/gestao-ia-pratica.css";
+import { mqlCampaignSlug } from "../lib/mql-campaigns";
 
-const EVENTO = "gestao-ia-pratica-lsc-one";
+const EVENTO = mqlCampaignSlug("gestao_ia_lsc_2025_10");
+import "../styles/gestao-ia-pratica.css";
 const OBRIGADO = "/obrigado-gestao-ia-pratica/";
 ---
 

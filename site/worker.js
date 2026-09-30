@@ -3,12 +3,8 @@
 //                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar.
-//                             Gestão com IA + LSC One (gestao-ia-pratica-lsc-one) vai ao
-//                             MQL Novo Lead com tag "Parceria LSC One".
-//                             Intervalo Técnico (intervalo-tecnico-gestao-financeira)
-//                             vai ao MQL Novo Lead. O título do card é o nome da pessoa.
-//                             A tag do CRM aceita no máximo 32 caracteres, então entram
-//                             duas: "intervalo técnico" e "gestão financeira".
+//                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao MQL Novo Lead
+//                             com tags do evento; dedup só no MQL (não reutiliza Teste Igor).
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
@@ -51,6 +47,9 @@
 //                          webhook no painel Asaas — vem de volta no header "asaas-access-token"
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
+// Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
+
+import mqlCampaignsConfig from "./config/mql-campaigns.json";
 
 const META_API_VERSION = "v21.0";
 
@@ -417,8 +416,7 @@ async function handleLead(request, env, ctx) {
     lead.evento.startsWith("webinar") ||
     lead.evento.startsWith("webserie") ||
     lead.evento === "planejamento-estrategico-2027" ||
-    lead.evento === EVENTO_GESTAO_IA_LSC ||
-    lead.evento === EVENTO_INTERVALO_FINANCEIRO ||
+    MQL_CAMPAIGN_SLUG_SET.has(lead.evento) ||
     isIsca;
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
@@ -446,10 +444,8 @@ async function handleLead(request, env, ctx) {
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
   } else if (lead.evento.startsWith("webinar")) {
     bgTasks.push(["mql", saveToMqlWebinar(lead, env)]);
-  } else if (lead.evento === EVENTO_GESTAO_IA_LSC) {
-    bgTasks.push(["mql", saveToMqlParceriaLsc(lead, env)]);
-  } else if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) {
-    bgTasks.push(["mql", saveToMqlIntervaloFinanceiro(lead, env)]);
+  } else if (ORBIT_MQL_INSCRICAO[lead.evento]) {
+    bgTasks.push(["mql", saveToMqlInscricao(lead, env)]);
   } else if (isIsca) {
     bgTasks.push(["mql", saveToMqlIsca(lead, env)]);
   }
@@ -540,10 +536,7 @@ async function saveToMailchimp(lead, env) {
   if (lead.evento.startsWith("webinar") || lead.evento.startsWith("webserie")) {
     mcTags.push("Webserie");
   }
-  if (lead.evento === EVENTO_GESTAO_IA_LSC) mcTags.push(ORBIT_TAG_PARCERIA_LSC);
-  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) {
-    mcTags.push("intervalo técnico", "gestão financeira");
-  }
+  mcTags.push(...nutricaoTagsForMqlCampaign(lead.evento, "mailchimp"));
 
   try {
     const r = await fetch(`${mcBase}/members`, {
@@ -754,14 +747,43 @@ const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
 const ORBIT_ATIVACAO_STAGE_IGNICAO = "1fec2ce2-2a71-47ce-8717-ea9746e98ecd";
-const EVENTO_GESTAO_IA_LSC = "gestao-ia-pratica-lsc-one";
-const EVENTO_INTERVALO_FINANCEIRO = "intervalo-tecnico-gestao-financeira";
 const ORBIT_TAG_PARCERIA_LSC = "Parceria LSC One";
 const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
 const ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA = "122cd261-a6b9-42be-a498-655e4c6346c1";
 const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
+
+function mqlCampaignBySlug(slug) {
+  return mqlCampaignsConfig.campaigns.find((c) => c.slug === slug);
+}
+
+function nutricaoTagsForMqlCampaign(slug, channel) {
+  const c = mqlCampaignBySlug(slug);
+  if (!c) return [];
+  const key = channel === "mailchimp" ? "mailchimpTags" : "manychatTags";
+  if (Array.isArray(c[key]) && c[key].length) return c[key];
+  return c.crmTags || [];
+}
+
+function buildOrbitMqlInscricao(campaigns) {
+  const map = {};
+  for (const c of campaigns) {
+    map[c.slug] = {
+      tags: c.crmTags,
+      source: c.crmSource,
+      titleStyle: c.titleStyle || "empresa_suffix",
+      triggerE0: Boolean(c.fluxos?.e0InboundPathKey),
+    };
+    if (c.titleSuffix) map[c.slug].titleSuffix = c.titleSuffix;
+    if (c.notes) map[c.slug].notes = c.notes;
+    if (c.customFields) map[c.slug].customFields = true;
+  }
+  return map;
+}
+
+const ORBIT_MQL_INSCRICAO = buildOrbitMqlInscricao(mqlCampaignsConfig.campaigns);
+const MQL_CAMPAIGN_SLUG_SET = new Set(mqlCampaignsConfig.campaigns.map((c) => c.slug));
 // Etiquetas do CRM por evento da LP (o POST /v1/leads grava `tags` direto no lead,
 // então a etiqueta pode ser aplicada no momento da criação — sem chamada extra).
 // Vazio por ora: o único evento mapeado aqui era o PE2027, que passou a ser
@@ -927,6 +949,11 @@ function pickCrmLeadForIsca(leads) {
   return mql[0] || open[0] || null;
 }
 
+/** Só card aberto no funil MQL (Intervalo / LSC One não reutilizam outros funis). */
+function pickOpenMqlLead(leads) {
+  return (leads || []).filter(isOpenCrmLead).find((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID) || null;
+}
+
 async function crmSearchLeadsByTerm(token, term) {
   if (!term) return [];
   const r = await fetch(
@@ -969,8 +996,7 @@ async function orbitPostLead(headers, body) {
   }).catch(() => null);
 }
 
-// Isca digital → funil MQL (não INBOUND). Dedup por e-mail/telefone: se já existe
-// card aberto (inclusive em outro funil), só soma tag/nota.
+// Isca digital → funil MQL (não INBOUND). Dedup só no MQL; outros funis abertos não recebem tag.
 async function saveToMqlIsca(lead, env) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
@@ -982,28 +1008,28 @@ async function saveToMqlIsca(lead, env) {
 
   try {
     const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
-    const existing = pickCrmLeadForIsca(found);
+    const existingMql = pickOpenMqlLead(found);
 
-    if (existing) {
-      const patch = { tags: mergeLeadTags(existing.tags, tags) };
+    if (existingMql) {
+      const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
       if (note) {
         const prev = String(existing.notes || existing.note || "").trim();
         patch.notes = prev && prev.indexOf(note) === -1 ? prev + "\n\n" + note : (prev || note);
       }
       const canAdvance =
         isResultado &&
-        existing.pipeline_id === ORBIT_MQL_PIPELINE_ID &&
-        (existing.stage_id === ORBIT_MQL_STAGE_NOVO || existing.stage_id === ORBIT_MQL_STAGE_INCONSCIENTE);
+        (existingMql.stage_id === ORBIT_MQL_STAGE_NOVO ||
+          existingMql.stage_id === ORBIT_MQL_STAGE_INCONSCIENTE);
       if (canAdvance) patch.stage_id = ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA;
 
-      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
+      const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
         method: "PATCH", headers, body: JSON.stringify(patch),
       });
       if (!res.ok) {
         const e = await res.text().catch(() => "");
-        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
+        return { ok: false, error: e.slice(0, 140), lead_id: existingMql.id };
       }
-      return { ok: true, lead_id: existing.id, updated: true, advanced: !!canAdvance };
+      return { ok: true, lead_id: existingMql.id, updated: true, advanced: !!canAdvance };
     }
 
     const title = [lead.empresa || lead.nome || lead.email, lead.norma || "Isca"].filter(Boolean).join(" - ");
@@ -1038,55 +1064,10 @@ async function saveToMqlIsca(lead, env) {
   }
 }
 
-// Encontro Gestão com IA + LSC One → funil MQL / Novo Lead, tag Parceria LSC One.
-// Não abre card no INBOUND. Dedup por e-mail/telefone: se já existe card aberto,
-// só soma a tag.
-async function saveToMqlParceriaLsc(lead, env) {
-  const token = env.ORBIT_CRM_API_KEY;
-  if (!token) return { ok: false, reason: "not_configured" };
-
-  const tags = [ORBIT_TAG_PARCERIA_LSC];
-  const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
-
-  try {
-    const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
-    const existing = pickCrmLeadForIsca(found);
-
-    if (existing) {
-      const patch = { tags: mergeLeadTags(existing.tags, tags) };
-      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
-        method: "PATCH", headers, body: JSON.stringify(patch),
-      });
-      if (!res.ok) {
-        const e = await res.text().catch(() => "");
-        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
-      }
-      return { ok: true, lead_id: existing.id, updated: true };
-    }
-
-    const title = [lead.empresa || lead.nome || lead.email, "Gestão com IA"].filter(Boolean).join(" - ");
-    const body = {
-      title,
-      pipeline_id: ORBIT_MQL_PIPELINE_ID,
-      stage_id: ORBIT_MQL_STAGE_NOVO,
-      contact_name: lead.nome || lead.email,
-      contact_email: lead.email,
-      source: ORBIT_TAG_PARCERIA_LSC,
-      tags,
-    };
-    if (lead.telefone) body.contact_phone = lead.telefone;
-    if (lead.empresa) body.company_name = lead.empresa;
-
-    const r = await orbitPostLead(headers, body);
-    if (r && r.ok) {
-      const d = await r.json().catch(() => ({}));
-      return { ok: true, lead_id: d.data?.id, created: true };
-    }
-    const e = r ? await r.text().catch(() => "") : "fetch_failed";
-    return { ok: false, error: String(e).slice(0, 140) };
-  } catch (e) {
-    return { ok: false, error: "fetch_failed" };
-  }
+function mqlInscricaoTitle(lead, cfg) {
+  if (cfg.titleStyle === "contact") return (lead.nome || lead.email || "").trim();
+  const suffix = cfg.titleSuffix || "Inscrição";
+  return [lead.empresa || lead.nome || lead.email, suffix].filter(Boolean).join(" - ");
 }
 
 // Dispara automação CRM E0 (e-mail + pesquisa) após tag intervalo técnico no MQL.
@@ -1112,58 +1093,65 @@ async function triggerIntervaloE0Fluxo(leadId, env) {
   }
 }
 
-// Intervalo Técnico / Gestão Financeira na Prática → funil MQL / Novo Lead.
-// Não abre card no INBOUND. Dedup por e-mail/telefone: se já existe card aberto,
-// só soma a tag.
-async function saveToMqlIntervaloFinanceiro(lead, env) {
+// Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → MQL / Novo Lead + tags do evento.
+async function saveToMqlInscricao(lead, env) {
+  const cfg = ORBIT_MQL_INSCRICAO[lead.evento];
+  if (!cfg) return { ok: false, reason: "unknown_event" };
+
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
-  const tags = ["intervalo técnico", "gestão financeira"];
+  const tags = cfg.tags;
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
 
   try {
     const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
-    const existing = pickCrmLeadForIsca(found);
+    const existingMql = pickOpenMqlLead(found);
 
-    if (existing) {
-      const patch = { tags: mergeLeadTags(existing.tags, tags) };
-      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
+    if (existingMql) {
+      const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
+      const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
         method: "PATCH", headers, body: JSON.stringify(patch),
       });
       if (!res.ok) {
         const e = await res.text().catch(() => "");
-        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
+        return { ok: false, error: e.slice(0, 140), lead_id: existingMql.id };
       }
-      const fluxo = await triggerIntervaloE0Fluxo(existing.id, env);
-      return { ok: true, lead_id: existing.id, updated: true, fluxo_e0: fluxo };
+      const fluxo = cfg.triggerE0 ? await triggerIntervaloE0Fluxo(existingMql.id, env) : undefined;
+      return { ok: true, lead_id: existingMql.id, updated: true, fluxo_e0: fluxo };
     }
 
-    const title = (lead.nome || lead.email || "").trim();
     const body = {
-      title,
+      title: mqlInscricaoTitle(lead, cfg),
       pipeline_id: ORBIT_MQL_PIPELINE_ID,
       stage_id: ORBIT_MQL_STAGE_NOVO,
       contact_name: lead.nome || lead.email,
       contact_email: lead.email,
-      source: "Intervalo Técnico",
+      source: cfg.source,
       tags,
-      notes: "Inscrição na live Intervalo Técnico, Gestão Financeira na Prática, 20/10/2026 às 16h (horário de Brasília).",
     };
+    if (cfg.notes) body.notes = cfg.notes;
     if (lead.telefone) body.contact_phone = lead.telefone;
     if (lead.empresa) body.company_name = lead.empresa;
-    const custom_fields = {};
-    for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-      const val = lead[field];
-      if (val) custom_fields[key] = val;
+    if (cfg.customFields) {
+      const custom_fields = {};
+      for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+        const val = lead[field];
+        if (val) custom_fields[key] = val;
+      }
+      if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
     }
-    if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
     const r = await orbitPostLead(headers, body);
     if (r && r.ok) {
       const d = await r.json().catch(() => ({}));
       const leadId = d.data?.id;
-      const fluxo = leadId ? await triggerIntervaloE0Fluxo(leadId, env) : { ok: false, reason: "no_lead_id" };
+      const fluxo =
+        cfg.triggerE0 && leadId
+          ? await triggerIntervaloE0Fluxo(leadId, env)
+          : cfg.triggerE0
+            ? { ok: false, reason: "no_lead_id" }
+            : undefined;
       return { ok: true, lead_id: leadId, created: true, fluxo_e0: fluxo };
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
@@ -1238,8 +1226,7 @@ function manyChatTagsFor(lead) {
   // ManyChat sem etiqueta nenhuma (não é webinar nem webserie, e a LP não manda
   // norma), então não havia como disparar lembrete do evento por lá.
   if (lead.evento === "planejamento-estrategico-2027") tags.push("PE2027");
-  if (lead.evento === EVENTO_GESTAO_IA_LSC) tags.push(ORBIT_TAG_PARCERIA_LSC);
-  if (lead.evento === EVENTO_INTERVALO_FINANCEIRO) tags.push("intervalo técnico", "gestão financeira");
+  tags.push(...nutricaoTagsForMqlCampaign(lead.evento, "manychat"));
   if (lead.evento === "isca" || lead.evento === "isca-resultado") tags.push("isca");
   const produto = MC_NORMA_TAGS[lead.norma];
   if (produto) tags.push(produto);

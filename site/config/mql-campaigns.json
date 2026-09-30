@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "campaigns": [
+    {
+      "key": "intervalo_gf_2026_10",
+      "slug": "intervalo-tecnico-gestao-financeira",
+      "label": "Academia de Combate · Intervalo Técnico · Gestão Financeira (20/10/2026)",
+      "lpPath": "/gestao-financeira/",
+      "crmTags": ["intervalo técnico", "gestão financeira"],
+      "crmSource": "Intervalo Técnico",
+      "titleStyle": "contact",
+      "notes": "Inscrição na live Intervalo Técnico, Gestão Financeira na Prática, 20/10/2026 às 16h (horário de Brasília).",
+      "customFields": true,
+      "manychatTags": ["intervalo técnico", "gestão financeira"],
+      "mailchimpTags": ["intervalo técnico", "gestão financeira"],
+      "fluxos": {
+        "e0InboundPathKey": "intervalo-tecnico-gestao-financeira-e0"
+      }
+    },
+    {
+      "key": "gestao_ia_lsc_2025_10",
+      "slug": "gestao-ia-pratica-lsc-one",
+      "label": "Gestão com IA na Prática · Templum + LSC One",
+      "lpPath": "/gestao-ia-pratica/",
+      "crmTags": ["Parceria LSC One"],
+      "crmSource": "Parceria LSC One",
+      "titleStyle": "empresa_suffix",
+      "titleSuffix": "Gestão com IA",
+      "manychatTags": ["Parceria LSC One"],
+      "mailchimpTags": ["Parceria LSC One"]
+    }
+  ]
+}

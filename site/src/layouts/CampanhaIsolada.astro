@@ -10,6 +10,7 @@ const {
   ogImage = "/assets/og/templum-og.jpg",
   noindex = true,
   schemas = [],
+  leadEvento = "",
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -186,6 +187,12 @@ const allSchemas = schemas;
       };
     </script>
 
+    {leadEvento ? (
+      <script is:inline define:vars={{ leadEvento }}>
+        window.__TPL_LEAD_EVENTO = leadEvento;
+      </script>
+    ) : null}
+
     <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
          depois de confirmar que o Supabase salvou o cadastro. trk.lead()
          continua na /obrigado, tratando GA4/Ads/TikTok (inalterado). -->
@@ -195,10 +202,17 @@ const allSchemas = schemas;
         if (!form) return;
         e.preventDefault();
         if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
-        var evt = form.getAttribute("data-trk-event");
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
-
+        var evt =
+          form.getAttribute("data-trk-event") ||
+          (typeof window.__TPL_LEAD_EVENTO === "string" && window.__TPL_LEAD_EVENTO) ||
+          d.evento ||
+          "";
+        if (!evt) {
+          console.error("[tpl] Formulário sem evento (data-trk-event ou leadEvento na layout).");
+          return;
+        }
         // Trava de disparo único: o mesmo form não processa 2x.
         if (form.dataset.leadSubmitted === "1") return;
         form.dataset.leadSubmitted = "1";

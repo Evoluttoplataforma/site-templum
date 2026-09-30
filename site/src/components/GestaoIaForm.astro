@@ -3,6 +3,7 @@ const { idPrefix = "", eventName, obrigado } = Astro.props;
 ---
 
 <form novalidate data-trk-event={eventName} data-obrigado={obrigado}>
+  {eventName ? <input type="hidden" name="evento" value={eventName} /> : null}
   <div class="field">
     <label for={`${idPrefix}nome`}>Nome</label>
     <input class="input" id={`${idPrefix}nome`} name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome" />

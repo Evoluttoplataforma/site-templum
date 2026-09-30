@@ -1,0 +1,102 @@
+---
+/**
+ * TEMPLATE (não publica rota: pasta _templates).
+ *
+ * Copiar para src/pages/<sua-rota>.astro e src/pages/obrigado-<sua-rota>.astro
+ * Referência visual completa: gestao-financeira.astro + gestao-financeira.css
+ *
+ * 1. config/mql-campaigns.json → nova key + slug + tags + lpPath
+ * 2. Ajustar constantes abaixo
+ * 3. Duplicar assets/CSS da campanha de outubro ou criar pasta em /assets/
+ * 4. docs/campanhas-mql.md
+ */
+import CampanhaIsolada from "../../layouts/CampanhaIsolada.astro";
+import CampanhaMqlForm from "../../components/CampanhaMqlForm.astro";
+import { mqlCampaignSlug } from "../../lib/mql-campaigns";
+import "../../styles/gestao-financeira.css";
+
+/** key cadastrada em config/mql-campaigns.json */
+const CAMPAIGN_KEY = "intervalo_gf_2026_10";
+
+const EVENTO = mqlCampaignSlug(CAMPAIGN_KEY);
+const OBRIGADO = "/obrigado-gestao-financeira/";
+
+const META_TITLE = "Título da live | Academia de Combate";
+const META_DESCRIPTION = "Descrição para SEO e compartilhamento.";
+const HIDDEN_MENSAGEM = "Resumo interno | data/hora | formato";
+const FORM_BAR = "Data · horário · online";
+---
+
+<CampanhaIsolada leadEvento={EVENTO} title={META_TITLE} description={META_DESCRIPTION}>
+  <header class="header">
+    <div class="header-inner">
+      <a href="#topo" aria-label="Início">
+        <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+      </a>
+      <a class="btn-reserve" href="#inscricao">
+        <span class="btn-long">Reserve seu lugar</span>
+        <span class="btn-short">Reserve</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="topo">
+    <section class="hero">
+      <div class="hero-lights" aria-hidden="true"></div>
+      <div class="ropes" aria-hidden="true"></div>
+      <div class="container-hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-text">
+              <p class="eyebrow">Academia de Combate apresenta</p>
+              <h1>Título principal da campanha</h1>
+              <p class="hero-line">Subtítulo em duas linhas se precisar.</p>
+              <p class="lede">Parágrafo de promessa: para quem é, o que a pessoa leva da live.</p>
+              <p class="seal">Intervalo Técnico</p>
+            </div>
+          </div>
+
+          <aside class="form-card" id="inscricao">
+            <p class="price-badge">Vagas limitadas</p>
+            <p class="price-free">Gratuito</p>
+            <p class="price-note">Só preencher e garantir a vaga.</p>
+            <CampanhaMqlForm
+              evento={EVENTO}
+              obrigado={OBRIGADO}
+              formBar={FORM_BAR}
+              hiddenMensagem={HIDDEN_MENSAGEM}
+            />
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="conteudo">
+      <div class="container">
+        <p>Seções de prova, agenda, FAQ: copiar de gestao-financeira.astro conforme a campanha.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="inscricao-final">
+      <div class="container">
+        <aside class="form-card">
+          <p class="price-free">Gratuito</p>
+          <CampanhaMqlForm
+            evento={EVENTO}
+            obrigado={OBRIGADO}
+            idPrefix="2-"
+            formBar={FORM_BAR}
+            hiddenMensagem={HIDDEN_MENSAGEM}
+          />
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+      <p>Rodapé: data, horário, online, gratuito.</p>
+    </div>
+  </footer>
+</CampanhaIsolada>

@@ -1,12 +1,15 @@
 ---
 import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import { mqlCampaignSlug } from "../lib/mql-campaigns";
+
+const EVENTO = mqlCampaignSlug("intervalo_gf_2026_10");
 import "../styles/gestao-financeira.css";
 
-const EVENTO = "intervalo-tecnico-gestao-financeira";
 const OBRIGADO = "/obrigado-gestao-financeira/";
 ---
 
 <CampanhaIsolada
+  leadEvento={EVENTO}
   title="Intervalo Técnico | Gestão Financeira na Prática | Academia de Combate"
   description="Live gratuita de gestão financeira na prática. 20 de outubro de 2026, 16h (horário de Brasília), online. Receita, custos, margem e caixa."
 >
@@ -78,6 +81,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
               <p class="price-note">Só preencher e garantir a&nbsp;vaga.</p>
               <p class="form-bar">20 de outubro · 16h · Ao vivo</p>
               <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="evento" value={EVENTO} />
               <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
                 <div class="field">
                   <label for="nome">Nome completo</label>
@@ -278,6 +282,7 @@ const OBRIGADO = "/obrigado-gestao-financeira/";
             <p class="price-note">Só preencher e garantir a&nbsp;vaga.</p>
             <p class="form-bar">20 de outubro · 16h · Online</p>
             <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="evento" value={EVENTO} />
               <input type="hidden" name="mensagem" value="Intervalo Técnico | Gestão Financeira na Prática | 20/10/2026 16h Brasília" />
               <div class="field">
                 <label for="nome-2">Nome completo</label>
