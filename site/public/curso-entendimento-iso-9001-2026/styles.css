@@ -733,6 +733,14 @@ strong, b { font-weight: 600; }
   margin: 0 auto;
   text-align: center;
 }
+.price-panel .official {
+  font-size: 15px; color: var(--text-mid); margin-bottom: 8px;
+}
+.price-panel .official strong {
+  text-decoration: line-through;
+  color: var(--text-soft);
+  font-weight: 600;
+}
 .price-panel .price-times {
   font-size: 16px; font-weight: 600; color: var(--text-2);
   margin: 0;
