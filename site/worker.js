@@ -31,7 +31,8 @@
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
-//   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook E0 Intervalo Técnico (Orbit → Fluxos)
+//   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook GF (path intervalo-tecnico-gestao-financeira-e0)
+//   MQL_E0_WEBHOOK_SECRETS (SECRETO, opcional) JSON { "<path_key>": "<secret>", ... } para várias campanhas E0
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
 //   MAPADOSITE_PASSWORD    senha (Basic Auth) para /mapadosite (default: Tp3321@)
@@ -403,6 +404,7 @@ async function handleLead(request, env, ctx) {
     meta_content_name: body.meta_content_name || "",
   };
 
+  applyMqlLpAttribution(lead);
   applySegmentLpUtmDefaults(lead, body);
 
   const isIsca =
@@ -742,9 +744,8 @@ async function saveToPipedrive(lead, env) {
 // ---- 3b) CRM Orbit ---------------------------------------------------------
 // Pipeline INBOUND ("Importado do Pipedrive") → Stage NOVO LEAD
 const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-api-v1/v1";
-/** Fluxo E0 Intervalo Técnico (webhook_inbound no Orbit). Secret: INTERVALO_E0_FLUXOS_SECRET no Worker. */
-const FLUXOS_INTERVALO_E0_WEBHOOK_URL =
-  "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound/intervalo-tecnico-gestao-financeira-e0";
+const FLUXOS_WEBHOOK_INBOUND_BASE =
+  "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
@@ -784,6 +785,23 @@ function applySegmentLpUtmDefaults(lead, body) {
   return lead;
 }
 
+/** Na conversão na LP da campanha, last-touch = UTMs da campanha (não herda tpl_last de outro e-mail). */
+function applyMqlLpAttribution(lead) {
+  const c = mqlCampaignBySlug(lead.evento);
+  if (!c?.lpPath || !c.utmDefaults) return lead;
+  const norm = (p) => {
+    const s = String(p || "").trim();
+    if (!s) return "";
+    return s.endsWith("/") ? s : s + "/";
+  };
+  if (norm(lead.pagina) !== norm(c.lpPath)) return lead;
+  const d = c.utmDefaults;
+  for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
+    if (d[k] != null && String(d[k]).trim() !== "") lead[k] = String(d[k]).trim();
+  }
+  return lead;
+}
+
 function nutricaoTagsForMqlCampaign(slug, channel) {
   const c = mqlCampaignBySlug(slug);
   if (!c) return [];
@@ -799,11 +817,16 @@ function buildOrbitMqlInscricao(campaigns) {
       tags: c.crmTags,
       source: c.crmSource,
       titleStyle: c.titleStyle || "empresa_suffix",
-      triggerE0: Boolean(c.fluxos?.e0InboundPathKey),
+      dedupOpenMql: c.mqlDedupOpenLead !== false,
     };
     if (c.titleSuffix) map[c.slug].titleSuffix = c.titleSuffix;
     if (c.notes) map[c.slug].notes = c.notes;
     if (c.customFields) map[c.slug].customFields = true;
+    const fx = c.fluxos;
+    if (fx?.e0InboundPathKey) {
+      map[c.slug].e0InboundPathKey = String(fx.e0InboundPathKey).trim();
+      if (fx.e0SentTag) map[c.slug].e0SentTag = String(fx.e0SentTag).trim();
+    }
   }
   return map;
 }
@@ -1039,7 +1062,7 @@ async function saveToMqlIsca(lead, env) {
     if (existingMql) {
       const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
       if (note) {
-        const prev = String(existing.notes || existing.note || "").trim();
+        const prev = String(existingMql.notes || existingMql.note || "").trim();
         patch.notes = prev && prev.indexOf(note) === -1 ? prev + "\n\n" + note : (prev || note);
       }
       const canAdvance =
@@ -1096,12 +1119,62 @@ function mqlInscricaoTitle(lead, cfg) {
   return [lead.empresa || lead.nome || lead.email, suffix].filter(Boolean).join(" - ");
 }
 
-// Dispara automação CRM E0 (e-mail + pesquisa) após tag intervalo técnico no MQL.
-async function triggerIntervaloE0Fluxo(leadId, env) {
-  const secret = env.INTERVALO_E0_FLUXOS_SECRET;
-  if (!secret || !leadId) return { ok: false, reason: "not_configured" };
+function mqlInscricaoCustomFields(lead) {
+  const custom_fields = {};
+  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+    const val = lead[field];
+    if (val) custom_fields[key] = val;
+  }
+  return custom_fields;
+}
+
+function buildMqlInscricaoPatch(lead, cfg, existingMql, tags) {
+  const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
+  patch.title = mqlInscricaoTitle(lead, cfg);
+  if (lead.nome) patch.contact_name = lead.nome;
+  if (lead.telefone) patch.contact_phone = lead.telefone;
+  if (lead.empresa) patch.company_name = lead.empresa;
+  if (cfg.source) patch.source = cfg.source;
+  if (cfg.notes) {
+    const prev = String(existingMql.notes || existingMql.note || "").trim();
+    patch.notes =
+      prev && prev.indexOf(cfg.notes) === -1 ? prev + "\n\n" + cfg.notes : prev || cfg.notes;
+  }
+  if (cfg.customFields) {
+    const cf = mqlInscricaoCustomFields(lead);
+    if (Object.keys(cf).length) patch.custom_fields = cf;
+  }
+  return patch;
+}
+
+function leadHasCrmTag(lead, tag) {
+  const want = String(tag || "").trim().toLowerCase();
+  if (!want) return false;
+  return (lead?.tags || []).some((t) => String(t).trim().toLowerCase() === want);
+}
+
+function mqlE0WebhookSecret(pathKey, env) {
+  const raw = env.MQL_E0_WEBHOOK_SECRETS;
+  if (raw) {
+    try {
+      const map = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (map && map[pathKey]) return String(map[pathKey]);
+    } catch (_) {
+      /* fallback below */
+    }
+  }
+  if (pathKey === "intervalo-tecnico-gestao-financeira-e0" && env.INTERVALO_E0_FLUXOS_SECRET) {
+    return env.INTERVALO_E0_FLUXOS_SECRET;
+  }
+  return "";
+}
+
+async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
+  const secret = mqlE0WebhookSecret(pathKey, env);
+  if (!secret || !leadId || !pathKey) return { ok: false, reason: "not_configured" };
+  const url = `${FLUXOS_WEBHOOK_INBOUND_BASE}/${encodeURIComponent(pathKey)}`;
   try {
-    const res = await fetch(FLUXOS_INTERVALO_E0_WEBHOOK_URL, {
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -1114,12 +1187,13 @@ async function triggerIntervaloE0Fluxo(leadId, env) {
       return { ok: false, error: String(e).slice(0, 200) };
     }
     return { ok: true };
-  } catch (e) {
+  } catch (_) {
     return { ok: false, error: "fetch_failed" };
   }
 }
 
-// Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → MQL / Novo Lead + tags do evento.
+// Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → funil MQL / Novo Lead + tags do evento.
+// E0: webhook inbound Orbit (após CRM ok), ver fluxos.e0InboundPathKey no JSON da campanha.
 async function saveToMqlInscricao(lead, env) {
   const cfg = ORBIT_MQL_INSCRICAO[lead.evento];
   if (!cfg) return { ok: false, reason: "unknown_event" };
@@ -1131,20 +1205,28 @@ async function saveToMqlInscricao(lead, env) {
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
 
   try {
-    const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
-    const existingMql = pickOpenMqlLead(found);
-
-    if (existingMql) {
-      const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
-      const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
-        method: "PATCH", headers, body: JSON.stringify(patch),
-      });
-      if (!res.ok) {
-        const e = await res.text().catch(() => "");
-        return { ok: false, error: e.slice(0, 140), lead_id: existingMql.id };
+    if (cfg.dedupOpenMql) {
+      const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
+      const existingMql = pickOpenMqlLead(found);
+      if (existingMql) {
+        const patch = buildMqlInscricaoPatch(lead, cfg, existingMql, tags);
+        const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
+          method: "PATCH", headers, body: JSON.stringify(patch),
+        });
+        if (!res.ok) {
+          const e = await res.text().catch(() => "");
+          return { ok: false, error: e.slice(0, 140), lead_id: existingMql.id };
+        }
+        let fluxo_e0;
+        if (cfg.e0InboundPathKey) {
+          if (cfg.e0SentTag && leadHasCrmTag(existingMql, cfg.e0SentTag)) {
+            fluxo_e0 = { ok: false, reason: "e0_already_sent" };
+          } else {
+            fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, existingMql.id, env);
+          }
+        }
+        return { ok: true, lead_id: existingMql.id, updated: true, fluxo_e0 };
       }
-      const fluxo = cfg.triggerE0 ? await triggerIntervaloE0Fluxo(existingMql.id, env) : undefined;
-      return { ok: true, lead_id: existingMql.id, updated: true, fluxo_e0: fluxo };
     }
 
     const body = {
@@ -1160,11 +1242,7 @@ async function saveToMqlInscricao(lead, env) {
     if (lead.telefone) body.contact_phone = lead.telefone;
     if (lead.empresa) body.company_name = lead.empresa;
     if (cfg.customFields) {
-      const custom_fields = {};
-      for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-        const val = lead[field];
-        if (val) custom_fields[key] = val;
-      }
+      const custom_fields = mqlInscricaoCustomFields(lead);
       if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
     }
 
@@ -1172,13 +1250,11 @@ async function saveToMqlInscricao(lead, env) {
     if (r && r.ok) {
       const d = await r.json().catch(() => ({}));
       const leadId = d.data?.id;
-      const fluxo =
-        cfg.triggerE0 && leadId
-          ? await triggerIntervaloE0Fluxo(leadId, env)
-          : cfg.triggerE0
-            ? { ok: false, reason: "no_lead_id" }
-            : undefined;
-      return { ok: true, lead_id: leadId, created: true, fluxo_e0: fluxo };
+      let fluxo_e0;
+      if (cfg.e0InboundPathKey && leadId) {
+        fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, leadId, env);
+      }
+      return { ok: true, lead_id: leadId, created: true, fluxo_e0 };
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };

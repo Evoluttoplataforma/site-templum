@@ -12,13 +12,13 @@
  */
 import CampanhaIsolada from "../../layouts/CampanhaIsolada.astro";
 import CampanhaMqlForm from "../../components/CampanhaMqlForm.astro";
-import { mqlCampaignSlug } from "../../lib/mql-campaigns";
+import { mqlCampaignLpProps } from "../../lib/mql-campaigns";
 import "../../styles/gestao-financeira.css";
 
 /** key cadastrada em config/mql-campaigns.json */
 const CAMPAIGN_KEY = "intervalo_gf_2026_10";
 
-const EVENTO = mqlCampaignSlug(CAMPAIGN_KEY);
+const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);
 const OBRIGADO = "/obrigado-gestao-financeira/";
 
 const META_TITLE = "Título da live | Academia de Combate";
@@ -27,7 +27,12 @@ const HIDDEN_MENSAGEM = "Resumo interno | data/hora | formato";
 const FORM_BAR = "Data · horário · online";
 ---
 
-<CampanhaIsolada leadEvento={EVENTO} title={META_TITLE} description={META_DESCRIPTION}>
+<CampanhaIsolada
+  leadEvento={EVENTO}
+  utmDefaults={UTM_DEFAULTS}
+  title={META_TITLE}
+  description={META_DESCRIPTION}
+>
   <header class="header">
     <div class="header-inner">
       <a href="#topo" aria-label="Início">

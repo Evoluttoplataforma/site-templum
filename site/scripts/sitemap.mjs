@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const SITE = "https://templum.com.br";
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
-const EXCLUDE = ["/design-system", "/404", "/obrigado"];
+const EXCLUDE = ["/design-system", "/404", "/obrigado", "/emails"];
 
 function walk(dir) {
   let out = [];
@@ -19,7 +19,7 @@ function walk(dir) {
 }
 
 const urls = walk(DIST)
-  .map((f) => "/" + relative(DIST, f).replace(/index\.html$/, "").replace(/\/$/, ""))
+  .map((f) => "/" + relative(DIST, f).replace(/index\.html$/, "").replace(/\\/g, "/").replace(/\/$/, ""))
   .map((u) => (u === "" ? "/" : u))
   .filter((u) => !EXCLUDE.some((e) => u === e || u.startsWith(e + "/")))
   .sort();

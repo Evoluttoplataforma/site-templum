@@ -33,6 +33,17 @@ for (const c of campaigns) {
     }
   }
   if (!c.crmSource) errors.push(`${c.slug}: falta crmSource`);
+  const fx = c.fluxos;
+  if (fx?.e0InboundPathKey) {
+    if (!String(fx.e0PrimaryTag || "").trim()) {
+      errors.push(`${c.slug}: fluxos.e0PrimaryTag obrigatório com e0InboundPathKey`);
+    }
+    if (!String(fx.e0SentTag || "").trim()) {
+      errors.push(`${c.slug}: fluxos.e0SentTag obrigatório com e0InboundPathKey`);
+    } else if (String(fx.e0SentTag).length > 32) {
+      errors.push(`${c.slug}: fluxos.e0SentTag > 32 chars`);
+    }
+  }
   if (c.lpPath) {
     const page =
       c.lpPath === "/"
@@ -40,6 +51,21 @@ for (const c of campaigns) {
         : join(root, "src", "pages", c.lpPath.replace(/^\//, "").replace(/\/$/, "") + ".astro");
     if (!existsSync(page)) {
       errors.push(`${c.slug}: lpPath ${c.lpPath} sem ${page.replace(root + "\\", "")}`);
+    }
+    const utm = c.utmDefaults;
+    if (!utm || typeof utm !== "object") {
+      errors.push(`${c.slug}: falta utmDefaults (obrigatório com lpPath)`);
+    } else {
+      for (const k of ["utm_source", "utm_medium", "utm_campaign"]) {
+        if (!String(utm[k] || "").trim()) {
+          errors.push(`${c.slug}: utmDefaults.${k} vazio`);
+        }
+      }
+      if (utm.utm_campaign && utm.utm_campaign !== c.slug) {
+        errors.push(
+          `${c.slug}: utmDefaults.utm_campaign deve ser igual ao slug ("${c.slug}")`,
+        );
+      }
     }
   }
 }

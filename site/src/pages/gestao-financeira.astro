@@ -1,8 +1,9 @@
 ---
 import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
-import { mqlCampaignSlug } from "../lib/mql-campaigns";
+import { mqlCampaignLpProps } from "../lib/mql-campaigns";
 
-const EVENTO = mqlCampaignSlug("intervalo_gf_2026_10");
+const CAMPAIGN_KEY = "intervalo_gf_2026_10";
+const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);
 import "../styles/gestao-financeira.css";
 
 const OBRIGADO = "/obrigado-gestao-financeira/";
@@ -20,6 +21,7 @@ const desafios = [
 
 <CampanhaIsolada
   leadEvento={EVENTO}
+  utmDefaults={UTM_DEFAULTS}
   title="Intervalo Técnico | Gestão Financeira com IA na Prática | Academia de Combate"
   description="Live gratuita de gestão financeira com IA na prática. 20 de outubro de 2026, 16h (horário de Brasília), online. Receita, custos, margem e caixa."
 >

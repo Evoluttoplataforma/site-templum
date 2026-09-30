@@ -11,6 +11,7 @@ const {
   noindex = true,
   schemas = [],
   leadEvento = "",
+  utmDefaults = null,
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -110,6 +111,13 @@ const allSchemas = schemas;
         try {
           var p = new URLSearchParams(location.search), cur = {}, now = Date.now();
           KEYS.forEach(function (k) { var v = p.get(k); if (v) cur[k] = v; });
+          var utmKeys = ["utm_source", "utm_medium", "utm_campaign"];
+          var hasUtmInUrl = utmKeys.some(function (k) { return p.get(k); });
+          if (!hasUtmInUrl && window.__TPL_UTM_DEFAULTS && typeof window.__TPL_UTM_DEFAULTS === "object") {
+            utmKeys.forEach(function (k) {
+              if (window.__TPL_UTM_DEFAULTS[k]) cur[k] = window.__TPL_UTM_DEFAULTS[k];
+            });
+          }
           if (!localStorage.getItem("tpl_first")) {
             localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "", first_seen: now }, cur)));
           }
@@ -190,6 +198,11 @@ const allSchemas = schemas;
     {leadEvento ? (
       <script is:inline define:vars={{ leadEvento }}>
         window.__TPL_LEAD_EVENTO = leadEvento;
+      </script>
+    ) : null}
+    {utmDefaults && Object.keys(utmDefaults).length ? (
+      <script is:inline define:vars={{ utmDefaults }}>
+        window.__TPL_UTM_DEFAULTS = utmDefaults;
       </script>
     ) : null}
 

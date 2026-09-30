@@ -26,3 +26,13 @@ export function getMqlCampaignByKey(key: MqlCampaignKey): MqlCampaign {
 export function mqlCampaignSlug(key: MqlCampaignKey): string {
   return getMqlCampaignByKey(key).slug;
 }
+
+/** Props padrão da LP de campanha (evento + UTMs; ver docs/campanhas-mql.md). */
+export function mqlCampaignLpProps(key: MqlCampaignKey) {
+  const c = getMqlCampaignByKey(key);
+  return {
+    evento: c.slug,
+    utmDefaults: c.utmDefaults ?? {},
+    lpPath: c.lpPath,
+  };
+}
