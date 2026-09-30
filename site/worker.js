@@ -403,6 +403,8 @@ async function handleLead(request, env, ctx) {
     meta_content_name: body.meta_content_name || "",
   };
 
+  applySegmentLpUtmDefaults(lead, body);
+
   const isIsca =
     lead.evento === "isca" ||
     lead.evento === "isca-resultado" ||
@@ -756,6 +758,30 @@ const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
 
 function mqlCampaignBySlug(slug) {
   return mqlCampaignsConfig.campaigns.find((c) => c.slug === slug);
+}
+
+/** LPs de segmento (evento "lead"): last-touch da página quando a URL não trouxe UTMs. */
+const SEGMENT_LP_UTM_DEFAULTS = {
+  "/iso-9001-advocacia-v2/": {
+    utm_source: "site",
+    utm_medium: "lp",
+    utm_campaign: "iso-9001-advocacia-v2",
+  },
+};
+
+function normLpPath(p) {
+  const s = String(p || "").trim();
+  if (!s) return "";
+  return s.endsWith("/") ? s : s + "/";
+}
+
+function applySegmentLpUtmDefaults(lead, body) {
+  const d = SEGMENT_LP_UTM_DEFAULTS[normLpPath(lead.pagina)];
+  if (!d || body?.utm_from_url === true) return lead;
+  for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
+    if (d[k] != null && String(d[k]).trim() !== "") lead[k] = String(d[k]).trim();
+  }
+  return lead;
 }
 
 function nutricaoTagsForMqlCampaign(slug, channel) {

@@ -24,6 +24,8 @@ const {
   // aconteceu em 10/09/2026 ao dar srcset ao hero: o celular baixou 89 KB + 36 KB.
   preloadImageSrcset = "",
   preloadImageSizes = "",
+  /** Last-touch na conversão quando a URL não traz utm_source/medium/campaign (igual CampanhaIsolada). */
+  utmDefaults = null,
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -211,6 +213,12 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       })();
     </script>
 
+    {utmDefaults && Object.keys(utmDefaults).length ? (
+      <script is:inline define:vars={{ utmDefaults }}>
+        window.__TPL_UTM_DEFAULTS = utmDefaults;
+      </script>
+    ) : null}
+
     <!-- Atribuição: UTMs + click-ids (Google/Meta) first/last-touch, fbp/fbc,
          client_id (visitante), session_id e session_attributes. window.__tplAttrib(). -->
     <script is:inline>
@@ -221,6 +229,13 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         try {
           var p = new URLSearchParams(location.search), cur = {}, now = Date.now();
           KEYS.forEach(function (k) { var v = p.get(k); if (v) cur[k] = v; });
+          var utmKeys = ["utm_source", "utm_medium", "utm_campaign"];
+          var hasUtmInUrl = utmKeys.some(function (k) { return p.get(k); });
+          if (!hasUtmInUrl && window.__TPL_UTM_DEFAULTS && typeof window.__TPL_UTM_DEFAULTS === "object") {
+            utmKeys.forEach(function (k) {
+              if (window.__TPL_UTM_DEFAULTS[k]) cur[k] = window.__TPL_UTM_DEFAULTS[k];
+            });
+          }
           if (!localStorage.getItem("tpl_first")) {
             localStorage.setItem("tpl_first", JSON.stringify(Object.assign({ landing: location.pathname, referrer: document.referrer || "", first_seen: now }, cur)));
           }
@@ -356,9 +371,16 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual
           var _attrib = (window.__tplAttrib && window.__tplAttrib()) || {};
           var _urlP = new URLSearchParams(location.search);
+          var _utmKeys = ["utm_source", "utm_medium", "utm_campaign"];
+          var _hasUtmInUrl = _utmKeys.some(function (k) { return _urlP.get(k); });
           ["utm_source","utm_medium","utm_campaign","utm_term","utm_content",
            "gclid","fbclid","gad_source","gad_campaignid","msclkid","ttclid","gbraid","wbraid"
           ].forEach(function(k) { if (!_attrib[k] && _urlP.get(k)) _attrib[k] = _urlP.get(k); });
+          if (!_hasUtmInUrl && window.__TPL_UTM_DEFAULTS && typeof window.__TPL_UTM_DEFAULTS === "object") {
+            ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function (k) {
+              if (window.__TPL_UTM_DEFAULTS[k]) _attrib[k] = window.__TPL_UTM_DEFAULTS[k];
+            });
+          }
           fetch("/api/lead", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -370,6 +392,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               faturamento: d.faturamento || "",
               evento: evt, pagina: location.pathname,
+              utm_from_url: _hasUtmInUrl,
               meta_event_id: leadEventId, meta_content_name: contentName,
             }, _attrib)),
           }).then(function (r) {

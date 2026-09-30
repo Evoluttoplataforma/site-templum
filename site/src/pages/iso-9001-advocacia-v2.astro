@@ -36,6 +36,12 @@ const schemaFaq = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
+
+const UTM_DEFAULTS = {
+  utm_source: "site",
+  utm_medium: "lp",
+  utm_campaign: "iso-9001-advocacia-v2",
+};
 ---
 
 <Base
@@ -44,6 +50,7 @@ const schemaFaq = {
   formCta="#diagnostico"
   formCtaMobile="#diagnostico"
   schemas={[schemaService, schemaFaq]}
+  utmDefaults={UTM_DEFAULTS}
 >
 <section class="section section--navy hero" id="diagnostico">
     <div class="container xl form-split">
