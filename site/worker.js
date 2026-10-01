@@ -2,7 +2,7 @@
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
 //                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
-//                             (tag "webinar 9001:2026") via saveToMqlWebinar.
+//                             (tag "webinar 9001:2026") via saveToMqlWebinar (ORBIT_CRM_API_KEY).
 //                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao MQL Novo Lead
 //                             com tags do evento; dedup só no MQL (não reutiliza Teste Igor).
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
@@ -72,6 +72,20 @@ export default {
     const url = new URL(request.url);
 
     // Rotas de API têm prioridade — ANTES do redirect www, para não perder POST body.
+    if (url.pathname === "/api/pesquisa-gf") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handlePesquisaGf(request, env);
+    }
     if (url.pathname === "/api/lead") {
       if (request.method === "OPTIONS") {
         return new Response(null, {
@@ -756,6 +770,8 @@ const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
 const ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA = "122cd261-a6b9-42be-a498-655e4c6346c1";
 const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
+const WEBINAR_MQL_TAG_SERIE = "webinar 9001:2026";
+const WEBINAR_MQL_SOURCE = "Webinar ISO 9001";
 
 function mqlCampaignBySlug(slug) {
   return mqlCampaignsConfig.campaigns.find((c) => c.slug === slug);
@@ -939,42 +955,150 @@ async function saveToOrbit(lead, env, dest) {
   }
 }
 
-// Webinar ISO 9001 → funil MQL (não INBOUND). Dedup mora na edge function.
-async function saveToMqlWebinar(lead, env) {
-  if (!String(lead.evento || "").startsWith("webinar")) {
-    return { ok: true, skipped: true, reason: "not_webinar" };
-  }
+function webinarMqlTags(evento) {
+  const tags = [WEBINAR_MQL_TAG_SERIE];
+  const ev = String(evento || "").trim();
+  if (ev && ev.length <= 32 && ev !== WEBINAR_MQL_TAG_SERIE) tags.push(ev);
+  return tags;
+}
+
+function webinarMqlNote(lead) {
+  const evento = String(lead.evento || "");
+  const pagina = String(lead.pagina || "");
+  const utm = [lead.utm_source, lead.utm_medium, lead.utm_campaign].filter(Boolean).join(" / ");
+  return [
+    "Webinar ISO 9001: " + evento,
+    pagina ? "Página: " + pagina : "",
+    utm ? "UTM: " + utm : "",
+  ].filter(Boolean).join("\n");
+}
+
+function webinarMqlCustomFields(lead) {
+  const cf = {};
+  if (lead.pagina) cf[ORBIT_FIELDS.pagina] = String(lead.pagina);
+  if (lead.cargo) cf[ORBIT_FIELDS.cargo] = String(lead.cargo);
+  if (lead.utm_source) cf[ORBIT_FIELDS.utm_source] = String(lead.utm_source);
+  if (lead.utm_medium) cf[ORBIT_FIELDS.utm_medium] = String(lead.utm_medium);
+  if (lead.utm_campaign) cf[ORBIT_FIELDS.utm_campaign] = String(lead.utm_campaign);
+  if (lead.utm_term) cf[ORBIT_FIELDS.utm_term] = String(lead.utm_term);
+  if (lead.utm_content) cf[ORBIT_FIELDS.utm_content] = String(lead.utm_content);
+  return cf;
+}
+
+function mergeWebinarNotes(prev, incoming) {
+  const p = String(prev || "").trim();
+  const n = String(incoming || "").trim();
+  if (!n) return p;
+  if (!p) return n;
+  if (p.indexOf(n) !== -1) return p;
+  return p + "\n\n" + n;
+}
+
+async function persistWebinarMqlSync(env, row) {
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
   const sbKey = env.SUPABASE_SERVICE_KEY;
-  if (!sbKey) return { ok: false, reason: "not_configured" };
+  if (!sbKey || !row.email) return;
   try {
-    const r = await fetch(`${sbUrl}/functions/v1/upsert-webinar-mql`, {
+    await fetch(`${sbUrl}/rest/v1/webinar_mql_sync`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         authorization: "Bearer " + sbKey,
         apikey: sbKey,
+        Prefer: "resolution=merge-duplicates",
       },
       body: JSON.stringify({
-        nome: lead.nome,
-        email: lead.email,
-        telefone: lead.telefone,
-        empresa: lead.empresa,
-        cargo: lead.cargo,
-        evento: lead.evento,
-        pagina: lead.pagina,
-        utm_source: lead.utm_source,
-        utm_medium: lead.utm_medium,
-        utm_campaign: lead.utm_campaign,
-        utm_term: lead.utm_term,
-        utm_content: lead.utm_content,
+        email: String(row.email).trim().toLowerCase(),
+        orbit_lead_id: row.orbit_lead_id || null,
+        action: row.action,
+        pipeline_id: ORBIT_MQL_PIPELINE_ID,
+        events: row.events || [],
+        detail: row.detail || null,
+        synced_at: new Date().toISOString(),
       }),
     });
-    const d = await r.json().catch(() => ({}));
-    if (!r.ok || d.ok === false) {
-      return { ok: false, error: d.error || d.reason || ("http_" + r.status) };
+  } catch (_) {
+    /* auditoria; não bloqueia CRM */
+  }
+}
+
+// Webinar ISO 9001 → funil MQL (não INBOUND). Regras em site/docs/campanhas-mql.md
+async function saveToMqlWebinar(lead, env) {
+  if (!String(lead.evento || "").startsWith("webinar")) {
+    return { ok: true, skipped: true, reason: "not_webinar" };
+  }
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const email = String(lead.email || "").trim().toLowerCase();
+  if (!email || email.indexOf("@") === -1) return { ok: false, error: "invalid_email" };
+
+  const tags = webinarMqlTags(lead.evento);
+  const note = webinarMqlNote(lead);
+  const cf = webinarMqlCustomFields(lead);
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+
+  try {
+    const found = await crmFindLeadsForIsca(token, email, lead.telefone);
+    const existingMql = pickOpenMqlLead(found);
+
+    if (existingMql) {
+      const patch = {
+        tags: mergeLeadTags(existingMql.tags, tags),
+        notes: mergeWebinarNotes(existingMql.notes || existingMql.note, note),
+      };
+      if (Object.keys(cf).length) patch.custom_fields = cf;
+      const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: String(e).slice(0, 140), lead_id: existingMql.id };
+      }
+      await persistWebinarMqlSync(env, {
+        email,
+        orbit_lead_id: existingMql.id,
+        action: "tagged_mql",
+        events: [String(lead.evento || "")],
+        detail: "open_mql",
+      });
+      return { ok: true, action: "tagged_mql", orbit_lead_id: existingMql.id, pipeline_id: ORBIT_MQL_PIPELINE_ID };
     }
-    return d;
+
+    const body = {
+      title: String(lead.nome || lead.empresa || email),
+      pipeline_id: ORBIT_MQL_PIPELINE_ID,
+      stage_id: ORBIT_MQL_STAGE_NOVO,
+      contact_name: String(lead.nome || email),
+      contact_email: email,
+      source: WEBINAR_MQL_SOURCE,
+      tags,
+      notes: note,
+    };
+    if (lead.telefone) body.contact_phone = lead.telefone;
+    if (lead.empresa) body.company_name = lead.empresa;
+    if (Object.keys(cf).length) body.custom_fields = cf;
+
+    const r = await orbitPostLead(headers, body);
+    if (!r || !r.ok) {
+      const e = r ? await r.text().catch(() => "") : "fetch_failed";
+      return { ok: false, error: String(e).slice(0, 140) };
+    }
+    const d = await r.json().catch(() => ({}));
+    const orbit_lead_id = (d.data && d.data.id) || d.id || null;
+    await persistWebinarMqlSync(env, {
+      email,
+      orbit_lead_id,
+      action: "created",
+      events: [String(lead.evento || "")],
+    });
+    return { ok: true, action: "created", orbit_lead_id, pipeline_id: ORBIT_MQL_PIPELINE_ID };
   } catch (e) {
     return { ok: false, error: "fetch_failed" };
   }
@@ -1166,6 +1290,7 @@ function mqlE0WebhookSecret(pathKey, env) {
   const gfPaths = new Set([
     "intervalo-tecnico-gestao-financeira-e0",
     "wh_1a3cf478c5404112",
+    "wh_d916fe011ef64d41",
   ]);
   if (gfPaths.has(pathKey) && env.INTERVALO_E0_FLUXOS_SECRET) {
     return env.INTERVALO_E0_FLUXOS_SECRET;
@@ -2171,6 +2296,78 @@ function timingSafeEqual(a, b) {
   let out = 0;
   for (let i = 0; i < x.length; i++) out |= x.charCodeAt(i) ^ y.charCodeAt(i);
   return out === 0;
+}
+
+const PESQUISA_GF_TAG = "pesquisa-gf:respondida";
+const PESQUISA_GF_FIELDS = new Set([
+  "cf_gf_conhece_templum_os",
+  "cf_gf_controle_financeiro",
+  "cf_gf_atrapalha_numeros",
+  "cf_gf_quer_sair_sabendo",
+  "cf_gf_prioridade_meses",
+  "cf_gf_faixa_receita",
+  "cf_gf_investe_ferramenta",
+  "cf_gf_quando_solucao",
+  "cf_gf_comentario_live",
+]);
+
+function pesquisaGfValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((v) => String(v || "").trim()).filter(Boolean).join(", ").slice(0, 4000);
+  }
+  return String(value || "").trim().slice(0, 4000);
+}
+
+async function handlePesquisaGf(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch (_) {
+    return corsJson({ ok: false, error: "invalid_json" }, 400);
+  }
+  const leadId = String(body?.lead_id || "").trim();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) {
+    return corsJson({ ok: false, error: "lead_id" }, 400);
+  }
+  const incoming = body?.answers && typeof body.answers === "object" ? body.answers : {};
+  const custom = {};
+  for (const [key, value] of Object.entries(incoming)) {
+    if (!PESQUISA_GF_FIELDS.has(key)) continue;
+    const val = pesquisaGfValue(value);
+    if (val) custom[key] = val;
+  }
+  if (!Object.keys(custom).length) return corsJson({ ok: false, error: "empty" }, 400);
+
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return corsJson({ ok: false, error: "not_configured" }, 500);
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+  try {
+    const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers });
+    if (!get.ok) return corsJson({ ok: false, error: "lead_not_found" }, 404);
+    const payload = await get.json().catch(() => ({}));
+    const lead = payload.data || payload.lead || payload;
+    const prev = lead.custom_fields && typeof lead.custom_fields === "object" ? lead.custom_fields : null;
+    const patch = {
+      tags: mergeLeadTags(lead.tags, [PESQUISA_GF_TAG]),
+      custom_fields: prev ? { ...prev, ...custom } : custom,
+    };
+    const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) {
+      const e = await res.text().catch(() => "");
+      return corsJson({ ok: false, error: String(e).slice(0, 180) }, 502);
+    }
+    return corsJson({ ok: true, lead_id: leadId });
+  } catch (_) {
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
+  }
 }
 
 function mergeLeadTags(existing, incoming) {

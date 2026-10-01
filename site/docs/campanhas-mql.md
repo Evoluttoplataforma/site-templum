@@ -12,11 +12,65 @@ Inscrições cadastradas no JSON:
 
 Não enviar inscrição de evento direto ao INBOUND.
 
-### Legado (não alterar)
-
-- Webinars `webinar-*` → edge `upsert-webinar-mql`
+- Webinars `webinar-*` → **`saveToMqlWebinar`** no Worker (mesma chave `ORBIT_CRM_API_KEY` das campanhas)
 - PE2027, iscas, formulário comercial → regras próprias
 - Campanhas **novas** (template + JSON) → só MQL
+
+## Webinars (`evento` começa com `webinar`)
+
+Regra de produto (out/2026): **um card MQL aberto por contato**, participação acumulada em **tags + notas**, sem mandar webinar para INBOUND.
+
+### Funil e origem
+
+| Item | Valor |
+|------|--------|
+| Funil | **MQL** (`519a684f-c522-4aeb-b14d-371986de41c6`) |
+| Etapa na criação | **Novo Lead** |
+| Origem no CRM | `Webinar ISO 9001` |
+| Tag da série | `webinar 9001:2026` (fixa enquanto durar a série) |
+| Tag do evento | igual ao campo `evento` da LP (ex.: `webinar-foco-cliente-0710`), **máx. 32 caracteres** |
+
+Mailchimp e ManyChat seguem o fluxo normal do Worker; CRM webinar **não** usa Pipedrive nem funil INBOUND.
+
+### Dedup (quando reutiliza o mesmo card)
+
+1. Busca lead por **e-mail** (e por **telefone**, se bater 10+ dígitos).
+2. **Reutiliza** só card **aberto** no funil **MQL** (PATCH: soma tags, append de nota, UTMs/página da última conversão nos CFs).
+3. Se **não** houver card MQL aberto → **POST** novo card em Novo Lead.
+
+### Quando pode existir mais de um card MQL (comportamento esperado)
+
+| Situação | O que acontece |
+|----------|----------------|
+| Card MQL anterior **ganho, perdido ou fechado** | Próxima inscrição **cria novo** card MQL |
+| Só existe card aberto em **outro funil** (ex.: INBOUND) | **Cria** card no MQL (webinar não reutiliza fora do MQL) |
+| E-mails diferentes ou typo | Dois cards |
+| Slug `evento` **> 32 caracteres** | Tag do evento **não** entra no CRM; a nota ainda traz o `evento` completo |
+
+Não prometer “nunca duplica”: prometer **no máximo um card MQL aberto reaproveitado** enquanto o negócio estiver aberto no MQL.
+
+### Histórico no card
+
+- **Tags:** cada live soma a tag do `evento` (e mantém `webinar 9001:2026`).
+- **Notas:** bloco por inscrição (`Webinar ISO 9001: …`, página, UTM); re-inscrição **append** se o texto for novo.
+- **Campos personalizados:** refletem a **última** conversão (página, cargo, UTMs), não uma lista histórica.
+- **Timeline** do Orbit (e-mails Fluxos, mudança de etapa): vem das automações, não do PATCH de inscrição.
+
+### Auditoria Supabase
+
+Tabela `webinar_mql_sync` (1 linha por e-mail): `orbit_lead_id`, `action` (`created` | `tagged_mql`), `events`, `synced_at`. Fonte de verdade comercial = **tags e notas no card**.
+
+### Backfill de inscrições antigas
+
+- Edge `upsert-webinar-mql` (modos `backfill` / `pending_since`) ou script `site/scripts/sync-webinar-mql-pending.mjs`.
+- Operacional no Worker: `GET /api/webinar-mql-backfill?token=LEADS_PASSWORD&limit=80` (repetir até zerar pendências).
+
+### Checklist: nova live webinar
+
+1. LP com `evento=webinar-…` (slug **≤ 32 chars** para tag CRM).
+2. Tag Mailchimp / automação alinhada ao mesmo slug.
+3. Após deploy do Worker, testar inscrição → card MQL Novo Lead + tags série + evento.
+4. Re-inscrição de teste com **mesmo e-mail** → **mesmo** card, tag extra se for outro `evento`.
 
 ## Fonte única: `config/mql-campaigns.json`
 
@@ -80,16 +134,16 @@ Referência GF: `scripts/intervalo-e0-crm-automation-reference.json`
 | HTML do e-mail | `scripts/intervalo-e0-email-body.html` |
 | Gerar patch Orbit | `node scripts/build-intervalo-e0-fluxos-graph.mjs` → `node scripts/build-intervalo-e0-ac-only.mjs` |
 | Publicar automação | Orbit MCP `update_crm_automation` com `intervalo-e0-ac-only.json` **ou** `ORBIT_CRM_API_KEY=... node scripts/apply-intervalo-e0-ac-only.mjs` |
-| Pesquisa | URL no E0 com `?email={contact_email}&lead_id={id}` (ver `survey` no JSON da campanha). Campos ocultos na pesquisa só **antes** da 1ª resposta; se já houver resposta, duplicar iteração no Orbit. |
+| Pesquisa | Botão do E0: `https://templum.com.br/gestao-financeira/pesquisa/?lead_id={id}`. O Worker faz PATCH no mesmo lead (`POST /api/pesquisa-gf`). |
 
-### Pesquisa pública ↔ lead (rastreio)
+### Pesquisa no card
 
-1. Cadastre `survey.publicUrl` + params no `mql-campaigns.json`.
-2. No E0, o botão usa e-mail e id do lead (merge da caixa Orbit).
-3. Na pesquisa Orbit: perguntas ocultas `email_inscricao` e `lead_id` com prefill da query (ou nova iteração se já existir resposta).
-4. Conferência: resposta no Orbit deve mostrar e-mail igual ao `contact_email` do card MQL.
+1. `survey.publicUrl` no `mql-campaigns.json` aponta para `/gestao-financeira/pesquisa/`.
+2. O E0 manda `lead_id={id}`. A página não pede nome, e-mail nem telefone.
+3. `POST /api/pesquisa-gf` lê o lead, junta os 9 campos em `custom_fields` e acrescenta a tag `pesquisa-gf:respondida`. Não abre card novo.
+4. A automação de módulo `8d63ade1-5b6e-4460-9ad0-aa440e34c24b` fica pausada. Ela não copia as respostas para o card.
 
-Automação GF: `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inbound`** · path `wh_1a3cf478c5404112` (ver `get_crm_inbound_webhooks`) · cooldown 24h · sent tag `e0:intervalo-gf-2026:enviado`.
+Automação GF (E0 e-mail): `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inbound`** · path **`wh_d916fe011ef64d41`** · URL `https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound/wh_d916fe011ef64d41` (também na descrição da automação; o painel do gatilho não mostra o endereço) · POST `{ "lead_id": "<uuid do lead MQL>" }` + header **`X-Fluxos-Secret`** · cooldown **0** · sent tag `e0:intervalo-gf-2026:enviado`.
 
 ## Checklist: teste de inscrição
 
@@ -114,6 +168,7 @@ Automação GF: `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inb
 ## Worker
 
 - Importa `config/mql-campaigns.json`.
+- `webinar-*` → `saveToMqlWebinar` (**ORBIT_CRM_API_KEY**, regras na seção Webinars acima).
 - Slugs do JSON → `isInscricaoEvento` → `saveToMqlInscricao` (**somente funil MQL**, sem INBOUND).
 - Dedup: cards **abertos no MQL** com o mesmo e-mail (padrão).
 - E0: após CRM ok, Worker POST no **webhook inbound** (`fluxos.e0InboundPathKey`); secret `INTERVALO_E0_FLUXOS_SECRET` ou `MQL_E0_WEBHOOK_SECRETS`.
