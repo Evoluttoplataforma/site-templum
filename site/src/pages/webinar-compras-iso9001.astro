@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:shop-bold",
+    t: "O que entra no 8.4 (e o que não é \"só compras\")",
+    d: "Processos, produtos e serviços fornecidos externamente: critérios para avaliar, selecionar, monitorar e reavaliar fornecedores conforme impacto no SGQ.",
+  },
+  {
+    icon: "solar:clipboard-list-bold",
+    t: "Critérios de seleção e avaliação",
+    d: "Como definir o mínimo exigido por tipo de fornecedor, registrar aprovação e provar reavaliação periódica sem planilha gigante que ninguém atualiza.",
+  },
+  {
+    icon: "solar:box-bold",
+    t: "Verificação na entrada e controle na operação",
+    d: "Inspeção na recepção, liberação para uso e o que fazer quando o fornecedor entrega fora de especificação: registro, comunicação e ação.",
+  },
+  {
+    icon: "solar:hand-shake-bold",
+    t: "Fornecedor crítico × fornecedor commodity",
+    d: "Rigor proporcional ao risco: quando exigir certificado, auditoria de segunda parte ou contrato detalhado, e quando simplificar sem perder rastreabilidade.",
+  },
+];
+
+const sinais = [
+  "Qualquer fornecedor novo entra no sistema sem critério documentado.",
+  "Lista de fornecedores aprovados existe, mas ninguém reavalia há anos.",
+  "Material chega errado e a solução é \"trocar depois\" sem registrar não conformidade.",
+  "Compras escolhe pelo preço e a qualidade só descobre o impacto na linha.",
+  "Contrato com fornecedor não menciona requisitos do produto ou serviço.",
+  "Auditor pede evidência de avaliação e só aparece nota fiscal.",
+];
+---
+
+<WebinarLp
+  slug="webinar-compras-iso9001"
+  metaTitle="Webinar Gratuito — Compras (Requisito 8.4) | ISO 9001:2026 | Templum"
+  metaDescription="Avaliação, seleção e controle de fornecedores na ISO 9001:2026 (requisito 8.4), na prática. Quarta, 21 de outubro às 16h, com Daniela Albuquerque."
+  eventName="Requisito 8.4 — Compras e Fornecedores | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisito 8.4"
+  h1Destaque="Compras"
+  h1Resto="e fornecedores sob controle"
+  h1Sub="Avaliação, seleção e controle do externamente provido — ISO 9001:2026."
+  dataFull="Quarta, 21 de Outubro de 2026"
+  dataCurta="21 Out 2026"
+  dataBarra="Quarta, 21 de Outubro"
+  startIso="2026-10-21T16:00:00-03:00"
+  endIso="2026-10-21T17:00:00-03:00"
+  desc="Fornecedor mal controlado derruba qualidade na sua casa. Neste webinar prático você vai entender o requisito 8.4 da ISO 9001:2026, definir critérios proporcionais ao risco e sair com um modelo de avaliação e reavaliação que a operação consegue manter."
+  evento="webinar-compras-2110"
+  obrigado="/obrigado-webinar-compras"
+  topicosIntro="Um webinar 100% prático sobre compras e fornecedores — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Seus fornecedores são parceiros do SGQ ou"
+  sinaisTituloEm="pontos cegos de risco?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela equilibra exigência de auditoria com a realidade de quem compra todo dia sem burocracia inútil."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 21 de outubro às 16h. Basta se inscrever."
+/>

@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:users-group-rounded-bold",
+    t: "Foco no cliente (5.1): da frase de efeito à operação",
+    d: "O que a ISO 9001:2026 exige de verdade sobre atender requisitos do cliente e cumprir obrigações legais: onde a maioria para no quadro da recepção e onde o auditor procura evidência.",
+  },
+  {
+    icon: "solar:document-text-bold",
+    t: "Política da qualidade (5.2): curta, comunicada e viva",
+    d: "Conteúdo mínimo, alinhamento com contexto e direção, disponibilidade para quem precisa e revisão quando a empresa muda. Como evitar política genérica que ninguém usa no dia a dia.",
+  },
+  {
+    icon: "solar:target-bold",
+    t: "Objetivos da qualidade (6.2): mensuráveis e rastreáveis",
+    d: "Como definir objetivo coerente com a política, com meta, prazo, responsável e plano para alcançar. A linha que liga política → objetivo → indicador (9.1) sem quebrar na auditoria.",
+  },
+  {
+    icon: "solar:chat-round-like-bold",
+    t: "Satisfação e feedback (9.1.2): ouvir sem virar pesquisa decorativa",
+    d: "Formas de monitorar percepção do cliente, registrar o que foi ouvido e transformar reclamação em melhoria do sistema, não só resposta pontual ao e-mail.",
+  },
+];
+
+const sinais = [
+  "A política da qualidade está na parede, mas ninguém na operação sabe citar uma frase.",
+  "Objetivo da qualidade existe só no manual e não tem meta nem dono.",
+  "Reclamação de cliente vira \"caso isolado\" e não entra no SGQ.",
+  "Indicador de satisfação é preenchido uma vez por ano, na véspera da auditoria.",
+  "A direção fala em foco no cliente, mas o processo interno ignora prazo e requisito acordado.",
+  "Mudou a estratégia da empresa e a política da qualidade continua igual desde a última certificação.",
+];
+---
+
+<WebinarLp
+  slug="webinar-foco-cliente-politica-objetivos-iso9001"
+  metaTitle="Webinar Gratuito — Foco no Cliente, Política e Objetivos (5.1, 5.2, 6.2) | ISO 9001:2026 | Templum"
+  metaDescription="Política da qualidade, objetivos mensuráveis e foco no cliente na ISO 9001:2026. Quarta, 7 de outubro às 16h, com Daniela Albuquerque."
+  eventName="Requisitos 5.1, 5.2 e 6.2 — Foco no Cliente, Política e Objetivos | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisitos 5.1, 5.2 e 6.2"
+  h1Destaque="Foco no Cliente"
+  h1Resto="Política e Objetivos"
+  h1Sub="Política da qualidade, objetivos mensuráveis e cliente no centro — ISO 9001:2026."
+  dataFull="Quarta, 7 de Outubro de 2026"
+  dataCurta="07 Out 2026"
+  dataBarra="Quarta, 7 de Outubro"
+  startIso="2026-10-07T16:00:00-03:00"
+  endIso="2026-10-07T17:00:00-03:00"
+  desc="Política genérica, objetivo sem meta e cliente que só aparece na pesquisa anual não sustentam auditoria nem gestão. Neste webinar prático você vai alinhar foco no cliente, política da qualidade e objetivos da ISO 9001:2026 na sequência que o auditor rastreia, e sair com um rascunho aplicável à sua empresa."
+  evento="webinar-foco-cliente-0710"
+  obrigado="/obrigado-webinar-foco-cliente-politica-objetivos"
+  topicosIntro="Um webinar 100% prático sobre liderança, política e planejamento da qualidade — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Sua política e seus objetivos guiam a operação ou"
+  sinaisTituloEm="só enfeitam o SGQ?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela ajuda a tirar política e objetivo do papel e conectar com o que o cliente sente na entrega."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 7 de outubro às 16h. Basta se inscrever."
+/>

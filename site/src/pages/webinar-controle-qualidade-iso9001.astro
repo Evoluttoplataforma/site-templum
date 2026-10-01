@@ -1,0 +1,61 @@
+---
+import WebinarLp from "../layouts/WebinarLp.astro";
+
+const topicos = [
+  {
+    icon: "solar:settings-bold",
+    t: "Planejamento e controle operacional (8.1)",
+    d: "Como definir critérios de aceitação, recursos e controles necessários antes de produzir ou prestar serviço, incluindo saídas planejadas e mudanças controladas.",
+  },
+  {
+    icon: "solar:shield-check-bold",
+    t: "Produção e prestação (8.5.1) e rastreabilidade (8.5.5)",
+    d: "Condições controladas, validação quando o resultado não pode ser verificado depois, identificação durante o processo e rastreabilidade quando a norma ou o cliente exigem.",
+  },
+  {
+    icon: "solar:scale-bold",
+    t: "Equipamentos de medição (7.1.5)",
+    d: "Calibração ou verificação, identificação do status, proteção e registro: o elo entre medição confiável e decisão de liberar ou refugar.",
+  },
+  {
+    icon: "solar:check-circle-bold",
+    t: "Liberação, não conforme e análise (8.6, 8.7 e 9.1)",
+    d: "Quando liberar produto ou serviço, como tratar saída não conforme sem esconder defeito, e como usar medição e análise para provar que o controle funciona.",
+  },
+];
+
+const sinais = [
+  "Produto segue na linha com desvio \"só dessa vez\" e sem registro.",
+  "Liberação final é assinatura no papel sem critério objetivo.",
+  "Instrumento de medição vencido ainda está na bancada.",
+  "Não conforme é retrabalhado no canto sem identificação clara.",
+  "Rastreabilidade só existe quando o cliente reclama.",
+  "Dado de qualidade é anotado e nunca vira análise ou decisão.",
+];
+---
+
+<WebinarLp
+  slug="webinar-controle-qualidade-iso9001"
+  metaTitle="Webinar Gratuito — Controle de Qualidade (8.1, 8.5, 8.6, 8.7, 7.1.5, 9.1) | ISO 9001:2026 | Templum"
+  metaDescription="Planejamento operacional, produção, medição, liberação e não conforme na ISO 9001:2026. Quarta, 28 de outubro às 16h, com Daniela Albuquerque."
+  eventName="Controle de Qualidade — Requisitos 8.1, 8.5.1, 8.5.5, 8.6, 8.7, 7.1.5 e 9.1 | ISO 9001:2026 — Templum Consultoria"
+  requisito="Requisitos 8.1, 8.5.1, 8.5.5, 8.6, 8.7, 7.1.5 e 9.1"
+  h1Destaque="Controle de Qualidade"
+  h1Resto="na operação"
+  h1Sub="Planejamento, produção, medição, liberação e análise — ISO 9001:2026."
+  dataFull="Quarta, 28 de Outubro de 2026"
+  dataCurta="28 Out 2026"
+  dataBarra="Quarta, 28 de Outubro"
+  startIso="2026-10-28T16:00:00-03:00"
+  endIso="2026-10-28T17:00:00-03:00"
+  desc="Controle de qualidade não é checklist na saída: é planejar critérios, executar com condições controladas, medir com equipamento confiável, liberar com evidência e tratar não conforme sem esconder. Neste webinar prático você conecta os requisitos 8.1, 8.5, 8.6, 8.7, 7.1.5 e 9.1 da ISO 9001:2026 no fluxo real da operação."
+  evento="webinar-controle-qualidade-2810"
+  obrigado="/obrigado-webinar-controle-qualidade"
+  topicosIntro="Um webinar 100% prático sobre controle na produção e prestação de serviços — com quem certifica e audita há mais de 15 anos."
+  topicos={topicos}
+  sinaisTitulo="Sua operação controla qualidade ou"
+  sinaisTituloEm="só apaga incêndio?"
+  sinais={sinais}
+  bio="Com mais de 15 anos dedicados à implementação e auditoria de normas ISO, Daniela já conduziu centenas de empresas à certificação em todo o Brasil. Sócia Diretora da Templum, ela traduz requisitos de produção e medição em rotina que chão de fábrica e auditoria aceitam."
+  ctaTexto="Gratuito. Ao vivo no YouTube. Dia 28 de outubro às 16h. Basta se inscrever."
+/>
