@@ -31,7 +31,7 @@
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
-//   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook GF (path intervalo-tecnico-gestao-financeira-e0)
+//   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook GF (path em fluxos.e0InboundPathKey)
 //   MQL_E0_WEBHOOK_SECRETS (SECRETO, opcional) JSON { "<path_key>": "<secret>", ... } para várias campanhas E0
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
@@ -1163,7 +1163,11 @@ function mqlE0WebhookSecret(pathKey, env) {
       /* fallback below */
     }
   }
-  if (pathKey === "intervalo-tecnico-gestao-financeira-e0" && env.INTERVALO_E0_FLUXOS_SECRET) {
+  const gfPaths = new Set([
+    "intervalo-tecnico-gestao-financeira-e0",
+    "wh_1a3cf478c5404112",
+  ]);
+  if (gfPaths.has(pathKey) && env.INTERVALO_E0_FLUXOS_SECRET) {
     return env.INTERVALO_E0_FLUXOS_SECRET;
   }
   return "";

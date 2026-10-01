@@ -24,7 +24,7 @@
         "leadIdQueryParam": "lead_id"
       },
       "fluxos": {
-        "e0InboundPathKey": "intervalo-tecnico-gestao-financeira-e0",
+        "e0InboundPathKey": "wh_1a3cf478c5404112",
         "e0PrimaryTag": "intervalo técnico",
         "e0SentTag": "e0:intervalo-gf-2026:enviado",
         "automationId": "eb0a9536-7037-48fe-8b1c-f1a828d499ae"

@@ -89,7 +89,7 @@ Referência GF: `scripts/intervalo-e0-crm-automation-reference.json`
 3. Na pesquisa Orbit: perguntas ocultas `email_inscricao` e `lead_id` com prefill da query (ou nova iteração se já existir resposta).
 4. Conferência: resposta no Orbit deve mostrar e-mail igual ao `contact_email` do card MQL.
 
-Automação GF: `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inbound`** · path `intervalo-tecnico-gestao-financeira-e0` · cooldown 24h · sent tag `e0:intervalo-gf-2026:enviado`.
+Automação GF: `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inbound`** · path `wh_1a3cf478c5404112` (ver `get_crm_inbound_webhooks`) · cooldown 24h · sent tag `e0:intervalo-gf-2026:enviado`.
 
 ## Checklist: teste de inscrição
 
