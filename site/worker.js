@@ -250,6 +250,43 @@ function iscaNormaFromSlug(slug) {
   return "";
 }
 
+function normaTagsFromPagina(pagina) {
+  const s = String(pagina || "").toLowerCase();
+  if (!s) return [];
+  const tags = [];
+  const add = (tag) => {
+    if (tag && !tags.includes(tag)) tags.push(tag);
+  };
+  if (
+    s.includes("iso-9001") ||
+    s.includes("iso9001") ||
+    s.includes("webinar-etica-cultura-qualidade") ||
+    s.includes("tartaruga") ||
+    s.includes("nao-conform")
+  ) add("ISO 9001");
+  if (s.includes("iso-14001") || s.includes("iso14001")) add("ISO 14001");
+  if (s.includes("iso-27001") || s.includes("iso27001")) add("ISO 27001");
+  if (s.includes("iso-45001") || s.includes("iso45001")) add("ISO 45001");
+  if (s.includes("iso-42001") || s.includes("iso42001")) add("ISO 42001");
+  if (s.includes("iso-37001") || s.includes("iso37001")) add("ISO 37001");
+  if (s.includes("pbqp")) add("PBQP-H");
+  if (s.includes("pqta")) add("PQTA");
+  if (s.includes("fssc") || s.includes("22000")) add("FSSC 22000");
+  if (s.includes("haccp")) add("HACCP");
+  if (s.includes("sassmaq")) add("SASSMAQ");
+  if (s.includes("lgpd")) add("LGPD");
+  if (s.includes("esg")) add("ESG");
+  if (s.includes("geric")) add("GERIC");
+  if (s.includes("gestao-financeira")) add("gestão financeira");
+  if (s.includes("gestao-ia-pratica")) add("Parceria LSC One");
+  if (s.includes("mapeamento-sgi") || s.includes("/sgi")) add("SGI");
+  return tags;
+}
+
+function withNormaTags(tags, pagina) {
+  return [...new Set([...(tags || []).filter(Boolean), ...normaTagsFromPagina(pagina)])];
+}
+
 function orbitTag32(value) {
   return String(value || "").trim().slice(0, 32);
 }
@@ -257,6 +294,7 @@ function orbitTag32(value) {
 function iscaOrbitTags(lead) {
   const tags = ["isca"];
   if (lead.norma) tags.push(orbitTag32(lead.norma));
+  for (const t of normaTagsFromPagina(lead.pagina)) tags.push(t);
   if (lead.isca) tags.push(orbitTag32(lead.isca));
   if (lead.evento === "isca-resultado") tags.push("diagnostico");
   return [...new Set(tags.filter(Boolean))];
@@ -901,8 +939,8 @@ async function saveToOrbit(lead, env, dest) {
   if (notes) body.notes = notes;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
-  const orbitTags = ORBIT_EVENTO_TAGS[lead.evento];
-  if (orbitTags && orbitTags.length) body.tags = orbitTags;
+  const orbitTags = withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina);
+  if (orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
 
@@ -1033,7 +1071,7 @@ async function saveToMqlWebinar(lead, env) {
   const email = String(lead.email || "").trim().toLowerCase();
   if (!email || email.indexOf("@") === -1) return { ok: false, error: "invalid_email" };
 
-  const tags = webinarMqlTags(lead.evento);
+  const tags = withNormaTags(webinarMqlTags(lead.evento), lead.pagina);
   const note = webinarMqlNote(lead);
   const cf = webinarMqlCustomFields(lead);
   const headers = {
@@ -1330,7 +1368,7 @@ async function saveToMqlInscricao(lead, env) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
-  const tags = cfg.tags;
+  const tags = withNormaTags(cfg.tags, lead.pagina);
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
 
   try {
