@@ -2,8 +2,6 @@
 // LP da atualização SASSMAQ 4.0.
 // A página /consultoria/sassmaq/ e a LP de campanha sassmaq-lp permanecem como estão.
 import LpBase from "../../layouts/LpBase.astro";
-import SeloImplementando from "../../components/SeloImplementando.astro";
-import Especialistas from "../../components/Especialistas.astro";
 import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
@@ -15,7 +13,16 @@ const slug = "sassmaq";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
-const heroChips = ["Transição até 11/03/2027", "Primeira certificação ou manutenção", "Especialistas e Templum OS"];
+const formTitulo = "Descubra se sua transportadora está preparada para a SASSMAQ 4.0";
+const formSub = "Solicite um diagnóstico com um especialista da Templum e entenda os principais gaps que sua empresa precisa resolver para se adequar às novas exigências.";
+const formCta = "Quero meu diagnóstico SASSMAQ 4.0";
+const ctaCurto = "Quero meu diagnóstico";
+const oferta = [
+  "Entenda quais mudanças impactam sua operação",
+  "Identifique os principais gaps",
+  "Saiba como estruturar sua adequação",
+  "Tire suas dúvidas com um especialista",
+];
 
 const mudancas = [
   { icon: "solar:planet-bold", t: "ESG", d: "Critérios mais claros de avaliação." },
@@ -74,12 +81,12 @@ const pageSchemas = [
 ---
 
 <LpBase
-  title="SASSMAQ 4.0: prepare sua transportadora para as novas exigências"
-  description="A 4ª edição do SASSMAQ entra em vigor em março de 2027. A Templum ajuda transportadoras e operadores logísticos a identificar gaps e chegar à auditoria preparados."
+  title="Sua transportadora está preparada para a certificação SASSMAQ 4.0?"
+  description="Consultoria para identificar os gaps, adequar a operação e chegar à auditoria. A transição da SASSMAQ 4.0 vai até 11 de março de 2027."
   noindex={false}
   formAnchor="#form"
   headerAnchorDesktop="#contato"
-  headerCta="Solicitar diagnóstico"
+  headerCta={ctaCurto}
   schemas={pageSchemas}
 >
   <div class="cs-page" style={`--accent:${c}`}>
@@ -88,16 +95,13 @@ const pageSchemas = [
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">SASSMAQ 4.0</span>
-          <h1 class="cs-title"><span class="cs-hl">SASSMAQ 4.0</span> chegou. Sua transportadora está preparada para as novas exigências?</h1>
-          <p class="cs-sub">Prepare sua empresa para a 4ª edição do SASSMAQ com acompanhamento especializado da Templum.</p>
-          <a href="#form" class="btn btn--primary btn--block cs-hero-cta">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-          <p class="cs-hero-note">A nova versão muda critérios de avaliação: ESG, segurança de processo, proteção patrimonial, gestão de terceiros e evidências de conformidade. Vale para a primeira certificação e para a próxima auditoria.</p>
-          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
-          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <h1 class="cs-title">Sua transportadora está preparada para a certificação <span class="cs-hl">SASSMAQ 4.0</span>?</h1>
+          <p class="cs-sub">Consultoria para identificar os gaps, adequar a operação e chegar à auditoria com especialistas. A transição vai até 11 de março de 2027.</p>
+          <a href="#form" class="btn btn--primary btn--block cs-hero-cta">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           <a href="#mudancas" class="cs-ver-metodo">Ver o que mudou <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta="Solicitar diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
+          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" />
         </div>
       </div>
     </section>
@@ -127,7 +131,7 @@ const pageSchemas = [
           </article>
         </div>
         <p class="cs-prazo-note">Esperar a auditoria se aproximar pode deixar pouco tempo para corrigir processos, reunir evidências e adequar a operação.</p>
-        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#form" class="btn btn--primary btn--lg">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -151,11 +155,25 @@ const pageSchemas = [
       </div>
     </section>
 
-    <section id="jeito" class="section cs-nova">
+    <section id="diagnostico" class="section">
+      <div class="container md cs-oferta">
+        <span class="tag-pill">Diagnóstico</span>
+        <h2>{formTitulo}</h2>
+        <p>{formSub}</p>
+        <ul class="check-list cs-oferta-list">
+          {oferta.map((item) => (
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{item}</li>
+          ))}
+        </ul>
+        <a href="#form" class="btn btn--primary btn--lg">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+    <section id="jeito" class="section section--cream cs-nova">
       <div class="container xl">
         <div class="section-header">
-          <span class="tag-pill">O jeito Templum</span>
-          <h2>Uma nova era para conquistar a <em class="accent">SASSMAQ</em></h2>
+          <span class="tag-pill">Como a Templum resolve</span>
+          <h2>Especialistas e o Templum OS na adequação da <em class="accent">SASSMAQ</em></h2>
           <p>Especialistas experientes. Templum OS. Uma central de inteligência trabalhando junto com sua transportadora.</p>
         </div>
         <p class="cs-nova-lead">Na Templum, sua transportadora não recebe apenas a orientação de um consultor. Você conta com <strong>especialistas conduzindo a adequação à SASSMAQ</strong> e com o <strong>Templum OS organizando e orientando a jornada da operação</strong>, com inteligência para ajudar a equipe a avançar em cada etapa: frota, motoristas, terceiros e evidências.</p>
@@ -194,60 +212,7 @@ const pageSchemas = [
           </table>
         </div>
         <p class="cs-nova-close">Menos tempo procurando como atender cada requisito. Mais clareza para adequar a operação antes da auditoria.</p>
-        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      </div>
-    </section>
-
-    <section class="section section--navy cs-gaps">
-      <div class="container md">
-        <span class="tag-pill tag-pill--glow">Antes da auditoria</span>
-        <h2>Não espere a auditoria revelar os gaps da sua <em class="accent">operação</em></h2>
-        <p>Com a consultoria da Templum, sua empresa recebe orientação especializada para avaliar os requisitos aplicáveis, estruturar as adequações e chegar à auditoria mais preparada.</p>
-        <p>Nós ajudamos sua equipe a transformar as exigências da SASSMAQ 4.0 em um plano de implementação claro e executável.</p>
-        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-      </div>
-    </section>
-
-    {d.motivos && d.motivos.length > 0 && (
-      <section class="section section--cream">
-        <div class="container xl">
-          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Por que a SASSMAQ continua decisiva para a <em class="accent">transportadora</em></h2></div>
-          <div class="cs-motivos">
-            {d.motivos.map((m, i) => (
-              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
-            ))}
-          </div>
-          {d.beneficios && d.beneficios.length > 0 && (
-            <div class="cs-benef">
-              <h3 class="cs-benef-h">O que a certificação abre para a operação</h3>
-              <ul class="check-list cs-benef-list">
-                {d.beneficios.map((b) => (
-                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </section>
-    )}
-
-    <SeloImplementando ctaHref="#contato" ctaTexto="Solicitar diagnóstico" />
-
-    <section id="metodo" class="section section--cream">
-      <div class="container xl">
-        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>O mesmo método, agora aplicado aos requisitos da SASSMAQ 4.0.</p></div>
-        <div class="step-grid">
-          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--navy">
-      <div class="container lg">
-        <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
-        <div class="why-grid">
-          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
-        </div>
+        <a href="#form" class="btn btn--primary btn--lg">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -257,8 +222,8 @@ const pageSchemas = [
           <div class="split-text">
             <span class="tag-pill">Garantia de 200%</span>
             <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
-            <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
-            <a href="#contato" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+            <p class="paragraph">{heroGarantia}</p>
+            <a href="#contato" class="btn btn--primary btn--lg">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           </div>
           <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
         </div>
@@ -274,42 +239,11 @@ const pageSchemas = [
       </div>
     </section>
 
-    <section class="cs-cover section--navy">
-      <div class="cs-cover-bg" aria-hidden="true"></div>
-      <div class="container md">
-        <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
-        <h2>De onde a frota estiver, <em class="accent">a Templum chega.</em></h2>
-        <p>Atendimento em todo o Brasil, Portugal e África. Sem deslocamento e sem custo extra, a operação se adequa de onde estiver.</p>
-        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum no Brasil, em Portugal e na África" loading="lazy" />
-      </div>
-    </section>
-
-    <Testimonials nota="4,9" ctaTexto="Solicitar diagnóstico" ctaHref="#contato" />
-
-    <DepoimentosTexto />
-
     <ClientLogos dark={true} titulo="Empresas que certificaram a SASSMAQ com a Templum" />
 
-    <section class="section section--cream">
-      <div class="container xl cs-pqi">
-        <div class="cs-pq">
-          <span class="tag-pill">Para quem serve</span>
-          <h2 class="h2">Para quem vive de <em class="accent">transporte e logística</em></h2>
-          <p class="reg-l" style="margin:10px 0 22px">Transportadoras, operadores e quem movimenta produtos químicos e precisa chegar à SASSMAQ 4.0 preparado.</p>
-          <div class="cs-pq-grid">
-            {(d.paraQuem || []).map((s) => <div class="cs-pq-item"><iconify-icon icon={s.icon}></iconify-icon>{s.t}</div>)}
-          </div>
-        </div>
-        <div class="cs-incluso">
-          <span class="tag-pill">O que está incluso</span>
-          <ul class="check-list" style="margin-top:18px">
-            {(d.incluso || []).map((i) => <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>)}
-          </ul>
-        </div>
-      </div>
-    </section>
+    <Testimonials nota="4,9" ctaTexto={ctaCurto} ctaHref="#contato" />
 
-    <Especialistas />
+    <DepoimentosTexto />
 
     <section class="section section--cream">
       <div class="container md">
@@ -323,24 +257,16 @@ const pageSchemas = [
     <section id="contato" class="cs-form section--navy">
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
-          <span class="tag-pill tag-pill--glow">Solicitar diagnóstico</span>
-          <h2>Descubra como preparar sua transportadora para a <em class="accent">SASSMAQ 4.0</em></h2>
-          <p>A equipe avalia os requisitos aplicáveis, mostra os gaps e indica como estruturar a adequação. Sem compromisso.</p>
+          <span class="tag-pill tag-pill--glow">Diagnóstico</span>
+          <h2>Descubra se sua transportadora está preparada para a <em class="accent">SASSMAQ 4.0</em></h2>
+          <p>{formSub}</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Leitura dos gaps da 4ª edição</li>
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Plano de adequação com especialistas</li>
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
+            {oferta.map((item) => (
+              <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{item}</li>
+            ))}
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta="Solicitar diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
-      </div>
-    </section>
-
-    <section class="cta-band">
-      <div class="container md">
-        <h2>Prepare sua transportadora para a <em>SASSMAQ 4.0</em></h2>
-        <p>Identifique os gaps, organize as evidências e chegue à auditoria com um plano claro.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" />
       </div>
     </section>
   </div>
@@ -382,6 +308,11 @@ const pageSchemas = [
   .cs-hero-cta { display: none; }
   .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
   .cs-ver-metodo:hover { color: var(--accent-lt); }
+
+  .cs-oferta { text-align: center; }
+  .cs-oferta h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; text-wrap: balance; margin: 14px 0 16px; }
+  .cs-oferta > p { max-width: 680px; margin: 0 auto 22px; font-size: 17px; line-height: 1.6; color: var(--text-mid); }
+  .cs-oferta-list { max-width: 560px; margin: 0 auto 28px; text-align: left; }
 
   .cs-dates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 8px; text-align: left; }
   .cs-date { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; }
