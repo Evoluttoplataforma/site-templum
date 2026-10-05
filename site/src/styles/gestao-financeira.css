@@ -885,7 +885,11 @@ h2 em { font-style: normal; color: var(--gold); }
 .ac-nova-lead strong { color: var(--ink); }
 .ac-nova-img {
   display: block;
-  width: min(960px, 100%);
+  width: 100%;
+  max-width: 980px;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
   margin: 0 auto 28px;
   border-radius: 16px;
   border: 1px solid var(--line);
