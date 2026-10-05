@@ -1,0 +1,496 @@
+---
+// LP da atualização SASSMAQ 4.0.
+// A página /consultoria/sassmaq/ e a LP de campanha sassmaq-lp permanecem como estão.
+import LpBase from "../../layouts/LpBase.astro";
+import SeloImplementando from "../../components/SeloImplementando.astro";
+import Especialistas from "../../components/Especialistas.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
+import ClientLogos from "../../components/ClientLogos.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { normas } from "../../data/normas.js";
+import d from "../../data/consultoria/sassmaq.js";
+
+const slug = "sassmaq";
+const norma = normas.find((n) => n.slug === slug) || {};
+const c = norma.color || "var(--orange)";
+const heroGarantia = d.hero.garantia || d.garantiaPadrao;
+const heroChips = ["Transição até 11/03/2027", "Primeira certificação ou manutenção", "Especialistas e Templum OS"];
+
+const mudancas = [
+  { icon: "solar:planet-bold", t: "ESG", d: "Critérios mais claros de avaliação." },
+  { icon: "solar:shield-warning-bold", t: "Segurança de processo", d: "Mais atenção aos controles que evitam acidentes na operação." },
+  { icon: "solar:lock-keyhole-bold", t: "Proteção patrimonial", d: "Reforço dos controles de proteção patrimonial." },
+  { icon: "solar:users-group-rounded-bold", t: "Terceiros e agregados", d: "Novos critérios para terceiros e transportadores agregados." },
+  { icon: "solar:map-point-bold", t: "Auditorias presenciais", d: "Auditorias presenciais passam a fazer parte da avaliação." },
+  { icon: "solar:calendar-bold", t: "Ciclo trienal", d: "Novo ciclo de três anos, com auditorias de manutenção." },
+  { icon: "solar:document-text-bold", t: "Questionário rodoviário", d: "Aproximadamente 576 questões no modal rodoviário." },
+  { icon: "solar:verified-check-bold", t: "Evidências", d: "Mais rigor na comprovação de licenças, controles e evidências." },
+];
+
+const faq = [
+  { q: "Quando a SASSMAQ 4.0 entra em vigor?", a: "A 4ª edição foi lançada em setembro de 2026. O período de transição vai até 11 de março de 2027. A partir de 12 de março de 2027, novas certificações, manutenções e extensões de escopo deverão seguir a SASSMAQ 4.0." },
+  { q: "O que mudou na 4ª edição?", a: "A nova edição vai além de uma atualização de documentos. Entre as mudanças estão critérios mais claros de ESG, mais atenção à segurança de processo, reforço da proteção patrimonial, novos critérios para terceiros e transportadores agregados, auditorias presenciais, ciclo trienal com auditorias de manutenção, aproximadamente 576 questões no questionário do modal rodoviário e mais rigor na comprovação de licenças, controles e evidências." },
+  { q: "Empresas que já têm SASSMAQ precisam se adequar?", a: "Sim. Manutenções e extensões de escopo a partir de 12 de março de 2027 seguem a 4ª edição. Esperar a auditoria se aproximar reduz o tempo para corrigir processos, reunir evidências e adequar a operação." },
+  { q: "A Templum atende quem busca a primeira certificação?", a: "Sim. O acompanhamento vale para a primeira certificação e para quem já é certificado e precisa se preparar para a próxima auditoria." },
+  { q: "Quem deve implementar o SASSMAQ?", a: "Transportadoras, operadores logísticos, frotas, armazenagem e empresas que movimentam produtos químicos, a granel ou fracionados." },
+  { q: "O SASSMAQ é obrigatório?", a: "É exigido por grande parte das indústrias químicas para contratar transportadores. Na prática, é um passaporte para o setor." },
+  { q: "Como a Templum conduz a adequação?", a: "Avaliamos os requisitos aplicáveis, identificamos os gaps e estruturamos um plano de implementação claro. Especialistas conduzem a adequação e o Templum OS organiza a jornada da operação até a auditoria." },
+  { q: "A certificação tem garantia?", a: "Ao concluir todas as etapas da consultoria e ainda assim não obter a certificação, devolvemos 200% do valor investido. A condição está em contrato." },
+];
+
+const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
+const pageSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Consultoria SASSMAQ 4.0",
+    serviceType: "Adequação à 4ª edição do SASSMAQ",
+    description: "Consultoria para transportadoras e operadores logísticos se prepararem para a SASSMAQ 4.0, com especialistas e o Templum OS.",
+    category: norma.categoria,
+    provider: { "@id": `${SITE}/#organization` },
+    areaServed: { "@type": "Country", name: "Brasil" },
+    url: `${SITE}/consultoria/sassmaq-4-0`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "Certificações", item: `${SITE}/consultoria` },
+      { "@type": "ListItem", position: 3, name: "SASSMAQ 4.0", item: `${SITE}/consultoria/sassmaq-4-0` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
+---
+
+<LpBase
+  title="SASSMAQ 4.0: prepare sua transportadora para as novas exigências"
+  description="A 4ª edição do SASSMAQ entra em vigor em março de 2027. A Templum ajuda transportadoras e operadores logísticos a identificar gaps e chegar à auditoria preparados."
+  noindex={false}
+  formAnchor="#form"
+  headerAnchorDesktop="#contato"
+  headerCta="Preparar minha empresa"
+  schemas={pageSchemas}
+>
+  <div class="cs-page" style={`--accent:${c}`}>
+    <section class="cs-hero">
+      <div class="cs-hero-bg" aria-hidden="true"></div>
+      <div class="container xl cs-hero-grid">
+        <div class="cs-hero-text">
+          <span class="tag-pill tag-pill--glow">SASSMAQ 4.0</span>
+          <h1 class="cs-title"><span class="cs-hl">SASSMAQ 4.0</span> chegou. Sua transportadora está preparada para as novas exigências?</h1>
+          <p class="cs-sub">Prepare sua empresa para a 4ª edição do SASSMAQ com acompanhamento especializado da Templum.</p>
+          <p class="cs-hero-note">A nova versão muda critérios de avaliação: ESG, segurança de processo, proteção patrimonial, gestão de terceiros e evidências de conformidade. Vale para a primeira certificação e para a próxima auditoria.</p>
+          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
+          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <a href="#mudancas" class="cs-ver-metodo">Ver o que mudou <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+        </div>
+        <div class="cs-hero-form" id="form">
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
+        </div>
+      </div>
+    </section>
+
+    <section id="prazo" class="section">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">Prazo de transição</span>
+          <h2>O prazo de transição já está <em class="accent">correndo</em></h2>
+          <p>A SASSMAQ 4.0 foi lançada em setembro de 2026 e o período de transição vai até 11 de março de 2027.</p>
+        </div>
+        <div class="cs-dates">
+          <article class="cs-date">
+            <span class="cs-date-k">Lançamento</span>
+            <strong>Setembro de 2026</strong>
+            <p>Publicação da 4ª edição.</p>
+          </article>
+          <article class="cs-date">
+            <span class="cs-date-k">Transição</span>
+            <strong>Até 11 de março de 2027</strong>
+            <p>Janela para adequar processos, evidências e a operação.</p>
+          </article>
+          <article class="cs-date cs-date--mark">
+            <span class="cs-date-k">Nova regra</span>
+            <strong>A partir de 12 de março de 2027</strong>
+            <p>Novas certificações, manutenções e extensões de escopo seguem a 4ª edição.</p>
+          </article>
+        </div>
+        <p class="cs-prazo-note">Esperar a auditoria se aproximar pode deixar pouco tempo para corrigir processos, reunir evidências e adequar a operação.</p>
+        <a href="#contato" class="btn btn--primary btn--lg">Antecipe sua adequação com a Templum <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+    <section id="mudancas" class="section section--cream">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">4ª edição</span>
+          <h2>O que mudou com a <em class="accent">SASSMAQ&nbsp;4.0</em>?</h2>
+          <p>A nova edição vai além de uma atualização de documentos.</p>
+        </div>
+        <div class="cs-mudancas">
+          {mudancas.map((m) => (
+            <article class="cs-mudanca reveal">
+              <span class="cs-mudanca-ico"><iconify-icon icon={m.icon}></iconify-icon></span>
+              <h3>{m.t}</h3>
+              <p>{m.d}</p>
+            </article>
+          ))}
+        </div>
+        <p class="cs-mudancas-close">Sua empresa precisa saber exatamente o que já atende e o que ainda precisa adequar.</p>
+      </div>
+    </section>
+
+    <section id="jeito" class="section cs-nova">
+      <div class="container xl">
+        <div class="section-header">
+          <span class="tag-pill">O jeito Templum</span>
+          <h2>Uma nova era para conquistar a <em class="accent">SASSMAQ</em></h2>
+          <p>Especialistas experientes. Templum OS. Uma central de inteligência trabalhando junto com sua transportadora.</p>
+        </div>
+        <p class="cs-nova-lead">Na Templum, sua transportadora não recebe apenas a orientação de um consultor. Você conta com <strong>especialistas conduzindo a adequação à SASSMAQ</strong> e com o <strong>Templum OS organizando e orientando a jornada da operação</strong>, com inteligência para ajudar a equipe a avançar em cada etapa: frota, motoristas, terceiros e evidências.</p>
+        <img
+          class="cs-nova-img"
+          src="/assets/img/templum-os-notebook.webp"
+          alt="Templum OS no notebook e no celular, a central que organiza a jornada da consultoria"
+          width="1600"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="cs-nova-compare-lead">Não é apenas consultoria. É uma nova forma de preparar a transportadora para a SASSMAQ.</p>
+        <div class="cs-nova-table-wrap">
+          <table class="cs-nova-table">
+            <thead>
+              <tr>
+                <th scope="col">Jeito tradicional</th>
+                <th scope="col">Com a Templum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Orientações concentradas no consultor</td>
+                <td>Especialistas e o Templum OS acompanhando a adequação da operação</td>
+              </tr>
+              <tr>
+                <td>Requisitos, evidências e checklists espalhados em planilhas, pastas e reuniões</td>
+                <td>Uma central de inteligência que organiza a jornada e mostra o que a equipe precisa fazer</td>
+              </tr>
+              <tr>
+                <td>A operação precisa transformar a orientação em execução sozinha</td>
+                <td>Agentes especializados ajudam a estruturar controles, evidências e o plano até a auditoria</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="cs-nova-close">Menos tempo procurando como atender cada requisito. Mais clareza para adequar a operação antes da auditoria.</p>
+        <a href="#contato" class="btn btn--primary btn--lg">Quero preparar minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+    <section class="section section--navy cs-gaps">
+      <div class="container md">
+        <span class="tag-pill tag-pill--glow">Antes da auditoria</span>
+        <h2>Não espere a auditoria revelar os gaps da sua <em class="accent">operação</em></h2>
+        <p>Com a consultoria da Templum, sua empresa recebe orientação especializada para avaliar os requisitos aplicáveis, estruturar as adequações e chegar à auditoria mais preparada.</p>
+        <p>Nós ajudamos sua equipe a transformar as exigências da SASSMAQ 4.0 em um plano de implementação claro e executável.</p>
+        <a href="#contato" class="btn btn--primary btn--lg">Fale com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+
+    {d.motivos && d.motivos.length > 0 && (
+      <section class="section section--cream">
+        <div class="container xl">
+          <div class="section-header"><span class="tag-pill">Por que certificar</span><h2>Por que a SASSMAQ continua decisiva para a <em class="accent">transportadora</em></h2></div>
+          <div class="cs-motivos">
+            {d.motivos.map((m, i) => (
+              <div class="cs-motivo reveal"><span class="cs-motivo-n">{String(i + 1).padStart(2, "0")}</span><h3>{m.t}</h3><p>{m.d}</p></div>
+            ))}
+          </div>
+          {d.beneficios && d.beneficios.length > 0 && (
+            <div class="cs-benef">
+              <h3 class="cs-benef-h">O que a certificação abre para a operação</h3>
+              <ul class="check-list cs-benef-list">
+                {d.beneficios.map((b) => (
+                  <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <SeloImplementando ctaHref="#contato" ctaTexto="Começar a adequação" />
+
+    <section id="metodo" class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>O mesmo método, agora aplicado aos requisitos da SASSMAQ 4.0.</p></div>
+        <div class="step-grid">
+          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--navy">
+      <div class="container lg">
+        <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
+        <div class="why-grid">
+          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container xl">
+        <div class="split">
+          <div class="split-text">
+            <span class="tag-pill">Garantia de 200%</span>
+            <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
+            <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
+            <a href="#contato" class="btn btn--primary btn--lg">Quero a garantia de 200% <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          </div>
+          <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream">
+      <div class="container xl">
+        <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
+        <div class="numbers-grid cs-stats">
+          {d.stats.map((s) => <div class="number-card reveal"><div class="value"><em>{s.num}</em></div><div class="label">{s.label}</div></div>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="cs-cover section--navy">
+      <div class="cs-cover-bg" aria-hidden="true"></div>
+      <div class="container md">
+        <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
+        <h2>De onde a frota estiver, <em class="accent">a Templum chega.</em></h2>
+        <p>Atendimento em todo o Brasil, Portugal e África. Sem deslocamento e sem custo extra, a operação se adequa de onde estiver.</p>
+        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum no Brasil, em Portugal e na África" loading="lazy" />
+      </div>
+    </section>
+
+    <Testimonials nota="4,9" ctaTexto="Quero preparar minha transportadora" ctaHref="#contato" />
+
+    <DepoimentosTexto />
+
+    <ClientLogos dark={true} titulo="Empresas que certificaram a SASSMAQ com a Templum" />
+
+    <section class="section section--cream">
+      <div class="container xl cs-pqi">
+        <div class="cs-pq">
+          <span class="tag-pill">Para quem serve</span>
+          <h2 class="h2">Para quem vive de <em class="accent">transporte e logística</em></h2>
+          <p class="reg-l" style="margin:10px 0 22px">Transportadoras, operadores e quem movimenta produtos químicos e precisa chegar à SASSMAQ 4.0 preparado.</p>
+          <div class="cs-pq-grid">
+            {(d.paraQuem || []).map((s) => <div class="cs-pq-item"><iconify-icon icon={s.icon}></iconify-icon>{s.t}</div>)}
+          </div>
+        </div>
+        <div class="cs-incluso">
+          <span class="tag-pill">O que está incluso</span>
+          <ul class="check-list" style="margin-top:18px">
+            {(d.incluso || []).map((i) => <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>{i}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <Especialistas />
+
+    <section class="section section--cream">
+      <div class="container md">
+        <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>A SASSMAQ 4.0 em detalhes</h2><p>Prazos, mudanças e como a adequação acontece na operação.</p></div>
+        <div class="faq-list">
+          {faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="cs-form section--navy">
+      <div class="container lg cs-form-grid">
+        <div class="cs-form-pitch">
+          <span class="tag-pill tag-pill--glow">Fale com um especialista</span>
+          <h2>Descubra como preparar sua transportadora para a <em class="accent">SASSMAQ 4.0</em></h2>
+          <p>A equipe avalia os requisitos aplicáveis, mostra os gaps e indica como estruturar a adequação. Sem compromisso.</p>
+          <ul class="check-list">
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Leitura dos gaps da 4ª edição</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Plano de adequação com especialistas</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
+          </ul>
+        </div>
+        <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container md">
+        <h2>Prepare sua transportadora para a <em>SASSMAQ 4.0</em></h2>
+        <p>Identifique os gaps, organize as evidências e chegue à auditoria com um plano claro.</p>
+        <a href="#contato" class="btn btn--dark btn--lg">Quero preparar minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+      </div>
+    </section>
+  </div>
+</LpBase>
+
+<style>
+  .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
+
+  .cs-page .cs-cover,
+  .cs-page .cs-form,
+  .cs-page .cs-gaps,
+  .cs-page .section--navy { background: color-mix(in srgb, var(--accent) 22%, #0f1216); }
+  .cs-page .cs-hero { background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 42%, #0c0e12) 0%, color-mix(in srgb, var(--accent) 20%, #0c0e12) 48%, #0c0e12 100%); }
+
+  .cs-page .section:not(.section--navy) .accent { color: var(--accent); font-style: italic; }
+  .cs-page .section:not(.section--navy) .tag-pill { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .cs-page .section:not(.section--navy) .number-card .value em { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .step-card .step-num { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .check-circle { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-question:hover { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
+  .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
+
+  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
+  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .cs-hero-text { max-width: 640px; }
+  .cs-hero .tag-pill { margin-bottom: 20px; }
+  .cs-title { font-size: clamp(30px, 3.8vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  .cs-hl { color: var(--accent-lt); }
+  .cs-sub { font-size: clamp(17px, 1.8vw, 20px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 18px; max-width: 560px; line-height: 1.45; }
+  .cs-hero-note { font-size: 15.5px; color: rgba(255,244,221,0.72); margin-top: 14px; max-width: 540px; line-height: 1.55; }
+  .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 16px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 540px; line-height: 1.5; }
+  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,244,221,0.14); }
+  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
+  .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
+  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
+  .cs-ver-metodo:hover { color: var(--accent-lt); }
+
+  .cs-dates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 8px; text-align: left; }
+  .cs-date { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 26px 24px; }
+  .cs-date--mark { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+  .cs-date-k { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .cs-date strong { display: block; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: 8px; }
+  .cs-date p { font-size: 14.5px; color: var(--text-mid); line-height: 1.5; }
+  .cs-prazo-note { max-width: 720px; margin: 28px auto 22px; font-size: 17px; line-height: 1.55; color: var(--text-mid); }
+  #prazo { text-align: center; }
+  #prazo .section-header { margin-bottom: 28px; }
+
+  .cs-mudancas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: left; }
+  .cs-mudanca { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 22px 20px; }
+  .cs-mudanca-ico { width: 48px; height: 48px; border-radius: var(--r-12); display: grid; place-items: center; font-size: 24px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 14px; }
+  .cs-mudanca h3 { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .cs-mudanca p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+  .cs-mudancas-close { max-width: 640px; margin: 28px auto 0; font-size: 18px; font-weight: 700; line-height: 1.45; text-wrap: balance; }
+  #mudancas { text-align: center; scroll-margin-top: 88px; }
+
+  .cs-nova { text-align: center; scroll-margin-top: 88px; }
+  .cs-nova .section-header h2 { text-wrap: balance; }
+  .cs-nova-lead { max-width: 760px; margin: 0 auto 28px; font-size: 17px; line-height: 1.65; color: var(--text-mid); }
+  .cs-nova-lead strong { color: var(--text); font-weight: 700; }
+  .cs-nova-img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto 40px; }
+  .cs-nova-compare-lead { max-width: 720px; margin: 0 auto 22px; font-size: clamp(20px, 2.4vw, 26px); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; text-wrap: balance; }
+  .cs-nova-table-wrap { max-width: 860px; margin: 0 auto 36px; overflow-x: auto; text-align: left; }
+  .cs-nova-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); overflow: hidden; box-shadow: var(--shadow-card); }
+  .cs-nova-table th,
+  .cs-nova-table td { width: 50%; padding: 16px 22px; font-size: 15px; line-height: 1.45; vertical-align: top; }
+  .cs-nova-table thead th { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .cs-nova-table thead th:first-child { color: var(--text-mid); background: var(--bg); }
+  .cs-nova-table thead th:last-child { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, #fff); }
+  .cs-nova-table tbody td { color: var(--text-mid); border-top: 1px solid var(--border); }
+  .cs-nova-table tbody td:last-child { color: var(--text); font-weight: 600; background: color-mix(in srgb, var(--accent) 6%, #fff); }
+  .cs-nova-close { max-width: 680px; margin: 0 auto 28px; font-size: 18px; font-weight: 600; line-height: 1.5; text-wrap: balance; }
+  @media (max-width: 640px) {
+    .cs-nova-table thead { display: none; }
+    .cs-nova-table,
+    .cs-nova-table tbody,
+    .cs-nova-table tr,
+    .cs-nova-table td { display: block; width: 100%; }
+    .cs-nova-table tr { border-top: 1px solid var(--border); }
+    .cs-nova-table tr:first-child { border-top: 0; }
+    .cs-nova-table td { padding: 10px 16px 12px; font-size: 14.5px; }
+    .cs-nova-table td::before {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .cs-nova-table td:first-child { background: var(--bg); }
+    .cs-nova-table td:first-child::before { content: "Jeito tradicional"; color: var(--text-mid); }
+    .cs-nova-table td:last-child::before { content: "Com a Templum"; color: var(--accent); }
+  }
+
+  .cs-gaps { text-align: center; padding: 88px 0; }
+  .cs-gaps h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; text-wrap: balance; margin: 16px 0 16px; }
+  .cs-gaps p { font-size: 17px; color: rgba(255,244,221,0.78); max-width: 680px; margin: 0 auto 14px; line-height: 1.6; }
+  .cs-gaps .btn { margin-top: 18px; }
+
+  .cs-stats { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } .cs-mudancas { grid-template-columns: repeat(2, 1fr); } .cs-dates { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .cs-stats { grid-template-columns: 1fr; } .cs-mudancas { grid-template-columns: 1fr; } }
+
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .why-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,244,221,0.12); border-radius: var(--r-20); padding: 30px 26px; }
+  .why-ico { width: 56px; height: 56px; border-radius: var(--r-16); display: grid; place-items: center; font-size: 28px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 18px; }
+  .why-card h3 { font-size: 19px; font-weight: 800; color: var(--cream); margin-bottom: 8px; }
+  .why-card p { font-size: 14.5px; color: rgba(255,244,221,0.7); line-height: 1.6; }
+
+  .cs-motivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 12px; }
+  @media (max-width: 880px) { .cs-motivos { grid-template-columns: 1fr; } }
+  .cs-motivo { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 30px 28px; }
+  .cs-motivo-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 16px; }
+  .cs-motivo h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .cs-motivo p { font-size: 14.5px; color: var(--text-mid); line-height: 1.6; }
+  .cs-benef { margin-top: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 32px clamp(24px,4vw,40px); }
+  .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
+  .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+  @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
+
+  .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
+  .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
+  .cs-cover .container { position: relative; z-index: 1; }
+  .cs-cover-ico { width: 64px; height: 64px; border-radius: var(--r-20); display: inline-grid; place-items: center; font-size: 32px; margin-bottom: 20px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+  .cs-cover h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; }
+  .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 640px; margin: 14px auto 0; line-height: 1.6; }
+  .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
+
+  .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cs-pq-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-12); padding: 14px 16px; font-size: 14.5px; font-weight: 600; color: var(--text); }
+  .cs-pq-item iconify-icon { font-size: 22px; }
+  .cs-incluso { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-24); padding: 30px; box-shadow: var(--shadow-card); }
+  @media (max-width: 880px) { .cs-pqi { grid-template-columns: 1fr; } .cs-pq-grid { grid-template-columns: 1fr; } }
+
+  .cs-form { padding: 88px 0; position: relative; overflow: hidden; scroll-margin-top: 72px; }
+  .cs-form-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 5vw, 56px); align-items: center; position: relative; z-index: 1; }
+  .cs-form-pitch h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--cream); letter-spacing: -0.02em; margin: 16px 0 14px; line-height: 1.12; }
+  .cs-form-pitch > p { font-size: 16px; color: rgba(255,244,221,0.75); line-height: 1.6; margin-bottom: 22px; max-width: 460px; }
+  .cs-form-pitch .check-item { color: var(--cream); }
+  @media (max-width: 880px) { .cs-form-grid { grid-template-columns: 1fr; } }
+
+  @media (max-width: 900px) {
+    .cs-hero-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .cs-chips { gap: 12px; }
+  }
+</style>
