@@ -1,6 +1,7 @@
 ---
 import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
 import { mqlCampaignLpProps } from "../lib/mql-campaigns";
+import d from "../data/consultoria/iso-9001.js";
 
 const CAMPAIGN_KEY = "academia_combate_iso_9001";
 const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);
@@ -8,6 +9,14 @@ import "../styles/gestao-financeira.css";
 
 const OBRIGADO = "/obrigado-academia-de-combate-iso-9001/";
 const FORM_MSG = "Academia de Combate | Diagnóstico ISO 9001 gratuito";
+
+/** Copy da consultoria ISO 9001 sem travessão na LP pública. */
+function plainCopy(text) {
+  return String(text).replace(/\u2014/g, ". ").replace(/\u2013/g, ", ");
+}
+
+const motivos = d.motivos.map((m) => ({ t: m.t, d: plainCopy(m.d) }));
+const stats = d.stats;
 
 const desafios = [
   "Tudo depende de mim: a operação trava quando eu saio",
@@ -188,12 +197,12 @@ const urgencias = [
         <div class="placar-grid">
         <div>
         <div class="section-head">
-          <span class="kicker">O placar</span>
-          <h2>Vencer o round de hoje<br /><em>não prova que você está ganhando o&nbsp;jogo.</em></h2>
-          <p>Muitas empresas crescem no operacional do dono. Vendem, entregam, apagam incêndio. A pergunta é se a operação aguenta o próximo&nbsp;round.</p>
+          <span class="kicker">O desafio</span>
+          <h2>Empresa forte não vive de heroísmo.<br /><em>Vive de&nbsp;processo.</em></h2>
+          <p>Muitas empresas crescem no operacional do dono. Vendem, entregam, apagam incêndio. A pergunta é se a operação se sustenta quando você não está na&nbsp;sala.</p>
         </div>
         <p class="prose">ISO 9001 não é documento para gaveta. É estrutura para padronizar, medir e melhorar sem depender da sua presença em cada&nbsp;decisão.</p>
-        <p class="prose">Com consultores experientes e o Templum OS, você organiza a jornada do diagnóstico à certificação com mais previsibilidade e menos&nbsp;retrabalho.</p>
+        <p class="prose">Com especialistas e o Templum OS, você organiza a jornada do diagnóstico à certificação com mais previsibilidade e menos&nbsp;retrabalho.</p>
         </div>
         <div>
         <p class="prose"><strong>O resultado?</strong></p>
@@ -201,68 +210,107 @@ const urgencias = [
           <li>O time continua&nbsp;correndo.</li>
           <li>O faturamento pode até&nbsp;crescer.</li>
           <li>A qualidade oscila de pessoa para&nbsp;pessoa.</li>
-          <li class="fight-card-hit">Mas a empresa ainda não joga<br />com processo de&nbsp;verdade.</li>
+          <li class="fight-card-hit">Mas a operação ainda não funciona<br />com processo de&nbsp;verdade.</li>
         </ul>
         </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="metodo">
+    <section class="ac-light" id="motivos">
       <div class="container">
-        <div class="section-head">
-          <span class="kicker">O método</span>
-          <h2>Do diagnóstico à certificação<br />sem parar a&nbsp;operação.</h2>
-          <p>Especialistas conduzem. O Templum OS organiza documentos, indicadores e rotinas para sua equipe executar com&nbsp;clareza.</p>
+        <div class="section-head section-head--center">
+          <span class="ac-kicker">Por que certificar</span>
+          <h2 class="ac-h2">Motivos para conquistar a <em>ISO&nbsp;9001</em></h2>
         </div>
-        <ol class="rounds">
-          <li class="round">
-            <span>Round 01</span>
-            <strong>Diagnóstico</strong>
-            <p>Entender o contexto, os gargalos e o caminho mais curto até a certificação, sem&nbsp;achismo.</p>
-          </li>
-          <li class="round">
-            <span>Round 02</span>
-            <strong>Implementação</strong>
-            <p>Mapear processos, envolver o time e estruturar o sistema de gestão com apoio da&nbsp;plataforma.</p>
-          </li>
-          <li class="round">
-            <span>Round 03</span>
-            <strong>Certificação</strong>
-            <p>Preparar auditorias internas e externas com evidências e melhoria contínua já em&nbsp;ritmo.</p>
-          </li>
-        </ol>
+        <div class="ac-motivos">
+          {motivos.map((m, i) => (
+            <article class="ac-motivo">
+              <span class="ac-motivo-n">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{m.t}</h3>
+              <p>{m.d}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="section section-alt" id="pauta">
+    <section class="ac-light" id="nova-forma">
       <div class="container">
-        <div class="section-head">
-          <span class="kicker">Por que certificar</span>
-          <h2>ISO 9001 com o jeito&nbsp;Templum.</h2>
-          <p>Consultoria + Templum OS: menos planilha solta, mais operação que se sustenta quando você não está na&nbsp;sala.</p>
+        <div class="section-head section-head--center">
+          <span class="ac-kicker">O jeito Templum</span>
+          <h2 class="ac-h2">Uma nova era para conquistar a&nbsp;<em>ISO&nbsp;9001</em></h2>
+          <p class="ac-lead" style="margin: 0 auto; text-align: center;">Especialistas experientes. Templum OS. Uma central de inteligência trabalhando junto com sua empresa.</p>
         </div>
-        <div class="topics">
-          <article class="topic">
-            <span class="topic-num">01</span>
-            <h3>Grandes contratos e licitações</h3>
-            <p>Muitos clientes só qualificam fornecedor com ISO 9001. O certificado abre portas e encurta due&nbsp;diligence.</p>
-          </article>
-          <article class="topic">
-            <span class="topic-num">02</span>
-            <h3>Menos retrabalho</h3>
-            <p>Processos documentados reduzem erro humano, desperdício e custo operacional que comem a&nbsp;margem.</p>
-          </article>
-          <article class="topic">
-            <span class="topic-num">03</span>
-            <h3>Decisão com evidência</h3>
-            <p>Indicadores, metas e análises críticas saem do opcional e viram rotina de&nbsp;gestão.</p>
-          </article>
-          <article class="topic">
-            <span class="topic-num">04</span>
-            <h3>Escalar sem caos</h3>
-            <p>Contratar e crescer com espinha dorsal operacional, não só com esforço do&nbsp;dono.</p>
-          </article>
+        <p class="ac-nova-lead">Na Templum, sua empresa não recebe apenas a orientação de um consultor. Você conta com <strong>especialistas conduzindo a certificação</strong> e com o <strong>Templum OS organizando e orientando sua jornada</strong>, com inteligência para ajudar sua equipe a avançar em cada etapa.</p>
+        <img
+          class="ac-nova-img"
+          src="/assets/img/templum-os-notebook.webp"
+          alt="Templum OS no notebook e no celular, com números-chave, produtos e o espaço da equipe"
+          width="1600"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="ac-nova-compare-lead">Não é apenas consultoria. É uma nova forma de implementar a&nbsp;ISO&nbsp;9001.</p>
+        <div class="ac-nova-table-wrap">
+          <table class="ac-nova-table">
+            <thead>
+              <tr>
+                <th scope="col">Jeito tradicional</th>
+                <th scope="col">Com a Templum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Orientações concentradas no consultor</td>
+                <td>Especialistas + Templum OS acompanhando a jornada de implementação</td>
+              </tr>
+              <tr>
+                <td>Informações entre arquivos, planilhas, procedimentos e reuniões</td>
+                <td>Uma central de inteligência que conecta informações e ajuda sua equipe a encontrar o caminho</td>
+              </tr>
+              <tr>
+                <td>Sua equipe precisa transformar orientação em execução</td>
+                <td>Agentes especializados ajudam a criar, estruturar e acelerar atividades da implementação</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ac-nova-close">Menos tempo procurando como fazer. Mais agilidade para fazer acontecer.</p>
+        <p class="ac-cta-center"><a class="btn-reserve btn-reserve--on-light" href="#inscricao-final">Solicitar diagnóstico gratuito</a></p>
+      </div>
+    </section>
+
+    <section class="ac-light" id="garantia">
+      <div class="container">
+        <div class="ac-split">
+          <div>
+            <span class="ac-kicker">Garantia de 200%</span>
+            <h2 class="ac-h2">Certificação ou o <em>dobro</em> do dinheiro de volta</h2>
+            <p class="ac-lead">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
+            <a class="btn-reserve btn-reserve--on-light" href="#inscricao-final">Quero a garantia de 200%</a>
+          </div>
+          <div class="ac-split-img">
+            <img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ac-light" id="resultados">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="ac-kicker">Empresas fortalecidas pela Templum</span>
+          <h2 class="ac-h2">Resultados que <em>comprovam</em></h2>
+        </div>
+        <div class="ac-stats">
+          {stats.map((s) => (
+            <div class="ac-stat">
+              <em>{s.num}</em>
+              <span>{s.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -290,17 +338,7 @@ const urgencias = [
           <h2>Solicite o diagnóstico <em>gratuito.</em></h2>
           <p>Um especialista em ISO 9001 analisa seu cenário e mostra o caminho mais curto até a certificação, com cronograma e investimento sob&nbsp;medida.</p>
         </div>
-        <div class="final-grid">
-          <article class="host">
-            <img class="host-photo" src="/assets/gestao-financeira/igor.jpg" alt="Igor Furniel" />
-            <div>
-              <span class="kicker">Quem conduz</span>
-              <h3>Igor Furniel</h3>
-              <p class="host-role">Sócio-fundador · Templum</p>
-              <p>Empreendedor há mais de 24 anos, Igor já conduziu centenas de implementações de sistemas de gestão, de pequenos negócios a operações de grande&nbsp;porte.</p>
-            </div>
-          </article>
-
+        <div class="final-form-wrap">
           <aside class="form-card" id="inscricao-final">
             <p class="price-badge">Sem compromisso</p>
             <p class="price-free">Diagnóstico gratuito</p>
