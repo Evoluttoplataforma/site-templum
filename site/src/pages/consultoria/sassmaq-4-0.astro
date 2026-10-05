@@ -79,7 +79,7 @@ const pageSchemas = [
   noindex={false}
   formAnchor="#form"
   headerAnchorDesktop="#contato"
-  headerCta="Preparar minha empresa"
+  headerCta="Solicitar diagnóstico"
   schemas={pageSchemas}
 >
   <div class="cs-page" style={`--accent:${c}`}>
@@ -90,13 +90,14 @@ const pageSchemas = [
           <span class="tag-pill tag-pill--glow">SASSMAQ 4.0</span>
           <h1 class="cs-title"><span class="cs-hl">SASSMAQ 4.0</span> chegou. Sua transportadora está preparada para as novas exigências?</h1>
           <p class="cs-sub">Prepare sua empresa para a 4ª edição do SASSMAQ com acompanhamento especializado da Templum.</p>
+          <a href="#form" class="btn btn--primary btn--block cs-hero-cta">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           <p class="cs-hero-note">A nova versão muda critérios de avaliação: ESG, segurança de processo, proteção patrimonial, gestão de terceiros e evidências de conformidade. Vale para a primeira certificação e para a próxima auditoria.</p>
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
           <a href="#mudancas" class="cs-ver-metodo">Ver o que mudou <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
+          <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta="Solicitar diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
         </div>
       </div>
     </section>
@@ -126,7 +127,7 @@ const pageSchemas = [
           </article>
         </div>
         <p class="cs-prazo-note">Esperar a auditoria se aproximar pode deixar pouco tempo para corrigir processos, reunir evidências e adequar a operação.</p>
-        <a href="#contato" class="btn btn--primary btn--lg">Antecipe sua adequação com a Templum <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -193,7 +194,7 @@ const pageSchemas = [
           </table>
         </div>
         <p class="cs-nova-close">Menos tempo procurando como atender cada requisito. Mais clareza para adequar a operação antes da auditoria.</p>
-        <a href="#contato" class="btn btn--primary btn--lg">Quero preparar minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -203,7 +204,7 @@ const pageSchemas = [
         <h2>Não espere a auditoria revelar os gaps da sua <em class="accent">operação</em></h2>
         <p>Com a consultoria da Templum, sua empresa recebe orientação especializada para avaliar os requisitos aplicáveis, estruturar as adequações e chegar à auditoria mais preparada.</p>
         <p>Nós ajudamos sua equipe a transformar as exigências da SASSMAQ 4.0 em um plano de implementação claro e executável.</p>
-        <a href="#contato" class="btn btn--primary btn--lg">Fale com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -230,7 +231,7 @@ const pageSchemas = [
       </section>
     )}
 
-    <SeloImplementando ctaHref="#contato" ctaTexto="Começar a adequação" />
+    <SeloImplementando ctaHref="#contato" ctaTexto="Solicitar diagnóstico" />
 
     <section id="metodo" class="section section--cream">
       <div class="container xl">
@@ -257,7 +258,7 @@ const pageSchemas = [
             <span class="tag-pill">Garantia de 200%</span>
             <h2 class="h1">Certificação ou o <em class="accent">dobro</em> do dinheiro de volta</h2>
             <p class="paragraph">Somos a única consultoria no Brasil que devolve o dobro do investimento se você não obtiver a certificação seguindo o nosso método.</p>
-            <a href="#contato" class="btn btn--primary btn--lg">Quero a garantia de 200% <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+            <a href="#contato" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
           </div>
           <div class="split-img reveal"><img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" /></div>
         </div>
@@ -283,7 +284,7 @@ const pageSchemas = [
       </div>
     </section>
 
-    <Testimonials nota="4,9" ctaTexto="Quero preparar minha transportadora" ctaHref="#contato" />
+    <Testimonials nota="4,9" ctaTexto="Solicitar diagnóstico" ctaHref="#contato" />
 
     <DepoimentosTexto />
 
@@ -322,7 +323,7 @@ const pageSchemas = [
     <section id="contato" class="cs-form section--navy">
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
-          <span class="tag-pill tag-pill--glow">Fale com um especialista</span>
+          <span class="tag-pill tag-pill--glow">Solicitar diagnóstico</span>
           <h2>Descubra como preparar sua transportadora para a <em class="accent">SASSMAQ 4.0</em></h2>
           <p>A equipe avalia os requisitos aplicáveis, mostra os gaps e indica como estruturar a adequação. Sem compromisso.</p>
           <ul class="check-list">
@@ -331,7 +332,7 @@ const pageSchemas = [
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
+        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta="Solicitar diagnóstico" obrigado="/consultoria/sassmaq-obrigado" />
       </div>
     </section>
 
@@ -339,7 +340,7 @@ const pageSchemas = [
       <div class="container md">
         <h2>Prepare sua transportadora para a <em>SASSMAQ 4.0</em></h2>
         <p>Identifique os gaps, organize as evidências e chegue à auditoria com um plano claro.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Quero preparar minha empresa <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#contato" class="btn btn--dark btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
   </div>
@@ -378,6 +379,7 @@ const pageSchemas = [
   .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
   .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
+  .cs-hero-cta { display: none; }
   .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
   .cs-ver-metodo:hover { color: var(--accent-lt); }
 
@@ -488,6 +490,7 @@ const pageSchemas = [
   @media (max-width: 900px) {
     .cs-hero-grid { grid-template-columns: 1fr; }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .cs-hero-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin-top: 18px; }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
