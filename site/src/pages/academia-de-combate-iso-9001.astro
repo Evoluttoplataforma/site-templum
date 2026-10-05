@@ -1,0 +1,425 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import { mqlCampaignLpProps } from "../lib/mql-campaigns";
+
+const CAMPAIGN_KEY = "academia_combate_iso_9001";
+const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);
+import "../styles/gestao-financeira.css";
+
+const OBRIGADO = "/obrigado-academia-de-combate-iso-9001/";
+const FORM_MSG = "Academia de Combate | Diagnóstico ISO 9001 gratuito";
+
+const desafios = [
+  "Tudo depende de mim: a operação trava quando eu saio",
+  "Processos não documentados, cada um faz do seu jeito",
+  "Retrabalho e desperdício comendo a margem",
+  "Cliente ou licitação exigindo certificação ISO 9001",
+  "Já tentamos implantar e não sustentamos",
+  "Crescer sem perder qualidade ou prazo",
+  "Outro desafio",
+];
+
+const urgencias = [
+  "Preciso certificar rápido",
+  "Estou sem pressa para certificar",
+  "Preciso para minha carreira",
+  "Sou apenas estudante",
+];
+---
+
+<CampanhaIsolada
+  leadEvento={EVENTO}
+  utmDefaults={UTM_DEFAULTS}
+  title="Consultoria ISO 9001 | Academia de Combate | Templum"
+  description="Diagnóstico gratuito de ISO 9001 com especialistas e Templum OS. Empresa forte vive de processo, não de heroísmo. Garantia de 200% em contrato."
+>
+
+<header class="header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="#topo" aria-label="Academia de Combate">
+          <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+        </a>
+        <a class="logo-templum-link" href="https://templum.com.br" aria-label="Templum Consultoria" target="_blank" rel="noopener noreferrer">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" />
+        </a>
+      </div>
+      <a class="btn-reserve" href="#inscricao">
+        <span class="btn-long">Solicitar diagnóstico</span>
+        <span class="btn-short">Diagnóstico</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="topo">
+    <section class="hero">
+      <div class="hero-lights" aria-hidden="true"></div>
+      <div class="ropes" aria-hidden="true"></div>
+      <div class="container-hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-text">
+              <p class="eyebrow">Academia de Combate&nbsp;apresenta</p>
+              <h1>Consultoria ISO&nbsp;9001</h1>
+              <p class="hero-line">Sua empresa não precisa lutar mais.<br /><em>Precisa lutar&nbsp;melhor.</em></p>
+              <p class="lede">Diagnóstico gratuito para empresários que querem sair do heroísmo diário e construir uma operação que funciona com processo, qualidade consistente e caminho claro até a&nbsp;certificação.</p>
+              <div class="date-bar">
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.2 4.6L19 8.2l-3.5 3.4.8 4.9L12 14.8 7.7 16.5l.8-4.9L5 8.2l4.8-.6L12 3z"/></svg>
+                  <div>
+                    <span class="date-label">Experiência</span>
+                    <span class="date-val">+2.000 certificadas</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>
+                  <div>
+                    <span class="date-label">Método</span>
+                    <span class="date-val">30 anos Templum</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                  <div>
+                    <span class="date-label">Garantia</span>
+                    <span class="date-val">200% em contrato</span>
+                  </div>
+                </div>
+                <div class="date-divider"></div>
+                <div class="date-item">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 18v2M16 18v2M3 10h18"/></svg>
+                  <div>
+                    <span class="date-label">Diagnóstico</span>
+                    <span class="date-val">Gratuito</span>
+                  </div>
+                </div>
+              </div>
+              <p class="seal">Processo, não heroísmo</p>
+            </div>
+          </div>
+
+          <aside class="form-card" id="inscricao">
+              <p class="price-badge">Sem compromisso</p>
+              <p class="price-free">Diagnóstico gratuito</p>
+              <p class="price-note">Preencha e um especialista entra em&nbsp;contato.</p>
+              <p class="form-bar">Resposta em até 1 hora útil · ISO 9001</p>
+              <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="evento" value={EVENTO} />
+              <input type="hidden" name="norma" value="ISO 9001" />
+              <input type="hidden" name="mensagem" value={FORM_MSG} />
+                <div class="field">
+                  <label for="nome">Nome completo</label>
+                  <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
+                </div>
+                <div class="field">
+                  <label for="email">E-mail</label>
+                  <input class="input" id="email" name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+                </div>
+                <div class="field">
+                  <label for="empresa">Empresa</label>
+                  <input class="input" id="empresa" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" />
+                </div>
+                <div class="field">
+                  <label for="telefone">WhatsApp *</label>
+                  <input class="input" id="telefone" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000" />
+                </div>
+                <div class="field">
+                  <label for="cargo">Seu cargo</label>
+                  <select class="select" id="cargo" name="cargo" required>
+                    <option value="">Selecione</option>
+                    <option>Proprietário</option>
+                    <option>Diretor / C-level</option>
+                    <option>Gerente</option>
+                    <option>Coordenador / Supervisor</option>
+                    <option>Consultor</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="funcionarios">Nº de funcionários</label>
+                  <select class="select" id="funcionarios" name="funcionarios" required>
+                    <option value="">Selecione</option>
+                    <option>1 a 10</option>
+                    <option>11 a 50</option>
+                    <option>51 a 100</option>
+                    <option>101 a 250</option>
+                    <option>251 a 500</option>
+                    <option>Mais de 500</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="urgencia">Urgência da certificação</label>
+                  <select class="select" id="urgencia" name="urgencia" required>
+                    <option value="">Selecione</option>
+                    {urgencias.map((u) => <option value={u}>{u}</option>)}
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="desafio">Maior desafio da empresa hoje</label>
+                  <select class="select" id="desafio" name="desafio" required>
+                    <option value="">Selecione</option>
+                    {desafios.map((d) => <option value={d}>{d}</option>)}
+                  </select>
+                </div>
+                <button type="submit" class="btn-reserve btn-block">
+                  Solicitar diagnóstico&nbsp;gratuito
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </form>
+              <p class="legal">Sem compromisso. Contato por e-mail e&nbsp;WhatsApp.</p>
+          </aside>
+        </div>
+        <div class="outcomes">
+          <p class="outcomes-lead">No diagnóstico você enxerga com mais clareza:</p>
+          <ul class="outcomes-list">
+            <li><strong>Gap</strong> O que falta hoje para a empresa estar pronta para a&nbsp;ISO&nbsp;9001.</li>
+            <li><strong>Prioridade</strong> Por onde começar sem parar a&nbsp;operação.</li>
+            <li><strong>Processo</strong> Onde o heroísmo está custando margem e&nbsp;prazo.</li>
+            <li><strong>Certificação</strong> Cronograma realista até a auditoria, com Templum&nbsp;OS.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="placar">
+      <div class="container">
+        <div class="placar-grid">
+        <div>
+        <div class="section-head">
+          <span class="kicker">O placar</span>
+          <h2>Vencer o round de hoje<br /><em>não prova que você está ganhando o&nbsp;jogo.</em></h2>
+          <p>Muitas empresas crescem no operacional do dono. Vendem, entregam, apagam incêndio. A pergunta é se a operação aguenta o próximo&nbsp;round.</p>
+        </div>
+        <p class="prose">ISO 9001 não é documento para gaveta. É estrutura para padronizar, medir e melhorar sem depender da sua presença em cada&nbsp;decisão.</p>
+        <p class="prose">Com consultores experientes e o Templum OS, você organiza a jornada do diagnóstico à certificação com mais previsibilidade e menos&nbsp;retrabalho.</p>
+        </div>
+        <div>
+        <p class="prose"><strong>O resultado?</strong></p>
+        <ul class="fight-card">
+          <li>O time continua&nbsp;correndo.</li>
+          <li>O faturamento pode até&nbsp;crescer.</li>
+          <li>A qualidade oscila de pessoa para&nbsp;pessoa.</li>
+          <li class="fight-card-hit">Mas a empresa ainda não joga<br />com processo de&nbsp;verdade.</li>
+        </ul>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="metodo">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">O método</span>
+          <h2>Do diagnóstico à certificação<br />sem parar a&nbsp;operação.</h2>
+          <p>Especialistas conduzem. O Templum OS organiza documentos, indicadores e rotinas para sua equipe executar com&nbsp;clareza.</p>
+        </div>
+        <ol class="rounds">
+          <li class="round">
+            <span>Round 01</span>
+            <strong>Diagnóstico</strong>
+            <p>Entender o contexto, os gargalos e o caminho mais curto até a certificação, sem&nbsp;achismo.</p>
+          </li>
+          <li class="round">
+            <span>Round 02</span>
+            <strong>Implementação</strong>
+            <p>Mapear processos, envolver o time e estruturar o sistema de gestão com apoio da&nbsp;plataforma.</p>
+          </li>
+          <li class="round">
+            <span>Round 03</span>
+            <strong>Certificação</strong>
+            <p>Preparar auditorias internas e externas com evidências e melhoria contínua já em&nbsp;ritmo.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="pauta">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Por que certificar</span>
+          <h2>ISO 9001 com o jeito&nbsp;Templum.</h2>
+          <p>Consultoria + Templum OS: menos planilha solta, mais operação que se sustenta quando você não está na&nbsp;sala.</p>
+        </div>
+        <div class="topics">
+          <article class="topic">
+            <span class="topic-num">01</span>
+            <h3>Grandes contratos e licitações</h3>
+            <p>Muitos clientes só qualificam fornecedor com ISO 9001. O certificado abre portas e encurta due&nbsp;diligence.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">02</span>
+            <h3>Menos retrabalho</h3>
+            <p>Processos documentados reduzem erro humano, desperdício e custo operacional que comem a&nbsp;margem.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">03</span>
+            <h3>Decisão com evidência</h3>
+            <p>Indicadores, metas e análises críticas saem do opcional e viram rotina de&nbsp;gestão.</p>
+          </article>
+          <article class="topic">
+            <span class="topic-num">04</span>
+            <h3>Escalar sem caos</h3>
+            <p>Contratar e crescer com espinha dorsal operacional, não só com esforço do&nbsp;dono.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="para-quem">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Para quem é</span>
+          <h2>Para quem cansou de ganhar o dia<br />e perder a&nbsp;semana.</h2>
+          <p>Proprietários, diretores e gestores de empresas de 10 a 250 pessoas que querem certificar ou reorganizar a gestão da&nbsp;qualidade.</p>
+        </div>
+        <div class="who-grid">
+          <blockquote>Minha operação depende demais de mim. Como sair desse&nbsp;ciclo?</blockquote>
+          <blockquote>Preciso de ISO 9001 para fechar contrato ou licitação. Por onde&nbsp;começo?</blockquote>
+          <blockquote>Já tentamos implantar e não&nbsp;sustentamos. O que fazer&nbsp;diferente?</blockquote>
+          <blockquote>Quero qualidade consistente sem travar o crescimento da&nbsp;empresa.</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="comando">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="kicker">Próximo passo</span>
+          <h2>Solicite o diagnóstico <em>gratuito.</em></h2>
+          <p>Um especialista em ISO 9001 analisa seu cenário e mostra o caminho mais curto até a certificação, com cronograma e investimento sob&nbsp;medida.</p>
+        </div>
+        <div class="final-grid">
+          <article class="host">
+            <img class="host-photo" src="/assets/gestao-financeira/igor.jpg" alt="Igor Furniel" />
+            <div>
+              <span class="kicker">Quem conduz</span>
+              <h3>Igor Furniel</h3>
+              <p class="host-role">Sócio-fundador · Templum</p>
+              <p>Empreendedor há mais de 24 anos, Igor já conduziu centenas de implementações de sistemas de gestão, de pequenos negócios a operações de grande&nbsp;porte.</p>
+            </div>
+          </article>
+
+          <aside class="form-card" id="inscricao-final">
+            <p class="price-badge">Sem compromisso</p>
+            <p class="price-free">Diagnóstico gratuito</p>
+            <p class="price-note">Preencha e um especialista entra em&nbsp;contato.</p>
+            <p class="form-bar">Resposta em até 1 hora útil · ISO 9001</p>
+            <form data-trk-event={EVENTO} data-obrigado={OBRIGADO}>
+              <input type="hidden" name="evento" value={EVENTO} />
+              <input type="hidden" name="norma" value="ISO 9001" />
+              <input type="hidden" name="mensagem" value={FORM_MSG} />
+              <div class="field">
+                <label for="nome-2">Nome completo</label>
+                <input class="input" id="nome-2" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
+              </div>
+              <div class="field">
+                <label for="email-2">E-mail</label>
+                <input class="input" id="email-2" name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+              </div>
+              <div class="field">
+                <label for="empresa-2">Empresa</label>
+                <input class="input" id="empresa-2" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" />
+              </div>
+              <div class="field">
+                <label for="telefone-2">WhatsApp *</label>
+                <input class="input" id="telefone-2" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000" />
+              </div>
+              <div class="field">
+                <label for="cargo-2">Seu cargo</label>
+                <select class="select" id="cargo-2" name="cargo" required>
+                  <option value="">Selecione</option>
+                  <option>Proprietário</option>
+                  <option>Diretor / C-level</option>
+                  <option>Gerente</option>
+                  <option>Coordenador / Supervisor</option>
+                  <option>Consultor</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="funcionarios-2">Nº de funcionários</label>
+                <select class="select" id="funcionarios-2" name="funcionarios" required>
+                  <option value="">Selecione</option>
+                  <option>1 a 10</option>
+                  <option>11 a 50</option>
+                  <option>51 a 100</option>
+                  <option>101 a 250</option>
+                  <option>251 a 500</option>
+                  <option>Mais de 500</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="urgencia-2">Urgência da certificação</label>
+                <select class="select" id="urgencia-2" name="urgencia" required>
+                  <option value="">Selecione</option>
+                  {urgencias.map((u) => <option value={u}>{u}</option>)}
+                </select>
+              </div>
+              <div class="field">
+                <label for="desafio-2">Maior desafio da empresa hoje</label>
+                <select class="select" id="desafio-2" name="desafio" required>
+                  <option value="">Selecione</option>
+                  {desafios.map((d) => <option value={d}>{d}</option>)}
+                </select>
+              </div>
+              <button type="submit" class="btn-reserve btn-block">
+                Solicitar diagnóstico&nbsp;gratuito
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </form>
+            <p class="legal">Sem compromisso. Contato por e-mail e&nbsp;WhatsApp.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Dúvidas</span>
+          <h2>Perguntas <em>frequentes.</em></h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>O diagnóstico é pago? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Não. O diagnóstico inicial é gratuito e sem compromisso. Um especialista entra em contato para entender seu cenário.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Qual o tamanho ideal de empresa? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Atendemos desde operações enxutas até empresas com centenas de colaboradores. O método se adapta ao porte e ao setor.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Preciso parar a operação para implantar? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Não. A implementação é feita em fases, convivendo com o dia a dia. O Templum OS ajuda a organizar sem travar a&nbsp;entrega.</p>
+          </details>
+          <details class="faq-item">
+            <summary>O que é a garantia de 200%? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Condição comercial da Templum em contrato: cumprindo o escopo acordado, garantimos certificação ou devolução conforme cláusulas do&nbsp;contrato.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Quanto tempo leva para certificar? <span class="faq-plus" aria-hidden="true">+</span></summary>
+            <p class="faq-answer">Depende do ponto de partida e do engajamento do time. No diagnóstico você recebe uma estimativa realista para a sua&nbsp;empresa.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+        <a class="logo-templum-link" href="https://templum.com.br" aria-label="Templum Consultoria" target="_blank" rel="noopener noreferrer">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" />
+        </a>
+      </div>
+      <div class="footer-copy">
+        <p>Consultoria ISO 9001 · Academia de Combate · Templum Consultoria</p>
+        <p class="footer-legal">© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+      </div>
+    </div>
+  </footer>
+
+</CampanhaIsolada>

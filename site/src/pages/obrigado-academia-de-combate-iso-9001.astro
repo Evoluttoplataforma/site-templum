@@ -1,0 +1,96 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import "../styles/gestao-financeira.css";
+---
+
+<CampanhaIsolada
+  title="Diagnóstico solicitado | ISO 9001 | Academia de Combate"
+  description="Recebemos sua solicitação de diagnóstico ISO 9001. Um especialista da Templum entrará em contato em breve."
+>
+
+<header class="header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="/academia-de-combate-iso-9001/" aria-label="Voltar para a página ISO 9001">
+          <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+        </a>
+        <a class="logo-templum-link" href="https://templum.com.br" aria-label="Templum Consultoria" target="_blank" rel="noopener noreferrer">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="ob-main">
+    <div class="container">
+      <article class="ob-card">
+        <div class="ob-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+        </div>
+        <p class="seal">ISO 9001 · Diagnóstico solicitado</p>
+        <h1>Recebemos <em>sua solicitação.</em></h1>
+        <p class="lede">Um especialista em ISO 9001 da Templum entra em contato em <strong>até 1 hora útil</strong> pelo WhatsApp ou telefone que você informou.</p>
+
+        <ul class="ob-facts">
+          <li><strong>1.</strong> Especialista analisa seu perfil com base nos dados informados.</li>
+          <li><strong>2.</strong> Diagnóstico gratuito: caminho mais curto até a certificação.</li>
+          <li><strong>3.</strong> Proposta personalizada com cronograma e investimento sob medida.</li>
+        </ul>
+
+        <a
+          class="btn-wpp"
+          href="https://wa.me/5519993521270?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20um%20especialista%20de%20ISO%209001"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Falar agora pelo WhatsApp</a>
+        <p class="ob-hint">Prefere aguardar? Retornaremos em até 1 hora útil.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="logo-academia" src="/assets/gestao-financeira/logo-academia.jpg" alt="Academia de Combate" />
+        <a class="logo-templum-link" href="https://templum.com.br" aria-label="Templum Consultoria" target="_blank" rel="noopener noreferrer">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" />
+        </a>
+      </div>
+      <div class="footer-copy">
+        <p>Consultoria ISO 9001 · Academia de Combate · Templum Consultoria</p>
+        <p class="footer-legal">© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+      </div>
+    </div>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var PRODUCT = { content_name: "ISO 9001", content_category: "Gestão da Qualidade" };
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try {
+          if (window.trk && typeof window.trk.lead === "function") {
+            window.trk.lead({
+              email: d.email,
+              phone: d.phone,
+              name: d.name,
+              content_name: PRODUCT.content_name,
+              content_category: PRODUCT.content_category,
+            });
+          }
+        } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 100);
+    })();
+  </script>
+</CampanhaIsolada>

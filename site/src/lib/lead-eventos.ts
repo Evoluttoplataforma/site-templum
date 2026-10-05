@@ -9,3 +9,5 @@ export const LEAD_EVENTO_INTERVALO_GESTAO_FINANCEIRA = mqlCampaignSlug(
 );
 
 export const LEAD_EVENTO_GESTAO_IA_LSC = mqlCampaignSlug("gestao_ia_lsc_2025_10");
+
+export const LEAD_EVENTO_ACADEMIA_ISO_9001 = mqlCampaignSlug("academia_combate_iso_9001");

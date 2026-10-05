@@ -1,51 +1,70 @@
-{
-  "version": 1,
-  "campaigns": [
-    {
-      "key": "intervalo_gf_2026_10",
-      "slug": "intervalo-tecnico-gestao-financeira",
-      "label": "Academia de Combate · Intervalo Técnico · Gestão Financeira (20/10/2026)",
-      "lpPath": "/gestao-financeira/",
-      "crmTags": ["intervalo técnico", "gestão financeira"],
-      "crmSource": "Intervalo Técnico",
-      "titleStyle": "contact",
-      "notes": "Inscrição na live Intervalo Técnico, Gestão Financeira na Prática, 20/10/2026 às 16h (horário de Brasília).",
-      "customFields": true,
-      "manychatTags": ["intervalo técnico", "gestão financeira"],
-      "mailchimpTags": ["intervalo técnico", "gestão financeira"],
-      "utmDefaults": {
-        "utm_source": "site",
-        "utm_medium": "lp",
-        "utm_campaign": "intervalo-tecnico-gestao-financeira"
-      },
-      "survey": {
-        "publicUrl": "https://app.templum.com.br/s/survey_1790776678332_5xsdnb6hi",
-        "emailQueryParam": "email",
-        "leadIdQueryParam": "lead_id"
-      },
-      "fluxos": {
-        "e0InboundPathKey": "wh_1a3cf478c5404112",
-        "e0PrimaryTag": "intervalo técnico",
-        "e0SentTag": "e0:intervalo-gf-2026:enviado",
-        "automationId": "eb0a9536-7037-48fe-8b1c-f1a828d499ae"
-      }
-    },
-    {
-      "key": "gestao_ia_lsc_2025_10",
-      "slug": "gestao-ia-pratica-lsc-one",
-      "label": "Gestão com IA na Prática · Templum + LSC One",
-      "lpPath": "/gestao-ia-pratica/",
-      "crmTags": ["Parceria LSC One"],
-      "crmSource": "Parceria LSC One",
-      "titleStyle": "empresa_suffix",
-      "titleSuffix": "Gestão com IA",
-      "manychatTags": ["Parceria LSC One"],
-      "mailchimpTags": ["Parceria LSC One"],
-      "utmDefaults": {
-        "utm_source": "site",
-        "utm_medium": "lp",
-        "utm_campaign": "gestao-ia-pratica-lsc-one"
-      }
-    }
-  ]
-}
+{
+  "version": 1,
+  "campaigns": [
+    {
+      "key": "intervalo_gf_2026_10",
+      "slug": "intervalo-tecnico-gestao-financeira",
+      "label": "Academia de Combate · Intervalo Técnico · Gestão Financeira (20/10/2026)",
+      "lpPath": "/gestao-financeira/",
+      "crmTags": ["intervalo técnico", "gestão financeira"],
+      "crmSource": "Intervalo Técnico",
+      "titleStyle": "contact",
+      "notes": "Inscrição na live Intervalo Técnico, Gestão Financeira na Prática, 20/10/2026 às 16h (horário de Brasília).",
+      "customFields": true,
+      "manychatTags": ["intervalo técnico", "gestão financeira"],
+      "mailchimpTags": ["intervalo técnico", "gestão financeira"],
+      "utmDefaults": {
+        "utm_source": "site",
+        "utm_medium": "lp",
+        "utm_campaign": "intervalo-tecnico-gestao-financeira"
+      },
+      "survey": {
+        "publicUrl": "https://app.templum.com.br/s/survey_1790776678332_5xsdnb6hi",
+        "emailQueryParam": "email",
+        "leadIdQueryParam": "lead_id"
+      },
+      "fluxos": {
+        "e0InboundPathKey": "wh_1a3cf478c5404112",
+        "e0PrimaryTag": "intervalo técnico",
+        "e0SentTag": "e0:intervalo-gf-2026:enviado",
+        "automationId": "eb0a9536-7037-48fe-8b1c-f1a828d499ae"
+      }
+    },
+    {
+      "key": "academia_combate_iso_9001",
+      "slug": "academia-de-combate-iso-9001",
+      "label": "Academia de Combate · ISO 9001 · Diagnóstico",
+      "lpPath": "/academia-de-combate-iso-9001/",
+      "crmTags": ["academia de combate", "iso 9001"],
+      "crmSource": "Academia de Combate",
+      "titleStyle": "contact",
+      "notes": "Diagnóstico gratuito ISO 9001 · LP Academia de Combate (out/2026).",
+      "customFields": true,
+      "manychatTags": ["academia de combate", "iso 9001"],
+      "mailchimpTags": ["academia de combate", "iso 9001"],
+      "utmDefaults": {
+        "utm_source": "site",
+        "utm_medium": "lp",
+        "utm_campaign": "academia-de-combate-iso-9001"
+      }
+    },
+    {
+      "key": "gestao_ia_lsc_2025_10",
+      "slug": "gestao-ia-pratica-lsc-one",
+      "label": "Gestão com IA na Prática · Templum + LSC One",
+      "lpPath": "/gestao-ia-pratica/",
+      "crmTags": ["Parceria LSC One"],
+      "crmSource": "Parceria LSC One",
+      "titleStyle": "empresa_suffix",
+      "titleSuffix": "Gestão com IA",
+      "manychatTags": ["Parceria LSC One"],
+      "mailchimpTags": ["Parceria LSC One"],
+      "utmDefaults": {
+        "utm_source": "site",
+        "utm_medium": "lp",
+        "utm_campaign": "gestao-ia-pratica-lsc-one"
+      }
+    }
+  ]
+}
+
