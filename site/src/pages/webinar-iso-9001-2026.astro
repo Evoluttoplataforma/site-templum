@@ -693,24 +693,30 @@ const schemaEvent = {
     if (!nome || !email) { alert("Por favor, preencha nome e e-mail."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("E-mail inválido."); return; }
     wbLeadSent = true;
-
-    // Salva dados para disparo de conversão na thank-you page (GA4/Ads via trk.lead)
-    try {
-      sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
-        email, phone: wpp, name: nome, norma: "ISO 9001",
-      }));
-    } catch (_) {}
+    const btn = form.querySelector('[type="submit"]') as HTMLButtonElement | null;
+    if (btn) btn.disabled = true;
 
     var redirected = false;
     function goToObrigado() {
       if (redirected) return; redirected = true;
       window.location.href = "/obrigado-webserie";
     }
-    var fallback = setTimeout(goToObrigado, 5000); // fallback: redireciona em no máximo 5s
+    function failTurnstile() {
+      wbLeadSent = false;
+      redirected = false;
+      if (btn) btn.disabled = false;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      if ((window as any).tplLeadFail) (window as any).tplLeadFail(form, btn);
+    }
 
-    // Envia para /api/lead → Mailchimp (tag: webinar01_01_07) + webhook. O Lead
-    // do Meta Pixel só dispara depois de confirmar que o Supabase salvou o cadastro.
-    try {
+    const tokenPromise = (window as any).tplTurnstileToken ? (window as any).tplTurnstileToken() : Promise.reject();
+    tokenPromise.then((token: string) => {
+      try {
+        sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+          email, phone: wpp, name: nome, norma: "ISO 9001",
+        }));
+      } catch (_) {}
+      var fallback = setTimeout(goToObrigado, 5000);
       const attrib = (window as any).__tplAttrib ? (window as any).__tplAttrib() : {};
       fetch("/api/lead", {
         method: "POST",
@@ -722,13 +728,27 @@ const schemaEvent = {
           evento: "webinar01_01_07",
           pagina: location.pathname,
           ...attrib,
+          turnstile_token: token,
         }),
       }).then((r) => r.json().catch(() => ({})).then((body: any) => ({ httpOk: r.ok, body })))
         .then((res: any) => {
+          if ((window as any).tplTurnstileReset) (window as any).tplTurnstileReset();
+          if (res.body && res.body.error === "turnstile") {
+            clearTimeout(fallback);
+            failTurnstile();
+            return;
+          }
           const saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
           if (saved && (window as any).fireMetaLead) (window as any).fireMetaLead({ email, phone: wpp }, "webinar-iso-9001-2026");
           clearTimeout(fallback); goToObrigado();
-        }).catch(() => { clearTimeout(fallback); goToObrigado(); });
-    } catch (_) { clearTimeout(fallback); goToObrigado(); }
+        }).catch(() => {
+          clearTimeout(fallback);
+          if ((window as any).tplTurnstileReset) (window as any).tplTurnstileReset();
+          goToObrigado();
+        });
+    }).catch(() => {
+      if ((window as any).tplTurnstileReset) (window as any).tplTurnstileReset();
+      failTurnstile();
+    });
   });
 </script>

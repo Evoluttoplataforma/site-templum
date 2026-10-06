@@ -375,6 +375,7 @@
 
   [hidden]{display:none!important;}
 </style>
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body data-slug="diagnostico-iso-9001">
 <div class="wrap">
@@ -685,15 +686,29 @@
     };
   }
   function postLead(mensagem, evento) {
-    return fetch(LEAD_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(leadPayload(mensagem, evento))
-    }).then(function(res) {
-      return res.json().catch(function(){ return {}; }).then(function(data) {
-        if (!res.ok || !data.ok) throw new Error((data && data.error) || 'Não foi possível registrar agora. Tente novamente.');
+    var payload = leadPayload(mensagem, evento);
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject(new Error('Não conseguimos enviar agora. Tente de novo.'));
+    return ready.then(function (token) {
+      payload.turnstile_token = token;
+      return fetch(LEAD_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }).then(function (res) {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok || !data.ok) {
+          var msg = data && data.error === 'turnstile'
+            ? 'Não conseguimos enviar agora. Tente de novo.'
+            : ((data && data.error) || 'Não foi possível registrar agora. Tente novamente.');
+          throw new Error(msg);
+        }
         return data;
       });
+    }, function (err) {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      throw err;
     });
   }
   function showLeadError(msg) {

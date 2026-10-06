@@ -315,6 +315,7 @@ h1,h2,h3{font-family:'Sora', system-ui, sans-serif; text-wrap:balance; margin:0;
   .stamp{width:84px;height:84px;}
 }
 </style>
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body>
 
@@ -781,24 +782,31 @@ var DATA = {
       (answers.q4 || "") +
       "; motivo: " +
       (answers.q5 || "");
-    try {
-      fetch("/api/lead", {
+    var payload = {
+      nome: qs("n"),
+      email: email,
+      telefone: qs("t"),
+      empresa: qs("c") || "",
+      norma: "PBQP-H",
+      isca: qs("isca") || "e-book-guia-pbqp-h",
+      mensagem: mensagem,
+      evento: "isca-resultado",
+      pagina: location.pathname,
+    };
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    ready.then(function (token) {
+      payload.turnstile_token = token;
+      return fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true,
-        body: JSON.stringify({
-          nome: qs("n"),
-          email: email,
-          telefone: qs("t"),
-          empresa: qs("c") || "",
-          norma: "PBQP-H",
-          isca: qs("isca") || "e-book-guia-pbqp-h",
-          mensagem: mensagem,
-          evento: "isca-resultado",
-          pagina: location.pathname,
-        }),
-      }).catch(function () {});
-    } catch (_) {}
+        body: JSON.stringify(payload),
+      });
+    }).then(function () {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+    }).catch(function () {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+    });
   }
 
   function init() {

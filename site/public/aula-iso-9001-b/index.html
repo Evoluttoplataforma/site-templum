@@ -181,6 +181,7 @@
     .sticky-cta a { display: block; color: #fff; font-size: 17px; font-weight: 800; text-align: center; text-decoration: none; }
     @media (max-width: 600px) { .sticky-cta { display: block; } .page { padding-bottom: 90px; } }
   </style>
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body>
 
@@ -293,6 +294,7 @@
     if (!ok) return;
 
     var btn = document.getElementById('btnSubmit');
+    var btnLabel = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Enviando...';
 
@@ -312,11 +314,21 @@
     };
 
     try {
-      await fetch('https://templum.com.br/api/lead', {
+      var token = await (window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject());
+      payload.turnstile_token = token;
+      var leadRes = await fetch('https://templum.com.br/api/lead', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      var leadData = await leadRes.json().catch(function () { return {}; });
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      if (leadData && leadData.error === 'turnstile') {
+        btn.disabled = false;
+        btn.textContent = btnLabel;
+        if (window.tplLeadFail) window.tplLeadFail(document.getElementById('leadForm'), btn);
+        return;
+      }
       var eid = 'aula-b-' + Date.now();
       if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'aula-iso-9001-form' }, { eventID: eid });
       fetch('https://templum.com.br/api/track', {
@@ -331,7 +343,15 @@
           properties: { content_name: 'aula-iso-9001-form' },
         }),
       });
-    } catch(err) {}
+    } catch(err) {
+      if (!payload.turnstile_token) {
+        if (window.tplTurnstileReset) window.tplTurnstileReset();
+        btn.disabled = false;
+        btn.textContent = btnLabel;
+        if (window.tplLeadFail) window.tplLeadFail(document.getElementById('leadForm'), btn);
+        return;
+      }
+    }
 
     // Redireciona para obrigado
     window.location.href = '/aula-iso-9001-b/obrigado/';

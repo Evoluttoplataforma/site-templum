@@ -613,6 +613,7 @@ footer {
 .footer-links a { font-size: 13px; color: var(--muted); transition: color .3s; }
 .footer-links a:hover { color: var(--cyan); }
 </style>
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body>
 
@@ -1179,18 +1180,17 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
   new FormData(form).forEach(function (v, k) { d[k] = v; });
 
   var btn = form.querySelector('[type="submit"]');
+  var btnLabel = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
 
-  // Guarda no sessionStorage para a /obrigado disparar os pixels (mesmo padrão do Base.astro)
-  try {
-    sessionStorage.setItem('tpl_lead_pending', JSON.stringify({
-      email: d.email || '', phone: d.telefone || '', name: d.nome || '', norma: d.norma || '',
-    }));
-  } catch (_) {}
-
-  // POST para o mesmo endpoint do site
-  try {
-    fetch('/api/lead', {
+  var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+  tokenPromise.then(function (token) {
+    try {
+      sessionStorage.setItem('tpl_lead_pending', JSON.stringify({
+        email: d.email || '', phone: d.telefone || '', name: d.nome || '', norma: d.norma || '',
+      }));
+    } catch (_) {}
+    return fetch('/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       keepalive: true,
@@ -1200,11 +1200,25 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
         cargo: d.cargo || '', funcionarios: d.funcionarios || '',
         mensagem: 'Tipo de laboratório: ' + (d.tipo_lab || ''),
         evento: 'lead', pagina: location.pathname,
+        turnstile_token: token,
       }),
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (body) { return body; });
+    }).then(function (body) {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      if (body && body.error === 'turnstile') {
+        try { sessionStorage.removeItem('tpl_lead_pending'); } catch (_) {}
+        if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+        if (window.tplLeadFail) window.tplLeadFail(form, btn);
+        return;
+      }
+      setTimeout(function () { window.location.href = '/obrigado'; }, 400);
     });
-  } catch (_) {}
-
-  setTimeout(function () { window.location.href = '/obrigado'; }, 400);
+  }).catch(function () {
+    if (window.tplTurnstileReset) window.tplTurnstileReset();
+    if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+    if (window.tplLeadFail) window.tplLeadFail(form, btn);
+  });
 });
 </script>
 </body>

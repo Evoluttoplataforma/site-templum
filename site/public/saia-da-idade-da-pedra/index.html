@@ -209,6 +209,7 @@
       body { padding-bottom: 68px; }
     }
   </style>
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body>
 
@@ -546,6 +547,7 @@
     if (!ok) return;
 
     var btn = document.getElementById('btnSubmit');
+    var btnLabel = btn.textContent;
     btn.disabled = true; btn.textContent = 'Enviando...';
 
     var utms = getUtms();
@@ -560,7 +562,16 @@
     };
 
     try {
-      await fetch('https://templum.com.br/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+      var token = await (window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject());
+      payload.turnstile_token = token;
+      var leadRes = await fetch('https://templum.com.br/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+      var leadData = await leadRes.json().catch(function () { return {}; });
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      if (leadData && leadData.error === 'turnstile') {
+        btn.disabled = false; btn.textContent = btnLabel;
+        if (window.tplLeadFail) window.tplLeadFail(document.getElementById('leadForm'), btn);
+        return;
+      }
       var eid = 'rx-caverna-' + Date.now();
       if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'raio-x-caverna' }, { eventID: eid });
       fetch('https://templum.com.br/api/track', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({
@@ -568,7 +579,14 @@
         first_name:payload.nome.split(' ')[0], last_name:payload.nome.split(' ').slice(1).join(' '),
         page_url:location.href, fbp:payload.fbp, fbc:payload.fbc, properties:{content_name:'raio-x-caverna'},
       })});
-    } catch(err) {}
+    } catch(err) {
+      if (!payload.turnstile_token) {
+        if (window.tplTurnstileReset) window.tplTurnstileReset();
+        btn.disabled = false; btn.textContent = btnLabel;
+        if (window.tplLeadFail) window.tplLeadFail(document.getElementById('leadForm'), btn);
+        return;
+      }
+    }
 
     document.getElementById('leadForm').style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';

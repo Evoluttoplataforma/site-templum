@@ -46,6 +46,9 @@
 //                          buscar nome/e-mail do cliente por customer id (o webhook não manda isso)
 //   ASAAS_WEBHOOK_TOKEN    (SECRETO) token que você mesmo escolhe (32-255 chars) ao cadastrar o
 //                          webhook no painel Asaas — vem de volta no header "asaas-access-token"
+//   TURNSTILE_SECRET_KEY   (SECRETO) segredo do widget Turnstile invisível templum-leads.
+//                          POST /api/lead só grava com token válido. Se o siteverify
+//                          estiver fora, o lead segue (não perde cadastro real).
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 // Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
@@ -401,9 +404,60 @@ async function handleCrmLeadLookup(request, env) {
   }
 }
 
+const TURNSTILE_FAIL_OPEN = new Set([
+  "missing-input-secret",
+  "invalid-input-secret",
+  "internal-error",
+]);
+
+// Token ausente ou inválido bloqueia. Falha de rede, 5xx ou segredo
+// mal configurado libera o lead: parar o formulário porque a Cloudflare
+// não respondeu perderia cadastro de verdade.
+async function verifyTurnstile(token, request, env) {
+  const secret = env.TURNSTILE_SECRET_KEY;
+  if (!secret) {
+    console.error("[lead:turnstile] TURNSTILE_SECRET_KEY ausente, envio liberado");
+    return { ok: true, skipped: "not_configured" };
+  }
+  const value = String(token || "").trim();
+  if (!value) return { ok: false, reason: "missing_token" };
+
+  const ip = request.headers.get("cf-connecting-ip") || "";
+  try {
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret, response: value, remoteip: ip }),
+      signal: AbortSignal.timeout(2500),
+    });
+    if (r.status >= 500) {
+      console.error("[lead:turnstile] siteverify", r.status);
+      return { ok: true, skipped: "upstream_" + r.status };
+    }
+    const data = await r.json().catch(() => null);
+    if (!data) {
+      console.error("[lead:turnstile] resposta invalida");
+      return { ok: true, skipped: "bad_response" };
+    }
+    if (data.success) return { ok: true };
+    const codes = Array.isArray(data["error-codes"]) ? data["error-codes"] : [];
+    if (codes.some((c) => TURNSTILE_FAIL_OPEN.has(c))) {
+      console.error("[lead:turnstile] fail open", JSON.stringify(codes));
+      return { ok: true, skipped: codes.join(",") };
+    }
+    return { ok: false, reason: "invalid_token" };
+  } catch (e) {
+    console.error("[lead:turnstile] siteverify indisponivel", e && e.message);
+    return { ok: true, skipped: "unreachable" };
+  }
+}
+
 async function handleLead(request, env, ctx) {
   let body = {};
   try { body = await request.json(); } catch (_) { return corsJson({ ok: false, error: "invalid_json" }, 400); }
+
+  const turnstile = await verifyTurnstile(body.turnstile_token, request, env);
+  if (!turnstile.ok) return corsJson({ ok: false, error: "turnstile" }, 403);
 
   const email = (body.email || "").trim().toLowerCase();
   if (!email || !email.includes("@")) return corsJson({ ok: false, error: "invalid_email" }, 422);

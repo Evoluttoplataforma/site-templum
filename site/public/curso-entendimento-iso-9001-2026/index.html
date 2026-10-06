@@ -27,6 +27,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"></noscript>
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer></script>
   <link rel="stylesheet" href="styles.css">
+  <script src="/js/tpl-turnstile.js?v=1"></script>
 </head>
 <body>
 
@@ -886,27 +887,46 @@
         meta_content_name: EVENTO,
       }, attrib());
 
-      var done = false;
-      function finish() {
-        if (done) return;
-        done = true;
-        submitBtn.disabled = false;
-        goCheckout();
-      }
-      var fallback = setTimeout(finish, 4000);
-
-      fetch(LEAD_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        keepalive: true,
-        body: JSON.stringify(payload),
-      })
-        .then(function () {
+      var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+      tokenPromise.then(function (token) {
+        payload.turnstile_token = token;
+        var done = false;
+        function finish() {
+          if (done) return;
+          done = true;
+          submitBtn.disabled = false;
+          goCheckout();
+        }
+        var fallback = setTimeout(finish, 4000);
+        fetch(LEAD_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          keepalive: true,
+          body: JSON.stringify(payload),
+        }).then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (body) { return { ok: r.ok, body: body }; });
+        }).then(function (res) {
+          if (window.tplTurnstileReset) window.tplTurnstileReset();
+          if (res.body && res.body.error === "turnstile") {
+            clearTimeout(fallback);
+            done = true;
+            submitBtn.disabled = false;
+            statusEl.textContent = "Não conseguimos enviar agora. Tente de novo.";
+            return;
+          }
           fireMetaLead(payload, leadEventId);
           clearTimeout(fallback);
           finish();
-        })
-        .catch(function () { clearTimeout(fallback); finish(); });
+        }).catch(function () {
+          clearTimeout(fallback);
+          if (window.tplTurnstileReset) window.tplTurnstileReset();
+          finish();
+        });
+      }).catch(function () {
+        if (window.tplTurnstileReset) window.tplTurnstileReset();
+        submitBtn.disabled = false;
+        statusEl.textContent = "Não conseguimos enviar agora. Tente de novo.";
+      });
     });
   })();
   </script>

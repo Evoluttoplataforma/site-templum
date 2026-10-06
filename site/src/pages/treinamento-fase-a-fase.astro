@@ -197,27 +197,42 @@ const objetivos = [
       if (leadSent) return; // trava de disparo único
       leadSent = true;
       var d = {}; new FormData(form).forEach(function (v, k) { d[k] = v; });
-      if (window.trk && typeof window.trk.lead === "function") {
-        try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
-      }
-      try {
-        fetch("/api/lead", {
+      var btn = form.querySelector('[type="submit"]');
+      if (btn) btn.disabled = true;
+      var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+      tokenPromise.then(function (token) {
+        if (window.trk && typeof window.trk.lead === "function") {
+          try { window.trk.lead({ email: d.email, phone: d.telefone, name: d.nome }); } catch (_) {}
+        }
+        return fetch("/api/lead", {
           method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
-          body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Inscrição: " + (d.treinamento || ""), evento: "treinamento", pagina: location.pathname }),
+          body: JSON.stringify({ nome: d.nome || "", email: d.email || "", telefone: d.telefone || "", empresa: d.empresa || "", norma: "", mensagem: "Inscrição: " + (d.treinamento || ""), evento: "treinamento", pagina: location.pathname, turnstile_token: token }),
         }).then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
         }).then(function (res) {
+          if (window.tplTurnstileReset) window.tplTurnstileReset();
+          if (res.body && res.body.error === "turnstile") {
+            leadSent = false;
+            if (btn) btn.disabled = false;
+            if (window.tplLeadFail) window.tplLeadFail(form, btn);
+            return;
+          }
           var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
           if (saved && window.fireMetaLead) window.fireMetaLead({ email: d.email, phone: d.telefone }, d.treinamento || "treinamento-fase-a-fase");
-        }).catch(function () {});
-      } catch (_) {}
-      form.hidden = true; success.hidden = false;
-      if (currentZoom) {
-        successMsg.textContent = "Tudo certo! Redirecionando para a sala do treinamento…";
-        setTimeout(function () { window.location.href = currentZoom; }, 1400);
-      } else {
-        successMsg.textContent = "O link do Zoom será enviado para o seu e-mail antes do treinamento.";
-      }
+          form.hidden = true; success.hidden = false;
+          if (currentZoom) {
+            successMsg.textContent = "Tudo certo! Redirecionando para a sala do treinamento…";
+            setTimeout(function () { window.location.href = currentZoom; }, 1400);
+          } else {
+            successMsg.textContent = "O link do Zoom será enviado para o seu e-mail antes do treinamento.";
+          }
+        });
+      }).catch(function () {
+        if (window.tplTurnstileReset) window.tplTurnstileReset();
+        leadSent = false;
+        if (btn) btn.disabled = false;
+        if (window.tplLeadFail) window.tplLeadFail(form, btn);
+      });
     });
   })();
 </script>
