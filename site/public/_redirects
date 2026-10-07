@@ -57,10 +57,6 @@
 /sgi/  /consultoria/sgi/  301
 /validation  /auditoria/  301
 /validation/  /auditoria/  301
-/treinamentos  /treinamento-fase-a-fase/  301
-/treinamentos/  /treinamento-fase-a-fase/  301
-/cursos  /treinamento-fase-a-fase/  301
-/cursos/  /treinamento-fase-a-fase/  301
 /o-drops-da-templum  /drops/  301
 /o-drops-da-templum/  /drops/  301
 /certificado-iso-9001-t01  /consultoria/iso-9001/  301
@@ -267,20 +263,6 @@
 /ab-sn/sgi  /consultoria/sgi/  301
 /lp-antigas/sgi  /consultoria/sgi/  301
 
-# → /treinamento-fase-a-fase
-/category/treinamentos  /treinamento-fase-a-fase/  301
-/cursos/auditor-iso-27001  /treinamento-fase-a-fase/  301
-/setembro-especial/masterclass-1  /treinamento-fase-a-fase/  301
-/setembro-especial/masterclass-2  /treinamento-fase-a-fase/  301
-/setembro-especial/masterclass-3  /treinamento-fase-a-fase/  301
-/setembro-especial/masterclass-4  /treinamento-fase-a-fase/  301
-/setembro-especial/masterclass-5  /treinamento-fase-a-fase/  301
-/setembro-especial/obrigado  /treinamento-fase-a-fase/  301
-/setembro-especial/sistema-de-gestao  /treinamento-fase-a-fase/  301
-/webinar/gestao-inteligente  /treinamento-fase-a-fase/  301
-/workshop/planejamento-estrategico  /treinamento-fase-a-fase/  301
-/workshop/planejamento-estrategico/obrigado  /treinamento-fase-a-fase/  301
-
 # → /presentes
 /presentes-templum  /presentes/  301
 /ebooks  /presentes/  301
@@ -316,7 +298,6 @@
 /iso-37001/*  /consultoria/iso-37001/  301
 /lgpd/*  /consultoria/lgpd/  301
 /nucleos/*  /solucoes-de-ia/  301
-/setembro-especial/*  /treinamento-fase-a-fase/  301
 /ia/*  /solucoes-de-ia/  301
 
 # Política de privacidade (linkada como /privacidade em alguns landers) → /page

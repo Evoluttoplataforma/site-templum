@@ -16,7 +16,6 @@ import { normas } from "../data/normas.js";
 const ecossistema = [
   { icon: "solar:settings-bold", nome: "Consultoria", desc: "Implantamos sua certificação com método próprio e plataforma de gestão, do diagnóstico à auditoria.", href: "/consultoria/" },
   { icon: "solar:clipboard-check-bold", nome: "Auditoria", desc: "Auditorias internas e preparação para a certificadora, conduzidas por especialistas.", href: "/auditoria/" },
-  { icon: "solar:square-academic-cap-bold", nome: "Treinamentos", desc: "Capacitação do seu time nas normas e na gestão, presencial e online.", href: "/treinamento-fase-a-fase/" },
   { icon: "solar:cpu-bolt-bold", nome: "Soluções de IA", desc: "Inteligência artificial aplicada à gestão para acelerar processos e decisões.", href: "/solucoes-de-ia/" },
 ];
 
@@ -226,6 +225,9 @@ const serviceSchema = {
 </Base>
 
 <style>
+  @media (min-width: 1025px) {
+    .eco-grid { grid-template-columns: repeat(3, 1fr); }
+  }
   .hf { position: relative; overflow: hidden; }
   .hf-bg { position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(720px 440px at 88% -10%, rgba(255,89,37,0.20), transparent 60%),

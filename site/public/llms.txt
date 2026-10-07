@@ -29,7 +29,6 @@ A atuação é 100% online, atendendo empresas de todos os portes e setores (ind
 - [Auditoria interna](https://templum.com.br/auditoria): auditorias inteligentes e cálculo de riscos com base nas normas ISO.
 - [Soluções de IA — Templum OS e Olívia](https://templum.com.br/solucoes-de-ia): plataforma com 12 agentes de IA que organizam a gestão.
 - [Metodologia](https://templum.com.br/metodologia): o método próprio em 7 passos, do diagnóstico à auditoria.
-- [Treinamentos](https://templum.com.br/treinamento-fase-a-fase): capacitação das equipes nas normas e na gestão.
 - [Quem somos](https://templum.com.br/quem-somos/sobre): história, sócios e valores da Templum.
 - [Cases de sucesso](https://templum.com.br/case-de-sucesso): resultados reais de clientes certificados.
 - [Falar com um especialista](https://templum.com.br/form): diagnóstico gratuito e sem compromisso.
