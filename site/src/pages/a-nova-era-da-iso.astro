@@ -1,0 +1,245 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import CampanhaMqlForm from "../components/CampanhaMqlForm.astro";
+import { mqlCampaignLpProps } from "../lib/mql-campaigns";
+import "../styles/nova-era-iso.css";
+
+const CAMPAIGN_KEY = "nova_era_iso_2026_10";
+const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);
+const OBRIGADO = "/obrigado-a-nova-era-da-iso/";
+
+const META_TITLE = "A Nova Era da Certificação ISO | 20 de outubro | Templum";
+const META_DESCRIPTION = "Evento online e gratuito em 20 de outubro. Igor Furniel mostra uma central de inteligência que simplifica o processo da certificação ISO.";
+const HIDDEN_MENSAGEM = "A Nova Era da Certificação ISO | 20/10/2026 | online e gratuito";
+const FORM_BAR = "20 de outubro · online · gratuito";
+
+const DESAFIOS = [
+  "Controles espalhados em planilha, pasta e e-mail",
+  "Quero conquistar a certificação ISO",
+  "Já tenho ISO e quero modernizar o sistema",
+  "Dependência total do consultor",
+  "Processos que só existem no papel",
+  "Correria na véspera da auditoria",
+  "Outro desafio",
+];
+---
+
+<CampanhaIsolada
+  leadEvento={EVENTO}
+  utmDefaults={UTM_DEFAULTS}
+  title={META_TITLE}
+  description={META_DESCRIPTION}
+>
+  <div class="lp-nova">
+    <header class="header">
+      <div class="header-inner">
+        <a href="#topo" aria-label="Início">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        </a>
+        <a class="btn btn-header" href="#inscricao">
+          <span class="long">Quero minha vaga gratuita</span>
+          <span class="short">Garantir vaga</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="topo">
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <p class="kicker">Evento online · gratuito</p>
+            <p class="hook">Pare de gerenciar planilhas e comece a gerenciar resultados.</p>
+            <h1>Conheça a Nova Era da Certificação ISO.</h1>
+            <p class="lede">
+              No dia 20 de outubro, Igor Furniel, CEO da Templum, mostra como ter uma central de inteligência que simplifica todo o processo da sua certificação ISO.
+            </p>
+            <div class="date-bar">
+              <div class="date-item">
+                <span>Data</span>
+                <strong>20 de outubro de 2026</strong>
+              </div>
+              <div class="date-item">
+                <span>Formato</span>
+                <strong>Online</strong>
+              </div>
+              <div class="date-item">
+                <span>Acesso</span>
+                <strong>Gratuito</strong>
+              </div>
+            </div>
+            <div class="speaker-strip">
+              <img src="/assets/img/socios/igor.jpg" alt="Igor Furniel" width="112" height="112" />
+              <div>
+                <strong>Igor Furniel</strong>
+                <span>CEO da Templum</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="price-card">
+            <p class="kicker">Vagas limitadas</p>
+            <p class="price-free">Gratuito</p>
+            <p class="price-note">Só preencher e garantir a vaga.</p>
+            <a class="btn" href="#inscricao">Quero minha vaga gratuita</a>
+            <p class="legal">Inscrição em 1 minuto. O horário chega na confirmação.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section band-cream" style="padding-top: 48px; padding-bottom: 48px;">
+        <div class="wrap">
+          <div class="proof">
+            <article><strong>+30</strong><span>anos de mercado</span></article>
+            <article><strong>+2.000</strong><span>clientes certificados</span></article>
+            <article><strong>+8.000</strong><span>contratos</span></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band-white" id="velha-era">
+        <div class="wrap">
+          <div class="era-grid">
+            <div>
+              <p class="kicker">O que ainda trava a certificação</p>
+              <h2>A certificação ainda vive espalhada.</h2>
+              <p class="section-lead">
+                O problema não é a ISO. É o modelo fragmentado: consultor de um lado, planilha de outro, pasta no e-mail e o conhecimento na cabeça de poucas pessoas.
+              </p>
+            </div>
+            <div class="era-shot">
+              <img src="/assets/nova-era-iso/velha-nova-era.jpg" alt="Da velha era de planilhas e documentos soltos para a nova era de gestão centralizada" width="1024" height="682" />
+            </div>
+          </div>
+          <div class="pains">
+            <article class="pain">
+              <h3>Planilhas dispersas</h3>
+              <p>Controles em pastas, e-mails e planilhas que ninguém encontra na hora da auditoria.</p>
+            </article>
+            <article class="pain">
+              <h3>Documentos desconectados</h3>
+              <p>Processos que existem no papel e somem quando a pessoa que os criou sai de férias.</p>
+            </article>
+            <article class="pain">
+              <h3>Correria pré-auditoria</h3>
+              <p>O pânico da véspera vira rotina. O time corre para montar evidência que já deveria estar pronta.</p>
+            </article>
+            <article class="pain">
+              <h3>Consultor insubstituível</h3>
+              <p>A empresa depende de quem guarda o método. Se o consultor sai, o sistema trava.</p>
+            </article>
+          </div>
+          <p class="agitation">Gerir a certificação desse jeito custa receita e esgota o time.</p>
+        </div>
+      </section>
+
+      <section class="section band-navy" id="no-evento">
+        <div class="wrap">
+          <p class="kicker">No evento</p>
+          <h2>O que você vai ver no dia 20.</h2>
+          <p class="section-lead">Uma conversa para quem dirige a empresa e quer simplificar a certificação, esteja começando agora ou já tenha o sistema.</p>
+          <div class="pillars" style="margin-top: 22px;">
+            <article class="pillar">
+              <h3>Central de inteligência</h3>
+              <p>Como reunir o que hoje está em planilha, pasta e e-mail num fluxo que a empresa consegue acompanhar.</p>
+            </article>
+            <article class="pillar">
+              <h3>O caminho até a auditoria</h3>
+              <p>O que muda quando a evidência deixa de ser montada na véspera e passa a acompanhar a operação.</p>
+            </article>
+            <article class="pillar">
+              <h3>Para quem vai certificar</h3>
+              <p>ISO 9001, 14001, 45001 e outras normas, sem depender de um consultor que guarda o método sozinho.</p>
+            </article>
+            <article class="pillar">
+              <h3>Para quem já tem ISO</h3>
+              <p>Como modernizar o sistema que já existe e sair do modelo fragmentado.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band-cream" id="quem-conduz">
+        <div class="wrap">
+          <p class="kicker">Quem conduz</p>
+          <article class="host">
+            <img class="host-photo" src="/assets/img/socios/igor.jpg" alt="Igor Furniel" width="296" height="296" />
+            <div>
+              <h2>Igor Furniel</h2>
+              <p class="role">CEO da Templum</p>
+              <p>
+                Empreendedor há mais de 24 anos, Igor já conduziu centenas de planejamentos estratégicos, de pequenos negócios a franquias que faturam mais de R$ 300 milhões por ano. No dia 20 de outubro, mostra como ter uma central de inteligência que simplifica todo o processo da certificação ISO.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section band-white" id="inscricao">
+        <div class="wrap-narrow">
+          <p class="kicker">Inscrições abertas</p>
+          <h2 class="enroll-title">Garanta sua vaga na<br /><span>Nova Era da Certificação ISO.</span></h2>
+          <p class="section-lead enroll-lead">20 de outubro, online e gratuito. As instruções de acesso chegam por e-mail e WhatsApp.</p>
+          <div class="form-card">
+            <p class="price-free">Gratuito</p>
+            <p class="price-note">Só preencher e garantir a vaga.</p>
+            <CampanhaMqlForm
+              evento={EVENTO}
+              obrigado={OBRIGADO}
+              formBar={FORM_BAR}
+              hiddenMensagem={HIDDEN_MENSAGEM}
+              submitLabel="Garantir minha vaga gratuita"
+              desafios={DESAFIOS}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="section band-cream" id="duvidas">
+        <div class="wrap-narrow">
+          <p class="kicker">Dúvidas</p>
+          <h2>Perguntas frequentes</h2>
+          <div class="faq-list">
+            <details>
+              <summary>Para quem é o evento?</summary>
+              <p>Para diretores e gerentes de pequenas e médias empresas que querem conquistar a ISO 9001, 14001, 45001 ou outra norma, e também para quem já tem o sistema e quer sair do modelo fragmentado.</p>
+            </details>
+            <details>
+              <summary>O evento é pago?</summary>
+              <p>Não. É online e gratuito. Basta preencher o formulário para garantir a vaga.</p>
+            </details>
+            <details>
+              <summary>Quando acontece?</summary>
+              <p>Dia 20 de outubro de 2026, online. O horário de Brasília chega por e-mail e WhatsApp na confirmação da inscrição.</p>
+            </details>
+            <details>
+              <summary>Como vou acessar?</summary>
+              <p>Depois da inscrição, as instruções de acesso chegam por e-mail e WhatsApp.</p>
+            </details>
+            <details>
+              <summary>Preciso já estar certificado?</summary>
+              <p>Não. Serve para quem vai começar a certificação e para quem já tem ISO e quer modernizar a forma de manter o sistema.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div class="wrap">
+          <h2>O próximo nível da sua gestão começa aqui.</h2>
+          <p>20 de outubro. Online e gratuito. Vagas limitadas.</p>
+          <a class="btn" href="#inscricao">Quero minha vaga gratuita</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        <div>
+          <p>A Nova Era da Certificação ISO · 20 de outubro de 2026 · online · gratuito</p>
+          <p>© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+</CampanhaIsolada>

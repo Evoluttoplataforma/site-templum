@@ -1,0 +1,69 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+import "../styles/nova-era-iso.css";
+
+const CAL =
+  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=A%20Nova%20Era%20da%20Certifica%C3%A7%C3%A3o%20ISO&dates=20261020/20261021&details=Evento%20online%20e%20gratuito%20da%20Templum%20em%2020%20de%20outubro%20de%202026.%20O%20hor%C3%A1rio%20de%20Bras%C3%ADlia%20chega%20na%20confirma%C3%A7%C3%A3o.&location=Online";
+---
+
+<CampanhaIsolada
+  title="Vaga reservada | A Nova Era da Certificação ISO"
+  description="Sua inscrição no evento de 20 de outubro está reservada. O horário e o acesso chegam por e-mail e WhatsApp."
+>
+  <div class="lp-nova">
+    <header class="header">
+      <div class="header-inner">
+        <a href="/a-nova-era-da-iso/" aria-label="Voltar para a página do evento">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        </a>
+      </div>
+    </header>
+
+    <main class="ob-main">
+      <article class="ob-card">
+        <div class="ob-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+        </div>
+        <p class="kicker">20 de outubro</p>
+        <h1>Sua vaga está reservada.</h1>
+        <p class="lede">O horário de Brasília e o link de acesso chegam por e-mail e WhatsApp.</p>
+        <ul class="ob-facts">
+          <li><strong>20 de outubro de 2026</strong></li>
+          <li>Online e gratuito</li>
+          <li>Com Igor Furniel, CEO da Templum</li>
+        </ul>
+        <a class="btn-wpp" href="https://chat.whatsapp.com/EE3NiUNvgC2Glmq3Pu7nU8" target="_blank" rel="noopener noreferrer">Entrar no grupo do WhatsApp</a>
+        <div class="ob-cal">
+          <a class="btn-cal" href={CAL} target="_blank" rel="noopener noreferrer">Salvar o dia no Google Calendar</a>
+        </div>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        <p>© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+      </div>
+    </footer>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 250);
+    })();
+  </script>
+</CampanhaIsolada>

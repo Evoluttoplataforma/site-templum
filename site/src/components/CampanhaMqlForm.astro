@@ -10,7 +10,21 @@ const {
   formBar = "",
   hiddenMensagem = "",
   submitLabel = "Garantir minha vaga gratuita",
+  desafios = null,
+  normas = null,
 } = Astro.props;
+
+const desafioOpcoes = Array.isArray(desafios) && desafios.length
+  ? desafios
+  : [
+      "Não temos um plano estratégico definido",
+      "Temos o plano, mas não conseguimos executar",
+      "Faltam indicadores e metas claras",
+      "Processos desorganizados: tudo passa por mim",
+      "Time desalinhado, sem responsáveis e prazos",
+      "Crescer sem estrutura para acompanhar",
+      "Outro desafio",
+    ];
 
 const pid = (name) => (idPrefix ? `${idPrefix}${name}` : name);
 ---
@@ -92,17 +106,20 @@ const pid = (name) => (idPrefix ? `${idPrefix}${name}` : name);
       <option>Mais de 500</option>
     </select>
   </div>
+  {Array.isArray(normas) && normas.length ? (
+    <div class="field">
+      <label for={pid("norma")}>Norma de interesse</label>
+      <select class="select" id={pid("norma")} name="norma" required>
+        <option value="">Selecione</option>
+        {normas.map((opcao) => <option>{opcao}</option>)}
+      </select>
+    </div>
+  ) : null}
   <div class="field">
     <label for={pid("desafio")}>Maior desafio da empresa hoje</label>
     <select class="select" id={pid("desafio")} name="desafio" required>
       <option value="">Selecione</option>
-      <option>Não temos um plano estratégico definido</option>
-      <option>Temos o plano, mas não conseguimos executar</option>
-      <option>Faltam indicadores e metas claras</option>
-      <option>Processos desorganizados: tudo passa por mim</option>
-      <option>Time desalinhado, sem responsáveis e prazos</option>
-      <option>Crescer sem estrutura para acompanhar</option>
-      <option>Outro desafio</option>
+      {desafioOpcoes.map((opcao) => <option>{opcao}</option>)}
     </select>
   </div>
   <button type="submit" class="btn-reserve btn-block">
