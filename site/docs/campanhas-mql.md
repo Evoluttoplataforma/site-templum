@@ -28,7 +28,7 @@ Regra de produto (out/2026): **um card MQL aberto por contato**, participação 
 | Etapa na criação | **Novo Lead** |
 | Origem no CRM | `Webinar ISO 9001` |
 | Tag da série | `webinar 9001:2026` (fixa enquanto durar a série) |
-| Tag do evento | igual ao campo `evento` da LP (ex.: `webinar-foco-cliente-0710`), **máx. 32 caracteres** |
+| Tag do evento | igual ao campo `evento` da LP (ex.: `webinar-foco-cliente-1410`), **máx. 32 caracteres** |
 
 Mailchimp e ManyChat seguem o fluxo normal do Worker; CRM webinar **não** usa Pipedrive nem funil INBOUND.
 
@@ -141,7 +141,7 @@ Referência GF: `scripts/intervalo-e0-crm-automation-reference.json`
 1. `survey.publicUrl` no `mql-campaigns.json` aponta para `/gestao-financeira/pesquisa/`.
 2. O E0 manda `lead_id={id}`. A página não pede nome, e-mail nem telefone.
 3. `POST /api/pesquisa-gf` lê o lead, junta os 9 campos em `custom_fields` e acrescenta a tag `pesquisa-gf:respondida`. Não abre card novo.
-4. A automação de módulo `8d63ade1-5b6e-4460-9ad0-aa440e34c24b` fica pausada. Ela não copia as respostas para o card.
+4. O funil de módulo "Pesquisa E0 → CRM" foi excluído. As respostas entram no card pelo formulário do site.
 
 Automação GF (E0 e-mail): `eb0a9536-7037-48fe-8b1c-f1a828d499ae` · gatilho **`webhook_inbound`** · path **`wh_d916fe011ef64d41`** · URL `https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound/wh_d916fe011ef64d41` (também na descrição da automação; o painel do gatilho não mostra o endereço) · POST `{ "lead_id": "<uuid do lead MQL>" }` + header **`X-Fluxos-Secret`** · cooldown **0** · sent tag `e0:intervalo-gf-2026:enviado`.
 
