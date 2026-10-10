@@ -82,6 +82,11 @@
         "utm_source": "site",
         "utm_medium": "lp",
         "utm_campaign": "nova-era-certificacao-iso"
+      },
+      "survey": {
+        "publicUrl": "https://templum.com.br/a-nova-era-da-iso/pesquisa/",
+        "emailQueryParam": "email",
+        "leadIdQueryParam": "lead_id"
       }
     }
   ]

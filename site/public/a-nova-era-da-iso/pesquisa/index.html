@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pesquisa pré-live | A Nova Era da Certificação ISO</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --ink:#1c2430; --muted:#6b7280; --line:#e7e9ee; --orange:#ff5925; --bg:#f3f4f6; --navy:#222831; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", system-ui, -apple-system, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+  .wrap { max-width:680px; margin:0 auto; padding:28px 16px 48px; }
+  .brand { text-align:center; font-weight:700; font-size:22px; letter-spacing:-0.02em; margin:8px 0 22px; color:var(--navy); }
+  .brand span { color:var(--orange); }
+  .intro h1 { margin:0 0 8px; font-size:20px; line-height:1.3; }
+  .intro p { margin:0 0 18px; color:var(--muted); font-size:14px; line-height:1.5; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 1px 2px rgba(16,24,40,.04); padding:18px 18px 8px; margin:0 0 12px; }
+  .q { margin:0; font-size:15px; line-height:1.4; }
+  .req { color:var(--orange); margin-left:2px; }
+  .hint { margin:6px 0 4px; color:var(--muted); font-size:13px; }
+  .opt { display:flex; align-items:flex-start; gap:10px; margin:0 -18px; padding:11px 18px; border-top:1px solid var(--line); font-size:14.5px; line-height:1.4; cursor:pointer; }
+  .card .opt:first-of-type { margin-top:12px; }
+  .opt input { margin-top:2px; accent-color:var(--orange); width:16px; height:16px; flex:none; }
+  .text-input { width:100%; margin:12px 0 10px; font:inherit; font-size:14.5px; padding:12px; border:1px solid var(--line); border-radius:8px; }
+  .text-input:focus, .opt input:focus-visible { outline:2px solid rgba(255,89,37,.35); outline-offset:2px; }
+  .actions { display:flex; justify-content:flex-end; margin-top:8px; }
+  button { background:var(--orange); color:#fff; border:0; border-radius:8px; padding:10px 16px; font:inherit; font-size:14px; font-weight:650; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  .err { color:#9b1c1c; font-size:14px; min-height:1.2em; margin:8px 0; }
+  .ok { background:#fff; border:1px solid var(--line); border-radius:12px; padding:28px 22px; }
+  .ok h1 { margin:0 0 8px; font-size:22px; }
+  .ok p { color:var(--muted); line-height:1.45; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Templum<span>!</span></div>
+  <div class="intro">
+    <h1>Pesquisa pré-live: A Nova Era da Certificação ISO</h1>
+    <p>Queremos conhecer um pouco mais sobre a realidade da sua empresa para tornar a live com o Igor Furniel ainda mais prática e relevante.</p>
+  </div>
+  <form id="form">
+    <section class="card">
+      <h2 class="q">Seus dados da inscrição<span class="req">*</span></h2>
+      <p class="hint">Use o mesmo nome e o mesmo e-mail do cadastro da live. Assim as respostas entram no seu card.</p>
+      <input class="text-input" id="nome" name="nome" type="text" autocomplete="name" required placeholder="Nome">
+      <input class="text-input" id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="E-mail da inscrição">
+    </section>
+    <section class="card">
+      <h2 class="q">1. Qual é o momento atual da sua empresa em relação à ISO?<span class="req">*</span></h2>
+      <label class="opt"><input type="radio" name="cf_ne_momento_iso" value="Ainda não possui certificação ISO" required> Ainda não possui certificação ISO</label>
+      <label class="opt"><input type="radio" name="cf_ne_momento_iso" value="Está em processo de implantação ou certificação"> Está em processo de implantação ou certificação</label>
+      <label class="opt"><input type="radio" name="cf_ne_momento_iso" value="Já é certificada e deseja modernizar a gestão"> Já é certificada e deseja modernizar a gestão</label>
+      <label class="opt"><input type="radio" name="cf_ne_momento_iso" value="Já é certificada e está satisfeita com o processo atual"> Já é certificada e está satisfeita com o processo atual</label>
+      <label class="opt"><input type="radio" name="cf_ne_momento_iso" value="Sou consultor(a) ou profissional da área"> Sou consultor(a) ou profissional da área</label>
+    </section>
+    <section class="card">
+      <h2 class="q">2. Como sua empresa gerencia atualmente os processos, documentos e evidências da ISO?<span class="req">*</span></h2>
+      <label class="opt"><input type="radio" name="cf_ne_como_gerencia" value="Em planilhas e pastas compartilhadas" required> Em planilhas e pastas compartilhadas</label>
+      <label class="opt"><input type="radio" name="cf_ne_como_gerencia" value="Em diferentes planilhas, documentos e sistemas"> Em diferentes planilhas, documentos e sistemas</label>
+      <label class="opt"><input type="radio" name="cf_ne_como_gerencia" value="Em um software de gestão"> Em um software de gestão</label>
+      <label class="opt"><input type="radio" name="cf_ne_como_gerencia" value="Com apoio de uma consultoria externa"> Com apoio de uma consultoria externa</label>
+      <label class="opt"><input type="radio" name="cf_ne_como_gerencia" value="Ainda não temos um Sistema de Gestão estruturado"> Ainda não temos um Sistema de Gestão estruturado</label>
+    </section>
+    <section class="card">
+      <h2 class="q">3. Qual é o maior desafio da sua empresa com o Sistema de Gestão atualmente?<span class="req">*</span></h2>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Excesso de burocracia e tarefas manuais" required> Excesso de burocracia e tarefas manuais</label>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Organização de documentos e evidências"> Organização de documentos e evidências</label>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Preparação e acompanhamento de auditorias"> Preparação e acompanhamento de auditorias</label>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Controle de indicadores e planos de ação"> Controle de indicadores e planos de ação</label>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Falta de integração entre processos e pessoas"> Falta de integração entre processos e pessoas</label>
+      <label class="opt"><input type="radio" name="cf_ne_maior_desafio_sg" value="Ainda estamos estruturando a gestão"> Ainda estamos estruturando a gestão</label>
+    </section>
+    <section class="card">
+      <h2 class="q">4. O que você mais gostaria de descobrir na live?<span class="req">*</span></h2>
+      <label class="opt"><input type="radio" name="cf_ne_descobrir_live" value="Como simplificar o processo de certificação ISO" required> Como simplificar o processo de certificação ISO</label>
+      <label class="opt"><input type="radio" name="cf_ne_descobrir_live" value="Como modernizar um Sistema de Gestão já existente"> Como modernizar um Sistema de Gestão já existente</label>
+      <label class="opt"><input type="radio" name="cf_ne_descobrir_live" value="Como utilizar tecnologia para reduzir a burocracia"> Como utilizar tecnologia para reduzir a burocracia</label>
+      <label class="opt"><input type="radio" name="cf_ne_descobrir_live" value="Como centralizar e acompanhar a gestão em um único lugar"> Como centralizar e acompanhar a gestão em um único lugar</label>
+      <label class="opt"><input type="radio" name="cf_ne_descobrir_live" value="Como funciona o Templum OS na prática"> Como funciona o Templum OS na prática</label>
+    </section>
+    <section class="card">
+      <h2 class="q">5. Sua empresa pretende investir na melhoria ou modernização do Sistema de Gestão?<span class="req">*</span></h2>
+      <label class="opt"><input type="radio" name="cf_ne_pretende_investir" value="Sim, nos próximos 3 meses" required> Sim, nos próximos 3 meses</label>
+      <label class="opt"><input type="radio" name="cf_ne_pretende_investir" value="Sim, nos próximos 6 a 12 meses"> Sim, nos próximos 6 a 12 meses</label>
+      <label class="opt"><input type="radio" name="cf_ne_pretende_investir" value="Temos interesse, mas ainda não definimos quando"> Temos interesse, mas ainda não definimos quando</label>
+      <label class="opt"><input type="radio" name="cf_ne_pretende_investir" value="Não temos essa previsão no momento"> Não temos essa previsão no momento</label>
+      <label class="opt"><input type="radio" name="cf_ne_pretende_investir" value="Não participo dessa decisão"> Não participo dessa decisão</label>
+    </section>
+    <p class="err" id="err"></p>
+    <div class="actions"><button type="submit" id="send">Enviar respostas</button></div>
+  </form>
+  <div class="ok" id="thanks" hidden>
+    <h1>Respostas recebidas!</h1>
+    <p>Suas respostas foram salvas e vão ajudar a preparar a live. Nos vemos no dia 20 de outubro, às 16h.</p>
+  </div>
+</div>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var leadId = (params.get("lead_id") || "").trim();
+  var validLead = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId);
+  var form = document.getElementById("form");
+  var fields = [
+    "cf_ne_momento_iso",
+    "cf_ne_como_gerencia",
+    "cf_ne_maior_desafio_sg",
+    "cf_ne_descobrir_live",
+    "cf_ne_pretende_investir"
+  ];
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var err = document.getElementById("err");
+    var btn = document.getElementById("send");
+    err.textContent = "";
+    var data = new FormData(form);
+    var nome = (data.get("nome") || "").toString().trim();
+    var email = (data.get("email") || "").toString().trim();
+    if (!nome || !email || email.indexOf("@") < 1) {
+      err.textContent = "Preencha nome e e-mail iguais aos da inscrição.";
+      return;
+    }
+    var answers = {};
+    for (var i = 0; i < fields.length; i++) {
+      var v = (data.get(fields[i]) || "").toString().trim();
+      if (v) answers[fields[i]] = v;
+    }
+    if (Object.keys(answers).length < 5) {
+      err.textContent = "Responda as cinco perguntas antes de enviar.";
+      return;
+    }
+    var payload = { nome: nome, email: email, answers: answers };
+    if (validLead) payload.lead_id = leadId;
+    btn.disabled = true;
+    fetch("/api/pesquisa-ne", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (res) { return res.json().then(function (j) { return { ok: res.ok && j.ok, j: j }; }); })
+      .then(function (out) {
+        if (!out.ok) throw new Error((out.j && out.j.error) || "falha");
+        form.hidden = true;
+        document.querySelector(".intro").hidden = true;
+        document.getElementById("thanks").hidden = false;
+      })
+      .catch(function (e) {
+        var code = e && e.message;
+        err.textContent = code === "email_not_found"
+          ? "Não achei esta inscrição. Use o mesmo nome e o mesmo e-mail do cadastro da live."
+          : "Não foi possível gravar agora. Tente de novo em instantes.";
+        btn.disabled = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

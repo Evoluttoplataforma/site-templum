@@ -76,7 +76,7 @@ export default {
     const url = new URL(request.url);
 
     // Rotas de API têm prioridade — ANTES do redirect www, para não perder POST body.
-    if (url.pathname === "/api/pesquisa-gf") {
+    if (url.pathname === "/api/pesquisa-gf" || url.pathname === "/api/pesquisa-ne") {
       if (request.method === "OPTIONS") {
         return new Response(null, {
           status: 204,
@@ -88,6 +88,7 @@ export default {
         });
       }
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      if (url.pathname === "/api/pesquisa-ne") return handlePesquisaNe(request, env);
       return handlePesquisaGf(request, env);
     }
     if (url.pathname === "/api/lead") {
@@ -2562,6 +2563,117 @@ async function handlePesquisaGf(request, env) {
       tags: mergeLeadTags(lead.tags, tags),
       custom_fields: prev ? { ...prev, ...custom } : custom,
     };
+    const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) {
+      const e = await res.text().catch(() => "");
+      return corsJson({ ok: false, error: String(e).slice(0, 180) }, 502);
+    }
+    return corsJson({ ok: true, lead_id: leadId });
+  } catch (_) {
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
+  }
+}
+
+const PESQUISA_NE_TAG = "pesquisa-ne:respondida";
+const PESQUISA_NE_TAG_NOVA_ERA = "nova era da iso";
+const PESQUISA_NE_FIELDS = new Set([
+  "cf_ne_momento_iso",
+  "cf_ne_como_gerencia",
+  "cf_ne_maior_desafio_sg",
+  "cf_ne_descobrir_live",
+  "cf_ne_pretende_investir",
+]);
+
+function namesLikelyMatch(a, b) {
+  const na = String(a || "").trim().toLowerCase().replace(/\s+/g, " ");
+  const nb = String(b || "").trim().toLowerCase().replace(/\s+/g, " ");
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  return na.includes(nb) || nb.includes(na);
+}
+
+function pickPesquisaNeLead(leads, nome) {
+  const open = (leads || []).filter(isOpenCrmLead);
+  const tagged = open.filter((l) => leadTagList(l).includes(PESQUISA_NE_TAG_NOVA_ERA));
+  const lives = tagged.filter((l) => l.pipeline_id === ORBIT_LIVES_PIPELINE_ID);
+  const mql = tagged.filter((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID);
+  const pool = lives.length ? lives : mql;
+  if (!pool.length) return null;
+  if (nome) {
+    const byName = pool.find((l) => namesLikelyMatch(l.contact_name || l.title, nome));
+    if (byName) return byName;
+  }
+  return pool[0];
+}
+
+async function resolvePesquisaNeLead(body, token, headers) {
+  const leadId = String(body?.lead_id || "").trim();
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) {
+    return { leadId, fromLookup: false };
+  }
+  const email = normalizeEmail(body?.email);
+  const nome = String(body?.nome || "").trim();
+  if (!email || !email.includes("@") || !nome) return { error: "identity", status: 400 };
+  const rows = await crmSearchLeadsByEmail(token, email);
+  const full = [];
+  for (const row of rows.slice(0, 10)) {
+    if (!row || !row.id) continue;
+    if (row.pipeline_id && Array.isArray(row.tags)) {
+      full.push(row);
+      continue;
+    }
+    const one = await fetch(`${ORBIT_BASE}/leads/${row.id}`, { headers });
+    if (!one.ok) continue;
+    const d = await one.json().catch(() => ({}));
+    full.push(d.data || d.lead || d);
+  }
+  const chosen = pickPesquisaNeLead(full, nome);
+  if (!chosen || !chosen.id) return { error: "email_not_found", status: 404 };
+  return { leadId: chosen.id, fromLookup: true, nome };
+}
+
+async function handlePesquisaNe(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch (_) {
+    return corsJson({ ok: false, error: "invalid_json" }, 400);
+  }
+  const incoming = body?.answers && typeof body.answers === "object" ? body.answers : {};
+  const custom = {};
+  for (const [key, value] of Object.entries(incoming)) {
+    if (!PESQUISA_NE_FIELDS.has(key)) continue;
+    const val = pesquisaGfValue(value);
+    if (val) custom[key] = val;
+  }
+  if (Object.keys(custom).length < 5) return corsJson({ ok: false, error: "empty" }, 400);
+
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return corsJson({ ok: false, error: "not_configured" }, 500);
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+  try {
+    const resolved = await resolvePesquisaNeLead(body, token, headers);
+    if (resolved.error) return corsJson({ ok: false, error: resolved.error }, resolved.status || 400);
+    const leadId = resolved.leadId;
+    const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers });
+    if (!get.ok) return corsJson({ ok: false, error: "lead_not_found" }, 404);
+    const payload = await get.json().catch(() => ({}));
+    const lead = payload.data || payload.lead || payload;
+    const prev = lead.custom_fields && typeof lead.custom_fields === "object" ? lead.custom_fields : null;
+    const nome = String(body?.nome || resolved.nome || "").trim();
+    const patch = {
+      tags: mergeLeadTags(lead.tags, [PESQUISA_NE_TAG]),
+      custom_fields: prev ? { ...prev, ...custom } : custom,
+    };
+    if (nome && !String(lead.contact_name || "").trim()) patch.contact_name = nome;
     const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
       method: "PATCH",
       headers,
