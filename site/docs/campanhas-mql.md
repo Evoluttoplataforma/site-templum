@@ -90,7 +90,8 @@ Tabela `webinar_mql_sync` (1 linha por e-mail): `orbit_lead_id`, `action` (`crea
 | `fluxos.e0PrimaryTag` | Tag da campanha usada no Fluxos (condição de envio) |
 | `fluxos.e0SentTag` | Tag aplicada após E0; re-inscrição não reenvia |
 | `fluxos.automationId` | UUID da automação (referência) |
-| `mqlDedupOpenLead` | Default `true`: mesmo e-mail com card aberto no MQL → PATCH (não duplica lead) |
+| `mqlDedupOpenLead` | Default `true`: mesmo e-mail com card aberto no funil de destino → PATCH (não duplica lead) |
+| `crmDest` | `mql` (padrão) ou `lives`. Nova Era grava em LIVES / Novo inscrito |
 
 ### Regra de UTM (não pular)
 

@@ -3,8 +3,9 @@
 //                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar (ORBIT_CRM_API_KEY).
-//                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao MQL Novo Lead
-//                             com tags do evento; dedup só no MQL (não reutiliza Teste Igor).
+//                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao funil da campanha
+//                             (padrão MQL Novo Lead; Nova Era: LIVES / Novo inscrito).
+//                             Dedup só no funil de destino (não reutiliza Teste Igor).
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
@@ -253,6 +254,7 @@ function iscaNormaFromSlug(slug) {
   return "";
 }
 
+// Etiqueta da norma a partir da URL de chegada. Soma, não substitui as outras.
 function normaTagsFromPagina(pagina) {
   const s = String(pagina || "").toLowerCase();
   if (!s) return [];
@@ -859,6 +861,8 @@ const ORBIT_ATIVACAO_STAGE_IGNICAO = "1fec2ce2-2a71-47ce-8717-ea9746e98ecd";
 const ORBIT_TAG_PARCERIA_LSC = "Parceria LSC One";
 const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
+const ORBIT_LIVES_PIPELINE_ID = "9638c34e-def9-40b6-bb6a-b80210960f70";
+const ORBIT_LIVES_STAGE_NOVO_INSCRITO = "fa3c2273-29c8-4df4-bdb1-2f6a993c059f";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
 const ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA = "122cd261-a6b9-42be-a498-655e4c6346c1";
 const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
@@ -921,11 +925,16 @@ function nutricaoTagsForMqlCampaign(slug, channel) {
 function buildOrbitMqlInscricao(campaigns) {
   const map = {};
   for (const c of campaigns) {
+    const dest = c.crmDest === "lives"
+      ? { pipelineId: ORBIT_LIVES_PIPELINE_ID, stageId: ORBIT_LIVES_STAGE_NOVO_INSCRITO }
+      : { pipelineId: c.crmPipelineId || ORBIT_MQL_PIPELINE_ID, stageId: c.crmStageId || ORBIT_MQL_STAGE_NOVO };
     map[c.slug] = {
       tags: c.crmTags,
       source: c.crmSource,
       titleStyle: c.titleStyle || "empresa_suffix",
       dedupOpenMql: c.mqlDedupOpenLead !== false,
+      pipelineId: dest.pipelineId,
+      stageId: dest.stageId,
     };
     if (c.titleSuffix) map[c.slug].titleSuffix = c.titleSuffix;
     if (c.notes) map[c.slug].notes = c.notes;
@@ -934,6 +943,10 @@ function buildOrbitMqlInscricao(campaigns) {
     if (fx?.e0InboundPathKey) {
       map[c.slug].e0InboundPathKey = String(fx.e0InboundPathKey).trim();
       if (fx.e0SentTag) map[c.slug].e0SentTag = String(fx.e0SentTag).trim();
+    }
+    if (fx?.sdrInboundPathKey) {
+      map[c.slug].sdrInboundPathKey = String(fx.sdrInboundPathKey).trim();
+      if (fx.sdrSentTag) map[c.slug].sdrSentTag = String(fx.sdrSentTag).trim();
     }
   }
   return map;
@@ -1216,7 +1229,11 @@ function pickCrmLeadForIsca(leads) {
 
 /** Só card aberto no funil MQL (Intervalo / LSC One não reutilizam outros funis). */
 function pickOpenMqlLead(leads) {
-  return (leads || []).filter(isOpenCrmLead).find((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID) || null;
+  return pickOpenLeadInPipeline(leads, ORBIT_MQL_PIPELINE_ID);
+}
+
+function pickOpenLeadInPipeline(leads, pipelineId) {
+  return (leads || []).filter(isOpenCrmLead).find((l) => l.pipeline_id === pipelineId) || null;
 }
 
 async function crmSearchLeadsByTerm(token, term) {
@@ -1390,6 +1407,36 @@ function mqlE0WebhookSecret(pathKey, env) {
   return "";
 }
 
+async function triggerMqlCampaignSdrWebhook(cfg, leadRecord, leadId, env) {
+  const pathKey = cfg && cfg.sdrInboundPathKey;
+  if (!pathKey || !leadId) return { ok: false, reason: "not_configured" };
+  if (cfg.sdrSentTag && leadRecord && leadHasCrmTag(leadRecord, cfg.sdrSentTag)) {
+    return { ok: false, reason: "sdr_already_sent" };
+  }
+  const secret = env.INTERVALO_SDR_FLUXOS_SECRET || "";
+  if (!secret) return { ok: false, reason: "not_configured" };
+  const url = `${FLUXOS_WEBHOOK_INBOUND_BASE}/${encodeURIComponent(pathKey)}`;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "X-Fluxos-Secret": secret,
+      },
+      body: JSON.stringify({ lead_id: leadId }),
+    });
+    const e = await res.text().catch(() => "");
+    let parsed = null;
+    try { parsed = JSON.parse(e); } catch (_) { parsed = null; }
+    if (!res.ok || (parsed && parsed.success === false)) {
+      return { ok: false, status: res.status, error: String(e).slice(0, 200) };
+    }
+    return { ok: true };
+  } catch (_) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
 async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
   const secret = mqlE0WebhookSecret(pathKey, env);
   if (!secret || !leadId || !pathKey) return { ok: false, reason: "not_configured" };
@@ -1403,9 +1450,11 @@ async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
       },
       body: JSON.stringify({ lead_id: leadId }),
     });
-    if (!res.ok) {
-      const e = await res.text().catch(() => "");
-      return { ok: false, error: String(e).slice(0, 200) };
+    const e = await res.text().catch(() => "");
+    let parsed = null;
+    try { parsed = JSON.parse(e); } catch (_) { parsed = null; }
+    if (!res.ok || (parsed && parsed.success === false)) {
+      return { ok: false, status: res.status, error: String(e).slice(0, 200) };
     }
     return { ok: true };
   } catch (_) {
@@ -1413,8 +1462,8 @@ async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
   }
 }
 
-// Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → funil MQL / Novo Lead + tags do evento.
-// E0: webhook inbound Orbit (após CRM ok), ver fluxos.e0InboundPathKey no JSON da campanha.
+// Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → funil da campanha (padrão: MQL / Novo Lead).
+// Nova Era (crmDest: lives) grava em LIVES / Novo inscrito. E0: ver fluxos.e0InboundPathKey.
 async function saveToMqlInscricao(lead, env) {
   const cfg = ORBIT_MQL_INSCRICAO[lead.evento];
   if (!cfg) return { ok: false, reason: "unknown_event" };
@@ -1424,36 +1473,48 @@ async function saveToMqlInscricao(lead, env) {
 
   const tags = withNormaTags(cfg.tags, lead.pagina);
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+  const destPipelineId = cfg.pipelineId || ORBIT_MQL_PIPELINE_ID;
+  const destStageId = cfg.stageId || ORBIT_MQL_STAGE_NOVO;
 
   try {
     if (cfg.dedupOpenMql) {
       const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
-      const existingMql = pickOpenMqlLead(found);
-      if (existingMql) {
-        const patch = buildMqlInscricaoPatch(lead, cfg, existingMql, tags);
-        const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
+      const existingDest = pickOpenLeadInPipeline(found, destPipelineId);
+      if (existingDest) {
+        const patch = buildMqlInscricaoPatch(lead, cfg, existingDest, tags);
+        const res = await fetch(`${ORBIT_BASE}/leads/${existingDest.id}`, {
           method: "PATCH", headers, body: JSON.stringify(patch),
         });
         if (!res.ok) {
           const e = await res.text().catch(() => "");
-          return { ok: false, error: e.slice(0, 140), lead_id: existingMql.id };
+          return { ok: false, error: e.slice(0, 140), lead_id: existingDest.id };
         }
         let fluxo_e0;
         if (cfg.e0InboundPathKey) {
-          if (cfg.e0SentTag && leadHasCrmTag(existingMql, cfg.e0SentTag)) {
+          if (cfg.e0SentTag && leadHasCrmTag(existingDest, cfg.e0SentTag)) {
             fluxo_e0 = { ok: false, reason: "e0_already_sent" };
           } else {
-            fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, existingMql.id, env);
+            fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, existingDest.id, env);
+            if (fluxo_e0 && fluxo_e0.ok === false) {
+              console.error("[lead:mql:e0]", JSON.stringify({ lead_id: existingDest.id, fluxo_e0 }));
+            }
           }
         }
-        return { ok: true, lead_id: existingMql.id, updated: true, fluxo_e0 };
+        let fluxo_sdr;
+        if (cfg.sdrInboundPathKey) {
+          fluxo_sdr = await triggerMqlCampaignSdrWebhook(cfg, existingDest, existingDest.id, env);
+          if (fluxo_sdr && fluxo_sdr.ok === false && fluxo_sdr.reason !== "sdr_already_sent") {
+            console.error("[lead:mql:sdr]", JSON.stringify({ lead_id: existingDest.id, fluxo_sdr }));
+          }
+        }
+        return { ok: true, lead_id: existingDest.id, updated: true, fluxo_e0, fluxo_sdr };
       }
     }
 
     const body = {
       title: mqlInscricaoTitle(lead, cfg),
-      pipeline_id: ORBIT_MQL_PIPELINE_ID,
-      stage_id: ORBIT_MQL_STAGE_NOVO,
+      pipeline_id: destPipelineId,
+      stage_id: destStageId,
       contact_name: lead.nome || lead.email,
       contact_email: lead.email,
       source: cfg.source,
@@ -1470,12 +1531,25 @@ async function saveToMqlInscricao(lead, env) {
     const r = await orbitPostLead(headers, body);
     if (r && r.ok) {
       const d = await r.json().catch(() => ({}));
-      const leadId = d.data?.id;
+      const created = d.data || d.lead || d;
+      const leadId = created?.id || d.id || null;
       let fluxo_e0;
-      if (cfg.e0InboundPathKey && leadId) {
+      if (!leadId) {
+        console.error("[lead:mql] crm sem id", JSON.stringify(Object.keys(d || {})));
+      } else if (cfg.e0InboundPathKey) {
         fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, leadId, env);
+        if (fluxo_e0 && fluxo_e0.ok === false) {
+          console.error("[lead:mql:e0]", JSON.stringify({ lead_id: leadId, fluxo_e0 }));
+        }
       }
-      return { ok: true, lead_id: leadId, created: true, fluxo_e0 };
+      let fluxo_sdr;
+      if (cfg.sdrInboundPathKey && leadId) {
+        fluxo_sdr = await triggerMqlCampaignSdrWebhook(cfg, null, leadId, env);
+        if (fluxo_sdr && fluxo_sdr.ok === false && fluxo_sdr.reason !== "sdr_already_sent") {
+          console.error("[lead:mql:sdr]", JSON.stringify({ lead_id: leadId, fluxo_sdr }));
+        }
+      }
+      return { ok: true, lead_id: leadId, created: true, fluxo_e0, fluxo_sdr };
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
@@ -2391,6 +2465,7 @@ function timingSafeEqual(a, b) {
 }
 
 const PESQUISA_GF_TAG = "pesquisa-gf:respondida";
+const PESQUISA_GF_GRUPO_TAG = "pesquisa-gf:grupo";
 const PESQUISA_GF_FIELDS = new Set([
   "cf_gf_conhece_templum_os",
   "cf_gf_controle_financeiro",
@@ -2410,16 +2485,51 @@ function pesquisaGfValue(value) {
   return String(value || "").trim().slice(0, 4000);
 }
 
+function leadTagList(lead) {
+  const tags = lead && lead.tags;
+  if (Array.isArray(tags)) return tags.map((t) => String(t).toLowerCase());
+  if (typeof tags === "string") return tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+  return [];
+}
+
+function pickPesquisaGfLead(leads) {
+  const mql = (leads || []).filter(isOpenCrmLead).filter((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID);
+  const campaign = mql.filter((l) => leadTagList(l).some((t) => t.includes("financeira") || t.includes("intervalo")));
+  return campaign[0] || mql[0] || null;
+}
+
+async function resolvePesquisaGfLead(body, token, headers) {
+  const leadId = String(body?.lead_id || "").trim();
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) {
+    return { leadId, fromGroup: false };
+  }
+  const origem = String(body?.origem || "").trim().toLowerCase();
+  const email = normalizeEmail(body?.email);
+  if (origem !== "grupo" || !email || !email.includes("@")) return { error: "lead_id", status: 400 };
+  const rows = await crmSearchLeadsByEmail(token, email);
+  const full = [];
+  for (const row of rows.slice(0, 10)) {
+    if (!row || !row.id) continue;
+    if (row.pipeline_id) {
+      full.push(row);
+      continue;
+    }
+    const one = await fetch(`${ORBIT_BASE}/leads/${row.id}`, { headers });
+    if (!one.ok) continue;
+    const d = await one.json().catch(() => ({}));
+    full.push(d.data || d.lead || d);
+  }
+  const chosen = pickPesquisaGfLead(full);
+  if (!chosen || !chosen.id) return { error: "email_not_found", status: 404 };
+  return { leadId: chosen.id, fromGroup: true };
+}
+
 async function handlePesquisaGf(request, env) {
   let body;
   try {
     body = await request.json();
   } catch (_) {
     return corsJson({ ok: false, error: "invalid_json" }, 400);
-  }
-  const leadId = String(body?.lead_id || "").trim();
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) {
-    return corsJson({ ok: false, error: "lead_id" }, 400);
   }
   const incoming = body?.answers && typeof body.answers === "object" ? body.answers : {};
   const custom = {};
@@ -2438,13 +2548,18 @@ async function handlePesquisaGf(request, env) {
     accept: "application/json",
   };
   try {
+    const resolved = await resolvePesquisaGfLead(body, token, headers);
+    if (resolved.error) return corsJson({ ok: false, error: resolved.error }, resolved.status || 400);
+    const leadId = resolved.leadId;
     const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers });
     if (!get.ok) return corsJson({ ok: false, error: "lead_not_found" }, 404);
     const payload = await get.json().catch(() => ({}));
     const lead = payload.data || payload.lead || payload;
     const prev = lead.custom_fields && typeof lead.custom_fields === "object" ? lead.custom_fields : null;
+    const tags = [PESQUISA_GF_TAG];
+    if (resolved.fromGroup) tags.push(PESQUISA_GF_GRUPO_TAG);
     const patch = {
-      tags: mergeLeadTags(lead.tags, [PESQUISA_GF_TAG]),
+      tags: mergeLeadTags(lead.tags, tags),
       custom_fields: prev ? { ...prev, ...custom } : custom,
     };
     const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {

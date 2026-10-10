@@ -72,6 +72,7 @@
       "lpPath": "/a-nova-era-da-iso/",
       "crmTags": ["nova era da iso", "certificação iso"],
       "crmSource": "Nova Era da ISO",
+      "crmDest": "lives",
       "titleStyle": "contact",
       "notes": "Evento online e gratuito em 20/10/2026. A Nova Era da Certificação ISO.",
       "customFields": true,
@@ -85,4 +86,4 @@
     }
   ]
 }
-
+

@@ -33,6 +33,9 @@ for (const c of campaigns) {
     }
   }
   if (!c.crmSource) errors.push(`${c.slug}: falta crmSource`);
+  if (c.crmDest && c.crmDest !== "lives" && c.crmDest !== "mql") {
+    errors.push(`${c.slug}: crmDest inválido ("${c.crmDest}"). Use "lives" ou "mql"`);
+  }
   const fx = c.fluxos;
   if (fx?.e0InboundPathKey) {
     if (!String(fx.e0PrimaryTag || "").trim()) {
@@ -42,6 +45,9 @@ for (const c of campaigns) {
       errors.push(`${c.slug}: fluxos.e0SentTag obrigatório com e0InboundPathKey`);
     } else if (String(fx.e0SentTag).length > 32) {
       errors.push(`${c.slug}: fluxos.e0SentTag > 32 chars`);
+    }
+    if (fx.sdrInboundPathKey && String(fx.sdrSentTag || "").length > 32) {
+      errors.push(`${c.slug}: fluxos.sdrSentTag > 32 chars`);
     }
   }
   if (c.lpPath) {
