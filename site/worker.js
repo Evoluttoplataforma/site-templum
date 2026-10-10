@@ -2486,11 +2486,22 @@ function pesquisaGfValue(value) {
   return String(value || "").trim().slice(0, 4000);
 }
 
+function tagName(tag) {
+  if (!tag) return "";
+  if (typeof tag === "string") return tag;
+  if (typeof tag === "object") return String(tag.name || tag.tag || tag.label || "").trim();
+  return String(tag);
+}
+
 function leadTagList(lead) {
   const tags = lead && lead.tags;
-  if (Array.isArray(tags)) return tags.map((t) => String(t).toLowerCase());
+  if (Array.isArray(tags)) return tags.map(tagName).map((t) => t.toLowerCase()).filter(Boolean);
   if (typeof tags === "string") return tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
   return [];
+}
+
+function leadContactEmail(lead) {
+  return normalizeEmail(lead && (lead.contact_email || lead.email));
 }
 
 function pickPesquisaGfLead(leads) {
@@ -2599,9 +2610,10 @@ function namesLikelyMatch(a, b) {
 function pickPesquisaNeLead(leads, nome) {
   const open = (leads || []).filter(isOpenCrmLead);
   const tagged = open.filter((l) => leadTagList(l).includes(PESQUISA_NE_TAG_NOVA_ERA));
-  const lives = tagged.filter((l) => l.pipeline_id === ORBIT_LIVES_PIPELINE_ID);
-  const mql = tagged.filter((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID);
-  const pool = lives.length ? lives : mql;
+  const taggedLives = tagged.filter((l) => l.pipeline_id === ORBIT_LIVES_PIPELINE_ID);
+  const lives = open.filter((l) => l.pipeline_id === ORBIT_LIVES_PIPELINE_ID);
+  const taggedMql = tagged.filter((l) => l.pipeline_id === ORBIT_MQL_PIPELINE_ID);
+  const pool = taggedLives.length ? taggedLives : (lives.length ? lives : (taggedMql.length ? taggedMql : []));
   if (!pool.length) return null;
   if (nome) {
     const byName = pool.find((l) => namesLikelyMatch(l.contact_name || l.title, nome));
@@ -2690,7 +2702,7 @@ async function handlePesquisaNe(request, env) {
 }
 
 function mergeLeadTags(existing, incoming) {
-  const set = new Set((existing || []).map(String).filter(Boolean));
+  const set = new Set((existing || []).map(tagName).filter(Boolean));
   for (const t of incoming) if (t) set.add(t);
   let tags = [...set];
   if (tags.length > 20) {
@@ -2716,23 +2728,22 @@ async function crmSearchLeadsByEmail(token, email) {
   if (!r.ok) return [];
   const j = await r.json().catch(() => ({}));
   const rows = j.data || j.leads || [];
-  const matched = rows.filter((l) => normalizeEmail(l.contact_email) === email);
   const full = [];
-  for (const lead of matched) {
-    if (Array.isArray(lead.tags)) {
-      full.push(lead);
-      continue;
+  for (const lead of rows.slice(0, 15)) {
+    if (!lead || !lead.id) continue;
+    const hasEmail = !!leadContactEmail(lead);
+    const hasTags = Array.isArray(lead.tags) && lead.tags.some((t) => tagName(t));
+    let row = lead;
+    if (!hasEmail || !hasTags || !lead.pipeline_id) {
+      const one = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+        headers: { authorization: "Bearer " + token, accept: "application/json" },
+      });
+      if (one.ok) {
+        const d = await one.json().catch(() => ({}));
+        row = d.data || d.lead || d;
+      }
     }
-    if (!lead.id) continue;
-    const one = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
-      headers: { authorization: "Bearer " + token, accept: "application/json" },
-    });
-    if (!one.ok) {
-      full.push(lead);
-      continue;
-    }
-    const d = await one.json().catch(() => ({}));
-    full.push(d.data || d.lead || d);
+    if (leadContactEmail(row) === email) full.push(row);
   }
   return full;
 }
