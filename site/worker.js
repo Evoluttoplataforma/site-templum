@@ -33,6 +33,7 @@
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
 //   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook GF (path em fluxos.e0InboundPathKey)
+//   NOVA_ERA_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook E0 Nova Era (path nova-era-certificacao-iso-e0)
 //   MQL_E0_WEBHOOK_SECRETS (SECRETO, opcional) JSON { "<path_key>": "<secret>", ... } para várias campanhas E0
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
@@ -1405,6 +1406,10 @@ function mqlE0WebhookSecret(pathKey, env) {
   if (gfPaths.has(pathKey) && env.INTERVALO_E0_FLUXOS_SECRET) {
     return env.INTERVALO_E0_FLUXOS_SECRET;
   }
+  const nePaths = new Set(["nova-era-certificacao-iso-e0"]);
+  if (nePaths.has(pathKey) && env.NOVA_ERA_E0_FLUXOS_SECRET) {
+    return env.NOVA_ERA_E0_FLUXOS_SECRET;
+  }
   return "";
 }
 
@@ -1438,10 +1443,13 @@ async function triggerMqlCampaignSdrWebhook(cfg, leadRecord, leadId, env) {
   }
 }
 
-async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
+async function triggerMqlCampaignE0Webhook(pathKey, leadId, env, dest) {
   const secret = mqlE0WebhookSecret(pathKey, env);
   if (!secret || !leadId || !pathKey) return { ok: false, reason: "not_configured" };
   const url = `${FLUXOS_WEBHOOK_INBOUND_BASE}/${encodeURIComponent(pathKey)}`;
+  const payload = { lead_id: leadId };
+  if (dest?.pipelineId) payload.pipeline_id = dest.pipelineId;
+  if (dest?.stageId) payload.stage_id = dest.stageId;
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -1449,7 +1457,7 @@ async function triggerMqlCampaignE0Webhook(pathKey, leadId, env) {
         "content-type": "application/json",
         "X-Fluxos-Secret": secret,
       },
-      body: JSON.stringify({ lead_id: leadId }),
+      body: JSON.stringify(payload),
     });
     const e = await res.text().catch(() => "");
     let parsed = null;
@@ -1495,7 +1503,10 @@ async function saveToMqlInscricao(lead, env) {
           if (cfg.e0SentTag && leadHasCrmTag(existingDest, cfg.e0SentTag)) {
             fluxo_e0 = { ok: false, reason: "e0_already_sent" };
           } else {
-            fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, existingDest.id, env);
+            fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, existingDest.id, env, {
+              pipelineId: destPipelineId,
+              stageId: destStageId,
+            });
             if (fluxo_e0 && fluxo_e0.ok === false) {
               console.error("[lead:mql:e0]", JSON.stringify({ lead_id: existingDest.id, fluxo_e0 }));
             }
@@ -1538,7 +1549,10 @@ async function saveToMqlInscricao(lead, env) {
       if (!leadId) {
         console.error("[lead:mql] crm sem id", JSON.stringify(Object.keys(d || {})));
       } else if (cfg.e0InboundPathKey) {
-        fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, leadId, env);
+        fluxo_e0 = await triggerMqlCampaignE0Webhook(cfg.e0InboundPathKey, leadId, env, {
+          pipelineId: destPipelineId,
+          stageId: destStageId,
+        });
         if (fluxo_e0 && fluxo_e0.ok === false) {
           console.error("[lead:mql:e0]", JSON.stringify({ lead_id: leadId, fluxo_e0 }));
         }

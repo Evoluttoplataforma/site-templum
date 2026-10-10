@@ -87,6 +87,12 @@
         "publicUrl": "https://templum.com.br/a-nova-era-da-iso/pesquisa/",
         "emailQueryParam": "email",
         "leadIdQueryParam": "lead_id"
+      },
+      "fluxos": {
+        "e0InboundPathKey": "nova-era-certificacao-iso-e0",
+        "e0PrimaryTag": "nova era da iso",
+        "e0SentTag": "e0:nova-era-2026:enviado",
+        "automationId": "b25bdb1a-45d3-4be6-8d89-62053018cdb1"
       }
     }
   ]
