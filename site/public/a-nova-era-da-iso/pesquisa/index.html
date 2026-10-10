@@ -27,9 +27,9 @@
   button { background:var(--orange); color:#fff; border:0; border-radius:8px; padding:10px 16px; font:inherit; font-size:14px; font-weight:650; cursor:pointer; }
   button:disabled { opacity:.6; cursor:wait; }
   .err { color:#9b1c1c; font-size:14px; min-height:1.2em; margin:8px 0; }
-  .ok { background:#fff; border:1px solid var(--line); border-radius:12px; padding:28px 22px; }
+  .ok, .missing { background:#fff; border:1px solid var(--line); border-radius:12px; padding:28px 22px; }
   .ok h1 { margin:0 0 8px; font-size:22px; }
-  .ok p { color:var(--muted); line-height:1.45; }
+  .ok p, .missing { color:var(--muted); line-height:1.45; }
 </style>
 </head>
 <body>
@@ -39,12 +39,13 @@
     <h1>Pesquisa pré-live: A Nova Era da Certificação ISO</h1>
     <p>Queremos conhecer um pouco mais sobre a realidade da sua empresa para tornar a live com o Igor Furniel ainda mais prática e relevante.</p>
   </div>
+  <p class="missing" id="missing" hidden>Este link precisa vir do e-mail de confirmação. Abra o botão daquele e-mail de novo.</p>
   <form id="form">
-    <section class="card">
+    <section class="card" id="id-card" hidden>
       <h2 class="q">Seus dados da inscrição<span class="req">*</span></h2>
       <p class="hint">Use o mesmo nome e o mesmo e-mail do cadastro da live. Assim as respostas entram no seu card.</p>
-      <input class="text-input" id="nome" name="nome" type="text" autocomplete="name" required placeholder="Nome">
-      <input class="text-input" id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="E-mail da inscrição">
+      <input class="text-input" id="nome" name="nome" type="text" autocomplete="name" placeholder="Nome">
+      <input class="text-input" id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="E-mail da inscrição">
     </section>
     <section class="card">
       <h2 class="q">1. Qual é o momento atual da sua empresa em relação à ISO?<span class="req">*</span></h2>
@@ -99,8 +100,15 @@
 (function () {
   var params = new URLSearchParams(location.search);
   var leadId = (params.get("lead_id") || "").trim();
+  var origem = (params.get("origem") || "").trim().toLowerCase();
   var validLead = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId);
+  var groupMode = !validLead && origem === "grupo";
   var form = document.getElementById("form");
+  var missing = document.getElementById("missing");
+  var intro = document.querySelector(".intro");
+  var idCard = document.getElementById("id-card");
+  var nomeInput = document.getElementById("nome");
+  var emailInput = document.getElementById("email");
   var fields = [
     "cf_ne_momento_iso",
     "cf_ne_como_gerencia",
@@ -108,18 +116,23 @@
     "cf_ne_descobrir_live",
     "cf_ne_pretende_investir"
   ];
+  if (!validLead && !groupMode) {
+    form.hidden = true;
+    if (intro) intro.hidden = true;
+    missing.hidden = false;
+    return;
+  }
+  if (groupMode && idCard && nomeInput && emailInput) {
+    idCard.hidden = false;
+    nomeInput.required = true;
+    emailInput.required = true;
+  }
   form.addEventListener("submit", function (ev) {
     ev.preventDefault();
     var err = document.getElementById("err");
     var btn = document.getElementById("send");
     err.textContent = "";
     var data = new FormData(form);
-    var nome = (data.get("nome") || "").toString().trim();
-    var email = (data.get("email") || "").toString().trim();
-    if (!nome || !email || email.indexOf("@") < 1) {
-      err.textContent = "Preencha nome e e-mail iguais aos da inscrição.";
-      return;
-    }
     var answers = {};
     for (var i = 0; i < fields.length; i++) {
       var v = (data.get(fields[i]) || "").toString().trim();
@@ -129,8 +142,18 @@
       err.textContent = "Responda as cinco perguntas antes de enviar.";
       return;
     }
-    var payload = { nome: nome, email: email, answers: answers };
+    var payload = { answers: answers };
     if (validLead) payload.lead_id = leadId;
+    else {
+      var nome = (nomeInput && nomeInput.value || "").trim();
+      var email = (emailInput && emailInput.value || "").trim();
+      if (!nome || !email || email.indexOf("@") < 1) {
+        err.textContent = "Preencha nome e e-mail iguais aos da inscrição.";
+        return;
+      }
+      payload.nome = nome;
+      payload.email = email;
+    }
     btn.disabled = true;
     fetch("/api/pesquisa-ne", {
       method: "POST",
