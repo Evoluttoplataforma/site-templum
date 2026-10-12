@@ -69,7 +69,7 @@ import Base from "../../layouts/Base.astro";
       var done = false;
       function fire() {
         if (done) return; done = true;
-        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name, content_name: PRODUCT.content_name, content_category: PRODUCT.content_category }); } catch (_) {}
+        try { if (window.__tplSetAdsUser) window.__tplSetAdsUser(d); if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name, content_name: PRODUCT.content_name, content_category: PRODUCT.content_category }); } catch (_) {}
       }
       var n = 0, t = setInterval(function () {
         n++;

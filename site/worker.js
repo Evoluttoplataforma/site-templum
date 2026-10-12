@@ -608,6 +608,7 @@ async function saveToSupabase(lead, env) {
       utm_source_ft: lead.utm_source_ft, utm_medium_ft: lead.utm_medium_ft,
       utm_campaign_ft: lead.utm_campaign_ft,
       gclid: lead.gclid, fbclid: lead.fbclid,
+      gbraid: lead.gbraid, wbraid: lead.wbraid,
     };
     if (lead.status_pagamento) payload.status_pagamento = lead.status_pagamento;
 

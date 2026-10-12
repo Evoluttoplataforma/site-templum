@@ -78,3 +78,24 @@ window.__loadTrackingKit = function () {
   // nativamente e imediatamente em MetaPixel.astro (ver Base.astro/LpBase.astro).
 };
 </script>
+<script is:inline>
+// Conversão otimizada: e-mail e telefone precisam entrar na tag ANTES do
+// trk.lead(). O kit externo dispara a etiqueta primeiro e manda o telefone
+// só com dígitos. A página de obrigado chama __tplSetAdsUser(d) antes.
+window.__tplSetAdsUser = function (data) {
+  data = data || {};
+  var email = String(data.email || "").trim().toLowerCase();
+  var digits = String(data.phone || data.telefone || "").replace(/\D/g, "");
+  if (digits.indexOf("00") === 0) digits = digits.slice(2);
+  if (digits.charAt(0) === "0") digits = digits.replace(/^0+/, "");
+  var phone = "";
+  if (digits.indexOf("55") === 0 && (digits.length === 12 || digits.length === 13)) phone = "+" + digits;
+  else if (digits.length === 10 || digits.length === 11) phone = "+55" + digits;
+  if (!email && !phone) return;
+  if (typeof window.gtag !== "function") return;
+  var user = {};
+  if (email) user.email = email;
+  if (phone) user.phone_number = phone;
+  try { window.gtag("set", "user_data", user); } catch (_) {}
+};
+</script>
