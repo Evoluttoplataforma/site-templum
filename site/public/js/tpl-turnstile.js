@@ -52,15 +52,21 @@
           pending = null;
           if (current) current.done(true, token);
         },
-        "error-callback": function () {
+        "error-callback": function (code) {
           var current = pending;
           pending = null;
-          if (current) current.done(false, new Error("turnstile"));
+          if (!current) return;
+          var err = new Error("turnstile");
+          err.code = code == null || code === "" ? "turnstile" : String(code);
+          current.done(false, err);
         },
         "timeout-callback": function () {
           var current = pending;
           pending = null;
-          if (current) current.done(false, new Error("turnstile_timeout"));
+          if (!current) return;
+          var err = new Error("turnstile_timeout");
+          err.code = "timeout";
+          current.done(false, err);
         },
       });
       return widgetId;
@@ -77,7 +83,9 @@
       return new Promise(function (resolve, reject) {
         var settled = false;
         var timer = setTimeout(function () {
-          done(false, new Error("turnstile_timeout"));
+          var err = new Error("turnstile_timeout");
+          err.code = "timeout";
+          done(false, err);
         }, 8000);
         function done(ok, value) {
           if (settled || my !== attempt) return;
@@ -85,6 +93,14 @@
           clearTimeout(timer);
           if (pending && pending.id === my) pending = null;
           if (!ok) {
+            var codigo = (value && value.code) || (value && value.message) || "turnstile";
+            if (codigo === "turnstile_timeout") codigo = "timeout";
+            if (codigo === "turnstile_script") codigo = "script";
+            try {
+              document.dispatchEvent(new CustomEvent("tpl:turnstile-fail", {
+                detail: { codigo: String(codigo).slice(0, 40) },
+              }));
+            } catch (_) {}
             try { window.turnstile.reset(widgetId); } catch (_) {}
           }
           if (ok) resolve(value);
@@ -94,9 +110,18 @@
         try {
           window.turnstile.execute(widgetId);
         } catch (err) {
-          done(false, err);
+          if (err && !err.code) err.code = "execute";
+          done(false, err || { code: "execute" });
         }
       });
+    }, function (err) {
+      var codigo = err && err.message === "turnstile_script" ? "script" : "turnstile";
+      try {
+        document.dispatchEvent(new CustomEvent("tpl:turnstile-fail", {
+          detail: { codigo: codigo },
+        }));
+      } catch (_) {}
+      return Promise.reject(err);
     });
   }
 
