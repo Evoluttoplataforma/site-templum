@@ -53,8 +53,8 @@ const PRECO_MES = PLANO_ENTRADA.mes;          // R$ 2.497/mês
 const PRECO_ANO = PRECO_MES * 12;             // R$ 29.964/ano
 const LIMITE_USUARIOS = PLANO_ENTRADA.usuarios;
 
-// A memória de cálculo desta tabela mora em src/data/stack-os.js — a /solucoes-de-ia
-// usa a mesma fonte, para as duas páginas nunca mostrarem contas diferentes.
+// A memória de cálculo desta tabela mora em src/data/stack-os.js.
+// A /solucoes-de-ia não publica valor.
 import { fatura } from "../../data/stack-os.js";
 const faturaMes = fatura.reduce((s, f) => s + f.mes, 0);   // R$ 10.103
 const faturaAno = faturaMes * 12;                          // R$ 121.236

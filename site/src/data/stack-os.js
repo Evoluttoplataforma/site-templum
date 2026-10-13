@@ -1,9 +1,9 @@
 // =============================================================================
 // STACK DE REFERÊNCIA — a conta dos seis sistemas que a Templum desligou.
 //
-// Fonte única: lida por /lp/templum-os (tabela completa, com memória de cálculo)
-// e por /solucoes-de-ia (versão compacta, ao lado dos planos). Mudou um valor?
-// Muda aqui, e as duas páginas mudam juntas.
+// Fonte única: lida por /lp/templum-os (tabela completa, com memória de cálculo).
+// A /solucoes-de-ia não mostra esta conta desde 13/10/2026. Mudou um valor?
+// Muda aqui.
 // =============================================================================
 
 // A fatura de referência. ⚠️ LEIA ANTES DE PUBLICAR:

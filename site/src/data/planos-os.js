@@ -1,8 +1,9 @@
 // =============================================================================
 // PLANOS DO TEMPLUM OS — fonte única de preço.
 //
-// Mudou o preço? Muda AQUI. A página /solucoes-de-ia (planos e preços) lê tudo
-// daqui: cards, tabela comparativa, custo por pessoa, schema.org e FAQ.
+// Mudou o preço? Muda AQUI. A /lp/templum-os lê o plano de entrada daqui.
+// A /solucoes-de-ia NÃO mostra valor (decisão de 13/10/2026): ela explica
+// o que cada plano é. Os números continuam neste arquivo para a LP paga.
 //
 // ⚠️ O QUE É "POR USUÁRIO" AQUI. Os planos NÃO cobram por assento: o preço é
 // fixo por faixa de usuários. O "custo por pessoa" que a página mostra é um
@@ -59,7 +60,7 @@ export const planos = [
     destaques: [
       "Tudo do Essencial",
       "Prioridade no suporte especializado",
-      "O dobro de usuários por 60% a mais",
+      "O dobro de usuários do Essencial",
     ],
   },
   {
@@ -76,7 +77,7 @@ export const planos = [
     destaques: [
       "Tudo do Performance",
       "Robustez para operação distribuída",
-      "Menor custo por pessoa da linha",
+      "Várias áreas no mesmo dado, ao mesmo tempo",
     ],
   },
 ];
