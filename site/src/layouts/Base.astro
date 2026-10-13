@@ -123,6 +123,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           // Meta Pixel: stub e fila já rodaram no <head>; aqui sai só o download.
           if (typeof window.__loadMetaPixel === "function") window.__loadMetaPixel();
         }
+        window.__tplBootTracking = boot;
         var evs = ["pointerdown","touchstart","keydown","scroll","mousemove"];
         var opts = { once: true, passive: true, capture: true };
         function once(){ evs.forEach(function(e){ window.removeEventListener(e, once, opts); }); boot(); }
@@ -372,6 +373,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
+            event_id: leadEventId,
           }));
         } catch (_) {}
         var _t = setTimeout(_go, 5000);
@@ -412,7 +414,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               faturamento: d.faturamento || "",
               evento: evt, pagina: location.pathname,
               utm_from_url: _hasUtmInUrl,
-              meta_event_id: leadEventId, meta_content_name: contentName,
+              meta_event_id: leadEventId, lead_event_id: leadEventId, meta_content_name: contentName,
               turnstile_token: token,
             }, _attrib)),
           }).then(function (r) {

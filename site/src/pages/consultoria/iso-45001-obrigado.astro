@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import LeadPendingConversion from "../../components/LeadPendingConversion.astro";
 ---
 
 <Base
@@ -57,26 +58,7 @@ import Base from "../../layouts/Base.astro";
     </div>
   </section>
 
-  <!-- Dispara Lead (Meta Pixel + Google Ads + CAPI) -->
-  <script is:inline>
-    (function () {
-      var raw = null;
-      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
-      if (!raw) return;
-      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
-      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
-      var PRODUCT = { content_name: 'ISO 45001', content_category: 'Saúde e Segurança' };
-      var done = false;
-      function fire() {
-        if (done) return; done = true;
-        try { if (window.__tplSetAdsUser) window.__tplSetAdsUser(d); if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name, content_name: PRODUCT.content_name, content_category: PRODUCT.content_category }); } catch (_) {}
-      }
-      var n = 0, t = setInterval(function () {
-        n++;
-        if ((window.trk && typeof window.trk.lead === "function") || n > 60) { clearInterval(t); fire(); }
-      }, 100);
-    })();
-  </script>
+  <LeadPendingConversion contentName="ISO 45001" contentCategory="Saúde e Segurança" />
 
 </Base>
 

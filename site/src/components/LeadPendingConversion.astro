@@ -1,0 +1,48 @@
+---
+// Dispara a conversão (Google Ads / GA4) na página de obrigado.
+// Se houver tpl_lead_pending, carrega o tracking-kit na hora e espera
+// window.trk.lead por até 20s. O item só sai do sessionStorage depois
+// que trk.lead() devolve o id do evento.
+interface Props {
+  contentName?: string;
+  contentCategory?: string;
+}
+const { contentName = "", contentCategory = "" } = Astro.props;
+---
+<script is:inline define:vars={{ contentName, contentCategory }}>
+  (function () {
+    var PRODUCT = { content_name: contentName || "", content_category: contentCategory || "" };
+    var raw = null;
+    try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+    if (!raw) return;
+    if (typeof window.__loadTrackingKit === "function") {
+      try { window.__loadTrackingKit(); } catch (_) {}
+    }
+    var d = {};
+    try { d = JSON.parse(raw) || {}; } catch (_) {}
+    var attempts = 0;
+    var timer = setInterval(function () {
+      attempts++;
+      var ready = window.trk && typeof window.trk.lead === "function";
+      if (!ready && attempts < 200) return;
+      clearInterval(timer);
+      if (!ready) return;
+      try {
+        if (typeof window.__tplSetAdsUser === "function") window.__tplSetAdsUser(d);
+        var props = {};
+        if (PRODUCT.content_name) props.content_name = PRODUCT.content_name;
+        if (PRODUCT.content_category) props.content_category = PRODUCT.content_category;
+        if (d.event_id) {
+          props.event_id = d.event_id;
+          props.transaction_id = d.event_id;
+        }
+        var fired = window.trk.lead(
+          { email: d.email || "", phone: d.phone || "", name: d.name || "" },
+          props
+        );
+        if (!fired) return;
+        try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      } catch (_) {}
+    }, 100);
+  })();
+</script>

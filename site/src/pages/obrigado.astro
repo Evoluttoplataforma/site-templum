@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import LeadPendingConversion from "../components/LeadPendingConversion.astro";
 
 // Copy real de "site atual/Templum Consultoria obrigado.html".
 const motivos = [
@@ -79,33 +80,7 @@ const depoimentos = [
     </div>
   </section>
 
-  <!-- Conversão: dispara o evento Lead aqui (thank-you page), confiável e visível
-       no Pixel Helper. Os dados vêm do form (sessionStorage), e o disparo acontece
-       só uma vez por envio (a flag é apagada). -->
-  <script is:inline>
-    (function () {
-      var raw = null;
-      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
-      if (!raw) return; // visita direta à /obrigado não conta conversão
-      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
-      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
-      var SECOND_PIXEL = "4177249519256900";
-      var done = false;
-      function fire() {
-        if (done) return; done = true;
-        // pixel primário + Google Ads + CAPI (via tracking-kit)
-        try { if (window.__tplSetAdsUser) window.__tplSetAdsUser(d); if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
-        // Lead também na 2ª conta Meta (o kit dispara só no pixel primário)
-      }
-      var n = 0, t = setInterval(function () {
-        n++;
-        // dispara assim que o kit estiver pronto (não bloqueia no fbq, que pode
-        // não carregar). gtag já é estático no head; fbq é best-effort no fire().
-        var ready = window.trk && typeof window.trk.lead === "function";
-        if (ready || n > 60) { clearInterval(t); fire(); }
-      }, 100);
-    })();
-  </script>
+  <LeadPendingConversion />
 </Base>
 
 <style>

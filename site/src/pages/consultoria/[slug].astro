@@ -19,6 +19,12 @@ export function getStaticPaths() {
 }
 
 const SAIDAS_ADS = new Set(["iso-27001", "iso-14001", "iso-45001", "pbqp-h"]);
+const OBRIGADO_SEARCH = {
+  "iso-14001": "/consultoria/iso-14001-obrigado",
+  "iso-27001": "/consultoria/iso-27001-obrigado",
+  "iso-45001": "/consultoria/iso-45001-obrigado",
+  "pbqp-h": "/consultoria/pbqp-h-obrigado",
+};
 const { slug } = Astro.props;
 const d = Object.values(dataModules).map((m) => m.default).filter(Boolean).find((x) => x.slug === slug);
 const norma = normas.find((n) => n.slug === slug) || {};
@@ -84,7 +90,7 @@ if (faqItems.length) {
           <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" colapsavel={slug === "iso-9001"} />
+          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" colapsavel={slug === "iso-9001"} obrigado={OBRIGADO_SEARCH[slug] || ""} />
         </div>
       </div>
     </section>
@@ -227,7 +233,7 @@ if (faqItems.length) {
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." colapsavel={slug === "iso-9001"} />
+        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." colapsavel={slug === "iso-9001"} obrigado={OBRIGADO_SEARCH[slug] || ""} />
       </div>
     </section>
 

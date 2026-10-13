@@ -12,7 +12,7 @@
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
-//   GET    /api/saida       → leitura da pesquisa (senha LEADS_PASSWORD), p/ /saida-ads
+//   GET    /api/saida       → leitura da pesquisa (senha Templum@2026), p/ /saida-ads
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
 //   GET    /api/crm-report  → leads do funil INBOUND real da Templum (tabela templum_inbound_leads), p/ /relatorio-inbound (senha protegida, reusa LEADS_PASSWORD)
@@ -529,6 +529,8 @@ async function handleLead(request, env, ctx) {
     // não casava com os eventos server-side.
     meta_event_id: body.meta_event_id || "",
     meta_content_name: body.meta_content_name || "",
+    // Mesmo id do Lead da Meta e do transaction_id do Google Ads.
+    lead_event_id: String(body.lead_event_id || body.meta_event_id || "").slice(0, 80),
   };
 
   applyMqlLpAttribution(lead);
@@ -627,6 +629,7 @@ async function saveToSupabase(lead, env) {
       gclid: lead.gclid, fbclid: lead.fbclid,
       gbraid: lead.gbraid, wbraid: lead.wbraid,
     };
+    if (lead.lead_event_id) payload.lead_event_id = lead.lead_event_id;
     if (lead.status_pagamento) payload.status_pagamento = lead.status_pagamento;
 
     const r = await fetch(`${sbUrl}/rest/v1/site_leads`, {
@@ -2037,7 +2040,7 @@ async function handleSaida(request, env) {
 async function handleSaidaRead(request, env) {
   const url = new URL(request.url);
   const token = url.searchParams.get("token") || "";
-  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  const expected = "Templum@2026";
   if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
 
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
