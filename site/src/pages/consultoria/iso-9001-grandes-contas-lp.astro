@@ -30,7 +30,7 @@ import { baseConsultoria } from "../../data/consultoria/_base.js";
 const NORMA = "ISO 9001";
 
 // Perguntas do diagnóstico. `campo` é a coluna do lead que recebe a resposta —
-// porte/cargo/prazo caem em colunas reais (Supabase + Pipedrive + Orbit +
+// porte/cargo/prazo caem em colunas reais (Supabase + Templum OS INBOUND +
 // Mailchimp); a situação vai no `mensagem`, que o worker manda pro CRM como
 // nota/necessidade (o Supabase não guarda essa coluna, o CRM sim).
 // Os valores de `funcionarios` e `cargo` são IDÊNTICOS aos do LeadForm — mudar
@@ -413,7 +413,7 @@ const faq = [
       txt("qzPrazo", respostas.urgencia);
 
       // Campos que o worker realmente persiste: porte/cargo/prazo em colunas
-      // próprias, e o resumo no `mensagem` (vira nota no Pipedrive/Orbit).
+      // próprias, e o resumo no `mensagem` (vira nota no Templum OS).
       var set = function (id, val) { var el = document.getElementById(id); if (el) el.value = val || ""; };
       set("fFunc", respostas.funcionarios);
       set("fCargo", respostas.cargo);

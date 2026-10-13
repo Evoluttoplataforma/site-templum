@@ -319,7 +319,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
 
     <script is:inline src="/js/tpl-turnstile.js?v=1"></script>
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
-         Supabase + Mailchimp + Pipedrive/ManyChat), dispara o Lead do Meta Pixel
+         Supabase + Mailchimp + Templum OS INBOUND/ManyChat), dispara o Lead do Meta Pixel
          SÓ depois de confirmar que o Supabase salvou o cadastro, e redireciona.
          Vale para qualquer form[data-trk-event]. data-trk-event="denuncia"
          não é enviado ao Mailchimp/webhook nem ao tracking (apenas UI).

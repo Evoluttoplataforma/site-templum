@@ -1,6 +1,7 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
-//   POST /api/lead          → salva lead no Supabase + Mailchimp + Pipedrive + ManyChat (em paralelo)
-//                             Inscrição de evento NÃO vai pro Pipedrive nem pro INBOUND
+//   POST /api/lead          → salva lead no Supabase + Mailchimp + Templum OS + ManyChat (em paralelo)
+//                             Lead comercial vai ao funil INBOUND (etapa NOVO LEAD). Não cria negócio no Pipedrive.
+//                             Inscrição de evento NÃO vai ao INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar (ORBIT_CRM_API_KEY).
 //                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao funil da campanha
@@ -399,7 +400,7 @@ function timed(promise, ms) {
 }
 
 // =====================================================================
-// LEAD: 3 destinos independentes — Supabase, Mailchimp, Pipedrive
+// LEAD: Supabase, Mailchimp, Templum OS (INBOUND). Pipedrive não recebe lead novo.
 // =====================================================================
 
 async function handleCrmLeadLookup(request, env) {
@@ -543,7 +544,7 @@ async function handleLead(request, env, ctx) {
   if (isIsca && !lead.norma) lead.norma = iscaNormaFromSlug(lead.isca || lead.pagina);
   if (isIsca && !lead.evento.startsWith("isca")) lead.evento = "isca";
 
-  // Inscrição em evento NÃO vai pro INBOUND/Pipedrive (em agosto/2026 as 59 da
+  // Inscrição em evento NÃO vai ao INBOUND (em agosto/2026 as 59 da
   // LP PE2027 inflaram perda). Webinar 9001 e isca digital vão ao funil MQL (nutrição).
   const isInscricaoEvento =
     lead.evento.startsWith("webinar") ||
@@ -553,7 +554,7 @@ async function handleLead(request, env, ctx) {
     isIsca;
 
   // Estratégia: salva no Supabase primeiro (aguarda, max 3s) e responde ao browser.
-  // Mailchimp + Pipedrive + Meta CAPI rodam em background via ctx.waitUntil.
+  // Mailchimp + Templum OS (INBOUND) + Meta CAPI rodam em background via ctx.waitUntil.
   const supabase = await timed(saveToSupabase(lead, env), 3000);
 
   const isResultado = lead.evento === "isca-resultado";
@@ -573,7 +574,7 @@ async function handleLead(request, env, ctx) {
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
     })]);
   } else if (!isInscricaoEvento) {
-    bgTasks.push(["pipedrive", saveToPipedrive(lead, env)]);
+    // CRM comercial: Templum OS, funil INBOUND, etapa NOVO LEAD. Sem Pipedrive.
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
   } else if (lead.evento.startsWith("webinar")) {
     bgTasks.push(["mql", saveToMqlWebinar(lead, env)]);
@@ -735,7 +736,10 @@ async function saveToMailchimp(lead, env) {
 }
 
 // ---- 3) Pipedrive -------------------------------------------------------
-// Pipeline INBOUND (id=1) → Stage NOVO LEAD (id=218)
+// /api/lead não chama mais isto. Lead comercial vai ao Templum OS (INBOUND).
+// A função fica só como histórico; a tela interna /leads ainda consulta o Pipedrive
+// por GET /api/pipedrive e POST /api/pipedrive-batch (leitura, não cria negócio).
+// Pipeline antigo: INBOUND (id=1) → Stage NOVO LEAD (id=218)
 const PD_BASE = "https://api.pipedrive.com/v1";
 const PD_PIPELINE = 1;
 const PD_STAGE = 218;
