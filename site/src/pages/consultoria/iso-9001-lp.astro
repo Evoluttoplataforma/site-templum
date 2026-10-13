@@ -6,6 +6,7 @@ import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/iso-9001.js";
 
@@ -243,6 +244,7 @@ const heroCta = "Solicitar diagnóstico";
       </div>
     </section>
   </div>
+  <SaidaPesquisa norma={norma.nome} />
 </LpBase>
 
 <style>

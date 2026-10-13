@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /design-system
+Disallow: /saida-ads
 
 # Google Ads — liberação explícita (AdsBot ignora parte das regras, mas
 # a Ajuda do Google pede Allow claro p/ AdsBot-Google / Mediapartners-Google).

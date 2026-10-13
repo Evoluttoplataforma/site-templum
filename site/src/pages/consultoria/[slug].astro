@@ -6,6 +6,7 @@ import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
 import { normas } from "../../data/normas.js";
 
 const dataModules = import.meta.glob("../../data/consultoria/*.js", { eager: true });
@@ -17,6 +18,7 @@ export function getStaticPaths() {
     .map((m) => ({ params: { slug: m.default.slug }, props: { slug: m.default.slug } }));
 }
 
+const SAIDAS_ADS = new Set(["iso-27001", "iso-14001", "iso-45001", "pbqp-h"]);
 const { slug } = Astro.props;
 const d = Object.values(dataModules).map((m) => m.default).filter(Boolean).find((x) => x.slug === slug);
 const norma = normas.find((n) => n.slug === slug) || {};
@@ -238,6 +240,7 @@ if (faqItems.length) {
       </div>
     </section>
   </div>
+  {SAIDAS_ADS.has(slug) && <SaidaPesquisa norma={norma.nome} />}
 </Base>
 
 <style>

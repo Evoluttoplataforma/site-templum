@@ -11,6 +11,8 @@
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
+//   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
+//   GET    /api/saida       → leitura da pesquisa (senha LEADS_PASSWORD), p/ /saida-ads
 //   GET    /api/leads       → leitura interna de leads (senha protegida)
 //   DELETE /api/leads       → exclui um lead no Supabase por id (senha protegida)
 //   GET    /api/crm-report  → leads do funil INBOUND real da Templum (tabela templum_inbound_leads), p/ /relatorio-inbound (senha protegida, reusa LEADS_PASSWORD)
@@ -91,6 +93,21 @@ export default {
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       if (url.pathname === "/api/pesquisa-ne") return handlePesquisaNe(request, env);
       return handlePesquisaGf(request, env);
+    }
+    if (url.pathname === "/api/saida") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          },
+        });
+      }
+      if (request.method === "POST") return handleSaida(request, env);
+      if (request.method === "GET") return handleSaidaRead(request, env);
+      return corsJson({ ok: false, error: "method_not_allowed" }, 405);
     }
     if (url.pathname === "/api/lead") {
       if (request.method === "OPTIONS") {
@@ -1861,6 +1878,199 @@ async function handleTrack(request, env) {
   }));
   // Sempre 2xx para o kit (ele só checa r.ok).
   return json({ ok: true, configured: true, results });
+}
+
+// ---------------------- Pesquisa de saída (LPs de Ads) ----------------------
+// Quem sai da página sem se cadastrar. Não cria lead no Pipedrive, Orbit,
+// Mailchimp nem ManyChat. A leitura fica em /saida-ads.
+const SAIDA_PAGINAS = new Set([
+  "/consultoria/iso-9001-lp",
+  "/consultoria/iso-27001",
+  "/consultoria/iso-14001",
+  "/consultoria/iso-45001",
+  "/consultoria/pbqp-h",
+  "/consultoria/sassmaq-4-0",
+]);
+const SAIDA_MOTIVOS = {
+  pesquisando: {
+    label: "Ainda estou só pesquisando",
+    detalhes: {
+      comparar: "Quero comparar com outras consultorias",
+      prazo: "Quero entender o prazo até certificar",
+      porte: "Quero ver se serve para o porte da empresa",
+      estudando: "Só estou estudando a norma",
+    },
+  },
+  preco: {
+    label: "Queria o preço antes de cadastrar",
+    detalhes: {
+      faixa: "Queria uma faixa de investimento antes de falar com alguém",
+      caro: "Achei que ia ser caro demais",
+      diretoria: "Preciso levar um número para a diretoria",
+      outro_preco: "Preço não era o problema",
+    },
+  },
+  depois: {
+    label: "Não ficou claro o que acontece depois",
+    detalhes: {
+      ligacao: "Não quero que alguém me ligue agora",
+      tempo: "Não entendi quanto tempo leva o diagnóstico",
+      compromisso: "Não ficou claro se tem custo ou compromisso",
+      diferenca: "Não entendi o que a Templum faz de diferente",
+    },
+  },
+  momento: {
+    label: "Não é o momento da minha empresa",
+    detalhes: {
+      prioridade: "A certificação ainda não é prioridade",
+      contrato: "Estou esperando um contrato ou uma licitação",
+      equipe: "Falta gente na equipe para tocar isso",
+      norma: "Queria só entender a norma, sem consultoria",
+    },
+  },
+  confianca: {
+    label: "Faltou confiança para deixar meus dados",
+    detalhes: {
+      cases: "Queria ver cases do meu setor",
+      marca: "Não conhecia a Templum",
+      garantia: "A garantia não ficou clara",
+      generico: "A página pareceu genérica demais",
+    },
+  },
+  formulario: {
+    label: "O formulário pediu coisa demais",
+    detalhes: {
+      telefone: "Pediu telefone cedo demais",
+      campos: "Eram muitos campos",
+      abordagem: "Não quero ser abordado agora",
+      whatsapp: "Prefiro chamar no WhatsApp",
+    },
+  },
+  outro: { label: "Outro motivo", detalhes: {} },
+};
+const SAIDA_GATILHOS = new Set(["mouse", "voltar", "preview"]);
+
+function saidaPath(value) {
+  let s = String(value || "").split("?")[0].split("#")[0].trim();
+  if (s.length > 1 && s.endsWith("/")) s = s.slice(0, -1);
+  return s;
+}
+function saidaClip(value, max) {
+  return String(value || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, max);
+}
+function saidaInt(value, min, max) {
+  const n = parseInt(value, 10);
+  if (!Number.isFinite(n)) return null;
+  return Math.min(max, Math.max(min, n));
+}
+
+async function handleSaida(request, env) {
+  let body;
+  try { body = await request.json(); }
+  catch (_) { return corsJson({ ok: false, error: "invalid_json" }, 400); }
+
+  if (saidaClip(body.company_url, 80)) return corsJson({ ok: true });
+
+  const pagina = saidaPath(body.pagina);
+  if (!SAIDA_PAGINAS.has(pagina)) return corsJson({ ok: false, error: "pagina" }, 400);
+
+  const motivoId = String(body.motivo || "");
+  const motivo = SAIDA_MOTIVOS[motivoId];
+  if (!motivo) return corsJson({ ok: false, error: "motivo" }, 400);
+
+  const detalheId = String(body.detalhe || "");
+  if (detalheId && !motivo.detalhes[detalheId]) return corsJson({ ok: false, error: "detalhe" }, 400);
+
+  const clientId = String(body.client_id || "");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(clientId)) {
+    return corsJson({ ok: false, error: "client_id" }, 400);
+  }
+
+  const gatilho = SAIDA_GATILHOS.has(body.gatilho) ? body.gatilho : "mouse";
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return corsJson({ ok: false, error: "not_configured" }, 500);
+
+  const payload = {
+    client_id: clientId,
+    pagina,
+    norma: saidaClip(body.norma, 80),
+    motivo: motivoId,
+    motivo_label: motivo.label,
+    detalhe: detalheId,
+    detalhe_label: detalheId ? motivo.detalhes[detalheId] : "",
+    comentario: saidaClip(body.comentario, 400),
+    gatilho,
+    dispositivo: body.dispositivo === "mobile" ? "mobile" : "desktop",
+    tempo_s: saidaInt(body.tempo_s, 0, 7200),
+    rolagem_pct: saidaInt(body.rolagem_pct, 0, 100),
+    form_iniciado: body.form_iniciado === true,
+    utm_source: saidaClip(body.utm_source, 200),
+    utm_medium: saidaClip(body.utm_medium, 200),
+    utm_campaign: saidaClip(body.utm_campaign, 200),
+    utm_content: saidaClip(body.utm_content, 200),
+    utm_term: saidaClip(body.utm_term, 200),
+    gclid: saidaClip(body.gclid, 200),
+  };
+
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/rpc/salvar_saida_pesquisa`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        apikey: sbKey,
+        authorization: "Bearer " + sbKey,
+      },
+      body: JSON.stringify({ p: payload }),
+    });
+    if (!res.ok) {
+      const err = await res.text().catch(() => "");
+      console.error("[saida] insert falhou", res.status, err.slice(0, 180));
+      return corsJson({ ok: false, error: "save_failed" }, 502);
+    }
+    return corsJson({ ok: true });
+  } catch (_) {
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
+  }
+}
+
+async function handleSaidaRead(request, env) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token") || "";
+  const expected = env.LEADS_PASSWORD || "Templum@3321";
+  if (token !== expected) return json({ ok: false, error: "unauthorized" }, 401);
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY;
+  if (!sbKey) return json({ ok: false, error: "no_supabase_service_key" }, 500);
+
+  const cols = "id,created_at,pagina,norma,motivo,motivo_label,detalhe,detalhe_label,comentario,gatilho,dispositivo,tempo_s,rolagem_pct,form_iniciado,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid";
+  try {
+    const res = await fetch(
+      `${sbUrl}/rest/v1/site_saida_pesquisa?select=${cols}&order=created_at.desc&limit=2000`,
+      {
+        headers: {
+          apikey: sbKey,
+          authorization: "Bearer " + sbKey,
+          accept: "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      const err = await res.text().catch(() => "");
+      return json({ ok: false, error: "supabase_" + res.status, detail: err.slice(0, 180) }, 502);
+    }
+    const data = await res.json();
+    return new Response(JSON.stringify({ ok: true, data }), {
+      status: 200,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+      },
+    });
+  } catch (e) {
+    return json({ ok: false, error: "fetch_failed", detail: e.message }, 502);
+  }
 }
 
 // ---------------------- Leads Read (GET /api/leads) ----------------------

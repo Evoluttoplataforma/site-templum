@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Por que saíram sem se cadastrar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --orange: #ff5925; --ink: #b23c0c; --navy: #222831; --cream: #fff4dd; --bg: #fffaeb; --line: rgba(24,25,27,.1); }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Montserrat, sans-serif; background: var(--bg); color: var(--navy); }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lead { margin: 0 0 22px; color: #3f424b; max-width: 640px; line-height: 1.5; }
+    .gate { max-width: 420px; margin: 12vh auto; background: #fff; border-radius: 24px; padding: 28px; box-shadow: 0 16px 40px rgba(24,25,27,.08); }
+    label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    input[type="password"] { width: 100%; min-height: 48px; border: 1.5px solid var(--line); border-radius: 12px; padding: 0 14px; font: inherit; }
+    button, .chip { font: inherit; cursor: pointer; }
+    .btn { margin-top: 14px; min-height: 48px; border: 0; border-radius: 999px; background: var(--orange); color: #fff; font-weight: 700; padding: 0 18px; }
+    .err { color: #dc2626; font-size: 14px; min-height: 1.2em; }
+    .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+    .chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 8px 12px; font-weight: 600; font-size: 13px; }
+    .chip.is-on { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+    .card, .panel { background: #fff; border-radius: 20px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(24,25,27,.04), 0 10px 28px rgba(24,25,27,.05); }
+    .card b { display: block; font-size: 28px; letter-spacing: -0.03em; }
+    .card span, .muted { color: #3f424b; font-size: 13px; }
+    .panel { margin-bottom: 14px; }
+    .panel h2 { margin: 0 0 12px; font-size: 18px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #3f424b; }
+    .track { height: 8px; background: var(--cream); border-radius: 99px; overflow: hidden; min-width: 80px; }
+    .fill { height: 100%; background: var(--orange); }
+    .quote { border-top: 1px solid var(--line); padding: 12px 0; }
+    .quote p { margin: 4px 0 0; font-size: 15px; }
+    .empty { padding: 12px 0; color: #3f424b; }
+    @media (max-width: 800px) { .cards { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="gate" class="gate">
+      <h1>Respostas de quem saiu</h1>
+      <p class="lead">A mesma senha da leitura de leads.</p>
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" autocomplete="current-password" />
+      <div><button class="btn" id="entrar" type="button">Entrar</button></div>
+      <p class="err" id="erro"></p>
+    </section>
+    <section id="painel" hidden>
+      <h1>Por que saíram sem se cadastrar</h1>
+      <p class="lead">Quem clicou no anúncio, abriu a página e foi embora sem pedir o diagnóstico. Cada linha é uma resposta do popup de saída.</p>
+      <div class="bar" id="periodos"></div>
+      <div class="bar" id="paginas"></div>
+      <label class="muted"><input type="checkbox" id="testes" /> Incluir testes do preview (?saida=1)</label>
+      <div class="cards" id="cards"></div>
+      <section class="panel">
+        <h2>O motivo</h2>
+        <div id="motivos"></div>
+      </section>
+      <section class="panel">
+        <h2>O detalhe</h2>
+        <div id="detalhes"></div>
+      </section>
+      <section class="panel">
+        <h2>Por página</h2>
+        <div id="por-pagina"></div>
+      </section>
+      <section class="panel">
+        <h2>O que escreveram</h2>
+        <div id="textos"></div>
+      </section>
+      <button class="btn" id="csv" type="button">Baixar planilha</button>
+    </section>
+  </main>
+  <script>
+    var NOMES = {
+      "/consultoria/iso-9001-lp": "ISO 9001",
+      "/consultoria/iso-27001": "ISO 27001",
+      "/consultoria/iso-14001": "ISO 14001",
+      "/consultoria/iso-45001": "ISO 45001",
+      "/consultoria/pbqp-h": "PBQP-H",
+      "/consultoria/sassmaq-4-0": "SASSMAQ 4.0"
+    };
+    var KEY = "tpl_saida_painel";
+    var rows = [];
+    var periodo = 30;
+    var pagina = "";
+    var token = "";
+
+    function pathOf(p) {
+      var s = String(p || "").split("?")[0];
+      if (s.length > 1 && s.endsWith("/")) s = s.slice(0, -1);
+      return s;
+    }
+    function nomePagina(p) { return NOMES[pathOf(p)] || pathOf(p); }
+    function media(list, key) {
+      var n = list.filter(function (r) { return r[key] != null; });
+      if (!n.length) return "-";
+      var s = n.reduce(function (a, r) { return a + Number(r[key] || 0); }, 0);
+      return Math.round(s / n.length);
+    }
+    function filtradas() {
+      var corte = periodo ? Date.now() - periodo * 86400000 : 0;
+      var testes = document.getElementById("testes").checked;
+      return rows.filter(function (r) {
+        if (!testes && r.gatilho === "preview") return false;
+        if (pagina && pathOf(r.pagina) !== pagina) return false;
+        if (corte && new Date(r.created_at).getTime() < corte) return false;
+        return true;
+      });
+    }
+    function grupo(list, key, labelKey) {
+      var map = {};
+      list.forEach(function (r) {
+        var id = r[key] || "(sem detalhe)";
+        if (!map[id]) map[id] = { id: id, label: r[labelKey] || id, n: 0, tempo: 0, rol: 0, tempoN: 0, rolN: 0 };
+        map[id].n += 1;
+        if (r.tempo_s != null) { map[id].tempo += Number(r.tempo_s); map[id].tempoN += 1; }
+        if (r.rolagem_pct != null) { map[id].rol += Number(r.rolagem_pct); map[id].rolN += 1; }
+      });
+      return Object.keys(map).map(function (k) { return map[k]; }).sort(function (a, b) { return b.n - a.n; });
+    }
+    function tabela(list, total, primeira) {
+      if (!list.length) return '<p class="empty">Ainda não chegou resposta nesse recorte.</p>';
+      var head = "<tr><th>" + primeira + "</th><th>Respostas</th><th></th><th>Tempo médio</th><th>Rolagem</th></tr>";
+      var body = list.map(function (g) {
+        var pct = total ? Math.round((g.n / total) * 100) : 0;
+        var tempo = g.tempoN ? Math.round(g.tempo / g.tempoN) + "s" : "-";
+        var rol = g.rolN ? Math.round(g.rol / g.rolN) + "%" : "-";
+        return "<tr><td>" + esc(g.label) + "</td><td>" + g.n + " (" + pct + "%)</td><td><div class='track'><div class='fill' style='width:" + pct + "%'></div></div></td><td>" + tempo + "</td><td>" + rol + "</td></tr>";
+      }).join("");
+      return "<table><thead>" + head + "</thead><tbody>" + body + "</tbody></table>";
+    }
+    function esc(s) {
+      return String(s || "").replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; });
+    }
+    function render() {
+      var list = filtradas();
+      var mob = list.filter(function (r) { return r.dispositivo === "mobile"; }).length;
+      var mobPct = list.length ? Math.round((mob / list.length) * 100) : 0;
+      document.getElementById("cards").innerHTML =
+        card(list.length, "respostas") +
+        card(media(list, "tempo_s") + (media(list, "tempo_s") === "-" ? "" : "s"), "tempo médio na página") +
+        card(media(list, "rolagem_pct") + (media(list, "rolagem_pct") === "-" ? "" : "%"), "rolagem média") +
+        card(mobPct + "%", "no celular");
+      document.getElementById("motivos").innerHTML = tabela(grupo(list, "motivo", "motivo_label"), list.length, "Motivo");
+      var comDetalhe = list.filter(function (r) { return r.detalhe; });
+      document.getElementById("detalhes").innerHTML = tabela(grupo(comDetalhe, "detalhe", "detalhe_label"), comDetalhe.length, "Detalhe");
+      var porPagina = grupo(list.map(function (r) {
+        return Object.assign({}, r, { pagina_nome: nomePagina(r.pagina), pagina_id: pathOf(r.pagina) });
+      }), "pagina_id", "pagina_nome");
+      document.getElementById("por-pagina").innerHTML = tabela(porPagina, list.length, "Página");
+      var textos = list.filter(function (r) { return (r.comentario || "").trim(); });
+      document.getElementById("textos").innerHTML = textos.length ? textos.map(function (r) {
+        var quando = new Date(r.created_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        return "<div class='quote'><span class='muted'>" + esc(nomePagina(r.pagina)) + " · " + esc(r.motivo_label || r.motivo) + " · " + quando + "</span><p>" + esc(r.comentario) + "</p></div>";
+      }).join("") : '<p class="empty">Ninguém escreveu um motivo livre nesse recorte.</p>';
+    }
+    function card(v, l) { return "<div class='card'><b>" + v + "</b><span>" + l + "</span></div>"; }
+    function chips(el, items, atual, onPick) {
+      el.innerHTML = "";
+      items.forEach(function (item) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip" + (item.id === atual ? " is-on" : "");
+        b.textContent = item.label;
+        b.addEventListener("click", function () { onPick(item.id); });
+        el.appendChild(b);
+      });
+    }
+    function pintarFiltros() {
+      chips(document.getElementById("periodos"), [
+        { id: 7, label: "7 dias" },
+        { id: 30, label: "30 dias" },
+        { id: 0, label: "Tudo" }
+      ], periodo, function (id) { periodo = id; pintarFiltros(); render(); });
+      var pags = [{ id: "", label: "Todas as páginas" }].concat(Object.keys(NOMES).map(function (p) {
+        return { id: p, label: NOMES[p] };
+      }));
+      chips(document.getElementById("paginas"), pags, pagina, function (id) { pagina = id; pintarFiltros(); render(); });
+    }
+    function entrar(senha) {
+      document.getElementById("erro").textContent = "Carregando…";
+      fetch("/api/saida?token=" + encodeURIComponent(senha))
+        .then(function (r) { return r.json().then(function (b) { return { ok: r.ok, body: b }; }); })
+        .then(function (res) {
+          if (!res.ok || !res.body || res.body.ok !== true) {
+            document.getElementById("erro").textContent = "Senha incorreta ou a leitura ainda não está no ar.";
+            return;
+          }
+          token = senha;
+          try { sessionStorage.setItem(KEY, senha); } catch (_) {}
+          rows = res.body.data || [];
+          document.getElementById("gate").hidden = true;
+          document.getElementById("painel").hidden = false;
+          pintarFiltros();
+          render();
+        })
+        .catch(function () {
+          document.getElementById("erro").textContent = "Não consegui ler as respostas agora.";
+        });
+    }
+    document.getElementById("entrar").addEventListener("click", function () {
+      entrar(document.getElementById("senha").value);
+    });
+    document.getElementById("senha").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") entrar(e.target.value);
+    });
+    document.getElementById("testes").addEventListener("change", render);
+    document.getElementById("csv").addEventListener("click", function () {
+      var list = filtradas();
+      var cols = ["created_at","pagina","norma","motivo_label","detalhe_label","comentario","dispositivo","gatilho","tempo_s","rolagem_pct","utm_campaign","gclid"];
+      var lines = [cols.join(",")].concat(list.map(function (r) {
+        return cols.map(function (c) {
+          var v = r[c] == null ? "" : String(r[c]).replace(/"/g, '""');
+          return '"' + v + '"';
+        }).join(",");
+      }));
+      var blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "saida-ads.csv";
+      a.click();
+    });
+    try { token = sessionStorage.getItem(KEY) || ""; } catch (_) {}
+    if (token) entrar(token);
+  </script>
+</body>
+</html>
