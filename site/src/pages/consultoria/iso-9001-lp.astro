@@ -172,7 +172,7 @@ const heroCta = "Solicitar diagnóstico";
         <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
         <h2>De onde você estiver, <em class="accent">a Templum chega.</em></h2>
         <p>{d.cobertura}</p>
-        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum — Brasil, Portugal e África" loading="lazy" />
+        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum: Brasil, Portugal e África" width="1024" height="722" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -345,7 +345,7 @@ const heroCta = "Solicitar diagnóstico";
   .cs-cover-ico { width: 64px; height: 64px; border-radius: var(--r-20); display: inline-grid; place-items: center; font-size: 32px; margin-bottom: 20px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 18%, transparent); }
   .cs-cover h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; }
   .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 600px; margin: 14px auto 0; line-height: 1.6; }
-  .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
+  .cs-cover-map { width: 100%; max-width: 680px; height: auto; aspect-ratio: 1024 / 722; margin: 32px auto 0; }
 
   .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
   .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
