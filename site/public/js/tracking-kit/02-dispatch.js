@@ -391,8 +391,8 @@
       gtag('event', map.ga4, gaProps);
     }
 
-    // Google Ads conversão (só em eventos de conversão por padrão)
-    var conversionEvents = ['Lead', 'Purchase', 'CompleteRegistration', 'StartTrial', 'Subscribe', 'Contact', 'Schedule'];
+    // Google Ads: o rótulo do formulário dispara só no Lead.
+    var conversionEvents = ['Lead'];
     if (conversionEvents.indexOf(eventName) !== -1 &&
         on(C.googleAds && C.googleAds.conversionId) &&
         on(C.googleAds.leadLabel) && window.gtag) {

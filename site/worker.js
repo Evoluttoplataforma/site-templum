@@ -1,6 +1,7 @@
 // Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Templum OS + ManyChat (em paralelo)
 //   POST /api/form-evento   → funil do formulário em site_form_eventos (sem dados pessoais)
+//   POST /api/whatsapp-ref  → código do clique de WhatsApp em site_whatsapp_refs (sem dados pessoais)
 //                             Lead comercial vai ao funil INBOUND (etapa NOVO LEAD). Não cria negócio no Pipedrive.
 //                             Inscrição de evento NÃO vai ao INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
@@ -61,6 +62,7 @@
 
 import mqlCampaignsConfig from "./config/mql-campaigns.json";
 import { sanitizeFormEvento } from "./form-evento.js";
+import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
 
 const META_API_VERSION = "v21.0";
 
@@ -139,6 +141,20 @@ export default {
       }
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       return handleFormEvento(request, env);
+    }
+    if (url.pathname === "/api/whatsapp-ref") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleWhatsappRef(request, env);
     }
     if (url.pathname === "/api/crm-lead") {
       if (request.method === "OPTIONS") {
@@ -521,6 +537,40 @@ async function handleFormEvento(request, env) {
     return corsJson({ ok: false }, 502);
   } catch (e) {
     console.error("[form-evento] fetch", e && e.message);
+    return corsJson({ ok: false }, 502);
+  }
+}
+
+async function handleWhatsappRef(request, env) {
+  let raw = "";
+  try { raw = await request.text(); } catch (_) { return corsJson({ ok: false }, 400); }
+  if (!raw || raw.length > 4000) return corsJson({ ok: false }, 400);
+  let body = null;
+  try { body = JSON.parse(raw); } catch (_) { return corsJson({ ok: false }, 400); }
+  const row = sanitizeWhatsappRef(body);
+  if (!row) return corsJson({ ok: false }, 400);
+
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
+  if (!sbKey) return corsJson({ ok: false }, 503);
+
+  try {
+    const r = await fetch(`${sbUrl}/rest/v1/site_whatsapp_refs`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        apikey: sbKey,
+        authorization: "Bearer " + sbKey,
+        prefer: "return=minimal",
+      },
+      body: JSON.stringify(row),
+    });
+    if (r.ok) return corsJson({ ok: true });
+    const err = await r.text().catch(() => "");
+    console.error("[whatsapp-ref]", r.status, err.slice(0, 180));
+    return corsJson({ ok: false }, 502);
+  } catch (e) {
+    console.error("[whatsapp-ref] fetch", e && e.message);
     return corsJson({ ok: false }, 502);
   }
 }

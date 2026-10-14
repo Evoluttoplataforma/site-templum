@@ -65,6 +65,18 @@ assert.equal(
 
 assert.equal(sanitizeFormEvento({ ...base, evento: "whatsapp_clique" }).evento, "whatsapp_clique");
 assert.equal(
+  sanitizeFormEvento({ ...base, evento: "whatsapp_clique", lead_event_id: "A2B3C4" }).lead_event_id,
+  "A2B3C4",
+);
+assert.equal(
+  sanitizeFormEvento({ ...base, evento: "whatsapp_clique", lead_event_id: "A2B3C0" }).lead_event_id,
+  undefined,
+);
+assert.equal(
+  sanitizeFormEvento({ ...base, evento: "envio_ok", lead_event_id: "A2B3C4" }).lead_event_id,
+  undefined,
+);
+assert.equal(
   sanitizeFormEvento({ ...base, evento: "erro_turnstile", erro_codigo: "110200" }).erro_codigo,
   "110200",
 );

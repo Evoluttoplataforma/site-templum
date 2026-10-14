@@ -54,6 +54,12 @@ function id(value) {
   return s;
 }
 
+function refCodigo(value) {
+  const s = texto(value);
+  if (!/^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/.test(s)) return "";
+  return s;
+}
+
 function pagina(value) {
   let s = texto(value).split("?")[0].split("#")[0];
   if (!s.startsWith("/")) return "";
@@ -123,6 +129,11 @@ export function sanitizeFormEvento(input) {
   if (evento === "envio_ok") {
     const lead = id(input.lead_event_id);
     if (lead) row.lead_event_id = lead;
+  }
+
+  if (evento === "whatsapp_clique") {
+    const ref = refCodigo(input.lead_event_id);
+    if (ref) row.lead_event_id = ref;
   }
 
   const us = utm(input.utm_source);

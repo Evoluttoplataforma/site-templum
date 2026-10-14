@@ -58,7 +58,7 @@ window.__loadTrackingKit = function () {
   var BASE = '/js/tracking-kit/';
   function load(file, cb) {
     var s = document.createElement('script');
-    s.async = false; s.src = BASE + file + '?v=20261013';
+    s.async = false; s.src = BASE + file + '?v=20261013b';
     if (cb) s.onload = cb;
     // Sem o kit, o GA4 principal e o Ads ficariam sem `config` (ver Base.astro).
     s.onerror = function () { if (typeof window.__gtagFallback === 'function') window.__gtagFallback(); };

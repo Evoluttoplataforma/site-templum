@@ -6,6 +6,7 @@
 
   var UMA_VEZ = { form_visivel: 1, form_inicio: 1, envio_clique: 1, envio_ok: 1 };
   var WPP_SEND_TO = "AW-17896226473/yuvnCL_ZgpwdEKn9ytVC";
+  var REF_ALFABETO = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
   var leadAberto = 0;
   var viuForm = false;
   var comecou = false;
@@ -111,23 +112,74 @@
     return false;
   }
 
-  function enviar(payload) {
+  function enviarBeacon(url, payload) {
     var corpo = "";
     try { corpo = JSON.stringify(payload); } catch (_) { return; }
     try {
       if (navigator.sendBeacon) {
         var blob = new Blob([corpo], { type: "application/json" });
-        if (navigator.sendBeacon("/api/form-evento", blob)) return;
+        if (navigator.sendBeacon(url, blob)) return;
       }
     } catch (_) {}
     try {
-      fetch("/api/form-evento", {
+      fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: corpo,
         keepalive: true,
       }).catch(function () {});
     } catch (_) {}
+  }
+
+  function enviar(payload) {
+    enviarBeacon("/api/form-evento", payload);
+  }
+
+  function codigoRef() {
+    var bytes = new Uint8Array(6);
+    try {
+      crypto.getRandomValues(bytes);
+    } catch (_) {
+      for (var i = 0; i < 6; i++) bytes[i] = Math.floor(Math.random() * 256);
+    }
+    var out = "";
+    for (var j = 0; j < 6; j++) out += REF_ALFABETO[bytes[j] % REF_ALFABETO.length];
+    return out;
+  }
+
+  function adsDoClique() {
+    var p = new URLSearchParams(location.search);
+    var stored = {};
+    try { stored = JSON.parse(ler("tpl_wpp_ads") || "{}") || {}; } catch (_) { stored = {}; }
+    ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign", "utm_term"].forEach(function (k) {
+      var v = p.get(k);
+      if (!v || String(v).indexOf("@") !== -1) return;
+      stored[k] = String(v).replace(/\s+/g, " ").trim().slice(0, 200);
+    });
+    var limpo = {};
+    ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign", "utm_term"].forEach(function (k) {
+      if (stored[k] && String(stored[k]).indexOf("@") === -1) limpo[k] = String(stored[k]).slice(0, 200);
+    });
+    gravar("tpl_wpp_ads", JSON.stringify(limpo));
+    return limpo;
+  }
+
+  function enviarWhatsappRef(ref, normaWpp) {
+    var ads = adsDoClique();
+    enviarBeacon("/api/whatsapp-ref", {
+      ref: ref,
+      pagina: location.pathname || "/",
+      norma: normaWpp || "",
+      dispositivo: dispositivo(),
+      sessao_id: sessaoId(),
+      gclid: ads.gclid || "",
+      gbraid: ads.gbraid || "",
+      wbraid: ads.wbraid || "",
+      utm_source: ads.utm_source || "",
+      utm_medium: ads.utm_medium || "",
+      utm_campaign: ads.utm_campaign || "",
+      utm_term: ads.utm_term || "",
+    });
   }
 
   window.tplFormEvento = function (extra) {
@@ -343,6 +395,19 @@
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
     if (!a || !ehWhatsapp(a.href)) return;
+    var ref = "";
+    var normaWpp = "";
+    if (a.getAttribute("data-wpp-ref") === "1") {
+      ref = codigoRef();
+      normaWpp = normaLimpa(a.getAttribute("data-wpp-norma")) || normaDo(null);
+      var msg = "Olá! Vim pelo site da Templum e quero saber sobre " + normaWpp + ". (ref " + ref + ")";
+      try {
+        var atual = new URL(a.href, location.origin);
+        var fone = (atual.pathname || "").replace(/\D/g, "");
+        if (fone) a.href = "https://wa.me/" + fone + "?text=" + encodeURIComponent(msg);
+      } catch (_) {}
+      enviarWhatsappRef(ref, normaWpp);
+    }
     var destino = a.href;
     var novaAba = a.target === "_blank";
     var aba = null;
@@ -353,7 +418,10 @@
       } catch (_) { aba = null; }
     }
     e.preventDefault();
-    window.tplFormEvento({ evento: "whatsapp_clique" });
+    var extraWpp = { evento: "whatsapp_clique" };
+    if (ref) extraWpp.lead_event_id = ref;
+    if (normaWpp) extraWpp.norma = normaWpp;
+    window.tplFormEvento(extraWpp);
     var abriu = false;
     function abrir() {
       if (abriu) return;
