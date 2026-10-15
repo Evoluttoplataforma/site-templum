@@ -1134,7 +1134,9 @@ async function saveToOrbit(lead, env, dest) {
   if (notes) body.notes = notes;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
-  const orbitTags = withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina);
+  // Etiqueta canônica do INBOUND é ISO9001 (junto). "ISO 9001" abria uma etiqueta nova.
+  const orbitTags = withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina)
+    .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag));
   if (orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
