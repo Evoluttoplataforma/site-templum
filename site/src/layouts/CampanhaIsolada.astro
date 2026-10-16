@@ -299,6 +299,16 @@ const allSchemas = schemas;
               _failTurnstile();
               return;
             }
+            if (res.body && res.body.error === "invalid_phone") {
+              clearTimeout(_t);
+              var tel = form.querySelector('[name="telefone"]');
+              if (tel) {
+                tel.setCustomValidity("WhatsApp inválido. Use DDD brasileiro e o 9 na frente. Ex.: (19) 99999-0000");
+                if (tel.reportValidity) tel.reportValidity();
+              }
+              _failTurnstile();
+              return;
+            }
             var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
             clearTimeout(_t);
             if (saved) {
@@ -353,21 +363,45 @@ const allSchemas = schemas;
       })();
     </script>
 
-    <!-- Máscara telefone -->
+    <!-- Máscara telefone: DDD BR + 9 + 8 dígitos. Tira 55 se a pessoa digitar DDI. -->
     <script is:inline>
-      document.addEventListener("input", function (e) {
-        var el = e.target;
-        if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
-        var d = el.value.replace(/\D/g, "").substring(0, 11);
-        var len = d.length;
-        var mask = "";
-        if (len === 0) { el.value = ""; return; }
-        if (len <= 2) { mask = "(" + d; }
-        else if (len <= 6) { mask = "(" + d.slice(0,2) + ") " + d.slice(2); }
-        else if (len <= 10) { mask = "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6); }
-        else { mask = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7); }
-        el.value = mask;
-      });
+      (function () {
+        var DDD = {11:1,12:1,13:1,14:1,15:1,16:1,17:1,18:1,19:1,21:1,22:1,24:1,27:1,28:1,31:1,32:1,33:1,34:1,35:1,37:1,38:1,41:1,42:1,43:1,44:1,45:1,46:1,47:1,48:1,49:1,51:1,53:1,54:1,55:1,61:1,62:1,63:1,64:1,65:1,66:1,67:1,68:1,69:1,71:1,73:1,74:1,75:1,77:1,79:1,81:1,82:1,83:1,84:1,85:1,86:1,87:1,88:1,89:1,91:1,92:1,93:1,94:1,95:1,96:1,97:1,98:1,99:1};
+        function digitsBR(raw) {
+          var d = String(raw || "").replace(/\D/g, "");
+          if (d.indexOf("55") === 0 && d.length >= 12) d = d.slice(2);
+          if (d.length > 11) d = d.slice(0, 11);
+          return d;
+        }
+        function maskBR(d) {
+          var len = d.length;
+          if (len === 0) return "";
+          if (len <= 2) return "(" + d;
+          if (len <= 7) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+          return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+        }
+        function validWa(d) {
+          return d.length === 11 && d.charAt(2) === "9" && !!DDD[d.slice(0, 2)];
+        }
+        function applyTel(el) {
+          var d = digitsBR(el.value);
+          el.value = maskBR(d);
+          if (!d.length) { el.setCustomValidity("Informe o WhatsApp com DDD."); return; }
+          if (d.length < 11) { el.setCustomValidity("WhatsApp incompleto. Use DDD + 9 dígitos."); return; }
+          if (!validWa(d)) { el.setCustomValidity("WhatsApp inválido. Use DDD brasileiro e o 9 na frente. Ex.: (19) 99999-0000"); return; }
+          el.setCustomValidity("");
+        }
+        document.addEventListener("input", function (e) {
+          var el = e.target;
+          if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
+          applyTel(el);
+        });
+        document.addEventListener("blur", function (e) {
+          var el = e.target;
+          if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
+          applyTel(el);
+        }, true);
+      })();
     </script>
 
   </body>

@@ -77,8 +77,12 @@ const pid = (name) => (idPrefix ? `${idPrefix}${name}` : name);
       name="telefone"
       type="tel"
       inputmode="numeric"
-      autocomplete="tel"
+      autocomplete="tel-national"
       required
+      maxlength="15"
+      minlength="15"
+      pattern={'^\\([1-9][0-9]\\) 9[0-9]{4}-[0-9]{4}$'}
+      title="WhatsApp com DDD, 11 dígitos. Ex.: (19) 99999-0000"
       placeholder="(00) 00000-0000"
     />
   </div>
