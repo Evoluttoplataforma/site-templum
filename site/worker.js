@@ -472,6 +472,16 @@ function applyBlogLeadAttribution(lead, body) {
     if (term) lead.utm_term = term.slice(0, 120);
   }
 
+  const pagSlug = pathOnly(lead.pagina).replace(/^\/+|\/+$/g, "");
+  const genericCampaign = ["form-blog", "form-consultoria-artigo", "form", "site", ""];
+  if (pagSlug && !genericCampaign.includes(pagSlug.toLowerCase())) {
+    const camp = String(lead.utm_campaign || "").trim();
+    if (!camp || camp !== pagSlug) lead.utm_campaign = pagSlug.slice(0, 120);
+    if (!lead.utm_term || lead.utm_term === "form" || lead.utm_term !== pagSlug) {
+      lead.utm_term = pagSlug.slice(0, 120);
+    }
+  }
+
   const entrada = String(body.pagina_entrada_url || body.landing_page || "").trim();
   if (entrada && lead.mensagem && !String(lead.mensagem).includes("Entrada no blog:")) {
     lead.mensagem += `\nEntrada no blog: ${entrada}`;
