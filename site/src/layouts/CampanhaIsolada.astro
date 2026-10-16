@@ -217,6 +217,8 @@ const allSchemas = schemas;
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
         if (!form) return;
         e.preventDefault();
+        var telEl = form.querySelector('input[name="telefone"]');
+        if (telEl) telEl.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
         if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
@@ -383,23 +385,51 @@ const allSchemas = schemas;
         function validWa(d) {
           return d.length === 11 && d.charAt(2) === "9" && !!DDD[d.slice(0, 2)];
         }
-        function applyTel(el) {
+        function telMsg(d) {
+          if (!d.length) return "Informe o WhatsApp com DDD.";
+          if (d.length < 11) return "WhatsApp incompleto. Use DDD + 9 dígitos.";
+          if (!validWa(d)) return "WhatsApp inválido. Use DDD brasileiro e o 9 na frente. Ex.: (19) 99999-0000";
+          return "";
+        }
+        function telErrorBox(el) {
+          var field = el.closest(".field");
+          if (!field) return null;
+          var box = field.querySelector("[data-tel-error]");
+          if (box) return box;
+          box = document.createElement("p");
+          box.className = "error-msg";
+          box.setAttribute("data-tel-error", "");
+          box.setAttribute("aria-live", "polite");
+          field.appendChild(box);
+          return box;
+        }
+        function applyTel(el, reveal) {
           var d = digitsBR(el.value);
+          var msg = telMsg(d);
+          var field = el.closest(".field");
+          var box = telErrorBox(el);
           el.value = maskBR(d);
-          if (!d.length) { el.setCustomValidity("Informe o WhatsApp com DDD."); return; }
-          if (d.length < 11) { el.setCustomValidity("WhatsApp incompleto. Use DDD + 9 dígitos."); return; }
-          if (!validWa(d)) { el.setCustomValidity("WhatsApp inválido. Use DDD brasileiro e o 9 na frente. Ex.: (19) 99999-0000"); return; }
-          el.setCustomValidity("");
+          el.setCustomValidity(msg);
+          el.setAttribute("aria-invalid", msg ? "true" : "false");
+          if (!msg) {
+            if (field) field.classList.remove("field--error");
+            if (box) box.textContent = "";
+            return;
+          }
+          if (reveal || (field && field.classList.contains("field--error"))) {
+            if (field) field.classList.add("field--error");
+            if (box) box.textContent = msg;
+          }
         }
         document.addEventListener("input", function (e) {
           var el = e.target;
           if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
-          applyTel(el);
+          applyTel(el, false);
         });
         document.addEventListener("blur", function (e) {
           var el = e.target;
           if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
-          applyTel(el);
+          applyTel(el, true);
         }, true);
       })();
     </script>

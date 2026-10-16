@@ -84,7 +84,9 @@ const pid = (name) => (idPrefix ? `${idPrefix}${name}` : name);
       pattern={'^\\([1-9][0-9]\\) 9[0-9]{4}-[0-9]{4}$'}
       title="WhatsApp com DDD, 11 dígitos. Ex.: (19) 99999-0000"
       placeholder="(00) 00000-0000"
+      aria-describedby={pid("telefone-erro")}
     />
+    <p class="error-msg" id={pid("telefone-erro")} data-tel-error aria-live="polite"></p>
   </div>
   <div class="field">
     <label for={pid("cargo")}>Seu cargo</label>

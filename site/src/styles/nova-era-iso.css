@@ -213,6 +213,17 @@ html, body { margin: 0; background: #222831; }
 .form-card .input,
 .form-card .select { color: #18191b; background: #fff; }
 .input:focus, .select:focus { outline: 2px solid rgba(255, 89, 37, 0.35); border-color: var(--orange); }
+.field--error .input { border-color: #dc2626; }
+.field--error .input:focus { outline: 2px solid rgba(220, 38, 38, 0.28); }
+.field .error-msg {
+  display: none;
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #dc2626;
+  line-height: 1.35;
+}
+.field--error .error-msg { display: block; }
 .btn-reserve {
   display: inline-flex;
   align-items: center;
