@@ -399,7 +399,7 @@ function applyLeadPaginaTracking(lead, body, request) {
     const abs = absolutePaginaUrl(c, body);
     if (!abs) continue;
     const path = pathOnly(abs).toLowerCase();
-    if (path === "/form/" || path === "/form") continue;
+    if (path === "/form/" || path === "/form" || path === "/") continue;
     contentUrl = abs;
     break;
   }
@@ -412,7 +412,70 @@ function applyLeadPaginaTracking(lead, body, request) {
 
   lead.pagina_submit = submitUrl || "";
   lead.pagina = contentUrl ? stripUrlQueryHash(contentUrl).slice(0, 480) : "";
+  const bodyReferrer = String(body.referrer || body.blog_first_referrer || "").trim();
+  if (bodyReferrer && !lead.referrer) lead.referrer = bodyReferrer.slice(0, 480);
   if (referer && !lead.referrer) lead.referrer = referer.slice(0, 480);
+}
+
+function isRootBlogPagina(pagina) {
+  const p = pathOnly(pagina).toLowerCase();
+  return !p || p === "/";
+}
+
+/** Blog: página de conteúdo + origem real (não direct/none do kit na /form/). */
+function applyBlogLeadAttribution(lead, body) {
+  if (lead.evento !== "blog-consultoria") return;
+
+  if (isRootBlogPagina(lead.pagina)) {
+    const slug = String(body.utm_campaign || "").trim();
+    const genericCampaign = ["form-blog", "form-consultoria-artigo", "form", "site"];
+    if (slug && !genericCampaign.includes(slug.toLowerCase())) {
+      lead.pagina = stripUrlQueryHash(
+        absolutePaginaUrl(`/${slug.replace(/^\/+|\/+$/g, "")}/`, body),
+      ).slice(0, 480);
+    } else if (body.content_page) {
+      lead.pagina = stripUrlQueryHash(absolutePaginaUrl(body.content_page, body)).slice(0, 480);
+    } else if (body.pagina_conteudo) {
+      lead.pagina = stripUrlQueryHash(absolutePaginaUrl(body.pagina_conteudo, body)).slice(0, 480);
+    }
+  }
+
+  const utmGeneric = (src, med) => {
+    const s = String(src || "").toLowerCase();
+    const m = String(med || "").toLowerCase();
+    return !s || s === "direct" || m === "none";
+  };
+
+  if (utmGeneric(lead.utm_source, lead.utm_medium)) {
+    const origem = String(body.origem || "").trim();
+    const medFromUrl = String(body.utm_medium || "").toLowerCase();
+    if (medFromUrl === "cta-artigo" || origem) {
+      lead.utm_source = "blog";
+      lead.utm_medium = medFromUrl === "cta-artigo" ? "cta-artigo" : "cta-artigo";
+    } else if (body.utm_source_ft && String(body.utm_source_ft).toLowerCase() !== "direct") {
+      lead.utm_source = String(body.utm_source_ft).trim();
+      lead.utm_medium = String(body.utm_medium_ft || lead.utm_medium || "referral").trim();
+    } else if (lead.utm_source_ft && String(lead.utm_source_ft).toLowerCase() !== "direct") {
+      lead.utm_source = String(lead.utm_source_ft).trim();
+      lead.utm_medium = String(lead.utm_medium_ft || lead.utm_medium || "referral").trim();
+    } else {
+      lead.utm_source = "blog";
+      lead.utm_medium =
+        lead.utm_medium && !utmGeneric(lead.utm_source, lead.utm_medium)
+          ? lead.utm_medium
+          : "organico";
+    }
+  }
+
+  if (String(lead.utm_term || "").toLowerCase() === "form") {
+    const term = String(body.utm_campaign || body.origem || "").trim();
+    if (term) lead.utm_term = term.slice(0, 120);
+  }
+
+  const entrada = String(body.pagina_entrada_url || body.landing_page || "").trim();
+  if (entrada && lead.mensagem && !String(lead.mensagem).includes("Entrada no blog:")) {
+    lead.mensagem += `\nEntrada no blog: ${entrada}`;
+  }
 }
 
 // Etiqueta da norma a partir da URL de chegada. Soma, não substitui as outras.
@@ -755,6 +818,7 @@ async function handleLead(request, env, ctx) {
   applyMqlLpAttribution(lead);
   applySegmentLpUtmDefaults(lead, body);
   applyLeadPaginaTracking(lead, body, request);
+  applyBlogLeadAttribution(lead, body);
 
   const isIsca =
     lead.evento === "isca" ||
