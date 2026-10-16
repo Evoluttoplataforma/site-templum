@@ -306,6 +306,115 @@ function iscaNormaFromSlug(slug) {
   return "";
 }
 
+const TEMPLUM_SITE_ORIGIN = "https://templum.com.br";
+const BLOG_SITE_ORIGIN = "https://certificacaoiso.com.br";
+
+function stripUrlQueryHash(url) {
+  try {
+    const u = new URL(url);
+    u.hash = "";
+    return u.toString();
+  } catch (_) {
+    return String(url || "").trim();
+  }
+}
+
+function pathOnly(input) {
+  const s = String(input || "").trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) {
+    try {
+      return new URL(s).pathname || "";
+    } catch (_) {
+      return "";
+    }
+  }
+  const p = s.split("?")[0].split("#")[0];
+  return p.startsWith("/") ? p : `/${p}`;
+}
+
+function isBlogPath(path) {
+  const p = String(path || "").toLowerCase();
+  if (p.includes("certificacaoiso.com.br")) return true;
+  if (/^\/consultoria\//.test(p)) return false;
+  if (p === "/form/" || p === "/form") return true;
+  if (/^\/presentes\//.test(p)) return true;
+  if (/^\/consultoria-iso/.test(p)) return true;
+  if (/^\/iso-\d/.test(p)) return true;
+  if (/^\/pbqp/.test(p)) return true;
+  if (/^\/passo-a-passo/.test(p)) return true;
+  if (/^\/quanto-custa-iso/.test(p)) return true;
+  if (/^\/certificacao-iso/.test(p)) return true;
+  return false;
+}
+
+function absolutePaginaUrl(input, body) {
+  const raw = String(input || "").trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return stripUrlQueryHash(raw);
+  let path = raw.split("?")[0].split("#")[0];
+  if (!path.startsWith("/")) path = `/${path}`;
+  const evento = String(body.evento || "");
+  const origin =
+    evento === "blog-consultoria" || isBlogPath(path) || isBlogPath(body.content_page)
+      ? BLOG_SITE_ORIGIN
+      : TEMPLUM_SITE_ORIGIN;
+  if (!path.endsWith("/") && !/\.\w+$/.test(path)) path += "/";
+  return `${origin}${path}`;
+}
+
+/** Página de conteúdo (SEO) + página do submit; grava em lead.pagina / lead.pagina_submit. */
+function applyLeadPaginaTracking(lead, body, request) {
+  const submitRaw =
+    body.pagina_submit ||
+    body.pagina ||
+    (request && request.headers.get("X-Templum-Page")) ||
+    "";
+  const submitUrl = absolutePaginaUrl(submitRaw, body);
+
+  const contentCandidates = [
+    body.content_page,
+    body.pagina_conteudo,
+    body.page,
+  ].filter(Boolean);
+
+  const landing = String(body.landing_page || body.landing || "").trim();
+  if (landing) contentCandidates.push(landing);
+
+  const campaign = String(body.utm_campaign || "").trim();
+  if (
+    campaign &&
+    !["form-blog", "form-consultoria-artigo", "form", "site"].includes(campaign.toLowerCase())
+  ) {
+    contentCandidates.push(`/${campaign.replace(/^\/+|\/+$/g, "")}/`);
+  }
+
+  const referer = request ? request.headers.get("Referer") || "" : "";
+  if (referer && /certificacaoiso\.com\.br/i.test(referer)) {
+    contentCandidates.unshift(referer);
+  }
+
+  let contentUrl = "";
+  for (const c of contentCandidates) {
+    const abs = absolutePaginaUrl(c, body);
+    if (!abs) continue;
+    const path = pathOnly(abs).toLowerCase();
+    if (path === "/form/" || path === "/form") continue;
+    contentUrl = abs;
+    break;
+  }
+
+  if (!contentUrl && submitUrl) {
+    const sp = pathOnly(submitUrl).toLowerCase();
+    contentUrl = sp === "/form/" || sp === "/form" ? "" : submitUrl;
+  }
+  if (!contentUrl && submitUrl) contentUrl = submitUrl;
+
+  lead.pagina_submit = submitUrl || "";
+  lead.pagina = contentUrl ? stripUrlQueryHash(contentUrl).slice(0, 480) : "";
+  if (referer && !lead.referrer) lead.referrer = referer.slice(0, 480);
+}
+
 // Etiqueta da norma a partir da URL de chegada. Soma, não substitui as outras.
 function normaTagsFromPagina(pagina) {
   const s = String(pagina || "").toLowerCase();
@@ -645,6 +754,7 @@ async function handleLead(request, env, ctx) {
 
   applyMqlLpAttribution(lead);
   applySegmentLpUtmDefaults(lead, body);
+  applyLeadPaginaTracking(lead, body, request);
 
   const isIsca =
     lead.evento === "isca" ||
@@ -1138,6 +1248,10 @@ async function saveToOrbit(lead, env, dest) {
     lead.mensagem,
     lead.desafio,
     lead.urgencia ? "Urgência: " + lead.urgencia : "",
+    lead.pagina_submit && lead.pagina_submit !== lead.pagina
+      ? "Formulário enviado em: " + lead.pagina_submit
+      : "",
+    lead.referrer ? "Referrer: " + lead.referrer : "",
   ].filter(Boolean).join("\n");
   if (notes) body.notes = notes;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
@@ -1179,10 +1293,24 @@ async function saveToOrbit(lead, env, dest) {
       }
     }
 
-    // Fallback 2: qualquer outro campo personalizado inválido — tenta de novo só com
-    // os campos essenciais.
+    // Fallback 2: outro custom field inválido — reenvia só rastreio (página + UTM).
     const basicBody = { ...body };
-    delete basicBody.custom_fields;
+    const trackingKeys = [
+      ORBIT_FIELDS.pagina,
+      ORBIT_FIELDS.utm_source,
+      ORBIT_FIELDS.utm_medium,
+      ORBIT_FIELDS.utm_campaign,
+      ORBIT_FIELDS.utm_term,
+      ORBIT_FIELDS.utm_content,
+    ];
+    const trackingCf = {};
+    if (body.custom_fields) {
+      for (const k of trackingKeys) {
+        if (body.custom_fields[k]) trackingCf[k] = body.custom_fields[k];
+      }
+    }
+    if (Object.keys(trackingCf).length) basicBody.custom_fields = trackingCf;
+    else delete basicBody.custom_fields;
     r = await fetch(`${ORBIT_BASE}/leads`, {
       method: "POST", headers, body: JSON.stringify(basicBody),
     }).catch(() => null);

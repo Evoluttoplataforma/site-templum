@@ -403,6 +403,13 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               if (window.__TPL_UTM_DEFAULTS[k]) _attrib[k] = window.__TPL_UTM_DEFAULTS[k];
             });
           }
+          var _submitUrl = location.origin + location.pathname;
+          var _landingPath = (_attrib.landing || location.pathname || "/").split("?")[0];
+          if (_landingPath && _landingPath.charAt(0) !== "/") _landingPath = "/" + _landingPath;
+          var _contentUrl = _submitUrl;
+          if (_landingPath && _landingPath !== location.pathname) {
+            _contentUrl = location.origin + _landingPath;
+          }
           fetch("/api/lead", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -413,7 +420,12 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               desafio: d.desafio || "",
               cargo: d.cargo || "", urgencia: d.urgencia || "", funcionarios: d.funcionarios || "",
               faturamento: d.faturamento || "",
-              evento: evt, pagina: location.pathname,
+              evento: evt,
+              pagina: _submitUrl,
+              pagina_submit: _submitUrl,
+              content_page: _contentUrl,
+              landing: _landingPath,
+              referrer: _attrib.referrer || document.referrer || "",
               utm_from_url: _hasUtmInUrl,
               meta_event_id: leadEventId, lead_event_id: leadEventId, meta_content_name: contentName,
               turnstile_token: token,
