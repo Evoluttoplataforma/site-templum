@@ -13,7 +13,11 @@ import d from "../../data/consultoria/iso-9001.js";
 const slug = "iso-9001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
-const heroChips = ["+2.000 empresas certificadas", "30 anos de experiência", "Sem limite de horas"];
+const heroChips = [
+  { t: "+2.000 empresas certificadas", href: "#resultados" },
+  { t: "30 anos de experiência", href: "#seguranca" },
+  { t: "Sem limite de horas", href: "#seguranca" },
+];
 const heroTitulo = ["Consultoria e certificação ISO 9001 de forma ", "simples e ágil", ""];
 const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a\u00A0certificação.";
 const heroCta = "Solicitar diagnóstico";
@@ -27,7 +31,11 @@ const faqExtras = [
   { q: "Qual é a validade do certificado?", a: "3 anos, com auditorias de manutenção anuais." },
   { q: "Empresa pequena pode certificar?", a: "Sim. A Templum atende empresas de qualquer porte." },
 ];
-const faqItems = [...(d.detalhes.faq || []), ...faqExtras];
+const faqDuplicadas = new Set([
+  "A certificação ISO 9001 é obrigatória?",
+  "Qual é a validade da certificação ISO 9001?",
+]);
+const faqItems = [...(d.detalhes.faq || []).filter((f) => !faqDuplicadas.has(f.q)), ...faqExtras];
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -68,9 +76,15 @@ const prazos2026 = [
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Garantia de 200% em contrato</span>
           <h1 class="cs-title">{heroTitulo[0]}<span class="cs-hl">{heroTitulo[1]}</span>{heroTitulo[2]}</h1>
+          <nav class="cs-atalhos" aria-label="Atalhos da página">
+            <a href="#como-conseguir">Como conseguir</a>
+            <a href="#quanto-custa">Quanto custa</a>
+            <a href="#iso-9001-2026">ISO 9001:2026</a>
+            <a href="#garantia">Garantia de 200%</a>
+          </nav>
           <p class="cs-sub">{heroSub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
-          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <div class="cs-chips">{heroChips.map((ch) => <a class="cs-chip" href={ch.href}><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch.t}</a>)}</div>
           <a href="#nova-forma" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
@@ -131,7 +145,7 @@ const prazos2026 = [
       <div class="container md">
         <div class="section-header">
           <span class="tag-pill">Investimento</span>
-          <h2>Quanto custa a certificação <em class="accent">ISO 9001</em>?</h2>
+          <h2>Quanto custa a certificação <em class="accent">ISO 9001?</em></h2>
         </div>
         <p class="cs-custo">O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma são apresentados no diagnóstico gratuito, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
         <div class="cs-sec-cta">
@@ -202,7 +216,7 @@ const prazos2026 = [
     </section>
 
     <!-- POR QUE TEMPLUM (escuro) -->
-    <section class="section section--navy">
+    <section class="section section--navy" id="seguranca">
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
@@ -212,7 +226,7 @@ const prazos2026 = [
     </section>
 
     <!-- GARANTIA 200% (claro) -->
-    <section class="section">
+    <section class="section" id="garantia">
       <div class="container xl">
         <div class="split">
           <div class="split-text">
@@ -227,7 +241,7 @@ const prazos2026 = [
     </section>
 
     <!-- STATS (claro) -->
-    <section class="section section--cream">
+    <section class="section section--cream" id="resultados">
       <div class="container xl">
         <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
         <div class="numbers-grid cs-stats">
@@ -284,7 +298,7 @@ const prazos2026 = [
       <div class="container md">
         <div class="section-header">
           <span class="tag-pill">Nova versão</span>
-          <h2><em class="accent">ISO 9001:2026</em>: o que muda e quais são os prazos</h2>
+          <h2><em class="accent">ISO 9001:2026:</em> o que muda e quais são os prazos</h2>
         </div>
         <ul class="cs-prazos">
           {prazos2026.map((item) => <li>{item}</li>)}
@@ -318,7 +332,7 @@ const prazos2026 = [
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
+        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
       </div>
     </section>
 
@@ -339,6 +353,9 @@ const prazos2026 = [
   .cs-page > section:not(.cs-hero) {
     content-visibility: auto;
     contain-intrinsic-size: auto 720px;
+  }
+  .cs-page > section:target {
+    content-visibility: visible;
   }
 </style>
 
@@ -365,11 +382,21 @@ const prazos2026 = [
   .cs-hero-text { max-width: 640px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
   .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .cs-atalhos a:hover { color: var(--cream); }
+  .cs-page section[id] { scroll-margin-top: 88px; }
+  .cs-page .tag-pill,
+  .cs-page .step-card,
+  .cs-page .why-card { cursor: default; }
+  .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
   .cs-hl { color: var(--accent-lt); }
   .cs-sub { font-size: clamp(18px, 2.1vw, 22px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 20px; max-width: 580px; line-height: 1.45; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
-  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); text-decoration: none; }
+  a.cs-chip:hover { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
   .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
   .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }

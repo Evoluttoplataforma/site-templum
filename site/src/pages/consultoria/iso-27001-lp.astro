@@ -31,6 +31,12 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
           <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <nav class="cs-atalhos" aria-label="Atalhos da página">
+            <a href="#metodo">Como funciona</a>
+            <a href="#investimento">Investimento</a>
+            <a href="#garantia">Garantia</a>
+            <a href="#perguntas">Perguntas frequentes</a>
+          </nav>
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
@@ -81,7 +87,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- POR QUE TEMPLUM (escuro) -->
-    <section class="section section--navy">
+    <section class="section section--navy" id="seguranca">
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
@@ -91,7 +97,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- GARANTIA 200% (claro) -->
-    <section class="section">
+    <section class="section" id="garantia">
       <div class="container xl">
         <div class="split">
           <div class="split-text">
@@ -159,11 +165,11 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     <Especialistas />
 
     <!-- FAQ (claro) -->
-    <section class="section section--cream">
+    <section class="section section--cream" id="perguntas">
       <div class="container md">
         <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
         <div class="faq-list">
-          {d.detalhes.faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+          {d.detalhes.faq.map((f) => <details class="faq-item" id={f.q === "O investimento é por projeto ou por hora?" ? "investimento" : undefined}><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
         </div>
       </div>
     </section>
@@ -220,6 +226,16 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-hero-text { max-width: 600px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
   .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .cs-atalhos a:hover { color: var(--cream); }
+  .cs-page section[id],
+  .cs-page #investimento { scroll-margin-top: 88px; }
+  .cs-page .tag-pill,
+  .cs-page .step-card,
+  .cs-page .why-card { cursor: default; }
+  .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
   .cs-hl { color: var(--accent-lt); }
   .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
