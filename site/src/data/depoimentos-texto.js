@@ -20,7 +20,7 @@ export const depoimentosTexto = [
   {
     nome: "Jessica Mesquita Lapa",
     cargo: "Agrimol Soluções Agrícolas",
-    texto: "Estou no processo de implementação da ISO 9001 e ISO 14001 com a Templum e gostaria de agradecer o suporte desde o início. Os ganhos são imensuráveis quando temos processos mapeados e implementados. Os procedimentos, controles e formulários organizaram tanto a Operação quanto a Administração, gerando maior confiabilidade e rastreabilidade — e melhorando a tomada de decisão.",
+    texto: "Estou no processo de implementação da ISO 9001 e ISO 14001 com a Templum e gostaria de agradecer o suporte desde o início. Os ganhos são imensuráveis quando temos processos mapeados e implementados. Os procedimentos, controles e formulários organizaram tanto a Operação quanto a Administração, gerando maior confiabilidade e rastreabilidade, e melhorando a tomada de decisão.",
   },
   {
     nome: "Daniela Migliavacca",

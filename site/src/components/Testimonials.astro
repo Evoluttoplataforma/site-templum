@@ -26,12 +26,12 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
           <div class={`tm-thumb ${d.vimeo ? "" : "is-soon"}`}>
             {d.vimeo ? (
               <>
-                <img src={`https://vumbnail.com/${d.vimeo}.jpg`} alt={d.nome} loading="lazy" onerror="this.style.display='none'" />
+                <img src={`https://vumbnail.com/${d.vimeo}.jpg`} alt={d.nome} width="640" height="400" loading="lazy" decoding="async" onerror="this.style.display='none'" />
                 <span class="tm-play"><iconify-icon icon="solar:play-bold"></iconify-icon></span>
                 <span class="tm-watch">Assista o vídeo</span>
               </>
             ) : (
-              <img class="tm-soon" src="/assets/img/estamos-implementando.webp" alt="Em breve" loading="lazy" />
+              <img class="tm-soon" src="/assets/img/estamos-implementando.webp" alt="Em breve" width="998" height="1294" loading="lazy" decoding="async" />
             )}
             {d.norma && <span class="tm-norma">{d.norma}</span>}
           </div>

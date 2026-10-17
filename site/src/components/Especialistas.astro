@@ -1,7 +1,7 @@
 ---
 // Seção de sócios/especialistas (escura). Reutilizada na home e nas consultorias.
 import { socios } from "../data/socios.js";
-const { sub = "Sócios, diretores e um time de consultores dedicados a levar sua empresa até o certificado — e além." } = Astro.props;
+const { sub = "Sócios, diretores e um time de consultores dedicados a levar sua empresa até o certificado, e além." } = Astro.props;
 ---
 
 <section class="section section--navy">
@@ -14,7 +14,7 @@ const { sub = "Sócios, diretores e um time de consultores dedicados a levar sua
     <div class="people-grid" style="max-width:1000px;margin:0 auto;">
       {socios.map((p) => (
         <div class="person-card reveal">
-          <img class="person-photo" src={p.img} alt={p.nome} loading="lazy" />
+          <img class="person-photo" src={p.img} alt={p.nome} width="600" height="800" loading="lazy" decoding="async" />
           <div class="person-body">
             <h3>{p.nome}</h3>
             <div class="person-divider"></div>

@@ -14,17 +14,51 @@ const slug = "iso-9001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroChips = ["+2.000 empresas certificadas", "30 anos de experiência", "Sem limite de horas"];
-const heroTitulo = ["Consultoria ISO 9001 para uma\u00A0certificação ", "mais simples e ágil", ""];
+const heroTitulo = ["Consultoria e certificação ISO 9001 de forma ", "simples e ágil", ""];
 const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a\u00A0certificação.";
 const heroCta = "Solicitar diagnóstico";
+const formTitulo = "Diagnóstico gratuito da sua certificação ISO 9001";
+const formSub = "Num diagnóstico com um especialista, entendemos o seu cenário e mostramos o caminho até o certificado, com prazo e investimento sob medida.";
+const formCta = "Quero meu diagnóstico";
+const faqExtras = [
+  { q: "Quanto tempo leva para conseguir a ISO 9001?", a: "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista é definido no diagnóstico gratuito." },
+  { q: "A ISO 9001 é obrigatória?", a: "Não por lei, mas é muito exigida por clientes, licitações e cadeias de fornecimento." },
+  { q: "Quem emite o certificado ISO 9001?", a: "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria." },
+  { q: "Qual é a validade do certificado?", a: "3 anos, com auditorias de manutenção anuais." },
+  { q: "Empresa pequena pode certificar?", a: "Sim. A Templum atende empresas de qualquer porte." },
+];
+const faqItems = [...(d.detalhes.faq || []), ...faqExtras];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+const etapasCert = [
+  "Diagnóstico gratuito: entendemos o cenário da empresa e definimos escopo e cronograma.",
+  "Implementação do sistema de gestão da qualidade, com a Templum conduzindo cada etapa.",
+  "Auditoria interna, para corrigir o que for preciso antes da auditoria oficial.",
+  "Auditoria de certificação, feita por um organismo certificador acreditado.",
+  "Certificado emitido, válido por 3 anos, com auditorias de manutenção anuais.",
+];
+const prazos2026 = [
+  "A nova versão da ISO 9001 foi publicada em 16 de setembro de 2026.",
+  "Depois de 31 de março de 2028, novas certificações iniciais só serão emitidas na versão 2026.",
+  "Empresas já certificadas na versão 2015 têm até 30 de setembro de 2029 para concluir a transição.",
+  "Quem começa agora já implanta o sistema no texto novo, sem precisar migrar depois.",
+];
 ---
 
 <LpBase
-  title="Consultoria ISO 9001 para uma certificação mais simples e ágil"
-  description="Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a certificação. Solicite um diagnóstico."
+  title="Consultoria e Certificação ISO 9001 | Templum"
+  description="Consultoria para certificação ISO 9001 com garantia de 200% em contrato. Saiba como conseguir a certificação e receba um diagnóstico gratuito."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta={heroCta}
+  schemas={[faqSchema]}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -40,7 +74,7 @@ const heroCta = "Solicitar diagnóstico";
           <a href="#nova-forma" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={heroCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
+          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
         </div>
       </div>
     </section>
@@ -68,6 +102,43 @@ const heroCta = "Solicitar diagnóstico";
         </div>
       </section>
     )}
+
+    <!-- COMO CONSEGUIR -->
+    <section class="section" id="como-conseguir">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">O caminho</span>
+          <h2>Como conseguir a certificação <em class="accent">ISO 9001</em></h2>
+          <p>O caminho até o certificado tem cinco etapas.</p>
+        </div>
+        <ol class="cs-caminho">
+          {etapasCert.map((etapa, i) => (
+            <li>
+              <span>{i + 1}</span>
+              <p>{etapa}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="cs-caminho-fim">A Templum conduz a sua empresa do diagnóstico até a auditoria. O certificado é emitido pelo organismo certificador.</p>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUANTO CUSTA -->
+    <section class="section section--cream" id="quanto-custa">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">Investimento</span>
+          <h2>Quanto custa a certificação <em class="accent">ISO 9001</em>?</h2>
+        </div>
+        <p class="cs-custo">O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma são apresentados no diagnóstico gratuito, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
 
     <!-- NOVA FORMA (claro) -->
     <section id="nova-forma" class="section cs-nova">
@@ -123,7 +194,7 @@ const heroCta = "Solicitar diagnóstico";
     <!-- MÉTODO 7 PASSOS (claro) -->
     <section id="metodo" class="section section--cream">
       <div class="container xl">
-        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
+        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>Implementação da <em class="accent">ISO 9001</em> em 7 passos</h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
         <div class="step-grid">
           {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
@@ -208,12 +279,28 @@ const heroCta = "Solicitar diagnóstico";
     <!-- ESPECIALISTAS / SÓCIOS (escuro) -->
     <Especialistas />
 
+    <!-- ISO 9001:2026 -->
+    <section class="section" id="iso-9001-2026">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">Nova versão</span>
+          <h2><em class="accent">ISO 9001:2026</em>: o que muda e quais são os prazos</h2>
+        </div>
+        <ul class="cs-prazos">
+          {prazos2026.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ (claro) -->
     <section class="section section--cream">
       <div class="container md">
         <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
         <div class="faq-list">
-          {d.detalhes.faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+          {faqItems.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
         </div>
       </div>
     </section>
@@ -246,6 +333,14 @@ const heroCta = "Solicitar diagnóstico";
   </div>
   <SaidaPesquisa norma={norma.nome} />
 </LpBase>
+
+<style is:global>
+  /* Seções abaixo do hero não entram no layout inicial, para o H1 pintar antes. */
+  .cs-page > section:not(.cs-hero) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
+</style>
 
 <style>
   .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
@@ -300,6 +395,15 @@ const heroCta = "Solicitar diagnóstico";
   .cs-benef-h { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
   .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
   @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
+
+  .cs-caminho { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0 auto 28px; max-width: 760px; padding: 0; }
+  .cs-caminho li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 16px 18px; text-align: left; }
+  .cs-caminho li span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); font-weight: 800; font-size: 16px; }
+  .cs-caminho li p { margin: 0; padding-top: 10px; font-size: 15.5px; line-height: 1.55; color: var(--text); }
+  .cs-caminho-fim, .cs-custo { max-width: 760px; margin: 0 auto 28px; font-size: 17px; line-height: 1.65; color: var(--text-mid); text-align: left; }
+  .cs-sec-cta { text-align: center; }
+  .cs-prazos { list-style: none; max-width: 760px; margin: 0 auto 28px; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .cs-prazos li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 16px 18px; font-size: 15.5px; line-height: 1.55; color: var(--text); text-align: left; }
 
   .cs-nova { text-align: center; scroll-margin-top: 88px; }
   .cs-nova .section-header h2 { text-wrap: balance; }
