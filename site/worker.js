@@ -63,6 +63,7 @@
 import mqlCampaignsConfig from "./config/mql-campaigns.json";
 import { sanitizeFormEvento } from "./form-evento.js";
 import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
+import { resolveZoomShortLink } from "./zoom-short-link.js";
 
 const META_API_VERSION = "v21.0";
 
@@ -231,6 +232,9 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    const zoomShort = url.pathname.match(/^\/z\/([^/]+)\/?$/);
+    if (zoomShort) return handleZoomShortLink(zoomShort[1], request.method, env);
+
     // Verificação do Google Search Console (método "Arquivo HTML").
     // A camada de assets do Workers derruba o ".html" da URL (307 p/
     // /googleb02be000df71bc63), e o verificador do Google espera 200 na URL
@@ -260,6 +264,35 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
+
+async function handleZoomShortLink(code, method, env) {
+  if (method !== "GET" && method !== "HEAD") {
+    return new Response("Not found", { status: 404 });
+  }
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return new Response("Not found", { status: 404 });
+  const headers = { authorization: "Bearer " + token, accept: "application/json" };
+  const result = await resolveZoomShortLink({
+    code,
+    getLead: async (id) => {
+      const res = await fetch(`${ORBIT_BASE}/leads/${id}`, { headers });
+      if (!res.ok) return null;
+      const payload = await res.json().catch(() => ({}));
+      const lead = payload.data || payload.lead || payload;
+      return lead && lead.id ? lead : null;
+    },
+  });
+  if (result.status !== 302 || !result.location) {
+    return new Response("Not found", { status: 404 });
+  }
+  return new Response(null, {
+    status: 302,
+    headers: {
+      location: result.location,
+      "cache-control": "private, no-store",
+    },
+  });
+}
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
