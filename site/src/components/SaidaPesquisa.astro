@@ -46,7 +46,6 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["comparar", "Quero comparar com outras consultorias"],
         ["prazo", "Quero entender o prazo até certificar"],
-        ["porte", "Quero ver se serve para o porte da empresa"],
         ["estudando", "Só estou estudando a norma"]
       ]
     },
@@ -58,8 +57,7 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["faixa", "Queria uma faixa de investimento antes de falar com alguém"],
         ["caro", "Achei que ia ser caro demais"],
-        ["diretoria", "Preciso levar um número para a diretoria"],
-        ["outro_preco", "Preço não era o problema"]
+        ["diretoria", "Preciso levar um número para a diretoria"]
       ]
     },
     depois: {
@@ -70,8 +68,7 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["ligacao", "Não quero que alguém me ligue agora"],
         ["tempo", "Não entendi quanto tempo leva o diagnóstico"],
-        ["compromisso", "Não ficou claro se tem custo ou compromisso"],
-        ["diferenca", "Não entendi o que a Templum faz de diferente"]
+        ["compromisso", "Não ficou claro se tem custo ou compromisso"]
       ]
     },
     momento: {
@@ -82,8 +79,7 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["prioridade", "A certificação ainda não é prioridade"],
         ["contrato", "Estou esperando um contrato ou uma licitação"],
-        ["equipe", "Falta gente na equipe para tocar isso"],
-        ["norma", "Queria só entender a norma, sem consultoria"]
+        ["equipe", "Falta gente na equipe para tocar isso"]
       ]
     },
     confianca: {
@@ -94,8 +90,7 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["cases", "Queria ver cases do meu setor"],
         ["marca", "Não conhecia a Templum"],
-        ["garantia", "A garantia não ficou clara"],
-        ["generico", "A página pareceu genérica demais"]
+        ["garantia", "A garantia não ficou clara"]
       ]
     },
     formulario: {
@@ -106,8 +101,40 @@ const { norma = "" } = Astro.props;
       detalhes: [
         ["telefone", "Pediu telefone cedo demais"],
         ["campos", "Eram muitos campos"],
-        ["abordagem", "Não quero ser abordado agora"],
         ["whatsapp", "Prefiro chamar no WhatsApp"]
+      ]
+    },
+    falar: {
+      label: "Quero falar com alguém antes de cadastrar",
+      pergunta: "Como você prefere continuar?",
+      fecho: "Dá para pedir o diagnóstico e a conversa começa por ali. Sem contrato nessa etapa.",
+      cta: true,
+      detalhes: [
+        ["ligar", "Prefiro que alguém me explique por telefone"],
+        ["whatsapp_agora", "Prefiro continuar no WhatsApp"],
+        ["reuniao", "Quero marcar uma conversa, sem formulário"]
+      ]
+    },
+    ja_tem: {
+      label: "Já estou resolvendo a certificação",
+      pergunta: "Em que ponto você está?",
+      fecho: "Se quiser um segundo olhar, o diagnóstico continua no topo da página.",
+      cta: false,
+      detalhes: [
+        ["consultoria", "Já tenho uma consultoria"],
+        ["processo", "Já começamos a certificação"],
+        ["interno", "Vamos tocar isso com a equipe interna"]
+      ]
+    },
+    curiosidade: {
+      label: "Entrei por curiosidade, não para contratar",
+      pergunta: "O que você buscava nesta página?",
+      fecho: "Obrigado por dizer. O diagnóstico fica no topo, se um dia a empresa for contratar.",
+      cta: false,
+      detalhes: [
+        ["conteudo", "Queria conteúdo, não um cadastro"],
+        ["anuncio", "O anúncio me trouxe, mas não era isso"],
+        ["norma_solta", "Queria só entender a norma"]
       ]
     },
     outro: {
@@ -118,6 +145,32 @@ const { norma = "" } = Astro.props;
       detalhes: []
     }
   };
+
+  // Três ângulos. A hora de Brasília escolhe um, então horas seguidas não
+  // repetem as mesmas perguntas e cada ângulo acumula amostra ao longo do dia.
+  var ANGULOS = [
+    { id: "momento", nome: "Momento de compra", ids: ["pesquisando", "preco", "momento"] },
+    { id: "pagina", nome: "Clareza da página", ids: ["depois", "confianca", "formulario"] },
+    { id: "proximo", nome: "Próximo passo", ids: ["falar", "ja_tem", "curiosidade"] }
+  ];
+
+  function horaBrasilia() {
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Sao_Paulo",
+        hour: "numeric",
+        hourCycle: "h23"
+      }).formatToParts(new Date());
+      var h = parts.filter(function (p) { return p.type === "hour"; })[0];
+      var n = parseInt(h && h.value, 10);
+      if (n === 24) n = 0;
+      if (n >= 0 && n <= 23) return n;
+    } catch (_) {}
+    return new Date().getHours();
+  }
+  function anguloDaHora() {
+    return ANGULOS[horaBrasilia() % ANGULOS.length];
+  }
 
   var kicker = root.querySelector("[data-sx-kicker]");
   var dots = root.querySelectorAll("[data-sx-dots] span");
@@ -142,7 +195,7 @@ const { norma = "" } = Astro.props;
   var shown = false;
   var answered = false;
   var semMouse = window.matchMedia("(hover: none)").matches || window.matchMedia("(max-width: 820px)").matches;
-  var state = { motivo: "", detalhe: "", comentario: "", gatilho: "" };
+  var state = { motivo: "", detalhe: "", comentario: "", gatilho: "", angulo: "" };
 
   function uuid() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -210,7 +263,7 @@ const { norma = "" } = Astro.props;
       motivo: state.motivo,
       detalhe: state.detalhe || "",
       comentario: (state.comentario || "").slice(0, 400),
-      gatilho: state.gatilho,
+      gatilho: state.angulo ? state.gatilho + "|" + state.angulo : state.gatilho,
       dispositivo: semMouse ? "mobile" : "desktop",
       tempo_s: Math.max(0, Math.round((Date.now() - start) / 1000)),
       rolagem_pct: maxScroll,
@@ -259,14 +312,15 @@ const { norma = "" } = Astro.props;
     later.hidden = false;
     later.textContent = "Agora não";
     clearOptions();
-    Object.keys(MOTIVOS).forEach(function (id) {
+    var ids = (state.angulo && ANGULOS.filter(function (a) { return a.id === state.angulo; })[0] || anguloDaHora()).ids.concat(["outro"]);
+    ids.forEach(function (id) {
       addOption(id, MOTIVOS[id].label, function () {
         state.motivo = id;
         answered = true;
         if (state.gatilho !== "preview") lockLong();
         else lockSession();
         salvar();
-        track("saida_motivo", { motivo: id, page: location.pathname });
+        track("saida_motivo", { motivo: id, angulo: state.angulo, page: location.pathname });
         showStep2();
       });
     });
@@ -322,10 +376,11 @@ const { norma = "" } = Astro.props;
     if (shown || locked() || formDirty() || leadEnviado()) return;
     shown = true;
     state.gatilho = gatilho;
+    state.angulo = anguloDaHora().id;
     root.hidden = false;
     document.documentElement.style.overflow = "hidden";
     showStep1();
-    track("saida_vista", { gatilho: gatilho, page: location.pathname, dispositivo: semMouse ? "mobile" : "desktop" });
+    track("saida_vista", { gatilho: gatilho, angulo: state.angulo, page: location.pathname, dispositivo: semMouse ? "mobile" : "desktop" });
     var first = options.querySelector("button");
     if (first) first.focus();
   }
@@ -514,7 +569,7 @@ const { norma = "" } = Astro.props;
     color: var(--navy, #222831);
   }
   .sx-free textarea:focus { outline: 2px solid var(--orange, #ff5925); border-color: transparent; }
-  .sx-send, .sx-cta--btn {
+  .sx-send {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -538,6 +593,31 @@ const { norma = "" } = Astro.props;
     font-size: 14px;
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+  a.sx-cta.sx-cta--btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 0 18px;
+    border: 0 !important;
+    border-radius: 999px;
+    background: #ff5925 !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none !important;
+  }
+  a.sx-cta.sx-cta--btn:hover {
+    background: #b23c0c !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff;
   }
   .sx-cta[hidden] { display: none !important; }
   .sx-later {

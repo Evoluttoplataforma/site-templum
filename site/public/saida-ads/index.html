@@ -44,7 +44,7 @@
   <main>
     <section id="gate" class="gate">
       <h1>Respostas de quem saiu</h1>
-      <p class="lead">A mesma senha da leitura de leads.</p>
+      <p class="lead">Senha interna da equipe.</p>
       <label for="senha">Senha</label>
       <input id="senha" type="password" autocomplete="current-password" />
       <div><button class="btn" id="entrar" type="button">Entrar</button></div>
@@ -57,6 +57,10 @@
       <div class="bar" id="paginas"></div>
       <label class="muted"><input type="checkbox" id="testes" /> Incluir testes do preview (?saida=1)</label>
       <div class="cards" id="cards"></div>
+      <section class="panel">
+        <h2>O ângulo da hora</h2>
+        <div id="angulos"></div>
+      </section>
       <section class="panel">
         <h2>O motivo</h2>
         <div id="motivos"></div>
@@ -80,11 +84,14 @@
     var NOMES = {
       "/consultoria/iso-9001-lp": "ISO 9001",
       "/consultoria/iso-27001": "ISO 27001",
+      "/consultoria/iso-27001-lp": "ISO 27001 LP",
       "/consultoria/iso-14001": "ISO 14001",
       "/consultoria/iso-45001": "ISO 45001",
       "/consultoria/pbqp-h": "PBQP-H",
+      "/consultoria/pbqp-h-lp": "PBQP-H LP",
       "/consultoria/sassmaq-4-0": "SASSMAQ 4.0"
     };
+    var ANGULOS = { momento: "Momento de compra", pagina: "Clareza da página", proximo: "Próximo passo" };
     var KEY = "tpl_saida_painel";
     var rows = [];
     var periodo = 30;
@@ -107,7 +114,7 @@
       var corte = periodo ? Date.now() - periodo * 86400000 : 0;
       var testes = document.getElementById("testes").checked;
       return rows.filter(function (r) {
-        if (!testes && r.gatilho === "preview") return false;
+        if (!testes && String(r.gatilho || "").split("|")[0] === "preview") return false;
         if (pagina && pathOf(r.pagina) !== pagina) return false;
         if (corte && new Date(r.created_at).getTime() < corte) return false;
         return true;
@@ -147,6 +154,11 @@
         card(media(list, "tempo_s") + (media(list, "tempo_s") === "-" ? "" : "s"), "tempo médio na página") +
         card(media(list, "rolagem_pct") + (media(list, "rolagem_pct") === "-" ? "" : "%"), "rolagem média") +
         card(mobPct + "%", "no celular");
+      var comAngulo = list.map(function (r) {
+        var id = String(r.gatilho || "").split("|")[1] || "";
+        return Object.assign({}, r, { angulo_id: id || "(antes da rotação)", angulo_nome: ANGULOS[id] || (id ? id : "Antes da rotação") });
+      });
+      document.getElementById("angulos").innerHTML = tabela(grupo(comAngulo, "angulo_id", "angulo_nome"), list.length, "Ângulo");
       document.getElementById("motivos").innerHTML = tabela(grupo(list, "motivo", "motivo_label"), list.length, "Motivo");
       var comDetalhe = list.filter(function (r) { return r.detalhe; });
       document.getElementById("detalhes").innerHTML = tabela(grupo(comDetalhe, "detalhe", "detalhe_label"), comDetalhe.length, "Detalhe");

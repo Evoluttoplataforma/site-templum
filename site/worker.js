@@ -2282,9 +2282,34 @@ const SAIDA_MOTIVOS = {
       whatsapp: "Prefiro chamar no WhatsApp",
     },
   },
+  falar: {
+    label: "Quero falar com alguém antes de cadastrar",
+    detalhes: {
+      ligar: "Prefiro que alguém me explique por telefone",
+      whatsapp_agora: "Prefiro continuar no WhatsApp",
+      reuniao: "Quero marcar uma conversa, sem formulário",
+    },
+  },
+  ja_tem: {
+    label: "Já estou resolvendo a certificação",
+    detalhes: {
+      consultoria: "Já tenho uma consultoria",
+      processo: "Já começamos a certificação",
+      interno: "Vamos tocar isso com a equipe interna",
+    },
+  },
+  curiosidade: {
+    label: "Entrei por curiosidade, não para contratar",
+    detalhes: {
+      conteudo: "Queria conteúdo, não um cadastro",
+      anuncio: "O anúncio me trouxe, mas não era isso",
+      norma_solta: "Queria só entender a norma",
+    },
+  },
   outro: { label: "Outro motivo", detalhes: {} },
 };
 const SAIDA_GATILHOS = new Set(["mouse", "voltar", "preview"]);
+const SAIDA_ANGULOS = new Set(["momento", "pagina", "proximo"]);
 
 function saidaPath(value) {
   let s = String(value || "").split("?")[0].split("#")[0].trim();
@@ -2322,7 +2347,10 @@ async function handleSaida(request, env) {
     return corsJson({ ok: false, error: "client_id" }, 400);
   }
 
-  const gatilho = SAIDA_GATILHOS.has(body.gatilho) ? body.gatilho : "mouse";
+  const gatilhoBruto = String(body.gatilho || "").split("|");
+  const gatilhoBase = SAIDA_GATILHOS.has(gatilhoBruto[0]) ? gatilhoBruto[0] : "mouse";
+  const angulo = SAIDA_ANGULOS.has(gatilhoBruto[1]) ? gatilhoBruto[1] : "";
+  const gatilho = angulo ? gatilhoBase + "|" + angulo : gatilhoBase;
   const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
   const sbKey = env.SUPABASE_SERVICE_KEY;
   if (!sbKey) return corsJson({ ok: false, error: "not_configured" }, 500);
