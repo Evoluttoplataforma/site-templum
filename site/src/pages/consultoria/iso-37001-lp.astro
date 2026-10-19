@@ -12,14 +12,60 @@ import d from "../../data/consultoria/iso-37001.js";
 const slug = "iso-37001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
-const heroGarantia = d.hero.garantia || d.garantiaPadrao;
-const heroChips = d.hero.chips || d.chipsPadrao || [];
+const heroChips = [
+  { t: "+2.000 empresas certificadas", href: "#resultados" },
+  { t: "30 anos de experiência", href: "#seguranca" },
+  { t: "Sem limite de horas", href: "#seguranca" },
+];
+const formTitulo = "Diagnóstico gratuito da sua certificação ISO 37001";
+const formSub = "Num diagnóstico com um especialista, entendemos o seu cenário e mostramos o caminho até o certificado, com prazo e investimento sob medida.";
+const formCta = "Quero meu diagnóstico";
+const oQueE = "É a norma internacional do sistema de gestão antissuborno. Ela define controles para prevenir, detectar e tratar o suborno na empresa e na relação com parceiros.";
+const tempo = "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista é definido no diagnóstico gratuito.";
+const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria.";
+const validade = "3 anos, com auditorias de manutenção anuais.";
+const faqPrioritarias = [
+  { q: "O que é a ISO 37001?", a: oQueE },
+  { q: "A ISO 37001 ajuda a atender a Lei Anticorrupção?", a: "Sim. Ela estrutura o programa de integridade com política, avaliação de riscos, due diligence, controles e canal de denúncia, alinhado à Lei 12.846/2013." },
+  { q: "Quem precisa da ISO 37001?", a: "Empresas que contratam com o poder público, participam de licitações ou fornecem para grandes empresas que exigem compliance." },
+  { q: "Quanto tempo leva?", a: tempo },
+  { q: "Quem emite o certificado?", a: emite },
+  { q: "Qual é a validade?", a: validade },
+];
+const faqJaCobertas = new Set([
+  ...faqPrioritarias.map((f) => f.q),
+  "O que é a ISO 37001?",
+]);
+const faqItems = [
+  ...faqPrioritarias,
+  ...(d.detalhes.faq || []).filter((f) => !faqJaCobertas.has(f.q)),
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+const etapasCert = [
+  "Diagnóstico gratuito: entendemos o cenário e os riscos de suborno da empresa e definimos escopo e cronograma.",
+  "Implementação do sistema de gestão antissuborno, com a Templum conduzindo cada etapa (política, avaliação de riscos, due diligence, controles e canal de denúncia).",
+  "Auditoria interna, para corrigir o que for preciso antes da auditoria oficial.",
+  "Auditoria de certificação, feita por um organismo certificador acreditado.",
+  "Certificado emitido, válido por 3 anos, com auditorias de manutenção anuais.",
+];
+const custo = "O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade do programa de integridade. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma são apresentados no diagnóstico gratuito, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.";
 ---
 
 <LpBase
-  title={`Consultoria ${norma.nome} com a Templum — Certificação garantida`}
-  description={`Consultoria ${norma.nome} com a Templum${norma.categoria ? " — " + norma.categoria : ""}: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro).`}
-  formAnchor="#contato"
+  title="Consultoria e Certificação ISO 37001 Antissuborno | Templum"
+  description="Consultoria para certificação ISO 37001 (sistema de gestão antissuborno) com garantia de 200% em contrato. Receba um diagnóstico gratuito."
+  formAnchor="#form"
+  headerAnchorDesktop="#contato"
+  headerCta={formCta}
+  schemas={[faqSchema]}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -28,15 +74,34 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
-          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <h1 class="cs-title">Consultoria e certificação <span class="cs-hl">ISO 37001</span>, o sistema de gestão antissuborno</h1>
+          <nav class="cs-atalhos" aria-label="Atalhos da página">
+            <a href="#o-que-e">O que é</a>
+            <a href="#como-conseguir">Como conseguir</a>
+            <a href="#quanto-custa">Quanto custa</a>
+            <a href="#garantia">Garantia de 200%</a>
+            <a href="#faq">Perguntas frequentes</a>
+          </nav>
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
-          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
-          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
+          <div class="cs-chips">{heroChips.map((ch) => <a class="cs-chip" href={ch.href}><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch.t}</a>)}</div>
           <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
-        <div class="cs-hero-form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Falar com Especialista" obrigado="/consultoria/iso-37001-obrigado" simples={true} cargo={true} />
+        <div class="cs-hero-form" id="form">
+          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-37001-obrigado" simples={true} cargo={true} />
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="o-que-e">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">A norma</span>
+          <h2>O que é a <em class="accent">ISO 37001</em></h2>
+        </div>
+        <p class="cs-custo">{oQueE}</p>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -65,13 +130,47 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       </section>
     )}
 
+    <section class="section" id="como-conseguir">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">O caminho</span>
+          <h2>Como conseguir a certificação <em class="accent">ISO 37001</em></h2>
+        </div>
+        <ol class="cs-caminho">
+          {etapasCert.map((etapa, i) => (
+            <li>
+              <span>{i + 1}</span>
+              <p>{etapa}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="cs-caminho-fim">A Templum conduz a sua empresa do diagnóstico até a auditoria. O certificado é emitido pelo organismo certificador.</p>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream" id="quanto-custa">
+      <div class="container md">
+        <div class="section-header">
+          <span class="tag-pill">Investimento</span>
+          <h2>Quanto custa a certificação <em class="accent">ISO 37001?</em></h2>
+        </div>
+        <p class="cs-custo">{custo}</p>
+        <div class="cs-sec-cta">
+          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
     <!-- SELO (escuro) -->
-    <SeloImplementando />
+    <SeloImplementando ctaHref="#form" />
 
     <!-- MÉTODO 7 PASSOS (claro) -->
     <section id="metodo" class="section section--cream">
       <div class="container xl">
-        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
+        <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>Implementação da <em class="accent">ISO 37001</em> em 7 passos</h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
         <div class="step-grid">
           {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
@@ -79,7 +178,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- POR QUE TEMPLUM (escuro) -->
-    <section class="section section--navy">
+    <section class="section section--navy" id="seguranca">
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
@@ -89,7 +188,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- GARANTIA 200% (claro) -->
-    <section class="section">
+    <section class="section" id="garantia">
       <div class="container xl">
         <div class="split">
           <div class="split-text">
@@ -104,7 +203,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
 
     <!-- STATS (claro) -->
-    <section class="section section--cream">
+    <section class="section section--cream" id="resultados">
       <div class="container xl">
         <div class="section-header"><span class="tag-pill">Empresas fortalecidas pela Templum</span><h2>Resultados que <em class="accent">comprovam</em></h2></div>
         <div class="numbers-grid cs-stats">
@@ -120,7 +219,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
         <span class="cs-cover-ico"><iconify-icon icon="solar:map-point-wave-bold"></iconify-icon></span>
         <h2>De onde você estiver, <em class="accent">a Templum chega.</em></h2>
         <p>{d.cobertura}</p>
-        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum — Brasil, Portugal e África" loading="lazy" />
+        <img class="cs-cover-map" src="/assets/img/mapa-cobertura.avif" alt="Mapa de atendimento da Templum: Brasil, Portugal e África" width="1024" height="722" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -157,11 +256,11 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     <Especialistas />
 
     <!-- FAQ (claro) -->
-    <section class="section section--cream">
+    <section class="section section--cream" id="faq">
       <div class="container md">
         <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
         <div class="faq-list">
-          {d.detalhes.faq.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+          {faqItems.map((f) => <details class="faq-item"><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
         </div>
       </div>
     </section>
@@ -172,14 +271,14 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
         <div class="cs-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
           <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado, sem compromisso.</p>
           <ul class="check-list">
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." cta="Falar com Especialista" obrigado="/consultoria/iso-37001-obrigado" simples={true} cargo={true} />
+        <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-37001-obrigado" simples={true} cargo={true} />
       </div>
     </section>
 
@@ -193,6 +292,16 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
     </section>
   </div>
 </LpBase>
+
+<style is:global>
+  .cs-page > section:not(.cs-hero) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
+  .cs-page > section:target {
+    content-visibility: visible;
+  }
+</style>
 
 <style>
   .cs-page { --accent-lt: color-mix(in srgb, var(--accent) 58%, #ffffff); }
@@ -214,9 +323,18 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-  .cs-hero-text { max-width: 600px; }
+  .cs-hero-text { max-width: 640px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .cs-atalhos a:hover { color: var(--cream); }
+  .cs-page section[id] { scroll-margin-top: 88px; }
+  .cs-page .tag-pill,
+  .cs-page .step-card,
+  .cs-page .why-card { cursor: default; }
+  .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
   .cs-hl { color: var(--accent-lt); }
   .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
@@ -224,9 +342,10 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
   .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
   .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
-  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); }
+  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); text-decoration: none; }
+  a.cs-chip:hover { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; }
   .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
-  .cs-hero-form { align-self: start; }
+  .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
   .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
   .cs-ver-metodo:hover { color: var(--accent-lt); }
 
@@ -251,13 +370,20 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-benef-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
   @media (max-width: 700px) { .cs-benef-list { grid-template-columns: 1fr; } }
 
+  .cs-caminho { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0 auto 28px; max-width: 760px; padding: 0; }
+  .cs-caminho li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-16); padding: 16px 18px; text-align: left; }
+  .cs-caminho li span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); font-weight: 800; font-size: 16px; }
+  .cs-caminho li p { margin: 0; padding-top: 10px; font-size: 15.5px; line-height: 1.55; color: var(--text); }
+  .cs-caminho-fim, .cs-custo { max-width: 760px; margin: 0 auto 28px; font-size: 17px; line-height: 1.65; color: var(--text-mid); text-align: left; }
+  .cs-sec-cta { text-align: center; }
+
   .cs-cover { position: relative; padding: 80px 0; text-align: center; overflow: hidden; }
   .cs-cover-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(620px 400px at 50% 120%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%); }
   .cs-cover .container { position: relative; z-index: 1; }
   .cs-cover-ico { width: 64px; height: 64px; border-radius: var(--r-20); display: inline-grid; place-items: center; font-size: 32px; margin-bottom: 20px; color: var(--accent-lt); background: color-mix(in srgb, var(--accent) 18%, transparent); }
   .cs-cover h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; color: var(--cream); letter-spacing: -0.025em; }
   .cs-cover p { font-size: 17px; color: rgba(255,244,221,0.72); max-width: 600px; margin: 14px auto 0; line-height: 1.6; }
-  .cs-cover-map { width: 100%; max-width: 680px; height: auto; margin: 32px auto 0; }
+  .cs-cover-map { width: 100%; max-width: 680px; height: auto; aspect-ratio: 1024 / 722; margin: 32px auto 0; }
 
   .cs-pqi { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
   .cs-pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
