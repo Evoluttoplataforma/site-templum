@@ -427,16 +427,17 @@ function applyBlogLeadAttribution(lead, body) {
   if (lead.evento !== "blog-consultoria") return;
 
   if (isRootBlogPagina(lead.pagina)) {
-    const slug = String(body.utm_campaign || "").trim();
     const genericCampaign = ["form-blog", "form-consultoria-artigo", "form", "site"];
-    if (slug && !genericCampaign.includes(slug.toLowerCase())) {
-      lead.pagina = stripUrlQueryHash(
-        absolutePaginaUrl(`/${slug.replace(/^\/+|\/+$/g, "")}/`, body),
-      ).slice(0, 480);
-    } else if (body.content_page) {
-      lead.pagina = stripUrlQueryHash(absolutePaginaUrl(body.content_page, body)).slice(0, 480);
-    } else if (body.pagina_conteudo) {
-      lead.pagina = stripUrlQueryHash(absolutePaginaUrl(body.pagina_conteudo, body)).slice(0, 480);
+    const fromContent = body.content_page || body.pagina_conteudo;
+    if (fromContent) {
+      lead.pagina = stripUrlQueryHash(absolutePaginaUrl(fromContent, body)).slice(0, 480);
+    } else {
+      const slug = String(body.utm_campaign || "").trim();
+      if (slug && !genericCampaign.includes(slug.toLowerCase())) {
+        lead.pagina = stripUrlQueryHash(
+          absolutePaginaUrl(`/${slug.replace(/^\/+|\/+$/g, "")}/`, body),
+        ).slice(0, 480);
+      }
     }
   }
 
@@ -475,8 +476,8 @@ function applyBlogLeadAttribution(lead, body) {
   const pagSlug = pathOnly(lead.pagina).replace(/^\/+|\/+$/g, "");
   const genericCampaign = ["form-blog", "form-consultoria-artigo", "form", "site", ""];
   if (pagSlug && !genericCampaign.includes(pagSlug.toLowerCase())) {
-    const camp = String(lead.utm_campaign || "").trim();
-    if (!camp || camp !== pagSlug) lead.utm_campaign = pagSlug.slice(0, 120);
+    const articleUrl = stripUrlQueryHash(absolutePaginaUrl(lead.pagina, body));
+    lead.utm_campaign = (articleUrl || pagSlug).slice(0, 180);
     if (!lead.utm_term || lead.utm_term === "form" || lead.utm_term !== pagSlug) {
       lead.utm_term = pagSlug.slice(0, 120);
     }
@@ -486,6 +487,141 @@ function applyBlogLeadAttribution(lead, body) {
   if (entrada && lead.mensagem && !String(lead.mensagem).includes("Entrada no blog:")) {
     lead.mensagem += `\nEntrada no blog: ${entrada}`;
   }
+}
+
+// Orgânico do site não traz utm_campaign na URL. O kit infere source/medium pelo
+// referrer e guarda em cookie, mas o formulário lia só a URL. Resultado: a coluna
+// UTM_CAMPAIGN do CRM ficava vazia (o referrer ia só para a nota).
+const ORGANIC_REFERRER_UTM = [
+  ["google.com.br", "google", "organic"],
+  ["google.com", "google", "organic"],
+  ["bing.com", "bing", "organic"],
+  ["yahoo.com", "yahoo", "organic"],
+  ["duckduckgo.com", "duckduckgo", "organic"],
+  ["yandex.com", "yandex", "organic"],
+  ["baidu.com", "baidu", "organic"],
+  ["instagram.com", "instagram", "social"],
+  ["youtube.com", "youtube", "social"],
+  ["facebook.com", "facebook", "social"],
+  ["fb.com", "facebook", "social"],
+  ["twitter.com", "twitter", "social"],
+  ["x.com", "twitter", "social"],
+  ["linkedin.com", "linkedin", "social"],
+  ["tiktok.com", "tiktok", "social"],
+  ["pinterest.com", "pinterest", "social"],
+  ["whatsapp.com", "whatsapp", "messaging"],
+  ["wa.me", "whatsapp", "messaging"],
+  ["t.me", "telegram", "messaging"],
+  ["telegram.org", "telegram", "messaging"],
+  ["reddit.com", "reddit", "social"],
+  ["gemini.google.com", "gemini", "ai"],
+  ["chat.openai.com", "chatgpt", "ai"],
+  ["chatgpt.com", "chatgpt", "ai"],
+  ["claude.ai", "claude", "ai"],
+  ["poe.com", "poe", "ai"],
+  ["wikipedia.org", "wikipedia", "referral"],
+];
+const GENERIC_UTM_CAMPAIGNS = new Set(["", "form", "site", "form-blog", "form-consultoria-artigo"]);
+
+function referrerHost(ref) {
+  try {
+    return new URL(String(ref || "")).hostname.replace(/^www\./, "").toLowerCase();
+  } catch (_) {
+    return "";
+  }
+}
+
+function isOwnSiteHost(host) {
+  return (
+    host === "templum.com.br" ||
+    host.endsWith(".templum.com.br") ||
+    host === "certificacaoiso.com.br" ||
+    host.endsWith(".certificacaoiso.com.br")
+  );
+}
+
+function utmFromReferrer(ref) {
+  const host = referrerHost(ref);
+  if (!host || isOwnSiteHost(host)) return null;
+  const domains = [...ORGANIC_REFERRER_UTM].sort((a, b) => b[0].length - a[0].length);
+  for (const [domain, source, medium] of domains) {
+    if (host === domain || host.endsWith("." + domain)) {
+      return { utm_source: source, utm_medium: medium };
+    }
+  }
+  return { utm_source: host.slice(0, 80), utm_medium: "referral" };
+}
+
+function utmSourceMissing(src) {
+  const s = String(src || "").trim().toLowerCase();
+  return !s || s === "direct" || s === "(direct)";
+}
+
+function utmMediumMissing(med) {
+  const m = String(med || "").trim().toLowerCase();
+  return !m || m === "none";
+}
+
+function leadIsPaidClick(lead) {
+  if (lead.gclid || lead.gbraid || lead.wbraid || lead.msclkid || lead.ttclid) return true;
+  const m = String(lead.utm_medium || "").trim().toLowerCase();
+  return ["cpc", "ppc", "paid", "paidsocial", "paid-social", "cpm", "display"].includes(m);
+}
+
+function originChannelLabel(src, med) {
+  const s = String(src || "").trim().toLowerCase();
+  const m = String(med || "").trim().toLowerCase();
+  if (!s || s === "direct" || s === "(direct)") {
+    return m && m !== "none" ? `direct-${m}` : "direct";
+  }
+  if (!m || m === "none") return s;
+  return `${s}-${m}`;
+}
+
+function contentSlugForCampaign(pagina) {
+  const path = pathOnly(pagina).replace(/^\/+|\/+$/g, "").toLowerCase();
+  if (!path || path === "form") return "";
+  return path.slice(0, 80);
+}
+
+function applyOrganicLeadAttribution(lead, body) {
+  if (lead.evento === "blog-consultoria") return;
+  if (leadIsPaidClick(lead)) return;
+
+  if (utmSourceMissing(lead.utm_source)) {
+    const inferred = utmFromReferrer(body.referrer || lead.referrer || "");
+    if (inferred) {
+      lead.utm_source = inferred.utm_source;
+      lead.utm_medium = inferred.utm_medium;
+    } else {
+      lead.utm_source = "direct";
+      if (utmMediumMissing(lead.utm_medium)) lead.utm_medium = "none";
+    }
+  } else if (utmMediumMissing(lead.utm_medium)) {
+    const ref = body.referrer || lead.referrer || "";
+    const inferred = utmFromReferrer(ref);
+    if (inferred) {
+      lead.utm_medium = inferred.utm_medium;
+      const src = String(lead.utm_source || "").trim().toLowerCase();
+      const host = referrerHost(ref);
+      if (src === host || src === inferred.utm_source) lead.utm_source = inferred.utm_source;
+    } else {
+      lead.utm_medium = "referral";
+    }
+  }
+
+  const camp = String(lead.utm_campaign || "").trim().toLowerCase();
+  if (!GENERIC_UTM_CAMPAIGNS.has(camp)) return;
+
+  const channel = originChannelLabel(lead.utm_source, lead.utm_medium);
+  const page = contentSlugForCampaign(lead.pagina);
+  lead.utm_campaign = (page ? `${channel}:${page}` : channel).slice(0, 120);
+
+  if (utmSourceMissing(lead.utm_source_ft) && !utmSourceMissing(lead.utm_source)) {
+    lead.utm_source_ft = lead.utm_source;
+    lead.utm_medium_ft = lead.utm_medium;
+  }
+  if (!String(lead.utm_campaign_ft || "").trim()) lead.utm_campaign_ft = lead.utm_campaign;
 }
 
 // Etiqueta da norma a partir da URL de chegada. Soma, não substitui as outras.
@@ -829,6 +965,7 @@ async function handleLead(request, env, ctx) {
   applySegmentLpUtmDefaults(lead, body);
   applyLeadPaginaTracking(lead, body, request);
   applyBlogLeadAttribution(lead, body);
+  applyOrganicLeadAttribution(lead, body);
 
   const isIsca =
     lead.evento === "isca" ||

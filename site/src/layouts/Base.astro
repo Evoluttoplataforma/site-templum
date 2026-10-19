@@ -403,6 +403,23 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               if (window.__TPL_UTM_DEFAULTS[k]) _attrib[k] = window.__TPL_UTM_DEFAULTS[k];
             });
           }
+          // Orgânico não vem na URL. O kit grava a origem em lt_utm_*. Sem isto o
+          // lead da página de consultoria chega no CRM sem source nem campanha.
+          if (!_clickNow && !_hasUtmInUrl && !_attrib.utm_source) {
+            var _ck = function (n) {
+              var m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)"));
+              return m ? decodeURIComponent(m[1]) : "";
+            };
+            var _ls = _ck("lt_utm_source");
+            var _lm = _ck("lt_utm_medium");
+            if (_ls && _ls.toLowerCase() !== "direct") {
+              _attrib.utm_source = _ls;
+              _attrib.utm_medium = _lm || "";
+              if (/^(cpc|ppc|paid|cpm|display)$/i.test(_lm || "") && !_attrib.utm_campaign) {
+                _attrib.utm_campaign = _ck("lt_utm_campaign");
+              }
+            }
+          }
           var _submitUrl = location.origin + location.pathname;
           var _landingPath = (_attrib.landing || location.pathname || "/").split("?")[0];
           if (_landingPath && _landingPath.charAt(0) !== "/") _landingPath = "/" + _landingPath;
