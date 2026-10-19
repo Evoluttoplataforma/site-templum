@@ -56,6 +56,11 @@
 //   TURNSTILE_SECRET_KEY   (SECRETO) segredo do widget Turnstile invisível templum-leads.
 //                          POST /api/lead só grava com token válido. Se o siteverify
 //                          estiver fora, o lead segue (não perde cadastro real).
+//   ZOOM_ACCOUNT_ID        (SECRETO) conta Server-to-Server do Zoom
+//   ZOOM_CLIENT_ID         (SECRETO)
+//   ZOOM_CLIENT_SECRET     (SECRETO)
+//                          Inscrição da live (funil LIVES) cria o participante e grava
+//                          o link curto no card. Vale até 20/10/2026 18h, horário de Brasília.
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 // Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
@@ -64,6 +69,15 @@ import mqlCampaignsConfig from "./config/mql-campaigns.json";
 import { sanitizeFormEvento } from "./form-evento.js";
 import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
 import { resolveZoomShortLink } from "./zoom-short-link.js";
+import {
+  ZOOM_JOIN_FIELD,
+  ZOOM_MEETING_ID,
+  ZOOM_SHORT_FIELD,
+  addMeetingRegistrant,
+  splitZoomName,
+  zoomAccessToken,
+  zoomLinkFields,
+} from "./zoom-registrant.js";
 
 const META_API_VERSION = "v21.0";
 
@@ -1979,6 +1993,74 @@ async function triggerMqlCampaignE0Webhook(pathKey, leadId, env, dest) {
   }
 }
 
+async function keepZoomFieldsOnPatch(headers, leadId, patch) {
+  const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers }).catch(() => null);
+  if (!get || !get.ok) return patch;
+  const payload = await get.json().catch(() => ({}));
+  const card = payload.data || payload.lead || payload;
+  const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
+  const keep = {};
+  if (prev[ZOOM_SHORT_FIELD]) keep[ZOOM_SHORT_FIELD] = prev[ZOOM_SHORT_FIELD];
+  if (prev[ZOOM_JOIN_FIELD]) keep[ZOOM_JOIN_FIELD] = prev[ZOOM_JOIN_FIELD];
+  if (!Object.keys(keep).length) return patch;
+  return { ...patch, custom_fields: { ...keep, ...(patch.custom_fields || {}) } };
+}
+
+// 20/10/2026 18:00 em Brasília. Depois disso a sala desta live não recebe inscrição nova.
+const ZOOM_LIVE_REGISTER_UNTIL_MS = Date.parse("2026-10-20T21:00:00.000Z");
+
+function zoomSignupEmail(email) {
+  const value = String(email || "").trim().toLowerCase();
+  const at = value.indexOf("@");
+  if (at < 1) return "";
+  if (!value.slice(at + 1).includes(".")) return "";
+  return value;
+}
+
+// Funil LIVES: inscreve no Zoom e grava o link curto. Falha aqui não desfaz o card.
+async function attachZoomLiveRegistrant(env, headers, leadId, lead) {
+  if (!leadId) return { ok: false, reason: "no_lead" };
+  if (Date.now() >= ZOOM_LIVE_REGISTER_UNTIL_MS) return { ok: false, reason: "after_live" };
+  const email = zoomSignupEmail(lead && lead.email);
+  if (!email) return { ok: false, reason: "invalid_email" };
+  if (!env.ZOOM_ACCOUNT_ID || !env.ZOOM_CLIENT_ID || !env.ZOOM_CLIENT_SECRET) {
+    return { ok: false, reason: "not_configured" };
+  }
+  try {
+    const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers });
+    if (!get.ok) return { ok: false, reason: "lead_not_found" };
+    const payload = await get.json().catch(() => ({}));
+    const card = payload.data || payload.lead || payload;
+    const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
+    if (prev[ZOOM_SHORT_FIELD] && prev[ZOOM_JOIN_FIELD]) return { ok: true, skipped: "already_linked" };
+
+    const token = await zoomAccessToken({
+      accountId: env.ZOOM_ACCOUNT_ID,
+      clientId: env.ZOOM_CLIENT_ID,
+      clientSecret: env.ZOOM_CLIENT_SECRET,
+    });
+    const name = splitZoomName((lead && lead.nome) || card.contact_name || email);
+    const joinUrl = await addMeetingRegistrant({
+      token,
+      meetingId: env.ZOOM_MEETING_ID || ZOOM_MEETING_ID,
+      email,
+      firstName: name.first_name,
+      lastName: name.last_name,
+    });
+    const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ custom_fields: { ...prev, ...zoomLinkFields(leadId, joinUrl) } }),
+    });
+    if (!res.ok) return { ok: false, reason: "crm_patch" };
+    return { ok: true };
+  } catch (err) {
+    const code = err && err.body && err.body.code;
+    console.error("[lead:zoom]", JSON.stringify({ lead_id: leadId, status: err && err.status || 0, code: code || null }));
+    return { ok: false, reason: "zoom", code: code || null };
+  }
+}
+
 // Inscrição de LP/campanha (ORBIT_MQL_INSCRICAO) → funil da campanha (padrão: MQL / Novo Lead).
 // Nova Era (crmDest: lives) grava em LIVES / Novo inscrito. E0: ver fluxos.e0InboundPathKey.
 async function saveToMqlInscricao(lead, env) {
@@ -1998,7 +2080,10 @@ async function saveToMqlInscricao(lead, env) {
       const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
       const existingDest = pickOpenLeadInPipeline(found, destPipelineId);
       if (existingDest) {
-        const patch = buildMqlInscricaoPatch(lead, cfg, existingDest, tags);
+        let patch = buildMqlInscricaoPatch(lead, cfg, existingDest, tags);
+        if (destPipelineId === ORBIT_LIVES_PIPELINE_ID) {
+          patch = await keepZoomFieldsOnPatch(headers, existingDest.id, patch);
+        }
         const res = await fetch(`${ORBIT_BASE}/leads/${existingDest.id}`, {
           method: "PATCH", headers, body: JSON.stringify(patch),
         });
@@ -2027,7 +2112,11 @@ async function saveToMqlInscricao(lead, env) {
             console.error("[lead:mql:sdr]", JSON.stringify({ lead_id: existingDest.id, fluxo_sdr }));
           }
         }
-        return { ok: true, lead_id: existingDest.id, updated: true, fluxo_e0, fluxo_sdr };
+        let zoom;
+        if (destPipelineId === ORBIT_LIVES_PIPELINE_ID) {
+          zoom = await attachZoomLiveRegistrant(env, headers, existingDest.id, lead);
+        }
+        return { ok: true, lead_id: existingDest.id, updated: true, fluxo_e0, fluxo_sdr, zoom };
       }
     }
 
@@ -2072,7 +2161,11 @@ async function saveToMqlInscricao(lead, env) {
           console.error("[lead:mql:sdr]", JSON.stringify({ lead_id: leadId, fluxo_sdr }));
         }
       }
-      return { ok: true, lead_id: leadId, created: true, fluxo_e0, fluxo_sdr };
+      let zoom;
+      if (leadId && destPipelineId === ORBIT_LIVES_PIPELINE_ID) {
+        zoom = await attachZoomLiveRegistrant(env, headers, leadId, lead);
+      }
+      return { ok: true, lead_id: leadId, created: true, fluxo_e0, fluxo_sdr, zoom };
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
