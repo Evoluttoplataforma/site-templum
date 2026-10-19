@@ -19,7 +19,8 @@ const {
   labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
   cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
   funcionarios = false, // true → mostra "Nº de funcionários" mesmo com simples={true}
-  colapsavel = false, // true → só nome/telefone/e-mail visíveis; resto atrás de toggle
+  colapsavel = false, // true → empresa, urgência e norma atrás do toggle
+  qualificaAntes = false, // true → nº de funcionários e cargo visíveis e obrigatórios, antes do toggle
   whatsapp = false, // true → link secundário de WhatsApp, só no celular
   whatsappNorma = "", // nome na mensagem; se vazio, usa `norma`
 } = Astro.props;
@@ -33,11 +34,12 @@ const cargos = ["Proprietário", "Diretor / C-level", "Consultor", "Funcionário
 const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certificar", "Preciso para minha carreira", "Sou apenas estudante"];
 // Com funcionários E faturamento juntos, a .form-row (1fr 1fr) ficaria com 3
 // filhos e sobraria um buraco — nesse caso a empresa vai em linha própria.
-const mostraFunc = !simples || funcionarios;
+const mostraFunc = (!simples || funcionarios) && !qualificaAntes;
 const parQualif = mostraFunc && faturamento;
 // Quantos campos a 2ª linha realmente rende: se sobrar só um, a grade de 2
 // colunas deixaria metade da linha vazia — daí o modificador --solo.
 const camposLinha2 = (parQualif ? 0 : 1) + (mostraFunc ? 1 : 0) + (faturamento ? 1 : 0);
+const mostraCargoPainel = (!simples || cargo) && !qualificaAntes;
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa;
@@ -53,6 +55,25 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
       <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
     </div>
     <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+
+    {qualificaAntes && (
+      <div class="form-row">
+        <div class="field">
+          <label>Nº de funcionários</label>
+          <select class="select" name="funcionarios" aria-label="Nº de funcionários" required>
+            <option value="">Selecione</option>
+            {faixasFuncionarios.map((f) => <option value={f}>{f}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label>Seu cargo</label>
+          <select class="select" name="cargo" aria-label="Seu cargo" required>
+            <option value="">Selecione</option>
+            {cargos.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </div>
+      </div>
+    )}
 
     {colapsavel && (
       <button
@@ -93,15 +114,17 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
           </div>
         )}
       </div>
-      {(!simples || cargo) && (
-        <div class={simples ? "form-row form-row--solo" : "form-row"}>
-          <div class="field">
-            <label>Seu cargo</label>
-            <select class="select" name="cargo" aria-label="Seu cargo">
-              <option value="">Selecione</option>
-              {cargos.map((c) => <option value={c}>{c}</option>)}
-            </select>
-          </div>
+      {(mostraCargoPainel || !simples) && (
+        <div class={mostraCargoPainel && !simples ? "form-row" : "form-row form-row--solo"}>
+          {mostraCargoPainel && (
+            <div class="field">
+              <label>Seu cargo</label>
+              <select class="select" name="cargo" aria-label="Seu cargo">
+                <option value="">Selecione</option>
+                {cargos.map((c) => <option value={c}>{c}</option>)}
+              </select>
+            </div>
+          )}
           {!simples && (
             <div class="field">
               <label>Qual sua urgência?</label>
