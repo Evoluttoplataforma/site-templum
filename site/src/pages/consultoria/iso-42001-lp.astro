@@ -39,9 +39,21 @@ const faqJaCobertas = new Set([
   "Quanto tempo leva para conseguir a certificação?",
   "Qual é a validade da certificação?",
 ]);
+const faqTrocas = new Map([
+  ["Minha empresa só usa IA de terceiros. Ainda assim preciso da 42001?", {
+    q: "Minha empresa só usa IA de terceiros. A ISO 42001 se aplica?",
+    a: "Sim. A norma se aplica a quem desenvolve, fornece ou usa sistemas de IA. Se a sua empresa usa um copiloto no atendimento, um modelo de score, uma triagem de currículos ou qualquer ferramenta de IA sobre dados de clientes, a responsabilidade pelo uso é dela, e a norma ajuda a organizar essa governança.",
+  }],
+  ["A ISO 42001 ajuda no Marco Legal da IA e no EU AI Act?", {
+    q: "A ISO 42001 ajuda no Marco Legal da IA e no EU AI Act?",
+    a: "Ajuda. O AI Act europeu já está em vigor, e no Brasil o Marco Legal da IA (PL 2338/2023) segue em tramitação no Congresso. A norma organiza as evidências que essas regras pedem ou tendem a pedir: inventário de sistemas de IA, avaliação de risco e de impacto, documentação, supervisão humana e rastreabilidade. Quem já tem o sistema de gestão rodando se adapta com mais facilidade quando as exigências chegarem.",
+  }],
+]);
 const faqItems = [
   ...faqPrioritarias,
-  ...(d.detalhes.faq || []).filter((f) => !faqJaCobertas.has(f.q)),
+  ...(d.detalhes.faq || [])
+    .filter((f) => !faqJaCobertas.has(f.q))
+    .map((f) => faqTrocas.get(f.q) || f),
 ];
 const faqSchema = {
   "@context": "https://schema.org",

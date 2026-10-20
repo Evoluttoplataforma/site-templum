@@ -20,14 +20,14 @@ const heroChips = [
 const formTitulo = "Diagnóstico gratuito da sua certificação ISO 37001";
 const formSub = "Num diagnóstico com um especialista, entendemos o seu cenário e mostramos o caminho até o certificado, com prazo e investimento sob medida.";
 const formCta = "Quero meu diagnóstico";
-const oQueE = "É a norma internacional do sistema de gestão antissuborno. Ela define controles para prevenir, detectar e tratar o suborno na empresa e na relação com parceiros.";
+const oQueE = "É a norma internacional do sistema de gestão antissuborno. Ela define controles para prevenir, detectar e tratar o suborno na empresa e na relação com parceiros, criando uma cultura de integridade.";
 const tempo = "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista é definido no diagnóstico gratuito.";
 const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria.";
 const validade = "3 anos, com auditorias de manutenção anuais.";
 const faqPrioritarias = [
   { q: "O que é a ISO 37001?", a: oQueE },
   { q: "A ISO 37001 ajuda a atender a Lei Anticorrupção?", a: "Sim. Ela estrutura o programa de integridade com política, avaliação de riscos, due diligence, controles e canal de denúncia, alinhado à Lei 12.846/2013." },
-  { q: "Quem precisa da ISO 37001?", a: "Empresas que contratam com o poder público, participam de licitações ou fornecem para grandes empresas que exigem compliance." },
+  { q: "Quem precisa da ISO 37001?", a: "Qualquer organização, pública ou privada e de qualquer porte, pode certificar. É especialmente exigida de empresas que contratam com o poder público, participam de licitações ou fornecem para grandes empresas com programas de compliance." },
   { q: "Quanto tempo leva?", a: tempo },
   { q: "Quem emite o certificado?", a: emite },
   { q: "Qual é a validade?", a: validade },
@@ -35,6 +35,9 @@ const faqPrioritarias = [
 const faqJaCobertas = new Set([
   ...faqPrioritarias.map((f) => f.q),
   "O que é a ISO 37001?",
+  "Qual é o objetivo principal da ISO 37001?",
+  "Quem pode usar a ISO 37001?",
+  "Como obter a certificação ISO 37001?",
 ]);
 const faqItems = [
   ...faqPrioritarias,
