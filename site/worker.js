@@ -1406,14 +1406,16 @@ function normLpPath(p) {
   return s.endsWith("/") ? s : s + "/";
 }
 
-/** LP de consultoria sem UTM nesta URL: campanha = a própria página, não a visita anterior. */
+/** LP de consultoria: source, medium e campaign só entram se vieram nesta URL. A página fica em lead.pagina. */
 function applyConsultoriaLpCampaign(lead, body) {
   if (String(lead.evento || "") !== "lead") return;
   const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
   if (!/^\/consultoria\/[^/]+-lp\/$/.test(path)) return;
-  if (body && body.utm_from_url === true && String(body.utm_campaign || "").trim()) return;
-  const url = stripUrlQueryHash(absolutePaginaUrl(lead.pagina, body));
-  if (url) lead.utm_campaign = url.slice(0, 180);
+  const fromUrl = body && body.utm_from_url === true;
+  for (const k of ["utm_source", "utm_medium", "utm_campaign"]) {
+    const v = fromUrl ? String(body[k] || "").trim() : "";
+    lead[k] = v.slice(0, 180);
+  }
 }
 
 function applySegmentLpUtmDefaults(lead, body) {
