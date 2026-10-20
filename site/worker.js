@@ -441,6 +441,19 @@ function applyLeadPaginaTracking(lead, body, request) {
     contentCandidates.unshift(referer);
   }
 
+  // Formulário enviado numa LP (não no /form/ do blog): a página desta visita
+  // é a conversão. Landing e utm_campaign gravados de outra página não substituem.
+  const submitPath = pathOnly(submitUrl).toLowerCase();
+  const submitIsGeneric = !submitPath || submitPath === "/" || submitPath === "/form" || submitPath === "/form/";
+  if (!submitIsGeneric && submitUrl) {
+    lead.pagina_submit = submitUrl;
+    lead.pagina = stripUrlQueryHash(submitUrl).slice(0, 480);
+    const bodyReferrerEarly = String(body.referrer || body.blog_first_referrer || "").trim();
+    if (bodyReferrerEarly && !lead.referrer) lead.referrer = bodyReferrerEarly.slice(0, 480);
+    if (referer && !lead.referrer) lead.referrer = referer.slice(0, 480);
+    return;
+  }
+
   let contentUrl = "";
   for (const c of contentCandidates) {
     const abs = absolutePaginaUrl(c, body);
@@ -1013,6 +1026,7 @@ async function handleLead(request, env, ctx) {
   applyLeadPaginaTracking(lead, body, request);
   applyBlogLeadAttribution(lead, body);
   applyOrganicLeadAttribution(lead, body);
+  applyConsultoriaLpCampaign(lead, body);
 
   const isIsca =
     lead.evento === "isca" ||
@@ -1390,6 +1404,16 @@ function normLpPath(p) {
   const s = String(p || "").trim();
   if (!s) return "";
   return s.endsWith("/") ? s : s + "/";
+}
+
+/** LP de consultoria sem UTM nesta URL: campanha = a própria página, não a visita anterior. */
+function applyConsultoriaLpCampaign(lead, body) {
+  if (String(lead.evento || "") !== "lead") return;
+  const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
+  if (!/^\/consultoria\/[^/]+-lp\/$/.test(path)) return;
+  if (body && body.utm_from_url === true && String(body.utm_campaign || "").trim()) return;
+  const url = stripUrlQueryHash(absolutePaginaUrl(lead.pagina, body));
+  if (url) lead.utm_campaign = url.slice(0, 180);
 }
 
 function applySegmentLpUtmDefaults(lead, body) {
