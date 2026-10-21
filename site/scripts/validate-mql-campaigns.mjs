@@ -51,12 +51,14 @@ for (const c of campaigns) {
     }
   }
   if (c.lpPath) {
-    const page =
-      c.lpPath === "/"
-        ? join(root, "src", "pages", "index.astro")
-        : join(root, "src", "pages", c.lpPath.replace(/^\//, "").replace(/\/$/, "") + ".astro");
+    const rel = c.lpPath === "/" ? "" : c.lpPath.replace(/^\//, "").replace(/\/$/, "");
+    const pageFile = rel
+      ? join(root, "src", "pages", rel + ".astro")
+      : join(root, "src", "pages", "index.astro");
+    const pageIndex = rel ? join(root, "src", "pages", rel, "index.astro") : pageFile;
+    const page = existsSync(pageFile) ? pageFile : pageIndex;
     if (!existsSync(page)) {
-      errors.push(`${c.slug}: lpPath ${c.lpPath} sem ${page.replace(root + "\\", "")}`);
+      errors.push(`${c.slug}: lpPath ${c.lpPath} sem ${pageFile.replace(root + "\\", "")}`);
     }
     const utm = c.utmDefaults;
     if (!utm || typeof utm !== "object") {

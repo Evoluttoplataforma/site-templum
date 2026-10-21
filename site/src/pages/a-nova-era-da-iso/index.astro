@@ -1,8 +1,8 @@
 ---
-import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
-import CampanhaMqlForm from "../components/CampanhaMqlForm.astro";
-import { mqlCampaignLpProps } from "../lib/mql-campaigns";
-import "../styles/nova-era-iso.css";
+import CampanhaIsolada from "../../layouts/CampanhaIsolada.astro";
+import CampanhaMqlForm from "../../components/CampanhaMqlForm.astro";
+import { mqlCampaignLpProps } from "../../lib/mql-campaigns";
+import "../../styles/nova-era-iso.css";
 
 const CAMPAIGN_KEY = "nova_era_iso_2026_10";
 const { evento: EVENTO, utmDefaults: UTM_DEFAULTS } = mqlCampaignLpProps(CAMPAIGN_KEY);

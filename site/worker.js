@@ -242,6 +242,14 @@ export default {
     }
 
     if (
+      url.pathname === "/nova-era-da-certificacao-iso/replay" ||
+      url.pathname === "/nova-era-da-certificacao-iso/replay/"
+    ) {
+      url.pathname = "/a-nova-era-da-iso/replay/";
+      return Response.redirect(url.toString(), 301);
+    }
+
+    if (
       url.pathname === "/programa-transicao-iso-9001-2026" ||
       url.pathname === "/programa-transicao-iso-9001-2026/"
     ) {
