@@ -1,0 +1,184 @@
+---
+import CampanhaIsolada from "../../layouts/CampanhaIsolada.astro";
+import "../../styles/nova-era-iso.css";
+
+const EVENTO = "nova-era-certificacao-iso-replay";
+const DIAGNOSTICO = "https://app.templum.com.br/p/crm-form/oq_IXzYtJtM-VvaucAFrs0ju";
+const MATERIAL = "/assets/nova-era-iso/material-de-apoio-nova-era.html";
+const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&byline=0&portrait=0&dnt=1";
+---
+
+<CampanhaIsolada
+  title="Replay | A Nova Era da Certificação ISO"
+  description="Replay e material de apoio da live de 20 de outubro. O cadastro libera o vídeo, o arquivo e o diagnóstico."
+>
+  <div class="lp-nova">
+    <header class="header">
+      <div class="header-inner">
+        <a href="/a-nova-era-da-iso/" aria-label="Página do evento">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        </a>
+      </div>
+    </header>
+
+    <main class="replay-main">
+      <div class="wrap-narrow">
+        <section id="replay-gate">
+          <p class="kicker">Replay e material de apoio</p>
+          <h1>A Nova Era da Certificação ISO.</h1>
+          <p class="lede replay-lead">
+            A sala encheu e algumas pessoas não conseguiram entrar. Por isso, o replay e o material de apoio ficam nesta página.
+          </p>
+          <div class="form-card">
+            <p class="price-note">O cadastro é rápido. Em seguida o vídeo, o material e o diagnóstico ficam liberados.</p>
+            <form id="replay-form" novalidate>
+              <input type="hidden" name="evento" value={EVENTO} />
+              <input type="hidden" name="mensagem" value="Replay | A Nova Era da Certificação ISO | 20/10/2026" />
+              <div class="field">
+                <label for="nome">Nome completo</label>
+                <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome completo" />
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input class="input" id="email" name="email" type="email" autocomplete="email" required placeholder="voce@empresa.com" />
+              </div>
+              <div class="field">
+                <label for="empresa">Empresa</label>
+                <input class="input" id="empresa" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" />
+              </div>
+              <div class="field">
+                <label for="telefone">WhatsApp</label>
+                <input
+                  class="input"
+                  id="telefone"
+                  name="telefone"
+                  type="tel"
+                  inputmode="numeric"
+                  autocomplete="tel-national"
+                  required
+                  maxlength="15"
+                  minlength="15"
+                  pattern={"^\\([1-9][0-9]\\) 9[0-9]{4}-[0-9]{4}$"}
+                  title="WhatsApp com DDD, 11 dígitos. Ex.: (19) 99999-0000"
+                  placeholder="(00) 00000-0000"
+                  aria-describedby="telefone-erro"
+                />
+                <p class="error-msg" id="telefone-erro" data-tel-error aria-live="polite"></p>
+              </div>
+              <button type="submit" class="btn-reserve btn-block">Liberar o replay</button>
+              <p class="form-error" id="replay-erro" role="alert"></p>
+            </form>
+            <p class="legal">Usamos estes dados para liberar o replay e o material.</p>
+          </div>
+        </section>
+
+        <section id="replay-liberado" hidden>
+          <p class="kicker">20 de outubro</p>
+          <h1>Replay liberado.</h1>
+          <p class="lede replay-lead">A live foi com Igor Furniel, CEO da Templum.</p>
+          <div class="replay-frame">
+            <iframe
+              id="replay-frame"
+              title="Replay: A Nova Era da Certificação ISO"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="replay-actions">
+            <a class="btn" id="replay-material" href={MATERIAL} download="Material-de-apoio-Nova-Era.html">Baixar o material de apoio</a>
+            <p class="replay-next">Se quiser olhar a sua empresa de perto, o diagnóstico individual continua aberto.</p>
+            <a class="btn btn-line" href={DIAGNOSTICO} target="_blank" rel="noopener noreferrer">Pedir o diagnóstico</a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        <p>© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+      </div>
+    </footer>
+  </div>
+
+  <script is:inline define:vars={{ EVENTO, VIMEO }}>
+    (function () {
+      var KEY = "tpl_ne_replay_v1";
+      var gate = document.getElementById("replay-gate");
+      var panel = document.getElementById("replay-liberado");
+      var form = document.getElementById("replay-form");
+      var erro = document.getElementById("replay-erro");
+      var frame = document.getElementById("replay-frame");
+
+      function show() {
+        if (frame && !frame.getAttribute("src")) frame.setAttribute("src", VIMEO);
+        if (gate) gate.hidden = true;
+        if (panel) panel.hidden = false;
+      }
+
+      try {
+        if (localStorage.getItem(KEY) === "1") show();
+      } catch (_) {}
+
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var tel = form.querySelector('input[name="telefone"]');
+        if (tel) tel.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
+        if (form.checkValidity && !form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+        if (form.dataset.leadSubmitted === "1") return;
+        form.dataset.leadSubmitted = "1";
+        var btn = form.querySelector('[type="submit"]');
+        if (btn) btn.disabled = true;
+        if (erro) erro.textContent = "";
+
+        var d = {};
+        new FormData(form).forEach(function (v, k) { d[k] = v; });
+        var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+        tokenPromise.then(function (token) {
+          return fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nome: d.nome || "",
+              email: d.email || "",
+              telefone: d.telefone || "",
+              empresa: d.empresa || "",
+              mensagem: d.mensagem || "",
+              evento: EVENTO,
+              pagina: location.pathname,
+              turnstile_token: token,
+            }),
+          }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (body) {
+              return { httpOk: r.ok, body: body };
+            });
+          });
+        }).then(function (res) {
+          if (window.tplTurnstileReset) window.tplTurnstileReset();
+          var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+          if (!saved) {
+            form.dataset.leadSubmitted = "";
+            if (btn) btn.disabled = false;
+            if (erro) {
+              erro.textContent = res.body && res.body.error === "invalid_phone"
+                ? "WhatsApp inválido. Use DDD brasileiro e o 9 na frente. Ex.: (19) 99999-0000"
+                : "Não conseguimos gravar agora. Tente de novo em instantes.";
+            }
+            return;
+          }
+          try { localStorage.setItem(KEY, "1"); } catch (_) {}
+          show();
+        }).catch(function () {
+          if (window.tplTurnstileReset) window.tplTurnstileReset();
+          form.dataset.leadSubmitted = "";
+          if (btn) btn.disabled = false;
+          if (erro) erro.textContent = "Não conseguimos confirmar o envio. Tente de novo.";
+        });
+      });
+    })();
+  </script>
+</CampanhaIsolada>

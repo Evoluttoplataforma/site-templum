@@ -8,6 +8,9 @@
 //                             (tag "webinar 9001:2026") via saveToMqlWebinar (ORBIT_CRM_API_KEY).
 //                             LPs de campanha (ORBIT_MQL_INSCRICAO) vão ao funil da campanha
 //                             (padrão MQL Novo Lead; Nova Era: LIVES / Novo inscrito).
+//                             Replay da Nova Era só etiqueta o card aberto do LIVES
+//                             (L2010_REPLAY_CADASTRO). Não muda fase, não abre Inbound,
+//                             não dispara E0, Meta, Mailchimp nem ManyChat.
 //                             Dedup só no funil de destino (não reutiliza Teste Igor).
 //                             Curso de Entendimento ISO 9001:2026 vai ao funil
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
@@ -272,6 +275,20 @@ export default {
           headers: { "WWW-Authenticate": 'Basic realm="Mapa do site", charset="UTF-8"' },
         });
       }
+    }
+
+    // Material da live: o arquivo é HTML. Sem attachment o navegador abre a
+    // apresentação em vez de baixar quando a pessoa aperta o botão.
+    if (url.pathname === REPLAY_NE_MATERIAL || url.pathname === REPLAY_NE_MATERIAL.replace(/\.html$/, "")) {
+      const asset = new URL(request.url);
+      asset.pathname = REPLAY_NE_MATERIAL.replace(/\.html$/, "");
+      const res = await env.ASSETS.fetch(new Request(asset.toString(), request));
+      if (!res.ok) return new Response("Not found", { status: 404 });
+      const headers = new Headers(res.headers);
+      headers.set("content-type", "text/html; charset=utf-8");
+      headers.set("content-disposition", 'attachment; filename="Material-de-apoio-Nova-Era.html"');
+      headers.set("cache-control", "public, max-age=3600");
+      return new Response(res.body, { status: 200, headers });
     }
 
     // tudo o mais = arquivos estáticos (Astro build em ./dist)
@@ -1013,7 +1030,7 @@ async function handleLead(request, env, ctx) {
     lead_event_id: String(body.lead_event_id || body.meta_event_id || "").slice(0, 80),
   };
 
-  if (lead.evento === "nova-era-certificacao-iso") {
+  if (lead.evento === "nova-era-certificacao-iso" || lead.evento === REPLAY_NE_EVENT) {
     const d = brMobileDigits(lead.telefone);
     if (!isBrWhatsappMobile(d)) {
       return corsJson({ ok: false, error: "invalid_phone" }, 422);
@@ -1041,6 +1058,7 @@ async function handleLead(request, env, ctx) {
     lead.evento.startsWith("webinar") ||
     lead.evento.startsWith("webserie") ||
     lead.evento === "planejamento-estrategico-2027" ||
+    lead.evento === REPLAY_NE_EVENT ||
     MQL_CAMPAIGN_SLUG_SET.has(lead.evento) ||
     isIsca;
 
@@ -1049,8 +1067,9 @@ async function handleLead(request, env, ctx) {
   const supabase = await timed(saveToSupabase(lead, env), 3000);
 
   const isResultado = lead.evento === "isca-resultado";
+  const isReplay = lead.evento === REPLAY_NE_EVENT;
   const bgTasks = [];
-  if (!isResultado) {
+  if (!isResultado && !isReplay) {
     bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
     bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
@@ -1059,7 +1078,9 @@ async function handleLead(request, env, ctx) {
     lead.evento === "curso-entendimento-iso-9001-2026" ||
     String(lead.evento || "").startsWith("curso-");
 
-  if (isCursoAluno) {
+  if (isReplay) {
+    bgTasks.push(["replay", saveReplayCadastro(lead, env)]);
+  } else if (isCursoAluno) {
     bgTasks.push(["orbit", saveToOrbit(lead, env, {
       pipeline_id: ORBIT_ATIVACAO_PIPELINE_ID,
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
@@ -1381,6 +1402,9 @@ const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_LIVES_PIPELINE_ID = "9638c34e-def9-40b6-bb6a-b80210960f70";
 const ORBIT_LIVES_STAGE_NOVO_INSCRITO = "fa3c2273-29c8-4df4-bdb1-2f6a993c059f";
+const REPLAY_NE_EVENT = "nova-era-certificacao-iso-replay";
+const REPLAY_NE_TAG = "L2010_REPLAY_CADASTRO";
+const REPLAY_NE_MATERIAL = "/assets/nova-era-iso/material-de-apoio-nova-era.html";
 const ORBIT_MQL_STAGE_INCONSCIENTE = "68179273-9dc5-4daa-acca-b52e24f262ca";
 const ORBIT_MQL_STAGE_CONSCIENTE_PROBLEMA = "122cd261-a6b9-42be-a498-655e4c6346c1";
 const ORBIT_MQL_STAGE_DESCARTADO = "00f86530-e014-4a6f-8888-a075f733a295";
@@ -2196,6 +2220,62 @@ async function saveToMqlInscricao(lead, env) {
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
   } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+// Replay da Nova Era: etiqueta o card aberto do LIVES e não muda a fase.
+// Card novo entra em Novo inscrito só com L2010_REPLAY_CADASTRO, sem a etiqueta
+// "nova era da iso", para não disparar o A0 nem o e-mail da live.
+function tagsKeepingReplay(existing) {
+  const tags = mergeLeadTags(existing, [REPLAY_NE_TAG]);
+  if (tags.includes(REPLAY_NE_TAG)) return tags;
+  const rest = tags.filter((t) => t !== REPLAY_NE_TAG);
+  if (rest.length >= 20) rest.pop();
+  return [REPLAY_NE_TAG, ...rest].slice(0, 20);
+}
+
+async function saveReplayCadastro(lead, env) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+  try {
+    const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
+    const existing = pickOpenLeadInPipeline(found, ORBIT_LIVES_PIPELINE_ID);
+    if (existing) {
+      const res = await fetch(`${ORBIT_BASE}/leads/${existing.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ tags: tagsKeepingReplay(existing.tags) }),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: e.slice(0, 140), lead_id: existing.id };
+      }
+      return { ok: true, lead_id: existing.id, updated: true };
+    }
+
+    const body = {
+      title: (lead.nome || lead.email || "").trim(),
+      pipeline_id: ORBIT_LIVES_PIPELINE_ID,
+      stage_id: ORBIT_LIVES_STAGE_NOVO_INSCRITO,
+      contact_name: lead.nome || lead.email,
+      contact_email: lead.email,
+      source: "Replay Nova Era",
+      tags: [REPLAY_NE_TAG],
+    };
+    if (lead.telefone) body.contact_phone = lead.telefone;
+    if (lead.empresa) body.company_name = lead.empresa;
+    const r = await orbitPostLead(headers, body);
+    if (r && r.ok) {
+      const d = await r.json().catch(() => ({}));
+      const created = d.data || d.lead || d;
+      return { ok: true, lead_id: created?.id || d.id || null, created: true };
+    }
+    const e = r ? await r.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(e).slice(0, 140) };
+  } catch (_) {
     return { ok: false, error: "fetch_failed" };
   }
 }

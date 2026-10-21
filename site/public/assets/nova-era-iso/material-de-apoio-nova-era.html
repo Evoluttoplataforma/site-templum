@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Nova Era da Certificação ISO · Live Templum · 20 OUT 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090d11;--bg2:#0d1318;--card:#111920;--card2:#152029;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.16);
+--ink:#E9EDF0;--muted:#8E99A3;--dim:#64707B;--amber:#F5B42A;--amber2:#FFC94D;--green:#3DDC84;--red:#F0605A;--blue:#5AB8F0;
+--r:16px;--sh:0 1px 0 rgba(255,255,255,.04) inset,0 20px 50px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);overflow:hidden}
+body{color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:19px;line-height:1.5;-webkit-font-smoothing:antialiased}
+b,strong{color:#fff}
+.mono{font-family:'JetBrains Mono',monospace}
+/* stage */
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;flex:none;transform-origin:center center;background:var(--bg);
+ background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:100% 46px;overflow:hidden;border-radius:6px}
+.slide{position:absolute;inset:0;padding:54px 76px 60px;display:none;flex-direction:column;justify-content:center}
+.slide.cur{display:flex}
+.slide .foot{position:absolute;left:76px;right:76px;bottom:20px;display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:11px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.slide .foot .st{color:var(--amber)}
+.note{display:none}
+/* type */
+.kick{font-family:'JetBrains Mono';font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:0 0 16px}
+h1,h2,h3{letter-spacing:-.035em;line-height:1.05;margin:0}
+h1{font-size:68px;font-weight:800}
+h2{font-size:48px;font-weight:800;margin-bottom:18px}
+h3{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.hl{color:var(--amber)} .gr{color:var(--green)} .rd{color:var(--red)} .bl{color:var(--blue)}
+.lead{font-size:24px;color:#C9D1D7;max-width:960px;margin:0;line-height:1.4}
+.sub{color:var(--muted)}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.chip{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line2);color:var(--muted);border-radius:999px;padding:6px 12px}
+.chip.a{color:#111;background:var(--amber);border-color:var(--amber);font-weight:700}
+.chip.g{color:var(--green);border-color:rgba(61,220,132,.4)}
+.chip.live{color:#fff;background:var(--red);border-color:var(--red);font-weight:700}
+.chip.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;margin-right:7px;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.2}}
+/* grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--sh)}
+.card .lab{font-family:'JetBrains Mono';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.card p{margin:0;color:#BFC8CF;font-size:17px}
+.card.red{border-color:rgba(240,96,90,.35);background:linear-gradient(180deg,rgba(240,96,90,.09),var(--card))}
+.card.red .lab{color:var(--red)}
+.card.green{border-color:rgba(61,220,132,.35);background:linear-gradient(180deg,rgba(61,220,132,.08),var(--card))}
+.card.green .lab{color:var(--green)}
+.card.amb{border-color:rgba(245,180,42,.45);background:linear-gradient(180deg,rgba(245,180,42,.1),var(--card))}
+.card.blue{border-color:rgba(90,184,240,.4);background:linear-gradient(180deg,rgba(90,184,240,.09),var(--card))}
+.card.blue .lab{color:var(--blue)}
+.big{font-size:78px;font-weight:800;letter-spacing:-.045em;line-height:1;color:#fff}
+.big.a{color:var(--amber)}.big.g{color:var(--green)}.big.r{color:var(--red)}.big.b{color:var(--blue)}
+.quote{border-left:4px solid var(--amber);padding:6px 0 6px 24px;margin:28px 0 0;font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.28;color:#fff;max-width:1060px}
+.quote small{display:block;font-family:'JetBrains Mono';font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:12px;font-weight:400}
+.src{font-family:'JetBrains Mono';font-size:11px;color:var(--dim);margin-top:12px;letter-spacing:.02em;line-height:1.5}
+/* reveal */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.slide.cur .rv{opacity:1;transform:none}
+.slide.cur .rv.d1{transition-delay:.15s}.slide.cur .rv.d2{transition-delay:.3s}.slide.cur .rv.d3{transition-delay:.45s}.slide.cur .rv.d4{transition-delay:.6s}.slide.cur .rv.d5{transition-delay:.75s}.slide.cur .rv.d6{transition-delay:.9s}
+/* cover */
+.cover{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center}
+.cover h1{font-size:84px}
+.who{display:flex;align-items:center;gap:16px;margin-top:30px}
+.ava{width:78px;height:78px;border-radius:50%;background:#222 center 12%/cover no-repeat;border:2px solid var(--amber);box-shadow:0 8px 24px rgba(0,0,0,.45);flex:none}
+.who .n{font-weight:800;font-size:20px}.who .r{font-family:'JetBrains Mono';font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.orb{position:relative;width:380px;height:380px;margin-left:auto}
+.orb svg{width:100%;height:100%}
+.orb .ring{fill:none;stroke:rgba(245,180,42,.35);stroke-width:1.2}
+.orb .ring2{fill:none;stroke:var(--amber);stroke-width:2;stroke-dasharray:6 10;animation:spin 40s linear infinite;transform-origin:190px 190px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb .lbl{font-family:'JetBrains Mono';font-size:12px;fill:var(--muted);letter-spacing:.08em}
+.orb .core{font:800 30px 'Plus Jakarta Sans';fill:#fff;letter-spacing:-.03em}
+/* agenda */
+.ag{display:grid;gap:12px;margin-top:22px;max-width:980px}
+.ag .it{display:grid;grid-template-columns:70px 1fr;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:12px;padding:16px 20px}
+.ag .no{font-family:'JetBrains Mono';font-size:28px;font-weight:700;color:var(--amber)}
+.ag .t{font-weight:800;font-size:22px;letter-spacing:-.02em}.ag .d{color:var(--muted);font-size:16px}
+/* bars */
+.bars{display:grid;gap:9px;margin-top:6px}
+.bar{display:grid;grid-template-columns:340px 1fr 70px;gap:14px;align-items:center;font-size:16px}
+.bar .lb{color:#C9D1D7}
+.bar .tr{height:26px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden}
+.bar .fl{height:100%;width:0;border-radius:6px;background:var(--dim);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.bar .fl.a{background:var(--amber)}.bar .fl.b{background:var(--blue)}.bar .fl.r{background:var(--red)}
+.bar .pc{font-family:'JetBrains Mono';font-weight:700;text-align:right}
+.bar.hi .lb{color:#fff;font-weight:700}
+/* formula */
+.formula{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:28px}
+.formula .f{background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;font-weight:700;font-size:19px}
+.formula .f small{display:block;font-family:'JetBrains Mono';font-size:10.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:400}
+.formula .op{color:var(--amber);font-weight:800;font-size:24px}
+.formula .f.res{background:var(--amber);color:#111;border-color:var(--amber)}
+.formula .f.res small{color:#5a4100}
+/* hub diagram */
+.hub{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:20px}
+.hub .pane{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px 10px}
+.hub .pane.red{border-color:rgba(240,96,90,.35)} .hub .pane.green{border-color:rgba(61,220,132,.35)}
+.hub svg{width:100%;height:auto;display:block}
+.hub .cap{font-family:'JetBrains Mono';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+/* eras table */
+.eras{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:10px}
+.eras th{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:0 18px 4px}
+.eras th.o{color:var(--red)} .eras th.n{color:var(--green)}
+.eras td{padding:13px 18px;font-size:19px;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.eras td.o{color:var(--muted);border-left:1px solid var(--line);border-radius:12px 0 0 12px;width:47%}
+.eras td.ar{width:6%;text-align:center;color:var(--amber);font-weight:800;background:var(--card2)}
+.eras td.n{color:#fff;font-weight:700;border-right:1px solid var(--line);border-radius:0 12px 12px 0;background:linear-gradient(90deg,var(--card),rgba(61,220,132,.08))}
+.eras tr{opacity:0;transform:translateX(-10px);transition:all .45s ease}
+.slide.cur .eras tr{opacity:1;transform:none}
+.slide.cur .eras tr:nth-child(2){transition-delay:.15s}.slide.cur .eras tr:nth-child(3){transition-delay:.3s}.slide.cur .eras tr:nth-child(4){transition-delay:.45s}.slide.cur .eras tr:nth-child(5){transition-delay:.6s}.slide.cur .eras tr:nth-child(6){transition-delay:.75s}.slide.cur .eras tr:nth-child(7){transition-delay:.9s}
+/* scattered case */
+.scatter{position:relative;height:420px;margin-top:6px}
+.scatter .doc{position:absolute;width:250px;background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;box-shadow:var(--sh);font-size:15px}
+.scatter .doc .t{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+.scatter .doc p{margin:0;color:#BFC8CF}
+.scatter .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:340px}
+.scatter .center .q{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.scatter svg{position:absolute;inset:0;width:100%;height:100%}
+/* steps / demo */
+.steps{display:grid;gap:10px;margin-top:18px}
+.step{display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 18px}
+.step .n{width:44px;height:44px;border-radius:12px;background:rgba(61,220,132,.13);color:var(--green);font-family:'JetBrains Mono';font-weight:700;display:flex;align-items:center;justify-content:center;font-size:17px}
+.step .t{font-weight:800;font-size:20px;letter-spacing:-.02em}.step .d{color:var(--muted);font-size:15.5px}
+.step.ia{border-color:rgba(90,184,240,.4);background:linear-gradient(90deg,rgba(90,184,240,.08),var(--card))}
+.step.ia .n{background:rgba(90,184,240,.15);color:var(--blue)}
+/* curve */
+.curve{width:100%;height:auto;margin-top:8px}
+.curve .ax{stroke:var(--line2);stroke-width:1}
+.curve .old{fill:none;stroke:var(--red);stroke-width:3.5;stroke-dasharray:1400;stroke-dashoffset:1400}
+.curve .new{fill:none;stroke:var(--green);stroke-width:3.5;stroke-dasharray:1400;stroke-dashoffset:1400}
+.slide.cur .curve .old{animation:draw 2.2s .2s ease forwards}.slide.cur .curve .new{animation:draw 2.2s 1.2s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.curve text{font-family:'JetBrains Mono';font-size:12px;fill:var(--muted);letter-spacing:.06em}
+/* calc */
+.calc{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:18px;align-items:stretch}
+.sl{margin:0 0 16px}
+.sl .row{display:flex;justify-content:space-between;align-items:baseline;font-size:17px;color:#C9D1D7}
+.sl .val{font-family:'JetBrains Mono';font-weight:700;color:var(--amber);font-size:18px}
+input[type=range]{width:100%;accent-color:var(--amber);height:24px}
+.res{background:linear-gradient(160deg,rgba(240,96,90,.12),var(--card));border:1px solid rgba(240,96,90,.4);border-radius:18px;padding:26px;display:flex;flex-direction:column;justify-content:center}
+.res .k{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.res .v{font-size:64px;font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1.05;margin:4px 0 14px}
+.res .v.h{font-size:40px;color:var(--red)}
+/* offer */
+.deliv{display:grid;gap:10px;margin-top:16px}
+.dv{display:grid;grid-template-columns:44px 1fr 1fr;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.dv .ic{width:40px;height:40px;border-radius:10px;background:rgba(245,180,42,.14);color:var(--amber);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'JetBrains Mono'}
+.dv .t{font-weight:800;font-size:19px;letter-spacing:-.02em}
+.dv .b{color:var(--green);font-size:16px}
+.dv .b::before{content:"→ ";color:var(--dim)}
+.price{border-radius:22px;padding:30px 34px;background:radial-gradient(120% 140% at 0% 0%,rgba(245,180,42,.22),transparent 60%),var(--card);border:1px solid rgba(245,180,42,.55)}
+.price .ph{font-family:'JetBrains Mono';color:var(--amber);letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+.anchor{display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:center;margin-top:16px}
+.anchor .vs{text-align:center;font-family:'JetBrains Mono';color:var(--dim)}
+.strike{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px;color:var(--muted)!important}
+/* paths */
+.paths{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:16px;margin-top:24px}
+.path{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+.path .n{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.path .t{font-size:24px;font-weight:800;letter-spacing:-.03em;margin:6px 0 8px}
+.path p{margin:0;color:var(--muted);font-size:16.5px}
+.path.on{border-color:var(--amber);background:linear-gradient(180deg,rgba(245,180,42,.14),var(--card));box-shadow:0 20px 60px rgba(245,180,42,.12)}
+.path.on .t{color:var(--amber)}
+.cta{display:inline-flex;align-items:center;gap:12px;margin-top:22px;padding:17px 28px 17px 20px;border-radius:999px;background:var(--amber);color:#14110a!important;font:800 20px/1 'Plus Jakarta Sans';letter-spacing:-.01em;text-decoration:none;box-shadow:0 12px 34px rgba(245,180,42,.3)}
+.cta .ei{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.16)}
+.qr{background:#fff;border-radius:14px;padding:10px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.qr img{display:block;width:168px;height:168px;image-rendering:pixelated}
+.qr span{display:block;font-family:'JetBrains Mono';font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#333;margin-top:6px}
+.qr.sm{padding:7px;border-radius:10px}.qr.sm img{width:104px;height:104px}
+/* objection cards */
+.obj{cursor:pointer}
+.obj .a{display:none;margin-top:10px;color:var(--green);font-size:16.5px}
+.obj.open .a{display:block}
+.obj .q{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.obj .hint{font-family:'JetBrains Mono';font-size:10.5px;color:var(--dim);margin-top:8px;letter-spacing:.08em;text-transform:uppercase}
+.obj.open .hint{display:none}
+/* editable */
+.ed{border-radius:6px;transition:outline .2s}
+body.editing .ed{outline:2px dashed var(--amber);outline-offset:3px;cursor:text;background:rgba(245,180,42,.05)}
+.tbc{color:var(--amber2)}
+body.editing .tbc::after{content:" · A CONFIRMAR";font-family:'JetBrains Mono';font-size:10px;color:var(--red);letter-spacing:.08em}
+/* deck UI */
+.bar-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;background:rgba(13,19,24,.92);border:1px solid var(--line2);border-radius:999px;padding:6px 8px;font-family:'JetBrains Mono';font-size:12px;color:var(--muted);backdrop-filter:blur(8px);opacity:.25;transition:opacity .25s}
+.bar-ui:hover{opacity:1}
+.bar-ui button{background:transparent;border:0;color:var(--ink);font:700 12px 'JetBrains Mono';letter-spacing:.06em;padding:8px 11px;border-radius:999px;cursor:pointer}
+.bar-ui button:hover{background:rgba(255,255,255,.08)}
+.bar-ui button.on{background:var(--amber);color:#111}
+.bar-ui .pos{min-width:62px;text-align:center}
+.bar-ui .clk{color:var(--amber);min-width:52px;text-align:center}
+.prog{position:fixed;left:0;top:0;height:3px;background:var(--amber);z-index:60;transition:width .3s}
+.notes{position:fixed;left:0;right:0;bottom:0;z-index:40;max-height:42vh;overflow:auto;background:#0d1318;border-top:2px solid var(--blue);padding:16px 26px 70px;font-size:16px;line-height:1.55;display:none;color:#D6DEE4}
+body.shownotes .notes{display:block}
+.notes .pl{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.notes ul,.notes ol{margin:6px 0 0;padding-left:20px}
+.notes .say{border-left:3px solid var(--amber);padding-left:12px;color:#fff;margin:8px 0}
+.notes .gat{display:inline-block;font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#111;background:var(--blue);border-radius:5px;padding:2px 7px;margin-right:6px}
+.help{position:fixed;top:14px;right:16px;z-index:50;font-family:'JetBrains Mono';font-size:11px;color:var(--dim);letter-spacing:.06em;opacity:.0;transition:opacity .3s}
+body:hover .help{opacity:.6}
+/* print */
+@media print{
+ @page{size:1280px 720px;margin:0}
+ html,body{overflow:visible;height:auto;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .viewport{position:static;display:block}
+ .stage{transform:none!important;background:none;border-radius:0;height:auto;overflow:visible}
+ .slide{display:flex!important;position:relative;width:1280px;height:720px;break-after:page;page-break-after:always;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:100% 46px}
+ .rv,.eras tr{opacity:1!important;transform:none!important}
+ .curve .old,.curve .new{stroke-dashoffset:0!important;animation:none!important}
+ .bar-ui,.notes,.prog,.help{display:none!important}
+ .obj .a{display:block!important}.obj .hint{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="help">← → navegar · N notas · E editar · F tela cheia · P PDF</div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 01 CAPA -->
+<section class="slide" data-t="Capa">
+ <div class="cover">
+  <div>
+   <p class="kick rv">Live Templum · 20 de outubro de 2026 · Online e gratuito</p>
+   <h1 class="rv d1">A Nova Era da <span class="hl">Certificação ISO</span></h1>
+   <p class="lead rv d2" style="margin-top:20px">Como conquistar e manter a ISO com menos conexão manual, mais inteligência e mais controle sobre o processo.</p>
+   <div class="who rv d3"><div class="ava" style="background-image:url(data:image/jpeg;base64,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)"></div><div><div class="n">Igor Furniel</div><div class="r">CEO da Templum · empreendedor há 24+ anos</div></div></div>
+   <div class="chiprow rv d4"><span class="chip">ISO 9001</span><span class="chip">ISO 14001</span><span class="chip">ISO 45001</span><span class="chip">e outras normas</span></div>
+  </div>
+  <div class="orb rv d2">
+   <svg viewBox="0 0 380 380" aria-hidden="true">
+    <circle class="ring" cx="190" cy="190" r="170"/><circle class="ring2" cx="190" cy="190" r="128"/><circle class="ring" cx="190" cy="190" r="82"/>
+    <text class="core" x="190" y="186" text-anchor="middle">Templum</text>
+    <text class="lbl" x="190" y="212" text-anchor="middle">OS</text>
+    <g class="lbl"><text x="190" y="52" text-anchor="middle">INFORMAÇÃO</text><text x="318" y="172" text-anchor="middle">PROCESSO</text><text x="190" y="344" text-anchor="middle">AÇÃO</text><text x="62" y="172" text-anchor="middle">EVIDÊNCIA</text></g>
+    <g fill="#F5B42A"><circle cx="190" cy="62" r="6"/><circle cx="318" cy="190" r="6"/><circle cx="190" cy="318" r="6"/><circle cx="62" cy="190" r="6"/></g>
+   </svg>
+  </div>
+ </div>
+ <div class="foot"><span>Templum · 30+ anos em sistemas de gestão</span><span class="st">templum.com.br</span></div>
+ <div class="note"><div class="pl">Tela de espera · antes de começar</div>Deixar esta tela enquanto o público entra. Música baixa. Confirmar áudio e compartilhamento de tela. Ter a demo do Templum OS aberta em outra aba, em ambiente <b>sem dados pessoais</b>, e uma gravação de backup da demonstração.</div>
+</section>
+
+<!-- 02 CHAT -->
+<section class="slide" data-t="Aquecimento no chat">
+ <p class="kick rv">Enquanto todo mundo chega</p>
+ <h2 class="rv d1">Escreva no chat <span class="hl">agora</span>:</h2>
+ <div class="g2">
+  <div class="card amb rv d2" style="padding:30px"><div class="big a">1</div><h3 style="margin-top:14px;font-size:28px">Vou buscar a primeira certificação</h3><p>Ainda não tenho ISO e quero conquistar.</p></div>
+  <div class="card blue rv d3" style="padding:30px"><div class="big b">2</div><h3 style="margin-top:14px;font-size:28px">Já tenho ISO</h3><p>Quero manter com menos esforço e modernizar o sistema.</p></div>
+ </div>
+ <p class="lead rv d4" style="margin-top:26px;font-size:20px">E junto: <b>sua cidade</b> e <b>qual norma</b> (9001, 14001, 45001…).</p>
+ <div class="foot"><span>Interação</span><span class="st">01 · Abertura</span></div>
+ <div class="note"><div class="pl">Abertura · 0:00 → 2:00</div>
+  <div class="say">"Boa noite, pessoal! Antes de começar, quero saber com quem eu estou falando. Digita no chat: 1 se você vai buscar a primeira certificação, 2 se você já tem ISO. E coloca a cidade e a norma."</div>
+  Ler alguns nomes em voz alta. Isso segmenta o público para a oferta: os dois caminhos aparecem no final.
+ </div>
+</section>
+
+<!-- 03 SUPER PROMESSA -->
+<section class="slide" data-t="Super promessa">
+ <p class="kick rv">Nos próximos minutos</p>
+ <h1 class="rv d1" style="font-size:62px;max-width:1100px">Você vai conhecer uma nova forma de <span class="hl">conquistar e manter</span> a certificação ISO.</h1>
+ <p class="lead rv d2" style="margin-top:22px">Com <b>menos trabalho manual</b>, <b>mais inteligência</b> e <b>mais controle</b> sobre o processo.</p>
+ <div class="card red rv d4" style="margin-top:34px;max-width:1080px;display:flex;gap:22px;align-items:center">
+  <div class="big r" style="font-size:64px">?</div>
+  <div><div class="lab">A pergunta que vamos responder hoje</div><p style="font-size:22px;color:#fff;font-weight:700;line-height:1.35">Quanto tempo e dinheiro a sua empresa ainda desperdiça conectando planilhas, documentos e informações para manter a ISO?</p></div>
+ </div>
+ <div class="foot"><span>Super promessa</span><span class="st">01 · Abertura</span></div>
+ <div class="note"><div class="pl">Super promessa · 2:00 → 3:30</div>
+  <span class="gat">Curiosidade</span><span class="gat">Antecipação</span>
+  <div class="say">"Hoje você vai conhecer uma nova forma de conquistar e manter a certificação ISO, com menos trabalho manual, mais inteligência e mais controle sobre o processo."</div>
+  Pausa. Depois a pergunta:
+  <div class="say">"E eu quero que você guarde uma pergunta: quanto tempo e dinheiro sua empresa ainda desperdiça conectando planilhas, documentos e informações para manter a ISO? Daqui a pouco a gente vai fazer essa conta juntos — com os números da sua empresa."</div>
+ </div>
+</section>
+
+<!-- 04 AGENDA -->
+<section class="slide" data-t="Agenda">
+ <p class="kick rv">O que você vai ver hoje</p>
+ <h2 class="rv d1">Do problema à <span class="hl">demonstração ao vivo</span></h2>
+ <div class="ag">
+  <div class="it rv d1"><div class="no">01</div><div><div class="t">O que vocês nos contaram</div><div class="d">O retrato dos 290 inscritos desta live — e o que ninguém declarou.</div></div></div>
+  <div class="it rv d2"><div class="no">02</div><div><div class="t">Por que o problema não é a planilha</div><div class="d">O que as pesquisas mais recentes mostram sobre informação desconectada.</div></div></div>
+  <div class="it rv d3"><div class="no">03</div><div><div class="t">Velha era × nova era — ao vivo no Templum OS</div><div class="d">Um mesmo caso real de empresa, do começo ao fim, nos dois cenários.</div></div></div>
+  <div class="it rv d4"><div class="no">04</div><div><div class="t">Como levar isso para a sua empresa</div><div class="d">Os caminhos para quem vai buscar a primeira ISO e para quem já é certificado.</div></div></div>
+ </div>
+ <div class="foot"><span>Agenda</span><span class="st">01 · Abertura</span></div>
+ <div class="note"><div class="pl">Agenda · 3:30 → 4:30</div><span class="gat">Antecipação</span>
+  <div class="say">"Fica comigo até o final, porque no bloco 3 eu vou abrir o sistema e mostrar o mesmo problema — um fornecedor que atrasa uma entrega — sendo tratado na velha era e na nova era. É ali que a ficha cai."</div></div>
+</section>
+
+<!-- 05 PESQUISA INSCRITOS -->
+<section class="slide" data-t="O que os inscritos disseram">
+ <p class="kick rv">Pesquisa de inscrição · n = 290</p>
+ <h2 class="rv d1" style="font-size:44px">O que vocês nos contaram sobre o <span class="hl">maior desafio</span></h2>
+ <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:30px;align-items:center;margin-top:10px">
+  <div class="bars" id="bars">
+   <div class="bar hi"><span class="lb">Já tenho ISO e quero modernizar o sistema</span><div class="tr"><div class="fl a" data-w="27"></div></div><span class="pc">27%</span></div>
+   <div class="bar hi"><span class="lb">Controles espalhados em planilha, pasta e e-mail</span><div class="tr"><div class="fl a" data-w="18"></div></div><span class="pc">18%</span></div>
+   <div class="bar"><span class="lb">Quero conquistar a certificação ISO</span><div class="tr"><div class="fl b" data-w="15"></div></div><span class="pc">15%</span></div>
+   <div class="bar hi"><span class="lb">Processos que só existem no papel</span><div class="tr"><div class="fl a" data-w="9"></div></div><span class="pc">9%</span></div>
+   <div class="bar"><span class="lb">Correria na véspera da auditoria</span><div class="tr"><div class="fl r" data-w="2"></div></div><span class="pc">2%</span></div>
+   <div class="bar"><span class="lb">Dependência total do consultor</span><div class="tr"><div class="fl r" data-w="1"></div></div><span class="pc">1%</span></div>
+   <div class="bar"><span class="lb">Outro desafio</span><div class="tr"><div class="fl" data-w="28"></div></div><span class="pc">28%</span></div>
+  </div>
+  <div>
+   <div class="card amb rv d3"><div class="big a">54%</div><p style="margin-top:8px;color:#fff;font-weight:600">querem tirar a gestão da planilha, da pasta e do papel</p><p style="font-size:14px;margin-top:6px">modernizar + controles espalhados + só no papel</p></div>
+   <div class="card blue rv d4" style="margin-top:14px"><div class="big b" style="font-size:56px">15%</div><p style="margin-top:8px;color:#fff;font-weight:600">vão buscar a primeira certificação</p></div>
+  </div>
+ </div>
+ <div class="foot"><span>Fonte: formulário de inscrição da live · 290 respostas</span><span class="st">02 · Diagnóstico</span></div>
+ <div class="note"><div class="pl">O que vocês nos contaram · 4:30 → 7:00</div><span class="gat">Conexão</span><span class="gat">Prova social</span>
+  <div class="say">"Mais da metade de vocês — 54% — está dizendo a mesma coisa com palavras diferentes: quero tirar a gestão da planilha, da pasta e do papel."</div>
+  <b>Virada do slide (chame atenção para as barras vermelhas):</b>
+  <div class="say">"Agora olha que curioso: só 2% marcaram a correria na véspera da auditoria e 1% a dependência do consultor. Então eu pergunto: quem aqui nunca correu na véspera da auditoria? Digita 'eu' no chat se já passou por isso."</div>
+  Os 28% de "outro desafio": pedir que escrevam no chat qual é. Use 1–2 respostas ao longo da live.
+ </div>
+</section>
+
+<!-- 06 CONTEXTO ISO SURVEY -->
+<section class="slide" data-t="Contexto ISO Survey">
+ <p class="kick rv">Contexto · a certificação segue relevante</p>
+ <div class="big a rv d1" style="font-size:132px">3.287.917</div>
+ <p class="lead rv d2" style="margin-top:12px;font-size:28px">certificados de sistemas de gestão ativos no mundo — <b>alta reportada de 10,9%</b>.</p>
+ <div class="g3" style="max-width:1100px">
+  <div class="card rv d3"><div class="lab">Base da gestão</div><p><b>89,7%</b> dos certificados estão em qualidade, meio ambiente e saúde e segurança.</p></div>
+  <div class="card rv d4"><div class="lab">A agenda evolui</div><p>A <b>ISO/IEC 42001</b> (gestão de IA) e a <b>ISO 37301</b> (compliance) entraram no levantamento.</p></div>
+  <div class="card rv d5"><div class="lab">Quem decide</div><p>Clientes maiores continuam pedindo o certificado. A pergunta é <b>como</b> você mantém o sistema.</p></div>
+ </div>
+ <p class="src rv d6">ISO Survey 2025, análise do UNI (publicada em 16/10/2026), certificados válidos em 31/12/2025. Certificados não equivalem a empresas únicas; a variação pode refletir cobertura e escopo.</p>
+ <div class="foot"><span>Contexto</span><span class="st">02 · Diagnóstico</span></div>
+ <div class="note"><div class="pl">Contexto · 7:00 → 8:00</div><span class="gat">Autoridade</span>
+  <div class="say">"Para quem está em dúvida se vale a pena: a certificação não está perdendo força. São mais de 3,2 milhões de certificados ativos no mundo, e o número cresceu. Inclusive já existe norma de gestão de inteligência artificial. A certificação continua; o que está mudando é o jeito de conduzir."</div>
+  Cuidado: falar "certificados", não "empresas".</div>
+</section>
+
+<!-- 07 PLAUSIBILIDADE LÓGICA -->
+<section class="slide" data-t="O mecanismo">
+ <p class="kick rv">O mecanismo</p>
+ <h2 class="rv d1">O problema <span class="hl">não é usar planilhas.</span></h2>
+ <p class="lead rv d2">É depender de pessoas para conectar informações, atualizar controles e acompanhar ações.</p>
+ <div class="hub rv d3">
+  <div class="pane red"><div class="cap rd">Hoje · a pessoa é o integrador</div>
+   <svg viewBox="0 0 520 210">
+    <g stroke="rgba(240,96,90,.55)" stroke-width="1.6" stroke-dasharray="5 5"><line x1="260" y1="105" x2="70" y2="40"/><line x1="260" y1="105" x2="450" y2="40"/><line x1="260" y1="105" x2="70" y2="172"/><line x1="260" y1="105" x2="450" y2="172"/><line x1="260" y1="105" x2="260" y2="20"/></g>
+    <g font-family="JetBrains Mono" font-size="12" fill="#BFC8CF" text-anchor="middle">
+     <rect x="10" y="24" width="120" height="32" rx="8" fill="#152029" stroke="rgba(255,255,255,.16)"/><text x="70" y="45">Planilha</text>
+     <rect x="390" y="24" width="120" height="32" rx="8" fill="#152029" stroke="rgba(255,255,255,.16)"/><text x="450" y="45">Pasta</text>
+     <rect x="10" y="156" width="120" height="32" rx="8" fill="#152029" stroke="rgba(255,255,255,.16)"/><text x="70" y="177">E-mail</text>
+     <rect x="390" y="156" width="120" height="32" rx="8" fill="#152029" stroke="rgba(255,255,255,.16)"/><text x="450" y="177">WhatsApp</text>
+     <rect x="210" y="2" width="100" height="30" rx="8" fill="#152029" stroke="rgba(255,255,255,.16)"/><text x="260" y="22">Papel</text>
+    </g>
+    <circle cx="260" cy="110" r="34" fill="rgba(240,96,90,.16)" stroke="#F0605A" stroke-width="2"/>
+    <text x="260" y="106" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="800" font-size="14" fill="#fff">Você</text>
+    <text x="260" y="123" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#F0605A">conecta tudo</text>
+   </svg>
+  </div>
+  <div class="pane green"><div class="cap gr">Nova era · o fluxo conecta</div>
+   <svg viewBox="0 0 520 210">
+    <g font-family="Plus Jakarta Sans" font-weight="700" font-size="14" fill="#fff" text-anchor="middle">
+     <rect x="6" y="80" width="112" height="46" rx="10" fill="#152029" stroke="#3DDC84"/><text x="62" y="108">Informação</text>
+     <rect x="138" y="80" width="112" height="46" rx="10" fill="#152029" stroke="#3DDC84"/><text x="194" y="108">Processo</text>
+     <rect x="270" y="80" width="112" height="46" rx="10" fill="#152029" stroke="#3DDC84"/><text x="326" y="108">Ação</text>
+     <rect x="402" y="80" width="112" height="46" rx="10" fill="#3DDC84" stroke="#3DDC84"/><text x="458" y="108" fill="#06210f">Evidência</text>
+    </g>
+    <g stroke="#3DDC84" stroke-width="2"><line x1="118" y1="103" x2="138" y2="103"/><line x1="250" y1="103" x2="270" y2="103"/><line x1="382" y1="103" x2="402" y2="103"/></g>
+    <text x="260" y="160" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#8E99A3">pessoas decidem e validam · o sistema conecta</text>
+    <text x="260" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#5AB8F0">IA com contexto apoia cada etapa</text>
+   </svg>
+  </div>
+ </div>
+ <p class="lead rv d4" style="font-size:19px;margin-top:18px">Quando essas etapas passam a funcionar de forma integrada, é possível <b>reduzir parte desse esforço</b>.</p>
+ <div class="foot"><span>Plausibilidade · prova lógica</span><span class="st">02 · Diagnóstico</span></div>
+ <div class="note"><div class="pl">Mecanismo · 8:00 → 10:00</div><span class="gat">Contraste</span>
+  <div class="say">"Eu não vim aqui falar mal de planilha. Planilha é ótima. O problema é quando uma pessoa vira o cabo que liga a planilha, a pasta, o e-mail e o WhatsApp. Se essa pessoa sai de férias, o sistema de gestão para."</div>
+  <div class="say">"Na velha era, as pessoas conectam os controles. Na nova, o sistema ajuda a conectar as informações e as ações."</div>
+  Não prometer eliminar trabalho: dizer "reduzir parte desse esforço".</div>
+</section>
+
+<!-- 08 PROVA PESQUISAS -->
+<section class="slide" data-t="O que as pesquisas mostram">
+ <p class="kick rv">Plausibilidade · o que as pesquisas mostram</p>
+ <h2 class="rv d1" style="font-size:42px">A tecnologia evoluiu. <span class="hl">A informação continua desconectada.</span></h2>
+ <div class="g3">
+  <div class="card amb rv d2"><div class="big a">75%</div><p style="margin-top:12px;color:#fff;font-weight:600">apontam qualidade ou disponibilidade de dados como barreira para gerar mais valor com IA.</p><p class="src">SAP + Oxford Economics · Brasil 2026 · 200 líderes de organizações com 500+ funcionários</p></div>
+  <div class="card amb rv d3"><div class="big a">72%</div><p style="margin-top:12px;color:#fff;font-weight:600">relatam falta de dados unificados e acessíveis.</p><p class="src">Deloitte · EUA · ago/2026 · 501 líderes de organizações que já testavam agentes de IA</p></div>
+  <div class="card red rv d4"><div class="big r">21%</div><p style="margin-top:12px;color:#fff;font-weight:600">apenas consideram seus processos preparados ou altamente preparados para agentes de IA.</p><p class="src">Deloitte · EUA · ago/2026 · mesma pesquisa</p></div>
+ </div>
+ <p class="src rv d5" style="margin-top:20px">Percepções autorrelatadas de grandes organizações. As pesquisas sustentam o problema da integração; não medem resultados do Templum OS.</p>
+ <div class="foot"><span>Plausibilidade · prova por pesquisas</span><span class="st">02 · Diagnóstico</span></div>
+ <div class="note"><div class="pl">Pesquisas · 10:00 → 12:00</div><span class="gat">Autoridade</span>
+  <div class="say">"Uma pesquisa da SAP com a Oxford Economics, feita aqui no Brasil este ano com 200 líderes de empresas com mais de 500 funcionários: 75% dizem que a qualidade ou a disponibilidade dos dados é a barreira para tirar mais valor da IA."</div>
+  <div class="say">"A Deloitte, em agosto, ouviu 501 líderes nos Estados Unidos: 72% não têm dados unificados e acessíveis. E só 21% acham que seus processos estão prontos para agentes de IA."</div>
+  Sempre dizer o recorte (porte/país). Não dizer "75% das empresas brasileiras".</div>
+</section>
+
+<!-- 09 PONTE -->
+<section class="slide" data-t="A pergunta">
+ <p class="kick rv">E isso nos leva a uma pergunta</p>
+ <div class="quote rv d1" style="font-size:40px;max-width:1120px">Se até as maiores empresas travam em informação desconectada e processos despreparados…</div>
+ <h1 class="rv d3" style="font-size:58px;margin-top:40px;max-width:1120px">…por que continuar conduzindo a certificação ISO com <span class="hl">tantas conexões manuais?</span></h1>
+ <div class="foot"><span>Ponte</span><span class="st">02 · Diagnóstico</span></div>
+ <div class="note"><div class="pl">Ponte · 12:00 → 12:40</div>Fale devagar. Deixe 3 segundos de silêncio depois da pergunta antes de passar para a história.</div>
+</section>
+
+<!-- 10 HISTÓRIA · CREDENCIAIS -->
+<section class="slide" data-t="Quem fala com você">
+ <p class="kick rv">Por que nos ouvir</p>
+ <div style="display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center">
+  <div class="ava rv d1" style="width:170px;height:170px;border-width:3px;background-image:url(data:image/jpeg;base64,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)"></div>
+  <div>
+   <h2 class="rv d1" style="margin-bottom:8px">Igor Furniel</h2>
+   <p class="lead rv d2" style="font-size:21px">CEO da Templum. Empreendedor há mais de 24 anos. Centenas de planejamentos estratégicos conduzidos — de pequenos negócios a franquias com faturamento acima de R$ 300 milhões por ano.</p>
+  </div>
+ </div>
+ <div class="g4">
+  <div class="card rv d2"><div class="big a" style="font-size:58px">30+</div><p style="margin-top:8px">anos de Templum, desde 2010 dedicada a sistemas de gestão ISO</p></div>
+  <div class="card rv d3"><div class="big a" style="font-size:58px">2.000+</div><p style="margin-top:8px">clientes certificados</p></div>
+  <div class="card rv d4"><div class="big a" style="font-size:58px">8.000+</div><p style="margin-top:8px">contratos</p></div>
+  <div class="card rv d5"><div class="lab">Conselho</div><p class="ed tbc" data-k="nigel"><b>Nigel Croft</b>, conselheiro da Templum, ex-presidente do comitê que redigiu a ISO 9001:2015</p></div>
+ </div>
+ <div class="foot"><span>História · credibilidade</span><span class="st">03 · História</span></div>
+ <div class="note"><div class="pl">Credenciais · 12:40 → 14:00</div><span class="gat">Autoridade</span>
+  Números conforme a página da live (30+ anos, 2.000+ clientes certificados, 8.000+ contratos). <b>Conferir o título exato do Nigel Croft</b> antes de falar (card editável com a tecla E).
+  <div class="say">"Eu não estou aqui como alguém que leu sobre ISO. A Templum já levou mais de 2 mil empresas à certificação. E foi exatamente por ver tantas empresas por dentro que a gente começou a se incomodar com uma coisa."</div></div>
+</section>
+
+<!-- 11 HISTÓRIA · JORNADA -->
+<section class="slide" data-t="A nossa história">
+ <p class="kick rv">A história</p>
+ <h2 class="rv d1" style="font-size:42px">Como chegamos à <span class="hl">nova era</span></h2>
+ <div class="steps" style="gap:9px">
+  <div class="step rv d1"><div class="n">1</div><div><div class="t">"Somos um pouco como você"</div><div class="d ed" data-k="h1">Também temos empresa, metas, equipe enxuta e cliente cobrando prazo. A gestão precisa caber na rotina.</div></div></div>
+  <div class="step rv d2"><div class="n">2</div><div><div class="t">"Só queríamos…"</div><div class="d ed" data-k="h2">…que o sistema de gestão ajudasse a empresa a decidir melhor — e não existisse só para passar na auditoria.</div></div></div>
+  <div class="step rv d3"><div class="n">3</div><div><div class="t">"Mas víamos a mesma dor, ano após ano"</div><div class="d ed" data-k="h3">Empresas boas presas a controles que não conversam. A pessoa da qualidade virando o "cabo" entre planilha, pasta e e-mail. E, na véspera, o mutirão para reconstruir evidências.</div></div></div>
+  <div class="step rv d4" style="border-color:rgba(245,180,42,.5)"><div class="n" style="background:rgba(245,180,42,.15);color:var(--amber)">4</div><div><div class="t">"Encontramos uma maneira de mudar"</div><div class="d ed" data-k="h4">E se a certificação deixasse de ser um evento anual e passasse a ser um fluxo da rotina? Dessa inquietação nasceu o Templum OS.</div></div></div>
+  <div class="step rv d5"><div class="n">5</div><div><div class="t">"Estamos dividindo isso com você porque…"</div><div class="d ed" data-k="h5">…30 anos de método não podem ficar presos na cabeça de um consultor nem numa pasta de rede. Eles precisam funcionar dentro da sua empresa.</div></div></div>
+ </div>
+ <div class="foot"><span>História · jornada do herói</span><span class="st">03 · História</span></div>
+ <div class="note"><div class="pl">História · 14:00 → 17:00</div><span class="gat">Conexão</span>
+  <b>Importante:</b> é uma estrutura narrativa. Substitua o item 3 por um episódio real (um cliente, um ano, uma auditoria específica) — histórias concretas retêm mais que frases gerais. Os textos são editáveis (tecla E).
+  <div class="say">"Teve uma empresa que… [episódio real: o que aconteceu na véspera, quem ficou até tarde, o que foi encontrado em qual pasta]."</div></div>
+</section>
+
+<!-- 12 GRANDE IDEIA -->
+<section class="slide" data-t="A grande ideia">
+ <p class="kick rv">A grande ideia</p>
+ <h1 class="rv d1" style="font-size:58px">A certificação deixa de ser um <span class="rd">evento</span> e passa a ser um <span class="gr">fluxo</span>.</h1>
+ <svg class="curve rv d2" viewBox="0 0 1120 300" aria-label="Ilustração: esforço concentrado na véspera da auditoria versus esforço distribuído na rotina">
+  <line class="ax" x1="40" y1="260" x2="1100" y2="260"/><line class="ax" x1="40" y1="20" x2="40" y2="260"/>
+  <text x="48" y="22">ESFORÇO</text><text x="1000" y="284">TEMPO →</text>
+  <line x1="840" y1="20" x2="840" y2="260" stroke="rgba(245,180,42,.4)" stroke-dasharray="4 6"/><text x="852" y="40" fill="#F5B42A">AUDITORIA</text>
+  <path class="old" d="M40 240 C200 238 400 236 600 232 C700 228 760 200 800 120 C820 70 832 40 840 36 C850 40 870 200 900 236 C960 244 1040 244 1100 244"/>
+  <path class="new" d="M40 190 C200 188 400 186 600 186 C700 186 780 182 840 176 C900 182 1000 186 1100 186"/>
+  <text x="560" y="222" fill="#F0605A">velha era · mutirão na véspera</text>
+  <text x="300" y="176" fill="#3DDC84">nova era · evidência registrada na rotina</text>
+ </svg>
+ <p class="src">Ilustração conceitual, não medição.</p>
+ <div class="foot"><span>A grande ideia</span><span class="st">03 · História</span></div>
+ <div class="note"><div class="pl">Grande ideia · 17:00 → 18:00</div>
+  <div class="say">"Na velha era, a ISO é um evento: passa o ano quieto e explode na véspera. Na nova era, ela é um fluxo: a evidência nasce no momento em que o trabalho acontece. Quando chega a auditoria, ela já está lá."</div></div>
+</section>
+
+<!-- 13 STATUS QUO -->
+<section class="slide" data-t="Por que o jeito atual não funciona">
+ <p class="kick rv">Conteúdo · por que o jeito atual cansa</p>
+ <h2 class="rv d1" style="font-size:42px">Cinco cenas que <span class="hl">você provavelmente reconhece</span></h2>
+ <div class="g5" style="grid-template-columns:repeat(5,1fr)">
+  <div class="card red rv d1"><div class="lab">01</div><h3 style="font-size:19px">Informação guardada não é informação utilizável</h3><p style="font-size:15px">Procedimento numa pasta, registro em outra, e o responsável procurando no e-mail.</p></div>
+  <div class="card red rv d2"><div class="lab">02</div><h3 style="font-size:19px">Registrar o risco não é executar</h3><p style="font-size:15px">O risco está na planilha. A ação está sem responsável ou sem prazo.</p></div>
+  <div class="card red rv d3"><div class="lab">03</div><h3 style="font-size:19px">O custo invisível é a coordenação</h3><p style="font-size:15px">Uma pessoa atualiza três controles diferentes sobre o mesmo evento.</p></div>
+  <div class="card red rv d4"><div class="lab">04</div><h3 style="font-size:19px">IA isolada vira retrabalho</h3><p style="font-size:15px">Um texto gerado sem contexto da empresa precisa ser refeito.</p></div>
+  <div class="card red rv d5"><div class="lab">05</div><h3 style="font-size:19px">A evidência nasce na véspera</h3><p style="font-size:15px">Mutirão para reconstruir registros dias antes da auditoria.</p></div>
+ </div>
+ <p class="lead rv d6" style="margin-top:24px;font-size:20px">Nenhuma delas é culpa de quem cuida da qualidade. <b>É o modelo que depende de conexão manual.</b></p>
+ <div class="foot"><span>Conteúdo · status quo</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Status quo · 18:00 → 21:00</div>
+  Pergunte no chat: <b>"Qual dessas cenas é a da sua empresa? Digita o número."</b> Leia algumas respostas.
+  Nunca ridicularizar planilhas, documentos ou o trabalho do responsável pela qualidade — muitos no público são essa pessoa.</div>
+</section>
+
+<!-- 14 CALCULADORA -->
+<section class="slide" data-t="Quanto custa a conexão manual">
+ <p class="kick rv">Lembra da pergunta do começo?</p>
+ <h2 class="rv d1" style="font-size:42px">Quanto custa a <span class="hl">conexão manual</span> na sua empresa?</h2>
+ <div class="calc rv d2">
+  <div class="card" style="padding:24px 26px">
+   <div class="sl"><div class="row"><span>Pessoas que mantêm o sistema de gestão</span><span class="val" id="c_p_v">2</span></div><input type="range" id="c_p" min="1" max="10" value="2"></div>
+   <div class="sl"><div class="row"><span>Horas por semana, cada uma, conectando controles</span><span class="val" id="c_h_v">4h</span></div><input type="range" id="c_h" min="1" max="20" value="4"></div>
+   <div class="sl"><div class="row"><span>Horas extras na preparação da auditoria (por ano)</span><span class="val" id="c_a_v">40h</span></div><input type="range" id="c_a" min="0" max="200" step="5" value="40"></div>
+   <div class="sl" style="margin-bottom:0"><div class="row"><span>Custo médio da hora (salário + encargos)</span><span class="val" id="c_c_v">R$ 60</span></div><input type="range" id="c_c" min="20" max="250" step="5" value="60"></div>
+  </div>
+  <div class="res">
+   <div class="k">Horas por ano só conectando informação</div>
+   <div class="v h" id="c_hours">424 h</div>
+   <div class="k">Custo anual estimado</div>
+   <div class="v" id="c_cost">R$ 25.440</div>
+   <p class="src" style="margin-top:0">Estimativa feita com os seus números (48 semanas/ano). Não é promessa de economia: é o tamanho do trabalho que hoje depende de pessoas.</p>
+  </div>
+ </div>
+ <div class="foot"><span>Conteúdo · o custo invisível</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Calculadora · 21:00 → 24:00</div><span class="gat">Dor</span><span class="gat">Interação</span>
+  Ajustar os controles ao vivo com um exemplo do chat ("quantas pessoas cuidam do sistema aí?"). Peça para cada um fazer a conta da própria empresa e escrever no chat o número de horas.
+  <div class="say">"Repara: isso não é o custo da ISO. É o custo de ter gente conectando informação que poderia estar conectada. E isso sem contar o risco de não encontrar uma evidência na hora da auditoria."</div>
+  O valor calculado reaparece na tela 23, como argumento para a conversa com o especialista.</div>
+</section>
+
+<!-- 15 CASO VELHA ERA -->
+<section class="slide" data-t="O caso: velha era">
+ <p class="kick rv">O caso · velha era</p>
+ <h2 class="rv d1" style="font-size:40px">Um fornecedor <span class="rd">atrasa uma entrega.</span></h2>
+ <div class="scatter rv d2">
+  <svg viewBox="0 0 1128 420" preserveAspectRatio="none"><g stroke="rgba(240,96,90,.45)" stroke-width="1.5" stroke-dasharray="5 6" fill="none"><path d="M260 60 L470 190"/><path d="M870 60 L660 190"/><path d="M250 330 L470 240"/><path d="M880 330 L660 240"/><path d="M560 400 L560 270"/></g></svg>
+  <div class="doc" style="left:10px;top:10px"><div class="t">Planilha de fornecedores</div><p>Avaliação do fornecedor ainda mostra nota 9.</p></div>
+  <div class="doc" style="right:10px;top:10px"><div class="t">Planilha de riscos</div><p>O risco "atraso de insumo" não foi atualizado.</p></div>
+  <div class="doc" style="left:10px;bottom:30px"><div class="t">E-mail · compras</div><p>"Alguém viu o que foi combinado com o fornecedor?"</p></div>
+  <div class="doc" style="right:10px;bottom:30px"><div class="t">RNC em Word · pasta</div><p>Ação corretiva aberta, sem prazo, sem responsável claro.</p></div>
+  <div class="doc" style="left:50%;bottom:-6px;transform:translateX(-50%);width:300px"><div class="t">Indicador no Excel · WhatsApp</div><p>Entrega no prazo só é atualizada no fim do mês. A evidência é um print.</p></div>
+  <div class="center"><div class="q">Quem conecta <span class="hl">tudo isso</span> hoje?</div><p class="sub" style="margin-top:10px">Responda no chat</p></div>
+ </div>
+ <div class="foot"><span>Caso ilustrativo</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Caso · velha era · 24:00 → 26:00</div><span class="gat">Reconhecimento</span>
+  Esta é a <b>única pergunta no chat antes da demo</b> (o dossiê recomenda evitar quizzes em sequência).
+  <div class="say">"Um fornecedor atrasa. Na velha era, essa informação vive em cinco lugares. A nota do fornecedor não muda, o risco não é atualizado, a ação corretiva fica sem dono, e o indicador só aparece no fim do mês. Quem conecta tudo isso na sua empresa? Escreve no chat o cargo dessa pessoa."</div>
+  Ler as respostas (geralmente: "eu", "a qualidade", "ninguém").</div>
+</section>
+
+<!-- 16 VELHA x NOVA -->
+<section class="slide" data-t="Velha era × nova era">
+ <p class="kick rv">Conteúdo · o novo jeito</p>
+ <h2 class="rv d1" style="font-size:42px;margin-bottom:6px">Velha era <span class="sub">×</span> <span class="hl">nova era</span></h2>
+ <table class="eras">
+  <tr><th class="o">Velha era</th><th></th><th class="n">Nova era</th></tr>
+  <tr><td class="o">Informações espalhadas</td><td class="ar">→</td><td class="n">Informações conectadas</td></tr>
+  <tr><td class="o">Controles paralelos</td><td class="ar">→</td><td class="n">Fluxos integrados</td></tr>
+  <tr><td class="o">Cobranças manuais</td><td class="ar">→</td><td class="n">Acompanhamento estruturado</td></tr>
+  <tr><td class="o">Evidências reunidas na véspera</td><td class="ar">→</td><td class="n">Evidências registradas na rotina</td></tr>
+  <tr><td class="o">Conhecimento concentrado em pessoas</td><td class="ar">→</td><td class="n">Processos com maior continuidade</td></tr>
+  <tr><td class="o">IA usada isoladamente</td><td class="ar">→</td><td class="n">IA apoiando processos, com contexto e supervisão</td></tr>
+ </table>
+ <div class="foot"><span>Conteúdo · contraste</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Velha × nova · 26:00 → 28:00</div><span class="gat">Contraste</span>
+  <div class="say">"Na velha era, você identifica um problema, registra numa planilha, cria uma ação em outro lugar e depois precisa cobrar alguém para saber se foi resolvido. Na nova era, o problema, a ação, o responsável, o prazo e a evidência ficam no mesmo fluxo. Não é só digitalizar documentos. É mudar a maneira como o sistema de gestão funciona."</div>
+  <span class="gat">Curiosidade</span> Transição: <i>"O que você vai ver agora não é apenas uma nova tela. É uma nova forma de conectar o processo."</i></div>
+</section>
+
+<!-- 17 DEMO -->
+<section class="slide" data-t="Demonstração ao vivo">
+ <div class="chiprow rv" style="margin:0 0 14px"><span class="chip live">Ao vivo</span><span class="chip">Templum OS</span></div>
+ <h2 class="rv d1" style="font-size:42px;margin-bottom:4px">O mesmo caso, <span class="gr">na nova era</span></h2>
+ <p class="lead rv d1" style="font-size:19px">Um fornecedor atrasa uma entrega. Acompanhe o caminho do problema até a evidência.</p>
+ <div class="steps">
+  <div class="step rv d2"><div class="n">1</div><div><div class="t">A ocorrência é registrada onde ela acontece</div><div class="d ed" data-k="d1">Quem viu, quando, qual fornecedor e qual pedido — sem abrir outra planilha.</div></div></div>
+  <div class="step rv d3"><div class="n">2</div><div><div class="t">Ela se conecta ao fornecedor e ao risco</div><div class="d ed" data-k="d2">A avaliação do fornecedor e o risco de atraso refletem o fato real.</div></div></div>
+  <div class="step rv d4"><div class="n">3</div><div><div class="t">A ação nasce com dono, prazo e lembrete</div><div class="d ed" data-k="d3">Ninguém precisa cobrar por e-mail para saber em que pé está.</div></div></div>
+  <div class="step ia rv d5"><div class="n">IA</div><div><div class="t">A IA sugere, a equipe valida</div><div class="d ed" data-k="d4">Com o contexto do processo, a IA apoia a análise de causa e a ação. A decisão continua com as pessoas.</div></div></div>
+  <div class="step rv d6"><div class="n">4</div><div><div class="t">A evidência e o indicador ficam prontos para a auditoria</div><div class="d ed" data-k="d5">Registrados na rotina, rastreáveis — sem mutirão na véspera.</div></div></div>
+ </div>
+ <div class="foot"><span>Demonstração · abra o Templum OS</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Demonstração · 28:00 → 35:00 (3–5 min de tela)</div><span class="gat">Demonstração</span>
+  <div class="say">"Vou mostrar esse mesmo processo funcionando dentro do Templum OS."</div>
+  <ol><li>Alternar para a aba do Templum OS (ambiente sem dados pessoais).</li><li>Percorrer <b>exatamente</b> o caso do fornecedor, na ordem dos passos — não fazer tour de funcionalidades.</li><li>Em cada passo, dizer o que deixou de ser redigitado <b>e</b> o que ainda depende de ação humana.</li><li>Se algo falhar: usar a gravação de backup.</li></ol>
+  <b>Antes da live:</b> ajustar os textos dos passos (tecla E) para refletir exatamente o que a versão demonstrada faz. Não prometer conformidade automática.</div>
+</section>
+
+<!-- 18 IA COM CONTEXTO -->
+<section class="slide" data-t="IA com contexto e supervisão">
+ <p class="kick rv">E a inteligência artificial?</p>
+ <h2 class="rv d1" style="font-size:44px">IA não substitui o sistema de gestão. <span class="hl">Ela precisa dele.</span></h2>
+ <div class="g2">
+  <div class="card red rv d2" style="padding:28px"><div class="lab">IA isolada</div><h3 style="font-size:26px">Um chat que não conhece sua empresa</h3><p>Gera textos genéricos, sem os seus processos, riscos e registros. Alguém precisa conferir tudo e refazer.</p></div>
+  <div class="card green rv d3" style="padding:28px"><div class="lab">IA no processo</div><h3 style="font-size:26px">Um apoio com contexto e supervisão</h3><p>Trabalha sobre informações conectadas — processo, risco, ação e evidência — e propõe. A equipe revisa e decide.</p></div>
+ </div>
+ <div class="quote rv d4" style="font-size:28px">A IA apoia as pessoas. A responsabilidade e a validação continuam com a equipe.</div>
+ <div class="foot"><span>Conteúdo · IA</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">IA · 35:00 → 36:30</div>
+  Ligar com as pesquisas: <i>"Lembra dos 75% e dos 72%? IA sem informação conectada não entrega. É por isso que a gente começa pelo fluxo."</i></div>
+</section>
+
+<!-- 19 RECAP -->
+<section class="slide" data-t="O que muda">
+ <p class="kick rv">Resumindo</p>
+ <h2 class="rv d1">O que muda na <span class="hl">nova era</span></h2>
+ <div class="g3">
+  <div class="card green rv d2" style="padding:28px"><div class="big g" style="font-size:54px">01</div><h3 style="margin-top:14px;font-size:24px">A evidência nasce na rotina</h3><p>A auditoria deixa de ser um mutirão.</p></div>
+  <div class="card green rv d3" style="padding:28px"><div class="big g" style="font-size:54px">02</div><h3 style="margin-top:14px;font-size:24px">Toda ação tem dono e prazo</h3><p>O sistema acompanha; você para de cobrar por e-mail.</p></div>
+  <div class="card green rv d4" style="padding:28px"><div class="big g" style="font-size:54px">03</div><h3 style="margin-top:14px;font-size:24px">A informação conectada vira inteligência</h3><p>E a IA passa a ter contexto para ajudar de verdade.</p></div>
+ </div>
+ <div class="foot"><span>Recapitulação</span><span class="st">04 · Conteúdo</span></div>
+ <div class="note"><div class="pl">Recap · 36:30 → 37:30</div>Pergunta rápida (sem quiz): <i>"Qual dessas três faria mais diferença na sua empresa? 1, 2 ou 3 no chat."</i></div>
+</section>
+
+<!-- 20 TRANSIÇÃO -->
+<section class="slide" data-t="Transição para a oferta">
+ <p class="kick rv">Agora, a sua empresa</p>
+ <h2 class="rv d1" style="font-size:46px;max-width:1100px">Cada empresa tem uma <span class="hl">realidade diferente</span>.</h2>
+ <div class="g3">
+  <div class="card rv d2"><div class="lab">Norma e escopo</div><p>9001, 14001, 45001, integrado — cada um com requisitos próprios.</p></div>
+  <div class="card rv d3"><div class="lab">Ponto de partida</div><p>Do zero, com planilhas que funcionam, ou com um sistema que precisa evoluir.</p></div>
+  <div class="card rv d4"><div class="lab">Porte e equipe</div><p>Quem vai operar, quanto tempo tem e o que já está em uso.</p></div>
+ </div>
+ <p class="lead rv d5" style="margin-top:28px">Por isso, uma live não resolve tudo. <b>O próximo passo é entender como esse modelo funciona na sua empresa.</b></p>
+ <div class="foot"><span>Transição · gatilho da razão</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">Transição · 37:30 → 39:00</div><span class="gat">Razão</span>
+  <div class="say">"Hoje você conheceu o que muda entre a velha e a nova era da certificação ISO. Mas cada empresa tem uma realidade diferente. Algumas estão buscando a primeira certificação; outras precisam evoluir a forma como mantêm seu sistema. Eu não consigo configurar a sua empresa numa live. Por isso, o próximo passo é entender como esse modelo funciona na sua realidade."</div></div>
+</section>
+
+<!-- 21 OFERTA · REUNIÃO -->
+<section class="slide" data-t="O próximo passo: conversa com especialista">
+ <p class="kick rv">O próximo passo</p>
+ <h2 class="rv d1 ed" data-k="of_title2" style="font-size:40px;margin-bottom:4px">Uma conversa de diagnóstico com um <span class="hl">especialista Templum</span></h2>
+ <p class="lead rv d1" style="font-size:19px">O que acontece na reunião <span class="sub">e o que você leva dela</span></p>
+ <div class="deliv">
+  <div class="dv rv d2"><div class="ic">1</div><div class="t ed" data-k="m1">Entendemos o seu cenário: norma, porte e ponto de partida</div><div class="b ed" data-k="mb1">Uma conversa sobre a sua realidade, não um roteiro genérico</div></div>
+  <div class="dv rv d3"><div class="ic">2</div><div class="t ed" data-k="m2">Mapeamos onde a sua gestão depende de conexão manual</div><div class="b ed" data-k="mb2">Você descobre onde estão as horas que calculou hoje</div></div>
+  <div class="dv rv d4"><div class="ic">3</div><div class="t ed" data-k="m3">Mostramos o Templum OS no seu processo prioritário</div><div class="b ed" data-k="mb3">O seu caso funcionando, não um tour de funcionalidades</div></div>
+  <div class="dv rv d5"><div class="ic">4</div><div class="t ed" data-k="m4">Desenhamos o caminho: primeira ISO ou evolução do sistema atual</div><div class="b ed" data-k="mb4">Próximos passos claros, com o método Templum</div></div>
+  <div class="dv rv d6"><div class="ic">5</div><div class="t ed" data-k="m5">Respondemos escopo, prazos e investimento</div><div class="b ed" data-k="mb5">Uma decisão com informação, sem pressão</div></div>
+ </div>
+ <div class="foot"><span>Oferta · reunião com especialista</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">O próximo passo · 39:00 → 42:00</div>
+  Hoje não há venda nem desconto na live: a oferta é a <b>reunião com um especialista</b>. Venda a reunião pelo que a pessoa leva dela.
+  <div class="say">"Eu não vou te vender nada hoje. O que eu quero é colocar você numa conversa com um especialista da Templum, olhando para a sua empresa. Nessa conversa a gente entende o seu cenário, mapeia onde estão as conexões manuais, mostra o Templum OS no seu processo prioritário e desenha o caminho — seja para a primeira certificação, seja para evoluir o sistema que você já tem."</div>
+  Colar o link do formulário no chat agora: https://app.templum.com.br/p/crm-form/oq_IXzYtJtM-VvaucAFrs0ju</div>
+</section>
+
+<!-- 22 PARA QUEM -->
+<section class="slide" data-t="Dois caminhos">
+ <p class="kick rv">Para quem é</p>
+ <h2 class="rv d1" style="font-size:44px">Dois pontos de partida, <span class="hl">o mesmo destino</span></h2>
+ <div class="g2">
+  <div class="card amb rv d2" style="padding:28px"><div class="lab">Respondeu 1 no chat · primeira certificação</div><h3 style="font-size:26px">Comece já na nova era</h3><p>Organize a operação e o fluxo de evidências desde o início, sem construir controles paralelos que depois precisariam ser conciliados.</p><p class="ed" data-k="p1" style="margin-top:12px;color:var(--amber2)">Diagnóstico + plano de implantação + demonstração no seu processo prioritário.</p></div>
+  <div class="card blue rv d3" style="padding:28px"><div class="lab">Respondeu 2 no chat · já certificado</div><h3 style="font-size:26px">Preserve o que funciona e evolua</h3><p>Reduza o esforço de manutenção, de cobrança e de busca de evidências — sem começar tudo de novo.</p><p class="ed" data-k="p2" style="margin-top:12px;color:var(--blue)">Diagnóstico das desconexões + plano de evolução do sistema existente.</p></div>
+ </div>
+ <div class="foot"><span>Oferta · para quem</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">Para quem · 42:00 → 43:30</div>Retomar o 1/2 do chat da abertura. Não prometer ausência de trabalho interno nem prazo universal de certificação.</div>
+</section>
+
+<!-- 23 POR QUE VALE A CONVERSA -->
+<section class="slide" data-t="Por que vale a conversa">
+ <p class="kick rv">Por que vale a sua agenda</p>
+ <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:24px;margin-top:6px;align-items:start">
+  <div>
+   <div class="card amb rv d1"><div class="lab">Você sai da reunião com</div>
+    <p class="ed" data-k="lv1" style="color:#fff;font-weight:600">+ O mapa dos pontos de conexão manual da sua gestão</p>
+    <p class="ed" data-k="lv2" style="color:#fff;font-weight:600;margin-top:8px">+ O Templum OS visto no seu processo, não numa demo genérica</p>
+    <p class="ed" data-k="lv3" style="color:#fff;font-weight:600;margin-top:8px">+ O caminho recomendado: primeira ISO ou evolução do seu sistema</p>
+   </div>
+   <div class="card green rv d2" style="margin-top:14px"><div class="lab">Nosso compromisso</div><p class="ed tbc" data-k="gar2" style="color:#fff">Na conversa, mostramos pelo menos 3 pontos onde a sua empresa perde tempo ou dinheiro na gestão.</p></div>
+  </div>
+  <div class="price rv d3">
+   <div class="ph">Leve a sua conta para a reunião</div>
+   <div style="display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;margin-top:14px">
+    <div>
+     <div class="sub mono" style="font-size:11px;letter-spacing:.1em">JEITO ATUAL · SUA ESTIMATIVA</div>
+     <div class="big r" style="font-size:46px" id="anchorCost">R$ 25.440</div>
+     <div class="sub" style="font-size:14px">por ano em horas conectando informação</div>
+     <div class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--amber);margin-top:18px">REUNIÃO COM ESPECIALISTA</div>
+     <div class="big a ed" data-k="custo_reuniao" style="font-size:46px">Sem custo</div>
+     <div class="sub ed" data-k="dur_reuniao" style="font-size:14px">online · com um especialista Templum</div>
+    </div>
+    <div class="qr"><img src="data:image/png;base64,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" alt="QR Code do formulário para agendar a conversa com um especialista Templum"><span>aponte a câmera</span></div>
+   </div>
+   <p class="ed" data-k="preco_msg2" style="margin:18px 0 0;font-size:19px;color:#fff;font-weight:600">Uma conversa pode mostrar <span class="hl">quanto disso você não precisa continuar pagando</span>.</p>
+  </div>
+ </div>
+ <div class="foot"><span>Oferta · ancoragem por transformação</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">Por que vale a conversa · 43:30 → 46:00</div><span class="gat">Ancoragem</span><span class="gat">Reciprocidade</span>
+  O valor "jeito atual" vem da calculadora (tela 14). Use o número que o público ajudou a montar.
+  <div class="say">"Lembra da conta? Na sua empresa, só a conexão manual custa algo perto de R$ X por ano. A conversa com o especialista não tem custo. O pior cenário é você sair dela sabendo exatamente onde estão essas horas."</div>
+  O compromisso dos "3 pontos" está marcado como A CONFIRMAR: use só se a equipe comercial estiver alinhada. Mostre o QR Code e cole o link no chat.</div>
+</section>
+
+<!-- 24 OBJEÇÕES -->
+<section class="slide" data-t="Dúvidas frequentes">
+ <p class="kick rv">Talvez você esteja pensando…</p>
+ <h2 class="rv d1" style="font-size:40px;margin-bottom:0">As cinco dúvidas que mais ouvimos</h2>
+ <div class="g3" style="grid-template-columns:repeat(3,1fr);margin-top:20px">
+  <div class="card obj rv d1"><div class="q">"Minha empresa é pequena."</div><div class="a">O que importa é a complexidade do seu processo e o que realmente precisa ser organizado — não o tamanho.</div><div class="hint">clique para responder</div></div>
+  <div class="card obj rv d2"><div class="q">"Já tenho ISO."</div><div class="a">A proposta não é começar tudo de novo, mas melhorar a manutenção do sistema que você já tem.</div><div class="hint">clique para responder</div></div>
+  <div class="card obj rv d3"><div class="q">"Minhas planilhas funcionam."</div><div class="a">O objetivo não é eliminar o que funciona, e sim reduzir as conexões manuais entre os controles.</div><div class="hint">clique para responder</div></div>
+  <div class="card obj rv d4"><div class="q">"Vou depender da IA?"</div><div class="a">A IA apoia as pessoas. A responsabilidade e a validação continuam com a sua equipe.</div><div class="hint">clique para responder</div></div>
+  <div class="card obj rv d5"><div class="q">"Isso garante a certificação?"</div><div class="a">A certificação depende do atendimento aos requisitos e da avaliação do organismo certificador. Nós ajudamos você a chegar preparado — e a se manter.</div><div class="hint">clique para responder</div></div>
+  <div class="card obj amb rv d6"><div class="q">"E a minha dúvida?"</div><div class="a">Manda no chat agora. Respondo ao vivo antes de encerrar.</div><div class="hint">clique</div></div>
+ </div>
+ <div class="foot"><span>Resolução de objeções</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">Objeções · 47:00 → 50:00</div>Clique em cada card para revelar a resposta. Priorize as objeções que aparecerem no chat.</div>
+</section>
+
+<!-- 25 FECHAMENTO -->
+<section class="slide" data-t="Fechamento">
+ <p class="kick rv">A decisão é sua</p>
+ <h2 class="rv d1" style="font-size:44px">Você tem <span class="hl">três caminhos</span> a partir de hoje</h2>
+ <div class="paths">
+  <div class="path rv d2"><div class="n">Caminho 1</div><div class="t">Continuar como está</div><p>Os mesmos controles, as mesmas cobranças e o mesmo mutirão na véspera — e as horas que você calculou.</p></div>
+  <div class="path rv d3"><div class="n">Caminho 2</div><div class="t">Tentar sozinho</div><p>Montar integrações e método por conta própria, correndo o risco de gastar tempo e dinheiro em tentativa e erro.</p></div>
+  <div class="path on rv d4"><div class="n">Caminho 3</div><div class="t">Conversar com um especialista Templum</div>
+   <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center">
+    <p>Entender, com 30 anos de método, como a nova era funciona na sua empresa.</p>
+    <div class="qr sm"><img src="data:image/png;base64,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" alt="QR Code do formulário"></div>
+   </div>
+   <a class="cta" id="ctaBtn" href="#" target="_blank" rel="noopener"><span class="ei">→</span><span class="ed" data-k="cta_txt2">Quero falar com um especialista</span></a>
+  </div>
+ </div>
+ <p class="src rv d5" style="font-size:13px;margin-top:18px">Como funciona: <b style="color:#C9D1D7">1.</b> você preenche o formulário (1 minuto) · <b style="color:#C9D1D7">2.</b> um especialista Templum entra em contato · <b style="color:#C9D1D7">3.</b> conversa de diagnóstico para a sua empresa. &nbsp;·&nbsp; <span class="hl">app.templum.com.br/p/crm-form/oq_IXzYtJtM-VvaucAFrs0ju</span></p>
+ <div class="foot"><span>Fechamento</span><span class="st">05 · Oferta</span></div>
+ <div class="note"><div class="pl">Fechamento · 50:00 → 55:00</div><span class="gat">Compromisso</span><span class="gat">Urgência</span>
+  <div class="say">"Você pode continuar conduzindo a certificação com os controles que já usa, ou pode tentar montar tudo sozinho. Ou pode conversar com um especialista e descobrir como essa nova era funciona na sua empresa. Aponta a câmera para o QR Code ou clica no link do chat. Leva um minuto."</div>
+  <b>Fechamento indireto:</b> o formulário funciona como aplicação; o especialista qualifica na conversa (por que agora, realidade da empresa, capacidade de executar nos próximos 90 dias).<br>
+  Deixe esta tela aberta por pelo menos 1 minuto em silêncio enquanto o público preenche. Cole o link no chat 2–3 vezes.<br>
+  Link: https://app.templum.com.br/p/crm-form/oq_IXzYtJtM-VvaucAFrs0ju</div>
+</section>
+
+<!-- 26 ENCERRAMENTO -->
+<section class="slide" data-t="Obrigado e fontes">
+ <p class="kick rv">Obrigado</p>
+ <h1 class="rv d1" style="font-size:64px">Bem-vindo à <span class="hl">nova era</span> da certificação ISO.</h1>
+ <div style="display:flex;align-items:center;justify-content:space-between;gap:24px"><div class="who rv d2"><div class="ava" style="background-image:url(data:image/jpeg;base64,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)"></div><div><div class="n">Igor Furniel · Templum</div><div class="r">templum.com.br</div></div></div>
+ <div class="rv d3" style="display:flex;align-items:center;gap:16px;margin-top:24px"><div style="text-align:right"><div class="mono" style="font-size:11px;letter-spacing:.12em;color:var(--amber)">FALE COM UM ESPECIALISTA</div><div class="sub" style="font-size:14px">aponte a câmera</div></div><div class="qr sm"><img src="data:image/png;base64,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" alt="QR Code do formulário"></div></div></div>
+ <div class="card rv d3" style="margin-top:28px;padding:18px 22px">
+  <div class="lab">Fontes citadas</div>
+  <p class="src" style="margin:0;color:var(--muted)">
+   SAP + Oxford Economics, The Value of AI: Brazil 2026 — news.sap.com/brazil/files/2026/10/01/SAP-Value-of-AI-2026-Brazil.pdf<br>
+   Deloitte, AI readiness and agentic success (12/08/2026) — deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html<br>
+   ISO Survey 2025, análise UNI (16/10/2026) — uni.com/iso-survey-il-2025-dei-sistemi-di-gestione<br>
+   Pesquisa de inscrição da live A Nova Era da Certificação ISO — 290 respostas<br>
+   Fontes externas não constituem endosso ao Templum OS.
+  </p>
+ </div>
+ <div class="foot"><span>Encerramento</span><span class="st">Templum · 20 OUT 2026</span></div>
+ <div class="note"><div class="pl">Encerramento · 55:00 → 60:00</div>Responder as últimas perguntas do chat com esta tela aberta. Reforçar o link do CTA uma última vez.</div>
+</section>
+
+</div></div>
+
+<div class="notes" id="notes"></div>
+<div class="bar-ui" id="ui">
+ <button id="prev" title="Anterior (←)">‹</button><span class="pos" id="pos">1 / 1</span><button id="next" title="Próxima (→)">›</button>
+ <span class="clk" id="clk" title="Cronômetro (clique para zerar)">00:00</span>
+ <button id="bNotes" title="Notas do apresentador (N)">Notas</button>
+ <button id="bEdit" title="Editar textos (E)">Editar</button>
+ <button id="bFull" title="Tela cheia (F)">⛶</button>
+ <button id="bPdf" title="Salvar PDF (P)">PDF</button>
+</div>
+
+<script>
+(function(){
+var CTA_URL='https://app.templum.com.br/p/crm-form/oq_IXzYtJtM-VvaucAFrs0ju';
+var KEY='templumNovaEraISO_2010';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(k,v){try{var s=load();s[k]=v;localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+var ST=load();
+var $=function(i){return document.getElementById(i)};
+var slides=[].slice.call(document.querySelectorAll('.slide'));
+var cur=0;
+/* scale */
+function fit(){var s=Math.min(innerWidth/1280,innerHeight/720);$('stage').style.transform='scale('+s+')'}
+addEventListener('resize',fit);fit();
+/* nav */
+function go(i){
+ i=Math.max(0,Math.min(slides.length-1,i));
+ slides.forEach(function(s,k){s.classList.toggle('cur',k===i)});
+ cur=i;$('pos').textContent=(i+1)+' / '+slides.length;$('prog').style.width=((i+1)/slides.length*100)+'%';
+ var n=slides[i].querySelector('.note');$('notes').innerHTML='<div class="pl" style="color:var(--dim)">Tela '+(i+1)+' · '+(slides[i].getAttribute('data-t')||'')+'</div>'+(n?n.innerHTML:'');
+ try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+ var bars=slides[i].querySelectorAll('.fl[data-w]');
+ [].forEach.call(document.querySelectorAll('.fl[data-w]'),function(b){b.style.width='0'});
+ setTimeout(function(){[].forEach.call(bars,function(b){b.style.width=(b.getAttribute('data-w')/28*100)+'%'})},120);
+}
+$('prev').onclick=function(){go(cur-1)};$('next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){
+ if(document.body.classList.contains('editing')&&e.target.isContentEditable){if(e.key==='Escape')toggleEdit();return}
+ if(e.target.tagName==='INPUT')return;
+ var k=e.key;
+ if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();go(cur+1)}
+ else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();go(cur-1)}
+ else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+ else if(k==='n'||k==='N')toggleNotes();
+ else if(k==='e'||k==='E')toggleEdit();
+ else if(k==='f'||k==='F')full();
+ else if(k==='p'||k==='P')window.print();
+});
+/* click on stage advances (except interactive) */
+$('stage').addEventListener('click',function(e){
+ if(e.target.closest('input,a,.obj,.ed,button'))return;
+ if(document.body.classList.contains('editing'))return;
+ var x=e.clientX/innerWidth; go(x<.25?cur-1:cur+1);
+});
+/* notes */
+function toggleNotes(){document.body.classList.toggle('shownotes');$('bNotes').classList.toggle('on')}
+$('bNotes').onclick=toggleNotes;
+/* edit */
+var eds=[].slice.call(document.querySelectorAll('.ed'));
+eds.forEach(function(el){var k=el.getAttribute('data-k');if(k&&ST['ed_'+k]!==undefined)el.innerHTML=ST['ed_'+k];
+ el.addEventListener('input',function(){save('ed_'+k,el.innerHTML)})});
+function toggleEdit(){var on=document.body.classList.toggle('editing');$('bEdit').classList.toggle('on',on);eds.forEach(function(el){el.contentEditable=on?'true':'false'})}
+$('bEdit').onclick=toggleEdit;
+/* full */
+function full(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen()}
+$('bFull').onclick=full;$('bPdf').onclick=function(){window.print()};
+/* clock */
+var t0=Date.now();$('clk').onclick=function(){t0=Date.now()};
+setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);$('clk').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000);
+/* objections */
+[].forEach.call(document.querySelectorAll('.obj'),function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+/* calculator */
+function brl(n){return 'R$ '+Math.round(n).toLocaleString('pt-BR')}
+var ids=['c_p','c_h','c_a','c_c'];
+ids.forEach(function(id){if(ST[id]!==undefined)$(id).value=ST[id];$(id).addEventListener('input',function(){save(id,$(id).value);calc()})});
+function calc(){
+ var p=+$('c_p').value,h=+$('c_h').value,a=+$('c_a').value,c=+$('c_c').value;
+ $('c_p_v').textContent=p;$('c_h_v').textContent=h+'h';$('c_a_v').textContent=a+'h';$('c_c_v').textContent=brl(c);
+ var hrs=p*h*48+a,cost=hrs*c;
+ $('c_hours').textContent=hrs.toLocaleString('pt-BR')+' h';$('c_cost').textContent=brl(cost);$('anchorCost').textContent=brl(cost);
+}
+calc();
+/* CTA */
+var cta=$('ctaBtn');if(CTA_URL){cta.href=CTA_URL}else{cta.removeAttribute('target');cta.addEventListener('click',function(e){e.preventDefault()})}
+/* start */
+var h=parseInt((location.hash||'').slice(1),10);go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
