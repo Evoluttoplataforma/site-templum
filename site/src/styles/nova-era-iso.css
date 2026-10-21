@@ -5,6 +5,7 @@ html, body { margin: 0; background: #222831; }
   --muted: rgba(255, 244, 221, 0.72);
   --line: rgba(255, 244, 221, 0.14);
   --orange: #ff5925;
+  --orange-deep: #e44718;
   --orange-ink: #b23c0c;
   --navy: #222831;
   --navy-2: #2d343e;
@@ -500,7 +501,8 @@ html, body { margin: 0; background: #222831; }
   background: var(--orange);
 }
 .replay-hero .form-card .kicker { color: var(--orange-ink); background: #fff4dd; border-color: transparent; }
-#replay-liberado h1 { max-width: 14em; font-size: clamp(32px, 4vw, 48px); }
+#replay-liberado h1 { max-width: 16em; font-size: clamp(32px, 4vw, 48px); line-height: 1.2; }
+#replay-liberado .lede { margin-top: 12px; line-height: 1.6; color: var(--muted); }
 .form-error {
   display: none;
   margin: 10px 0 0;
@@ -513,9 +515,9 @@ html, body { margin: 0; background: #222831; }
 .replay-frame {
   position: relative;
   width: 100%;
-  margin-top: 8px;
-  padding-top: 56.25%;
-  background: #111;
+  margin-top: 22px;
+  aspect-ratio: 1512 / 982;
+  background: #000;
   border-radius: 16px;
   overflow: hidden;
 }
@@ -526,15 +528,47 @@ html, body { margin: 0; background: #222831; }
   height: 100%;
   border: 0;
 }
-.replay-actions { display: grid; gap: 12px; margin-top: 18px; max-width: 560px; }
-.replay-actions .btn { min-height: 52px; padding: 0 18px; font-size: 16px; }
-.replay-next { color: var(--muted); font-size: 16px; }
-.btn-line {
-  background: transparent;
-  color: var(--cream);
-  border: 1px solid var(--line);
+.replay-actions {
+  display: grid;
+  justify-items: stretch;
+  gap: 0;
+  margin-top: 18px;
 }
-.btn-line:hover { background: rgba(255, 244, 221, 0.08); }
+.replay-actions .btn {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 18px;
+  font-size: 16px;
+  text-align: center;
+}
+.replay-actions .btn:hover { background: var(--orange-deep); color: #fff; }
+.replay-diag {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.replay-diag h2 {
+  color: var(--cream);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.25;
+}
+.replay-diag p {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.lp-nova a.btn-white,
+.lp-nova a.btn-white:hover {
+  display: flex;
+  width: 100%;
+  margin-top: 22px;
+  background: #fff;
+  color: var(--navy);
+  border: 0;
+}
+.lp-nova a.btn-white:hover { background: var(--cream); color: var(--navy); }
 .lp-nova [hidden] { display: none !important; }
 
 @media (min-width: 980px) {

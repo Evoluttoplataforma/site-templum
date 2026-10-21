@@ -10,7 +10,7 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
 
 <CampanhaIsolada
   title="Replay liberado | A Nova Era da Certificação ISO"
-  description="A sala lotou. O replay e o material de apoio de A Nova Era da Certificação ISO, com Igor Furniel, estão liberados."
+  description="O replay de A Nova Era da Certificação ISO está liberado, com a gravação completa e o material de apoio."
 >
   <div class="lp-nova">
     <header class="header">
@@ -26,14 +26,13 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
         <div class="wrap hero-grid">
           <div>
             <p class="kicker">Replay liberado + material de apoio</p>
-            <h1>A sala lotou. Agora você pode assistir ao encontro completo.</h1>
-            <p class="lede">Anunciamos que não haveria replay, mas algumas pessoas não conseguiram entrar na transmissão.</p>
-            <p class="lede">Por isso, liberamos o acesso à gravação de A Nova Era da Certificação ISO, com Igor Furniel.</p>
+            <h1>O replay de A Nova Era da Certificação ISO está liberado!</h1>
+            <p class="lede">A sala lotou e algumas pessoas ficaram de fora. Por isso, decidimos abrir uma exceção e disponibilizar a gravação completa com Igor Furniel, além do material de apoio.</p>
             <p class="replay-access">Cadastre-se para acessar:</p>
             <ul class="replay-gains">
               <li>Replay completo da live</li>
               <li>Material de apoio do encontro</li>
-              <li>Oportunidade de solicitar um diagnóstico individual</li>
+              <li>Solicite um diagnóstico para avaliar os desafios da gestão da sua empresa</li>
             </ul>
           </div>
           <div class="form-card">
@@ -84,8 +83,8 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
       <section class="hero" id="replay-liberado" hidden>
         <div class="wrap-narrow">
           <p class="kicker">Replay liberado</p>
-          <h1>A gravação está aqui.</h1>
-          <p class="lede">A Nova Era da Certificação ISO, com Igor Furniel.</p>
+          <h1>Agora é só dar o play!</h1>
+          <p class="lede">Assista ao replay completo de A Nova Era da Certificação ISO, com Igor Furniel.</p>
           <div class="replay-frame">
             <iframe
               id="replay-frame"
@@ -96,8 +95,11 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
           </div>
           <div class="replay-actions">
             <a class="btn" id="replay-material" href={MATERIAL} download="Material-de-apoio-Nova-Era.html">Baixar o material de apoio</a>
-            <p class="replay-next">Se quiser olhar a sua empresa de perto, o diagnóstico individual continua aberto.</p>
-            <a class="btn btn-line" href={DIAGNOSTICO} target="_blank" rel="noopener noreferrer">Pedir o diagnóstico</a>
+            <div class="replay-diag">
+              <h2>E na sua empresa, a ISO está ajudando a gerar resultados?</h2>
+              <p>Na live, o Igor mostrou por que a certificação precisa ir além do certificado. Agora, você pode olhar para a realidade da sua empresa com nossos especialistas.</p>
+              <a class="btn btn-white" href={DIAGNOSTICO} target="_blank" rel="noopener noreferrer">Solicitar meu diagnóstico</a>
+            </div>
           </div>
         </div>
       </section>
