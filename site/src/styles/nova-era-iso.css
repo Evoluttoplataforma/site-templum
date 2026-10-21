@@ -554,19 +554,24 @@ html, body { margin: 0; background: #222831; }
   line-height: 1.25;
 }
 .replay-diag p {
-  margin-top: 14px;
+  margin-top: 16px;
   color: var(--muted);
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 1.65;
 }
+.replay-diag strong { color: var(--cream); font-weight: 700; }
 .lp-nova a.btn-white,
 .lp-nova a.btn-white:hover {
   display: flex;
   width: 100%;
   margin-top: 22px;
+  padding: 16px 22px;
   background: #fff;
   color: var(--navy);
   border: 0;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
 }
 .lp-nova a.btn-white:hover { background: var(--cream); color: var(--navy); }
 .lp-nova [hidden] { display: none !important; }
