@@ -16,7 +16,7 @@ const {
   simples = false, // true → oculta nº funcionários, cargo e urgência
   faturamento = false, // true → mostra faturamento mensal (qualificação p/ PCI, mín. R$ 100 mil/mês)
   faturamentoObrigatorio = false, // true → torna o faturamento obrigatório (campanhas que otimizam por faixa)
-  faturamentoAnual = false, // true → faixa anual visível e obrigatória, antes do toggle (não mistura com a mensal)
+  faixaMensal = false, // true → faixa de faturamento mensal visível e obrigatória, antes do toggle (não mistura com o seletor mensal padrão)
   labelEmpresa = "Empresa", // sobrescreve o rótulo do campo "empresa" (ex.: "Nome da Construtora")
   cargo = false, // true → mostra o campo "Seu cargo" mesmo com simples={true}
   funcionarios = false, // true → mostra "Nº de funcionários" mesmo com simples={true}
@@ -36,7 +36,7 @@ const urgencias = ["Preciso certificar rápido", "Estou sem pressa para certific
 // Com funcionários E faturamento juntos, a .form-row (1fr 1fr) ficaria com 3
 // filhos e sobraria um buraco — nesse caso a empresa vai em linha própria.
 const mostraFunc = (!simples || funcionarios) && !qualificaAntes;
-const mostraFat = faturamento && !faturamentoAnual;
+const mostraFat = faturamento && !faixaMensal;
 const parQualif = mostraFunc && mostraFat;
 // Quantos campos a 2ª linha realmente rende: se sobrar só um, a grade de 2
 // colunas deixaria metade da linha vazia — daí o modificador --solo.
@@ -44,7 +44,7 @@ const camposLinha2 = (parQualif ? 0 : 1) + (mostraFunc ? 1 : 0) + (mostraFat ? 1
 const mostraCargoPainel = (!simples || cargo) && !qualificaAntes;
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
-const faixasFaturamentoAnual = ["Até R$ 100 mil", "De R$ 100 mil a R$ 500 mil", "De R$ 500 mil a R$ 1 milhão", "De R$ 1 milhão a R$ 5 milhões", "Acima de R$ 5 milhões"];
+const faixasFaturamentoMensal = ["Até R$ 100 mil", "De R$ 100 mil a R$ 500 mil", "De R$ 500 mil a R$ 1 milhão", "De R$ 1 milhão a R$ 5 milhões", "Acima de R$ 5 milhões"];
 const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa;
 ---
 
@@ -78,12 +78,12 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
       </div>
     )}
 
-    {faturamentoAnual && (
+    {faixaMensal && (
       <div class="field">
-        <label>Qual é o faturamento anual aproximado da sua empresa?</label>
-        <select class="select" name="faturamento" aria-label="Qual é o faturamento anual aproximado da sua empresa?" required>
+        <label>Qual é o faturamento mensal aproximado da sua empresa?</label>
+        <select class="select" name="faturamento" aria-label="Qual é o faturamento mensal aproximado da sua empresa?" required>
           <option value="">Selecione</option>
-          {faixasFaturamentoAnual.map((f) => <option value={f}>{f}</option>)}
+          {faixasFaturamentoMensal.map((f) => <option value={f}>{f}</option>)}
         </select>
       </div>
     )}
