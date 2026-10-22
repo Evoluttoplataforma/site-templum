@@ -16,6 +16,8 @@
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
+//                             LP /iso-9001-advocacia-v2/: só as faixas mensais acima de
+//                             R$ 100 mil vão ao INBOUND. Até R$ 100 mil vai ao MQL.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
 //   GET    /api/saida       → leitura da pesquisa (senha Templum@2026), p/ /saida-ads
@@ -1093,6 +1095,9 @@ async function handleLead(request, env, ctx) {
       pipeline_id: ORBIT_ATIVACAO_PIPELINE_ID,
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
     })]);
+  } else if (isAdvocaciaFaturamentoMql(lead)) {
+    // Até R$ 100 mil nesta LP não entra no INBOUND. Vai ao funil MQL.
+    bgTasks.push(["mql", saveToMqlAdvocacia(lead, env)]);
   } else if (!isInscricaoEvento) {
     // CRM comercial: Templum OS, funil INBOUND, etapa NOVO LEAD. Sem Pipedrive.
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
@@ -1858,6 +1863,120 @@ async function orbitPostLead(headers, body) {
   return fetch(`${ORBIT_BASE}/leads`, {
     method: "POST", headers, body: JSON.stringify(basicBody),
   }).catch(() => null);
+}
+
+const ADVOCACIA_LP_PATH = "/iso-9001-advocacia-v2/";
+const ADVOCACIA_FATURAMENTO_INBOUND = new Set([
+  "De R$ 100 mil a R$ 500 mil",
+  "De R$ 500 mil a R$ 1 milhão",
+  "De R$ 1 milhão a R$ 5 milhões",
+  "Acima de R$ 5 milhões",
+]);
+
+function isAdvocaciaLp(lead) {
+  return normLpPath(pathOnly(lead && lead.pagina)).toLowerCase() === ADVOCACIA_LP_PATH;
+}
+
+function isAdvocaciaFaturamentoInbound(lead) {
+  if (!isAdvocaciaLp(lead)) return false;
+  return ADVOCACIA_FATURAMENTO_INBOUND.has(String(lead.faturamento || "").trim());
+}
+
+function isAdvocaciaFaturamentoMql(lead) {
+  return isAdvocaciaLp(lead) && !isAdvocaciaFaturamentoInbound(lead);
+}
+
+function advocaciaMqlTags(lead) {
+  return withNormaTags(["advocacia-ate-100mil"], lead.pagina).map((tag) =>
+    tag === "ISO 9001" ? "ISO9001" : tag,
+  );
+}
+
+function advocaciaMqlNote(lead) {
+  const faixa = String(lead.faturamento || "").trim();
+  const lines = ["LP ISO 9001 advocacia."];
+  lines.push(faixa ? "Faturamento mensal: " + faixa + "." : "Faturamento mensal não informado.");
+  if (lead.pagina) lines.push(String(lead.pagina));
+  return lines.join("\n");
+}
+
+function advocaciaMqlCustomFields(lead) {
+  const custom_fields = {};
+  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+    const val = lead[field];
+    if (val) custom_fields[key] = val;
+  }
+  return custom_fields;
+}
+
+// LP advocacia, faixa até R$ 100 mil → funil MQL (não INBOUND). Dedup só no MQL.
+async function saveToMqlAdvocacia(lead, env) {
+  if (!isAdvocaciaFaturamentoMql(lead)) return { ok: true, skipped: true, reason: "not_advocacia_mql" };
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+
+  const email = String(lead.email || "").trim().toLowerCase();
+  if (!email || email.indexOf("@") === -1) return { ok: false, error: "invalid_email" };
+
+  const tags = advocaciaMqlTags(lead);
+  const note = advocaciaMqlNote(lead);
+  const custom_fields = advocaciaMqlCustomFields(lead);
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+
+  try {
+    const found = await crmFindLeadsForIsca(token, email, lead.telefone);
+    const existingMql = pickOpenMqlLead(found);
+
+    if (existingMql) {
+      const patch = { tags: mergeLeadTags(existingMql.tags, tags) };
+      const prev = String(existingMql.notes || existingMql.note || "").trim();
+      patch.notes = prev && prev.indexOf(note) === -1 ? prev + "\n\n" + note : prev || note;
+      if (Object.keys(custom_fields).length) patch.custom_fields = custom_fields;
+      const res = await fetch(`${ORBIT_BASE}/leads/${existingMql.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: String(e).slice(0, 140), lead_id: existingMql.id };
+      }
+      return { ok: true, action: "tagged_mql", lead_id: existingMql.id, pipeline_id: ORBIT_MQL_PIPELINE_ID };
+    }
+
+    const body = {
+      title: String(lead.empresa || lead.nome || email),
+      pipeline_id: ORBIT_MQL_PIPELINE_ID,
+      stage_id: ORBIT_MQL_STAGE_NOVO,
+      contact_name: String(lead.nome || email),
+      contact_email: email,
+      source: "LP Advocacia",
+      tags,
+      notes: note,
+    };
+    if (lead.telefone) body.contact_phone = lead.telefone;
+    if (lead.empresa) body.company_name = lead.empresa;
+    if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
+
+    const r = await orbitPostLead(headers, body);
+    if (!r || !r.ok) {
+      const e = r ? await r.text().catch(() => "") : "fetch_failed";
+      return { ok: false, error: String(e).slice(0, 140) };
+    }
+    const d = await r.json().catch(() => ({}));
+    return {
+      ok: true,
+      action: "created",
+      lead_id: (d.data && d.data.id) || d.id || null,
+      pipeline_id: ORBIT_MQL_PIPELINE_ID,
+    };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
 }
 
 // Isca digital → funil MQL (não INBOUND). Dedup só no MQL; outros funis abertos não recebem tag.
