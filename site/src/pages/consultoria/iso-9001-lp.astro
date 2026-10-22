@@ -12,6 +12,7 @@ import d from "../../data/consultoria/iso-9001.js";
 
 const slug = "iso-9001";
 const norma = normas.find((n) => n.slug === slug) || {};
+const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001.";
 const c = norma.color || "var(--orange)";
 const heroChips = [
   { t: "+2.000 empresas certificadas", href: "#resultados" },
@@ -88,7 +89,7 @@ const prazos2026 = [
           <a href="#nova-forma" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
+          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} whatsappLinha={wppLinha} whatsappFixo={true} />
         </div>
       </div>
     </section>
@@ -332,7 +333,7 @@ const prazos2026 = [
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} />
+        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} whatsappLinha={wppLinha} />
       </div>
     </section>
 

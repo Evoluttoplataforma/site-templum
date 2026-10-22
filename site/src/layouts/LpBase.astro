@@ -30,7 +30,7 @@ const allSchemas = schemas;
 <html lang="pt-BR" data-tpl-lp="1">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
     <MetaPixel />
@@ -262,7 +262,7 @@ const allSchemas = schemas;
       };
     </script>
 
-    <script is:inline src="/js/form-funil.js?v=20261014"></script>
+    <script is:inline src="/js/form-funil.js?v=20261022"></script>
     <script is:inline src="/js/tpl-turnstile.js?v=2"></script>
     <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
          depois de confirmar que o Supabase salvou o cadastro. trk.lead()
@@ -461,7 +461,7 @@ const allSchemas = schemas;
     z-index: 100;
     background: var(--navy);
     border-bottom: 1px solid rgba(255,244,221,0.10);
-    padding: 0 clamp(16px, 4vw, 40px);
+    padding: env(safe-area-inset-top, 0px) clamp(16px, 4vw, 40px) 0;
   }
   .lp-header-inner {
     max-width: 1200px;

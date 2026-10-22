@@ -400,7 +400,13 @@
     if (a.getAttribute("data-wpp-ref") === "1") {
       ref = codigoRef();
       normaWpp = normaLimpa(a.getAttribute("data-wpp-norma")) || normaDo(null);
-      var msg = "Olá! Vim pelo site da Templum e quero saber sobre " + normaWpp + ". (ref " + ref + ")";
+      var linha = String(a.getAttribute("data-wpp-linha") || "").replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim();
+      if (!linha) {
+        linha = normaWpp
+          ? "Olá! Vim pelo site da Templum e quero saber sobre " + normaWpp + "."
+          : "Olá! Vim pelo site da Templum.";
+      }
+      var msg = linha + "\nCódigo de atendimento: " + ref;
       try {
         var atual = new URL(a.href, location.origin);
         var fone = (atual.pathname || "").replace(/\D/g, "");

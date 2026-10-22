@@ -18,6 +18,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
 const formTitulo = "Descubra se sua transportadora está preparada para a SASSMAQ 4.0";
 const formSub = "Solicite um diagnóstico com um especialista da Templum e entenda os principais gaps que sua empresa precisa resolver para se adequar às novas exigências.";
 const formCta = "Quero meu diagnóstico SASSMAQ 4.0";
+const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o SASSMAQ 4.0.";
 const ctaCurto = "Quero meu diagnóstico";
 const oferta = [
   "Entenda quais mudanças impactam sua operação",
@@ -105,7 +106,7 @@ const pageSchemas = [
           <a href="#mudancas" class="cs-ver-metodo">Ver o que mudou <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" whatsapp={true} whatsappNorma="SASSMAQ 4.0" />
+          <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" whatsapp={true} whatsappNorma="SASSMAQ 4.0" whatsappLinha={wppLinha} whatsappFixo={true} />
         </div>
       </div>
     </section>
@@ -270,7 +271,7 @@ const pageSchemas = [
             ))}
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" whatsapp={true} whatsappNorma="SASSMAQ 4.0" />
+        <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" whatsapp={true} whatsappNorma="SASSMAQ 4.0" whatsappLinha={wppLinha} />
       </div>
     </section>
   </div>
