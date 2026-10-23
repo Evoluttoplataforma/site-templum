@@ -68,6 +68,24 @@
   .h2{font-size:clamp(1.8rem,3.4vw,2.7rem); margin-bottom:22px}
   .h2 .dot{color:var(--orange)}
   .sec--navy .h2{color:var(--cream)}
+  .sec--navy + .sec--navy{box-shadow:inset 0 1px 0 var(--navy-line)}
+  .sec--navy .ba__title,
+  .sec--navy .ba__after{color:var(--navy)}
+  .sec--navy .ba__before,
+  .sec--navy .ba__row--head span{color:var(--muted)}
+  .sec--navy .ba__row--head span:last-child{color:var(--orange-dark)}
+  .sec--navy .step h3,
+  .sec--navy .deliver h3,
+  .sec--navy .qa q,
+  .sec--navy .steps-close{color:var(--cream)}
+  .sec--navy .step p,
+  .sec--navy .deliver p,
+  .sec--navy .qa p{color:var(--muted-dark)}
+  .sec--navy .steps__rail{background:var(--navy-line)}
+  .sec--navy .step__num{box-shadow:0 0 0 6px var(--navy), inset 0 0 0 2px var(--navy-line)}
+  .sec--navy .step.is-on .step__num{box-shadow:0 0 0 6px var(--navy), 0 14px 26px -12px rgba(0,0,0,.45)}
+  .sec--navy .deliver li,
+  .sec--navy .qa li{border-color:var(--navy-line)}
   .lead{font-size:clamp(1.05rem,1.4vw,1.2rem); line-height:1.6; max-width:58ch}
 
   .pill{
@@ -495,45 +513,8 @@
   </div>
 </section>
 
-<!-- ============ 3. CINCO PASSOS ============ -->
-<section class="sec sec--cream2" aria-labelledby="imersao-title">
-  <div class="wrap">
-    <div class="reveal" style="max-width:820px">
-      <span class="pill pill--light">Imersão SG de Alta Performance</span>
-      <h2 class="h2" id="imersao-title" style="margin-top:22px">Quatro dias. Cinco passos para colocar seu SG em movimento<span class="dot">.</span></h2>
-      <p class="lead">Você não vai apenas conhecer uma metodologia. Vai começar a aplicá-la ao seu próprio Sistema de Gestão, dentro do Templum OS.</p>
-    </div>
-
-    <ol class="steps" id="steps">
-      <span class="steps__rail" aria-hidden="true"><i></i></span>
-      <li class="step reveal">
-        <span class="step__num">01</span>
-        <div><h3>Diagnóstico</h3><p>Descubra o que precisa mudar antes de mudar tudo. Identifique o que já funciona, o que está disperso e onde estão as oportunidades de evolução do seu SG.</p></div>
-      </li>
-      <li class="step reveal d1">
-        <span class="step__num">02</span>
-        <div><h3>Processos</h3><p>Organize o trabalho para não depender de improviso. Comece a estruturar processos e responsabilidades com mais clareza para a operação.</p></div>
-      </li>
-      <li class="step reveal d2">
-        <span class="step__num">03</span>
-        <div><h3>Indicadores</h3><p>Tenha os números que ajudem a decidir. Conecte indicadores à gestão para entender o desempenho e identificar o que precisa de atenção.</p></div>
-      </li>
-      <li class="step reveal d3">
-        <span class="step__num">04</span>
-        <div><h3>Execução</h3><p>Faça o planejamento sair do papel. Organize ações, responsáveis e prioridades para acompanhar o que realmente está acontecendo.</p></div>
-      </li>
-      <li class="step reveal">
-        <span class="step__num">05</span>
-        <div><h3>Evolução</h3><p>Saiba o que avançou e qual é o próximo passo. Visualize o progresso da construção e identifique onde concentrar seus próximos esforços.</p></div>
-      </li>
-    </ol>
-
-    <p class="steps-close reveal">Ao final dos quatro dias, você não terá apenas anotações. Terá seu próprio SG em construção e um caminho para continuar evoluindo.</p>
-  </div>
-</section>
-
 <!-- ============ 4. DA PAREDE PARA A GESTÃO ============ -->
-<section class="sec sec--cream" aria-labelledby="palestra-title">
+<section class="sec sec--navy" aria-labelledby="palestra-title">
   <div class="wrap">
     <div class="reveal" style="max-width:820px">
       <h2 class="h2" id="palestra-title">Palestra não muda um SG. Prática e ferramenta mudam<span class="dot">.</span></h2>
@@ -577,7 +558,7 @@
 </section>
 
 <!-- ============ 4. COMO SAI DO PAPEL ============ -->
-<section class="sec sec--cream2" aria-labelledby="caminho-title">
+<section class="sec sec--cream" aria-labelledby="caminho-title">
   <div class="wrap">
     <div class="reveal" style="max-width:820px">
       <h2 class="h2" id="caminho-title">Como o seu SG sai do papel<span class="dot">.</span></h2>
@@ -611,6 +592,43 @@
   </div>
 </section>
 
+<!-- ============ 3. CINCO PASSOS ============ -->
+<section class="sec sec--navy" aria-labelledby="imersao-title">
+  <div class="wrap">
+    <div class="reveal" style="max-width:820px">
+      <span class="pill pill--light">Imersão SG de Alta Performance</span>
+      <h2 class="h2" id="imersao-title" style="margin-top:22px">Quatro dias. Cinco passos para colocar seu SG em movimento<span class="dot">.</span></h2>
+      <p class="lead">Você não vai apenas conhecer uma metodologia. Vai começar a aplicá-la ao seu próprio Sistema de Gestão, dentro do Templum OS.</p>
+    </div>
+
+    <ol class="steps" id="steps">
+      <span class="steps__rail" aria-hidden="true"><i></i></span>
+      <li class="step reveal">
+        <span class="step__num">01</span>
+        <div><h3>Diagnóstico</h3><p>Descubra o que precisa mudar antes de mudar tudo. Identifique o que já funciona, o que está disperso e onde estão as oportunidades de evolução do seu SG.</p></div>
+      </li>
+      <li class="step reveal d1">
+        <span class="step__num">02</span>
+        <div><h3>Processos</h3><p>Organize o trabalho para não depender de improviso. Comece a estruturar processos e responsabilidades com mais clareza para a operação.</p></div>
+      </li>
+      <li class="step reveal d2">
+        <span class="step__num">03</span>
+        <div><h3>Indicadores</h3><p>Tenha os números que ajudem a decidir. Conecte indicadores à gestão para entender o desempenho e identificar o que precisa de atenção.</p></div>
+      </li>
+      <li class="step reveal d3">
+        <span class="step__num">04</span>
+        <div><h3>Execução</h3><p>Faça o planejamento sair do papel. Organize ações, responsáveis e prioridades para acompanhar o que realmente está acontecendo.</p></div>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">05</span>
+        <div><h3>Evolução</h3><p>Saiba o que avançou e qual é o próximo passo. Visualize o progresso da construção e identifique onde concentrar seus próximos esforços.</p></div>
+      </li>
+    </ol>
+
+    <p class="steps-close reveal">Ao final dos quatro dias, você não terá apenas anotações. Terá seu próprio SG em construção e um caminho para continuar evoluindo.</p>
+  </div>
+</section>
+
 <!-- ============ TEMAS ============ -->
 <section class="sec sec--cream" aria-labelledby="temas-title">
   <div class="wrap">
@@ -628,7 +646,7 @@
 </section>
 
 <!-- ============ 6. ENTREGAS ============ -->
-<section class="sec sec--cream2" aria-labelledby="entregas-title">
+<section class="sec sec--navy" aria-labelledby="entregas-title">
   <div class="wrap">
     <div class="reveal" style="max-width:820px">
       <h2 class="h2" id="entregas-title">Três entregas para mostrar à diretoria<span class="dot">.</span></h2>
@@ -656,14 +674,14 @@
     <h2 class="h2" id="lado-title">Você não precisa convencer a diretoria sozinho<span class="dot">.</span></h2>
     <div class="prose">
       <p class="lead">Identificar oportunidades é uma coisa. Conseguir apoio para colocá-las em prática é outra.</p>
-      <p>Por isso, o time da Templum pode se reunir com a direção da sua empresa. Essa reunião acontece se você tiver interesse em agendá-la. Nela, apresentamos a aplicação com você, esclarecemos dúvidas e discutimos os próximos passos junto com a direção. A Templum está como parceira nesse momento.</p>
+      <p>Por isso, o time da Templum pode se reunir com a direção da sua empresa. Nela, apresentamos a aplicação com você, esclarecemos dúvidas e discutimos os próximos passos junto com a direção. A Templum está como parceira nesse momento.</p>
       <p style="font-weight:700; color:var(--cream)">Você leva o resultado. A gente ajuda a transformar esse resultado em decisão.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 7. QUEM CONSTRÓI ============ -->
-<section class="sec sec--cream2" aria-labelledby="auth-title">
+<section class="sec sec--cream" aria-labelledby="auth-title">
   <div class="wrap">
     <div class="reveal" style="max-width:860px">
       <h2 class="h2" id="auth-title">Quem vai construir essa jornada com você<span class="dot">.</span></h2>
@@ -694,7 +712,7 @@
 </section>
 
 <!-- ============ 8. OBJEÇÕES ============ -->
-<section class="sec sec--cream" aria-labelledby="obj-title">
+<section class="sec sec--navy" aria-labelledby="obj-title">
   <div class="wrap">
     <div class="reveal" style="max-width:820px">
       <h2 class="h2" id="obj-title">Mas…</h2>
@@ -717,7 +735,7 @@
 </section>
 
 <!-- ============ FAQ ============ -->
-<section class="sec sec--cream2" aria-labelledby="faq-title">
+<section class="sec sec--cream" aria-labelledby="faq-title">
   <div class="wrap">
     <div class="reveal" style="max-width:820px">
       <h2 class="h2" id="faq-title">Perguntas frequentes<span class="dot">.</span></h2>
