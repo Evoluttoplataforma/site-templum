@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qualidade: impulsionando o desempenho · Mês da Qualidade Templum 2026</title>
+<meta name="description" content="De 3 a 6 de novembro, parta do SG que já tem e prepare, com a Templum, uma evolução que a direção consiga enxergar.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.png">
+<link rel="canonical" href="https://templum.com.br/mes-da-qualidade-2026-v2/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens (identidade Templum) ---------- */
+  :root{
+    --navy:#222831;
+    --navy-2:#2C333E;
+    --navy-line:rgba(253,164,125,.22);
+    --orange:#FF5925;
+    --orange-dark:#AF4022;
+    --orange-light:#FDA47D;
+    --peach:#FDD88C;
+    --brown:#4F251B;
+    --cream:#FFFAEB;
+    --cream-2:#FFF4DD;
+    --ink:#18191B;
+    --muted:#5A5249;
+    --muted-dark:#C4CAD3;
+    --line-light:rgba(79,37,27,.16);
+    --radius:16px;
+    --shadow-warm:0 40px 80px -36px rgba(79,37,27,.42), 0 12px 28px -18px rgba(79,37,27,.28);
+    --shadow-dark:0 40px 80px -30px rgba(0,0,0,.6);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --gutter:16px;
+    --max:1180px;
+  }
+  @media (min-width:768px){ :root{ --gutter:40px; } }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scrollbar-color:var(--orange-dark) var(--cream-2); overflow-x:hidden}
+  body{
+    margin:0;
+    font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    font-size:17px; line-height:1.65; color:var(--ink);
+    background:var(--cream);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--orange); color:var(--navy)}
+  img,svg{display:block; max-width:100%}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--orange); outline-offset:3px; border-radius:6px}
+
+  h1,h2,h3{margin:0; font-weight:800; letter-spacing:-0.03em; text-wrap:balance; line-height:1.12}
+  p{margin:0}
+  .wrap{width:100%; max-width:var(--max); margin-inline:auto; padding-inline:var(--gutter)}
+  .measure{max-width:64ch}
+
+  /* ---------- Sections & rhythm ---------- */
+  .sec{padding-block:clamp(72px,11vw,140px); position:relative}
+  .sec--navy{background:var(--navy); color:var(--cream)}
+  .sec--cream{background:var(--cream)}
+  .sec--cream2{background:var(--cream-2)}
+  .sec--navy p{color:var(--muted-dark)}
+  .sec--cream p, .sec--cream2 p{color:var(--muted)}
+
+  .h2{font-size:clamp(1.8rem,3.4vw,2.7rem); margin-bottom:22px}
+  .h2 .dot{color:var(--orange)}
+  .sec--navy .h2{color:var(--cream)}
+  .lead{font-size:clamp(1.05rem,1.4vw,1.2rem); line-height:1.6; max-width:58ch}
+
+  .pill{
+    display:inline-flex; flex-wrap:wrap; align-items:center; gap:10px 12px;
+    font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    padding:9px 16px; border-radius:999px;
+  }
+  .pill--dark{background:rgba(255,89,37,.12); color:var(--orange-light); box-shadow:inset 0 0 0 1px var(--navy-line)}
+  .pill--light{background:var(--cream-2); color:var(--orange-dark); box-shadow:inset 0 0 0 1px var(--line-light)}
+  .pill .sep{width:4px; height:4px; border-radius:50%; background:currentColor; opacity:.6}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:12px;
+    font:inherit; font-weight:800; font-size:15px; letter-spacing:.02em;
+    color:var(--navy); background:var(--orange);
+    padding:18px 30px; border-radius:999px; border:0; cursor:pointer; text-decoration:none;
+    box-shadow:0 18px 32px -18px rgba(24,25,27,.55);
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+  }
+  .btn:hover{transform:translateY(-2px); background:#ff6d3d; box-shadow:0 24px 40px -18px rgba(24,25,27,.6)}
+  .btn:active{transform:translateY(0) scale(.98)}
+  .btn svg{transition:transform .3s var(--ease)}
+  .btn:hover svg{transform:translateX(4px)}
+  .btn--block{width:100%}
+  .btn--ghost{background:transparent; color:var(--cream); box-shadow:inset 0 0 0 1.5px rgba(255,250,235,.35)}
+  .btn--ghost:hover{background:rgba(255,250,235,.06); box-shadow:inset 0 0 0 1.5px var(--orange-light)}
+
+  /* ---------- Header ---------- */
+  .top{
+    position:absolute; inset:0 0 auto 0; z-index:10;
+    padding-block:22px;
+  }
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px}
+  .wordmark{font-weight:800; font-size:20px; letter-spacing:-0.02em; color:var(--cream); text-decoration:none; display:inline-flex; align-items:center; gap:10px}
+  .wordmark i{width:10px; height:10px; border-radius:50%; background:var(--orange); display:inline-block; transform:translateY(1px)}
+  .top__tag{font-size:13px; font-weight:600; color:var(--muted-dark); white-space:nowrap}
+  .top__right{display:flex; align-items:center; gap:18px}
+  .logo{display:block; height:auto; width:auto; max-height:38px}
+  .top .logo{max-height:38px}
+  .btn--sm{font-size:13px; padding:11px 20px; box-shadow:none}
+  .btn--sm:hover{box-shadow:none}
+  @media (max-width:640px){ .top__right .top__tag{display:none} }
+
+  /* ---------- Hero ---------- */
+  .hero{background:var(--navy); color:var(--cream); padding-top:132px; padding-bottom:clamp(64px,9vw,112px); overflow:hidden; isolation:isolate}
+  .hero::before{
+    content:""; position:absolute; inset:-20% -10% auto auto; width:min(900px,120vw); height:900px; z-index:-1;
+    background:radial-gradient(closest-side, rgba(255,89,37,.22), rgba(255,89,37,0) 70%);
+    pointer-events:none;
+  }
+  .hero__grid{display:grid; gap:36px; align-items:start; max-width:860px}
+  .hero__copy{display:grid; gap:16px}
+  .hero__copy .hero__lead{margin:0}
+  .hero__cta{display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px; margin-top:8px}
+  .hero .dates{margin-top:8px}
+  .hero__cta span{font-size:14px; color:var(--muted-dark)}
+
+  /* ---------- Formulário ---------- */
+  .form-sec{background:var(--cream-2)}
+  .form-wrap{max-width:560px; margin-inline:auto}
+  .form-head{font-size:clamp(2rem,4vw,2.6rem); color:var(--orange); margin-bottom:8px}
+  .form-sub{font-size:15px; color:var(--muted); margin-bottom:22px}
+  .form-date{
+    font-size:14px; font-weight:700; color:var(--navy); background:var(--peach);
+    border-radius:12px; padding:12px 16px; margin-bottom:26px;
+  }
+  .form-card{
+    background:var(--cream); color:var(--ink); border-radius:24px; padding:clamp(26px,4vw,40px);
+    box-shadow:var(--shadow-warm);
+  }
+  .field select{
+    font:inherit; font-size:16px; color:var(--ink); appearance:none; -webkit-appearance:none;
+    background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23222831' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 16px center;
+    border:1.5px solid rgba(79,37,27,.2); border-radius:12px; padding:14px 44px 14px 16px; min-height:52px; width:100%;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field select:focus{outline:none; border-color:var(--orange-dark); box-shadow:0 0 0 4px rgba(255,89,37,.18)}
+  .form-card .btn--block{margin-top:12px; font-size:15px}
+  .form-foot{font-size:12.5px; color:var(--muted); text-align:center; margin-top:16px}
+  .form-foot a{color:var(--orange-dark)}
+  .deliver{list-style:none; padding:0; margin:56px 0 0; display:grid; gap:0}
+  .deliver li{display:grid; grid-template-columns:56px 1fr; gap:20px; align-items:start; padding:30px 0; border-top:1px solid var(--line-light)}
+  .deliver li:last-child{border-bottom:1px solid var(--line-light)}
+  .deliver__n{font-size:14px; font-weight:800; color:var(--orange-dark); padding-top:6px}
+  .deliver h3{font-size:clamp(1.2rem,1.8vw,1.4rem); color:var(--navy); margin-bottom:8px}
+  .deliver p{font-size:16px; color:var(--muted); max-width:60ch}
+  .ba{margin-top:72px; background:var(--cream-2); border-radius:24px; padding:clamp(26px,4vw,48px)}
+  .ba__title{font-size:clamp(1.3rem,2vw,1.6rem); color:var(--navy); margin-bottom:24px}
+  .ba__row{display:grid; gap:6px; padding:16px 0; border-top:1px solid var(--line-light)}
+  .ba__row--head{border-top:0; padding-top:0; font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  .ba__row--head span:last-child{color:var(--orange-dark)}
+  .ba__before{font-size:16px; color:var(--muted); text-decoration:line-through; text-decoration-color:rgba(90,82,73,.45)}
+  .ba__after{font-size:16px; font-weight:600; color:var(--navy)}
+  .force{margin-top:72px; display:grid; gap:18px; max-width:760px}
+  .force h3{font-size:clamp(1.5rem,2.6vw,2rem); color:var(--navy)}
+  .force p{font-size:17px; color:var(--muted)}
+  @media (min-width:760px){
+    .ba__row{grid-template-columns:1fr 1fr; gap:32px; align-items:center}
+    .ba__row--head{grid-template-columns:1fr 1fr; gap:32px}
+  }
+  .cron{list-style:none; padding:0 0 8px; margin:0; display:grid; gap:18px}
+  .cron li{display:grid; grid-template-columns:64px 1fr; gap:16px; align-items:start}
+  .cron b{font-size:15px; font-weight:800; color:var(--orange-dark); padding-top:2px}
+  .cron strong{display:block; font-size:16px; color:var(--navy); margin-bottom:4px}
+  .cron p{font-size:15px; color:var(--muted)}
+  .illus{margin:0}
+  .illus img{width:100%; height:auto; border-radius:24px; box-shadow:var(--shadow-warm)}
+  .person__photo{width:72px; height:72px; border-radius:50%; object-fit:cover; object-position:center 20%; box-shadow:0 0 0 3px var(--cream-2)}
+  .hero h1{font-size:clamp(2.1rem,4.2vw,3.4rem); margin:0; color:var(--cream)}
+  .hero h1 .dot{color:var(--orange)}
+  .hero__lead{font-size:clamp(1.02rem,1.3vw,1.14rem); color:var(--muted-dark); max-width:54ch}
+  .hero__lead strong{color:var(--cream); font-weight:700}
+  .dates{
+    display:flex; flex-wrap:wrap; gap:14px 40px; margin-top:40px; padding-top:28px;
+    border-top:1px solid var(--navy-line);
+  }
+  .dates div{display:grid; gap:4px}
+  .dates b{font-size:clamp(1.5rem,2.6vw,2.1rem); font-weight:800; letter-spacing:-0.02em; color:var(--cream)}
+  .dates span{font-size:13px; color:var(--muted-dark)}
+
+  /* ---------- Form card ---------- */
+  .form-card{
+    background:var(--cream); color:var(--ink);
+    border-radius:24px; padding:clamp(28px,3.4vw,40px);
+    box-shadow:var(--shadow-dark);
+    position:relative;
+  }
+  .form-card h2{font-size:clamp(1.5rem,2.3vw,1.85rem); margin-bottom:10px; color:var(--navy)}
+  .form-card > p{color:var(--muted); font-size:15px; margin-bottom:24px}
+  .field{display:grid; gap:7px; margin-bottom:16px}
+  .field label{font-size:13px; font-weight:700; color:var(--navy)}
+  .field input{
+    font:inherit; font-size:16px; color:var(--ink);
+    background:#fff; border:1.5px solid rgba(79,37,27,.2); border-radius:12px;
+    padding:14px 16px; min-height:52px; width:100%;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input::placeholder{color:#7C7267}
+  .field input:focus{outline:none; border-color:var(--orange-dark); box-shadow:0 0 0 4px rgba(255,89,37,.18)}
+  .form-card .btn{margin-top:8px}
+  .form-note{font-size:12.5px; color:var(--muted); margin-top:14px; text-align:center}
+  .form-msg{font-size:14px; color:var(--orange-dark); font-weight:600; margin-top:12px; min-height:1.4em}
+
+  /* ---------- Hero stat strip ---------- */
+  .strip{margin-top:clamp(64px,8vw,96px); display:grid; gap:0; grid-template-columns:1fr}
+  @media (min-width:700px){ .strip{grid-template-columns:repeat(3,1fr)} }
+  .strip div{padding:26px 0; border-top:1px solid var(--navy-line); display:grid; gap:6px}
+  @media (min-width:700px){ .strip div{padding:26px 28px} .strip div:first-child{padding-left:0} }
+  .strip b{font-size:17px; font-weight:800; color:var(--cream)}
+  .strip span{font-size:14.5px; color:var(--muted-dark)}
+
+  /* ---------- Diferencial ---------- */
+  .split{display:grid; gap:56px; align-items:center}
+  @media (min-width:960px){ .split{grid-template-columns:1fr 1fr; gap:88px} }
+  .illus-col{display:grid; gap:36px; align-content:center}
+  .questions{display:grid; gap:0; margin:0; padding:0; list-style:none}
+  .questions li{
+    font-size:clamp(1.15rem,2vw,1.4rem); font-weight:700; color:var(--navy); letter-spacing:-0.01em;
+    padding:14px 0; border-bottom:1px solid var(--line-light);
+  }
+  .questions li:last-child{border-bottom:0}
+  .answer{margin:-12px 0 0; font-size:clamp(1.05rem,1.5vw,1.2rem); font-weight:700; color:var(--orange-dark); line-height:1.4}
+
+  /* illustrative Templum OS window */
+  .os{
+    background:var(--navy); color:var(--cream);
+    border-radius:24px; overflow:hidden; box-shadow:var(--shadow-warm);
+    position:relative;
+  }
+  .os__bar{display:flex; align-items:center; justify-content:space-between; padding:16px 22px; border-bottom:1px solid var(--navy-line)}
+  .os__dots{display:flex; gap:7px}
+  .os__dots i{width:10px; height:10px; border-radius:50%; background:rgba(255,250,235,.22)}
+  .os__title{font-size:13px; font-weight:700; color:var(--muted-dark)}
+  .os__body{padding:26px 24px 28px; display:grid; gap:18px}
+  .os__head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .os__head h3{font-size:19px; color:var(--cream)}
+  .os__head span{font-size:13px; color:var(--orange-light); font-weight:700}
+  .mod{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center}
+  .mod__n{font-size:13px; font-weight:800; color:var(--orange-light); width:26px}
+  .mod__name{font-size:15px; font-weight:600; color:var(--cream)}
+  .mod__bar{height:8px; border-radius:99px; background:rgba(255,250,235,.1); overflow:hidden; grid-column:2 / 3; margin-top:-6px}
+  .mod__bar i{display:block; height:100%; width:var(--w); background:linear-gradient(90deg,var(--orange-dark),var(--orange)); border-radius:99px; transform-origin:left; transform:scaleX(0); transition:transform 1.4s var(--ease)}
+  .is-in .mod__bar i{transform:scaleX(1)}
+  .mod__pct{font-size:13px; font-weight:700; color:var(--muted-dark); font-variant-numeric:tabular-nums}
+  .os__foot{font-size:12.5px; color:var(--muted-dark); border-top:1px solid var(--navy-line); padding-top:16px}
+  .os__tag{
+    position:absolute; top:76px; right:18px; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--navy); background:var(--peach); padding:6px 10px; border-radius:999px;
+  }
+
+  /* ---------- Imersão timeline ---------- */
+  .steps{position:relative; display:grid; gap:40px; margin-top:64px; list-style:none; padding:0}
+  .steps__rail{position:absolute; background:var(--line-light); border-radius:2px}
+  .steps__rail i{position:absolute; inset:0; background:var(--orange); border-radius:2px; transform-origin:top left; transform:scaleY(var(--p,0)); transition:transform .2s linear}
+  @media (min-width:960px){
+    .steps{grid-template-columns:repeat(5,1fr); gap:28px}
+    .steps__rail{top:27px; left:6%; right:6%; height:3px}
+    .steps__rail i{transform:scaleX(var(--p,0)); transform-origin:left center}
+  }
+  @media (max-width:959px){
+    .steps__rail{left:27px; top:28px; bottom:28px; width:3px}
+    .steps__rail i{transform-origin:top center}
+  }
+  .step{position:relative; display:grid; grid-template-columns:56px 1fr; gap:20px; align-items:start}
+  @media (min-width:960px){ .step{grid-template-columns:1fr; gap:20px} }
+  .step__num{
+    width:56px; height:56px; border-radius:50%; display:grid; place-items:center;
+    background:var(--cream); color:var(--orange-dark); font-weight:800; font-size:16px;
+    box-shadow:0 0 0 6px var(--cream-2), inset 0 0 0 2px var(--line-light);
+    transition:background .4s var(--ease), color .4s var(--ease), box-shadow .4s var(--ease);
+    position:relative; z-index:1;
+  }
+  .step.is-on .step__num{background:var(--orange); color:var(--navy); box-shadow:0 0 0 6px var(--cream-2), 0 14px 26px -12px rgba(79,37,27,.55)}
+  .step h3{font-size:clamp(1.2rem,1.7vw,1.35rem); margin:6px 0 10px; color:var(--navy)}
+  .step p{font-size:15px; color:var(--muted); line-height:1.6}
+  .steps-close{margin-top:64px; font-size:clamp(1.15rem,1.8vw,1.35rem); font-weight:700; color:var(--navy); max-width:46ch}
+
+  /* ---------- Benefícios ---------- */
+  .benefits{display:grid; gap:56px; align-items:start}
+  @media (min-width:960px){ .benefits{grid-template-columns:.9fr 1.1fr; gap:96px} }
+  .checks{list-style:none; padding:0; margin:0; display:grid; gap:0}
+  .checks li{
+    display:grid; grid-template-columns:34px 1fr; gap:16px; align-items:center;
+    padding:22px 0; border-bottom:1px solid var(--navy-line);
+    font-size:clamp(1.02rem,1.5vw,1.16rem); font-weight:600; color:var(--cream);
+  }
+  .checks li:first-child{border-top:1px solid var(--navy-line)}
+  .checks svg{width:34px; height:34px}
+  .closing-big{margin-top:72px; font-size:clamp(1.6rem,3.4vw,2.8rem); font-weight:800; letter-spacing:-0.03em; line-height:1.15; color:var(--cream); max-width:24ch}
+  .closing-big .dot{color:var(--orange)}
+  .closing-big em{font-style:normal; color:var(--orange-light)}
+
+  /* ---------- Mês continua ---------- */
+  .journey{display:grid; gap:0; margin-top:56px; list-style:none; padding:0}
+  .journey li{display:grid; gap:10px; padding:30px 0; border-top:1px solid var(--line-light)}
+  @media (min-width:880px){
+    .journey li{grid-template-columns:260px 1fr; gap:48px; align-items:baseline}
+  }
+  .journey time{font-size:clamp(1.25rem,2.2vw,1.7rem); font-weight:800; color:var(--navy); letter-spacing:-0.02em; line-height:1.2}
+  .journey time small{display:block; font-size:13px; font-weight:700; color:var(--orange-dark); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px}
+  .journey p{font-size:16px; color:var(--muted); max-width:56ch}
+  .journey h3{font-size:19px; color:var(--navy); margin-bottom:6px}
+  .support{margin-top:48px; display:grid; gap:36px; font-size:clamp(1.1rem,1.6vw,1.25rem); font-weight:700; color:var(--navy)}
+  @media (min-width:880px){ .support{grid-template-columns:1fr 1fr; gap:64px} }
+  .support p{font-weight:500; font-size:16px; color:var(--muted); margin-top:8px}
+  .support b{display:block; font-size:clamp(1.25rem,2vw,1.5rem); letter-spacing:-0.02em}
+
+  /* ---------- Objeções ---------- */
+  .qa{display:grid; gap:0; margin-top:56px; list-style:none; padding:0}
+  .qa li{padding:34px 0; border-top:1px solid var(--line-light)}
+  .qa li:last-child{border-bottom:1px solid var(--line-light)}
+  .qa q{display:block; quotes:"“" "”"; font-size:clamp(1.3rem,2.4vw,1.8rem); font-weight:800; letter-spacing:-0.02em; color:var(--navy); line-height:1.25; margin-bottom:14px; max-width:30ch}
+  .qa p{font-size:16px; color:var(--muted); max-width:60ch}
+  .qa p + p{margin-top:10px}
+  .qa__final{margin-top:52px; font-size:clamp(1.25rem,2.2vw,1.6rem); font-weight:800; color:var(--orange-dark); letter-spacing:-0.02em}
+
+  /* ---------- Calculadora ---------- */
+  .calc{
+    display:grid; gap:40px; align-items:center;
+    background:var(--navy-2); border-radius:28px; padding:clamp(28px,4vw,56px);
+    box-shadow:var(--shadow-dark); margin-top:56px;
+  }
+  @media (min-width:960px){ .calc{grid-template-columns:1fr 1fr; gap:72px} }
+  .calc__head{font-size:13px; font-weight:700; color:var(--orange-light); letter-spacing:.06em; text-transform:uppercase}
+  .calc__score{font-size:clamp(4rem,9vw,6.5rem); font-weight:800; letter-spacing:-0.05em; line-height:1; color:var(--cream); font-variant-numeric:tabular-nums}
+  .calc__score span{font-size:.45em; color:var(--orange); letter-spacing:0; margin-left:4px}
+  .calc__stage{font-size:clamp(1.1rem,1.8vw,1.3rem); font-weight:700; color:var(--cream); margin-top:6px}
+  .calc__track{height:12px; border-radius:99px; background:rgba(255,250,235,.1); overflow:hidden; margin-top:22px}
+  .calc__track i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--orange-dark),var(--orange)); border-radius:99px; transition:width .6s var(--ease)}
+  .calc__note{font-size:13px; color:var(--muted-dark); margin-top:18px}
+  .toggles{display:grid; gap:10px}
+  .toggle{
+    display:flex; align-items:center; gap:14px; width:100%;
+    font:inherit; font-size:15.5px; font-weight:600; text-align:left; color:var(--cream);
+    background:rgba(255,250,235,.04); border:1.5px solid rgba(255,250,235,.12); border-radius:14px;
+    padding:15px 18px; cursor:pointer; min-height:56px;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .toggle:hover{border-color:rgba(253,164,125,.55)}
+  .toggle[aria-pressed="true"]{border-color:var(--orange); background:rgba(255,89,37,.12)}
+  .toggle .box{width:22px; height:22px; border-radius:7px; display:grid; place-items:center; box-shadow:inset 0 0 0 1.5px rgba(255,250,235,.4); flex-shrink:0; transition:background .2s ease, box-shadow .2s ease}
+  .toggle[aria-pressed="true"] .box{background:var(--orange); box-shadow:none}
+  .toggle .box svg{opacity:0; transition:opacity .2s ease}
+  .toggle[aria-pressed="true"] .box svg{opacity:1}
+
+  /* ---------- Autoridade ---------- */
+  .people{display:grid; gap:20px; margin-top:56px}
+  @media (min-width:880px){ .people{grid-template-columns:1fr 1fr; gap:28px} }
+  .person{
+    background:#fff; border-radius:var(--radius); padding:clamp(26px,3vw,36px);
+    box-shadow:var(--shadow-warm); display:grid; gap:18px; align-content:start;
+  }
+  .person__mono{
+    width:72px; height:72px; border-radius:50%; display:grid; place-items:center;
+    background:var(--navy); color:var(--orange); font-weight:800; font-size:24px; letter-spacing:-0.02em;
+  }
+  .person h3{font-size:clamp(1.3rem,2vw,1.6rem); color:var(--navy)}
+  .person__role{font-size:13px; font-weight:700; color:var(--orange-dark); letter-spacing:.04em; margin-top:4px}
+  .person p{font-size:15.5px; color:var(--muted)}
+  .proof{display:grid; gap:0; margin-top:56px}
+  @media (min-width:700px){ .proof{grid-template-columns:repeat(2,1fr)} }
+  .proof div{padding:30px 0; border-top:1px solid var(--line-light)}
+  @media (min-width:700px){ .proof div{padding:34px 32px 0 0} }
+  .proof b{display:block; font-size:clamp(2.6rem,5.4vw,4rem); font-weight:800; letter-spacing:-0.05em; line-height:1; color:var(--navy)}
+  .proof b em{font-style:normal; color:var(--orange)}
+  .proof span{display:block; margin-top:10px; font-size:15px; color:var(--muted)}
+  .authority-close{margin-top:56px; font-size:clamp(1.2rem,2vw,1.5rem); font-weight:700; color:var(--navy); max-width:40ch; letter-spacing:-0.01em}
+
+  /* ---------- FAQ ---------- */
+  .faq{margin-top:56px; display:grid; gap:0}
+  .faq details{border-top:1px solid var(--line-light); padding:0}
+  .faq details:last-child{border-bottom:1px solid var(--line-light)}
+  .faq summary{
+    list-style:none; cursor:pointer; padding:24px 56px 24px 0; position:relative;
+    font-size:clamp(1.02rem,1.5vw,1.14rem); font-weight:700; color:var(--navy); line-height:1.4;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{
+    content:""; position:absolute; right:6px; top:50%; width:14px; height:14px; margin-top:-7px;
+    background:
+      linear-gradient(var(--orange-dark),var(--orange-dark)) center/14px 2px no-repeat,
+      linear-gradient(var(--orange-dark),var(--orange-dark)) center/2px 14px no-repeat;
+    transition:transform .35s var(--ease);
+  }
+  .faq details[open] summary::after{transform:rotate(45deg)}
+  .faq details p{padding:0 40px 26px 0; font-size:15.5px; color:var(--muted); max-width:66ch}
+  .faq summary:focus-visible{outline-offset:-3px}
+
+  /* ---------- Final CTA ---------- */
+  .final{background:var(--navy); color:var(--cream); text-align:left; overflow:hidden; position:relative; isolation:isolate}
+  .final::before{
+    content:""; position:absolute; left:50%; bottom:-40%; transform:translateX(-50%); width:min(1100px,160vw); height:760px; z-index:-1;
+    background:radial-gradient(closest-side, rgba(255,89,37,.26), rgba(255,89,37,0) 70%);
+  }
+  .final h2{font-size:clamp(1.9rem,3.8vw,3rem); color:var(--cream); margin-bottom:24px; max-width:18em}
+  .final h2 .dot{color:var(--orange)}
+  .final p{color:var(--muted-dark)}
+  .final .lead{margin-bottom:44px}
+  .final__row{display:flex; flex-wrap:wrap; gap:20px 28px; align-items:center}
+  .final__row small{font-size:14px; color:var(--muted-dark)}
+  .footer{background:var(--navy); color:var(--muted-dark); padding-block:28px; border-top:1px solid var(--navy-line); font-size:13px}
+  .footer .wrap{display:flex; flex-wrap:wrap; gap:12px 28px; justify-content:space-between; align-items:center}
+
+  /* ---------- Motion (single authored moment + reveals) ---------- */
+  .js .reveal{opacity:0; transform:translateY(22px); transition:opacity .9s var(--ease), transform .9s var(--ease)}
+  .js .reveal.is-in{opacity:1; transform:none}
+  .js .reveal.d1{transition-delay:.08s}
+  .js .reveal.d2{transition-delay:.16s}
+  .js .reveal.d3{transition-delay:.24s}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition-duration:.01ms !important; animation:none !important}
+    .js .reveal{opacity:1; transform:none}
+  }
+
+  .prose{display:grid; gap:16px; max-width:62ch}
+  .prose p{margin:0}
+
+  /* mobile polish */
+  @media (max-width:520px){
+    .top__tag{display:none}
+    .btn{width:100%}
+    .hero{padding-top:110px}
+    .dates{gap:18px 28px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. HERO ============ -->
+<header class="hero" id="topo">
+  <div class="top">
+    <div class="wrap">
+      <a href="#topo" aria-label="Templum"><img class="logo" src="../mes-da-qualidade-2026/logo-templum.png" alt="Templum" width="150" height="50"></a>
+      <div class="top__right">
+        <a class="btn btn--sm" href="#formulario">Garantir minha vaga</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <span class="pill pill--dark">Mês da Qualidade Templum 2026</span>
+        <h1>Qualidade: impulsionando o desempenho<span class="dot">.</span></h1>
+        <p class="hero__lead"><strong>Você quer que a qualidade impulsione o desempenho.</strong> Vamos ajudar você a fazer essa mudança acontecer.</p>
+        <p class="hero__lead">Seu sistema de gestão já existe. Você mantém documentos, acompanha processos, cobra ações e prepara a empresa para as auditorias.</p>
+        <p class="hero__lead">Mas você quer que esse trabalho vá além: que os indicadores orientem decisões, que as áreas participem e que a direção enxergue a contribuição da qualidade para os resultados.</p>
+        <p class="hero__lead">Você sabe aonde quer chegar. O desafio é conseguir transformar essa visão em uma mudança concreta dentro da empresa.</p>
+        <p class="hero__lead">Durante o Mês da Qualidade, você vai partir do SG que já tem para aplicar uma forma mais conectada de fazer gestão no Templum OS, com orientação especializada. E terá apoio para apresentar essa evolução à alta direção.</p>
+      </div>
+
+      <div class="hero__cta">
+        <a class="btn" href="#formulario">Garantir minha vaga gratuita
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="dates">
+        <div><b>3 a 6 de nov.</b><span>Imersão prática</span></div>
+        <div><b>Ao longo do mês</b><span>Encontros</span></div>
+        <div><b>30 dias</b><span>De acesso ao Templum OS</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 2. A REALIDADE ============ -->
+<section class="sec sec--cream" aria-labelledby="realidade-title">
+  <div class="wrap split">
+    <div class="reveal">
+      <span class="pill pill--light">A realidade de quem conduz a Qualidade</span>
+      <h2 class="h2" id="realidade-title" style="margin-top:22px">Seu trabalho já faz a Qualidade avançar<span class="dot">.</span></h2>
+      <p class="lead">Mas você sabe que ela pode ir além.</p>
+      <div class="prose" style="margin-top:22px">
+        <p>Quando as informações estão espalhadas entre planilhas, documentos e sistemas, uma parte importante do seu tempo é dedicada a consolidar dados, buscar atualizações e cobrar retornos.</p>
+        <p>A auditoria se aproxima, as pendências ganham prioridade e o acompanhamento do desempenho acaba ficando para depois.</p>
+        <p>Você conhece essa realidade. E sabe o que gostaria de fazer diferente.</p>
+        <p>Neste Mês da Qualidade, a proposta é trabalhar nessa mudança com informações da sua empresa, orientação para avançar e uma aplicação prática que você possa mostrar a quem decide.</p>
+      </div>
+    </div>
+    <div class="reveal d2">
+      <figure class="illus">
+        <img src="../mes-da-qualidade-2026/hero-templum-os.webp" width="1672" height="941" loading="lazy" alt="Planilhas, documentos e sistemas reunidos no Templum OS, com processos, indicadores e o progresso do SG em um painel">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. A IMERSÃO ============ -->
+<section class="sec sec--cream2" aria-labelledby="imersao-title">
+  <div class="wrap">
+    <div class="reveal" style="max-width:820px">
+      <span class="pill pill--light">De 3 a 6 de novembro</span>
+      <h2 class="h2" id="imersao-title" style="margin-top:22px">Quatro dias para começar a construir a evolução que você quer ver na sua empresa<span class="dot">.</span></h2>
+      <p class="lead">Durante a Imersão SG de Alta Performance, você começa a aplicar a metodologia ao seu próprio sistema de gestão dentro do Templum OS.</p>
+      <p class="measure" style="margin-top:18px">Se hoje você usa planilhas, documentos ou outro software, esse é o seu ponto de partida. Você pode participar sem abandonar os controles que utiliza e sem precisar migrar todo o SG durante os quatro dias.</p>
+    </div>
+
+    <ol class="steps" id="steps">
+      <span class="steps__rail" aria-hidden="true"><i></i></span>
+      <li class="step reveal">
+        <span class="step__num">01</span>
+        <div><h3>Diagnóstico</h3><p>Entenda onde vale concentrar seus esforços. Identifique o que já funciona no seu SG, onde as informações estão dispersas e quais oportunidades merecem atenção.</p></div>
+      </li>
+      <li class="step reveal d1">
+        <span class="step__num">02</span>
+        <div><h3>Processos</h3><p>Dê visibilidade ao trabalho e às responsabilidades. Trabalhe com os processos da sua empresa para conectar informações e deixar mais claro quem responde por cada atividade.</p></div>
+      </li>
+      <li class="step reveal d2">
+        <span class="step__num">03</span>
+        <div><h3>Indicadores</h3><p>Conecte os números às decisões. Organize indicadores para acompanhar o desempenho e identificar o que precisa de atenção.</p></div>
+      </li>
+      <li class="step reveal d3">
+        <span class="step__num">04</span>
+        <div><h3>Execução</h3><p>Acompanhe o que acontece depois do planejamento. Conecte ações, responsáveis e prioridades para visualizar os encaminhamentos e acompanhar sua execução.</p></div>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">05</span>
+        <div><h3>Evolução</h3><p>Enxergue os avanços e os próximos passos. Avalie o progresso da aplicação e identifique onde concentrar os próximos esforços.</p></div>
+      </li>
+    </ol>
+
+    <p class="steps-close reveal">Ao final da imersão, você terá iniciado essa aplicação com dados da sua empresa e terá um caminho para continuar avançando.</p>
+  </div>
+</section>
+
+<!-- ============ 4. O MÊS CONTINUA ============ -->
+<section class="sec sec--cream" aria-labelledby="mes-title">
+  <div class="wrap">
+    <div class="reveal" style="max-width:820px">
+      <span class="pill pill--light">Depois dos quatro dias</span>
+      <h2 class="h2" id="mes-title" style="margin-top:22px">A experiência continua depois da imersão<span class="dot">.</span></h2>
+      <p class="lead">E a construção também.</p>
+      <div class="prose" style="margin-top:22px">
+        <p>A primeira semana é o ponto de partida. Nas semanas seguintes, você continua atualizando as informações do seu SG, estruturando indicadores e avançando na aplicação, com acompanhamento da Templum.</p>
+        <p>O objetivo é chegar ao final de novembro com uma demonstração baseada nos dados da sua empresa, que ajude a apresentar à direção as possibilidades de evolução da gestão.</p>
+        <p>Você também terá 30 dias de acesso ao Templum OS, poderá acompanhar seus avanços com a Calculadora de Progresso e participar dos encontros com especialistas ao longo do mês.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:56px; max-width:820px">
+      <h3 class="ba__title">Ao longo de novembro, os encontros com especialistas aprofundam temas ligados a essa evolução<span class="dot">.</span></h3>
+    </div>
+    <ul class="cron reveal" style="margin-top:28px">
+      <li><b>09/11</b><div><strong>Performance de Processos e Valor</strong><p>Conexão entre processos, equipes, tecnologia e o que o cliente espera.</p></div></li>
+      <li><b>16/11</b><div><strong>Performance na Execução</strong><p>Responsabilidades claras e equipes trabalhando juntas.</p></div></li>
+      <li><b>23/11</b><div><strong>Performance de Indicadores e Melhoria</strong><p>Medições para orientar decisões e definir prioridades.</p></div></li>
+      <li><b>30/11</b><div><strong>Performance com IA e melhoria contínua</strong><p>Inteligência artificial como apoio ao método e à melhoria da gestão.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 5. ENTREGAS ============ -->
+<section class="sec sec--cream2" aria-labelledby="entregas-title">
+  <div class="wrap">
+    <div class="reveal" style="max-width:820px">
+      <span class="pill pill--light">O que você leva à direção</span>
+      <h2 class="h2" id="entregas-title" style="margin-top:22px">Transforme essa experiência em uma proposta para a direção<span class="dot">.</span></h2>
+      <p class="lead">Durante a jornada, você trabalha para reunir três entregas.</p>
+    </div>
+
+    <ul class="deliver">
+      <li class="reveal">
+        <span class="deliver__n">01</span>
+        <div><h3>Seu SG aplicado no Templum OS</h3><p>Processos, responsáveis, ações e indicadores com informações reais da sua empresa, conforme você avança na aplicação.</p></div>
+      </li>
+      <li class="reveal d1">
+        <span class="deliver__n">02</span>
+        <div><h3>Um painel para acompanhar a gestão</h3><p>Informações organizadas para visualizar o SG e apoiar decisões, reduzindo a dependência de consolidações em planilhas.</p></div>
+      </li>
+      <li class="reveal d2">
+        <span class="deliver__n">03</span>
+        <div><h3>Um caso de negócio para apresentar à diretoria</h3><p>O cenário atual, as oportunidades identificadas e um plano de evolução do SG, construídos com os dados da sua empresa.</p></div>
+      </li>
+    </ul>
+
+    <p class="steps-close reveal">Assim, você leva à conversa uma aplicação concreta, com elementos para discutir como a empresa pode avançar.</p>
+  </div>
+</section>
+
+<!-- ============ 6. AO LADO NA CONVERSA ============ -->
+<section class="sec sec--navy" aria-labelledby="lado-title">
+  <div class="wrap reveal" style="max-width:820px">
+    <span class="pill pill--dark">Na reunião com a direção</span>
+    <h2 class="h2" id="lado-title" style="margin-top:22px">E você terá a Templum ao seu lado nessa conversa<span class="dot">.</span></h2>
+    <p class="lead">Sabemos que identificar oportunidades de evolução é uma coisa. Conseguir apoio para colocá-las em prática é outra.</p>
+    <p class="measure" style="margin-top:18px">Por isso, além de ajudar você a preparar a proposta, nosso time participa da reunião com a direção da sua empresa para apresentar a aplicação, esclarecer dúvidas e discutir os próximos passos para a continuidade com o Templum OS.</p>
+  </div>
+</section>
+
+
+<!-- ============ FORMULÁRIO ============ -->
+<section class="sec form-sec" id="formulario" aria-labelledby="form-title">
+  <div class="wrap form-wrap reveal">
+    <h2 class="form-head" id="form-title">Gratuito</h2>
+    <p class="form-sub">Só preencher e garantir a vaga.</p>
+    <p class="form-date">3 a 6 de novembro · Imersão prática · gratuito</p>
+    <div class="form-card">
+      <form id="lead-form" data-trk-event="mes-da-qualidade-2026" novalidate>
+        <div class="field">
+          <label for="f-nome">Nome completo</label>
+          <input id="f-nome" name="nome" type="text" autocomplete="name" placeholder="Seu nome completo" required>
+        </div>
+        <div class="field">
+          <label for="f-email">E-mail</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com" required>
+        </div>
+        <div class="field">
+          <label for="f-empresa">Empresa</label>
+          <input id="f-empresa" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa" required>
+        </div>
+        <div class="field">
+          <label for="f-wpp">WhatsApp</label>
+          <input id="f-wpp" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(00) 00000-0000" required>
+        </div>
+        <div class="field">
+          <label for="f-cargo">Seu cargo</label>
+          <select id="f-cargo" name="cargo" required>
+            <option value="">Selecione</option>
+            <option>Proprietário</option>
+            <option>Diretor / C-level</option>
+            <option>Gerente</option>
+            <option>Coordenador / Supervisor</option>
+            <option>Consultor</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-func">Nº de funcionários</label>
+          <select id="f-func" name="funcionarios" required>
+            <option value="">Selecione</option>
+            <option>1 a 10</option>
+            <option>11 a 50</option>
+            <option>51 a 100</option>
+            <option>101 a 250</option>
+            <option>251 a 500</option>
+            <option>Mais de 500</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-desafio">Maior desafio da empresa hoje</label>
+          <select id="f-desafio" name="desafio" required>
+            <option value="">Selecione</option>
+            <option>Alinhar equipe, processos e tecnologia</option>
+            <option>Medir o que realmente importa para a performance</option>
+            <option>Engajar a equipe na melhoria do SG</option>
+            <option>Mostrar o valor do SG para a alta gestão</option>
+            <option>Preparar certificação ou auditoria</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <button class="btn btn--block" type="submit">Garantir minha vaga gratuita
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+      </form>
+      <p class="form-foot">Vagas limitadas. As instruções de acesso chegam por e-mail e WhatsApp. <a href="https://templum.com.br/politica-de-privacidade">Política de Privacidade</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. CTA FINAL ============ -->
+<section class="sec final" aria-labelledby="final-title">
+  <div class="wrap reveal">
+    <h2 id="final-title">Dê o próximo passo para fazer a qualidade impulsionar o desempenho<span class="dot">.</span></h2>
+    <p class="lead" style="margin-bottom:44px">Traga a realidade do seu SG. Durante novembro, vamos ajudar você a experimentar essa evolução e preparar o caminho para levá-la adiante na sua empresa.</p>
+    <div class="final__row">
+      <a class="btn" href="#formulario">Garantir minha vaga gratuita
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <small>Imersão prática · 3 a 6 de novembro · 30 dias no Templum OS</small>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <img class="logo" src="../mes-da-qualidade-2026/logo-templum.png" alt="Templum" width="112" height="37">
+    <span>Mês da Qualidade Templum 2026 · Imersão SG de Alta Performance</span>
+  </div>
+</footer>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Build-line: the five steps light up and the rail fills as the imersão section is read
+  const steps = document.getElementById('steps');
+  const rail = steps.querySelector('.steps__rail i');
+  const stepEls = [...steps.querySelectorAll('.step')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function updateBuild() {
+    const r = steps.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const progress = Math.min(1, Math.max(0, (vh * 0.8 - r.top) / (r.height * 0.9)));
+    rail.parentElement.style.setProperty('--p', progress.toFixed(3));
+    stepEls.forEach((s, i) => s.classList.toggle('is-on', progress >= (i + 0.5) / stepEls.length || reduce));
+  }
+  window.addEventListener('scroll', updateBuild, { passive: true });
+  window.addEventListener('resize', updateBuild);
+  updateBuild();
+
+  const form = document.getElementById('lead-form');
+  const phone = document.getElementById('f-wpp');
+  const EVENTO = 'mes-da-qualidade-2026';
+  const OBRIGADO = '/obrigado-mes-da-qualidade-2026/';
+  phone.addEventListener('input', () => {
+    const d = phone.value.replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 2) phone.value = d ? '(' + d : '';
+    else if (d.length <= 7) phone.value = '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    else phone.value = '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  });
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const msg = document.getElementById('form-msg');
+    const btn = form.querySelector('[type="submit"]');
+    const nome = form.nome.value.trim();
+    const email = form.email.value.trim();
+    const empresa = form.empresa.value.trim();
+    const telefone = form.telefone.value.trim();
+    const fail = (text, field) => { msg.textContent = text; if (field) field.focus(); };
+    if (!nome || nome.length < 2) return fail('Informe seu nome.', form.nome);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Informe um e-mail válido.', form.email);
+    if (!empresa) return fail('Informe a empresa.', form.empresa);
+    if (telefone.replace(/\D/g, '').length < 10) return fail('Informe um WhatsApp com DDD.', form.telefone);
+    if (!form.cargo.value) return fail('Selecione seu cargo.', form.cargo);
+    if (!form.funcionarios.value) return fail('Selecione o número de funcionários.', form.funcionarios);
+    if (!form.desafio.value) return fail('Selecione o maior desafio da empresa.', form.desafio);
+    if (form.dataset.leadSubmitted === '1') return;
+    form.dataset.leadSubmitted = '1';
+    btn.disabled = true;
+    msg.textContent = '';
+    const params = new URLSearchParams(location.search);
+    const payload = {
+      nome, email, telefone, empresa,
+      cargo: form.cargo.value,
+      funcionarios: form.funcionarios.value,
+      desafio: form.desafio.value,
+      mensagem: 'Mês da Qualidade 2026. Imersão SG de Alta Performance, 3 a 6 de novembro. Desafio: ' + form.desafio.value + '. Empresa: ' + empresa,
+      evento: EVENTO,
+      pagina: location.pathname,
+      landing: location.href
+    };
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','gbraid','wbraid'].forEach((key) => {
+      if (params.get(key)) payload[key] = params.get(key);
+    });
+    const tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    tokenPromise.then((token) => {
+      payload.turnstile_token = token;
+      return fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then((r) => r.json().catch(() => ({})).then((body) => ({ ok: r.ok, body })));
+    }).then((res) => {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      if (!res.ok || !res.body || res.body.ok !== true) {
+        delete form.dataset.leadSubmitted;
+        btn.disabled = false;
+        msg.textContent = 'Não conseguimos enviar agora. Tente de novo.';
+        return;
+      }
+      try {
+        sessionStorage.setItem('tpl_lead_pending', JSON.stringify({ email, phone: telefone, name: nome }));
+      } catch (_) {}
+      location.href = OBRIGADO;
+    }).catch(() => {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      delete form.dataset.leadSubmitted;
+      btn.disabled = false;
+      msg.textContent = 'Não conseguimos enviar agora. Tente de novo.';
+    });
+  });
+</script>
+<script src="/js/tpl-turnstile.js?v=2"></script>
+</body>
+</html>

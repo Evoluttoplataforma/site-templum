@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const SITE = "https://templum.com.br";
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
-const EXCLUDE = ["/design-system", "/404", "/obrigado", "/emails", "/saida-ads", "/a-nova-era-da-iso/replay"];
+const EXCLUDE = ["/design-system", "/404", "/obrigado", "/emails", "/saida-ads", "/a-nova-era-da-iso/replay", "/mes-da-qualidade-2026-v2"];
 
 function walk(dir) {
   let out = [];
