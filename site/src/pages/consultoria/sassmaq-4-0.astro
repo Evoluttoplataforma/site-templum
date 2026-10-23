@@ -15,11 +15,11 @@ const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
-const formTitulo = "Descubra se sua transportadora está preparada para a SASSMAQ 4.0";
-const formSub = "Solicite um diagnóstico com um especialista da Templum e entenda os principais gaps que sua empresa precisa resolver para se adequar às novas exigências.";
-const formCta = "Quero meu diagnóstico SASSMAQ 4.0";
+const formTitulo = "Fale agora com um especialista SASSMAQ 4.0";
+const formSub = "Preencha o formulário e um especialista entrará em contato.";
+const formCta = "Solicite uma proposta";
 const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o SASSMAQ 4.0.";
-const ctaCurto = "Quero meu diagnóstico";
+const ctaCurto = "Solicite uma proposta";
 const oferta = [
   "Entenda quais mudanças impactam sua operação",
   "Identifique os principais gaps",
@@ -162,7 +162,7 @@ const pageSchemas = [
 
     <section id="diagnostico" class="section">
       <div class="container md cs-oferta">
-        <span class="tag-pill">Diagnóstico</span>
+        <span class="tag-pill">Proposta</span>
         <h2>{formTitulo}</h2>
         <p>{formSub}</p>
         <ul class="check-list cs-oferta-list">
@@ -262,7 +262,7 @@ const pageSchemas = [
     <section id="contato" class="cs-form section--navy">
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
-          <span class="tag-pill tag-pill--glow">Diagnóstico</span>
+          <span class="tag-pill tag-pill--glow">Proposta</span>
           <h2>Descubra se sua transportadora está preparada para a <em class="accent">SASSMAQ 4.0</em></h2>
           <p>{formSub}</p>
           <ul class="check-list">

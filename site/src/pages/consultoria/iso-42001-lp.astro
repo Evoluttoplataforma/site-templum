@@ -18,11 +18,11 @@ const heroChips = [
   { t: "30 anos de experiência", href: "#seguranca" },
   { t: "Sem limite de horas", href: "#seguranca" },
 ];
-const formTitulo = "Diagnóstico gratuito da sua certificação ISO 42001";
-const formSub = "Num diagnóstico com um especialista, entendemos o seu cenário e mostramos o caminho até o certificado, com prazo e investimento sob medida.";
-const formCta = "Quero meu diagnóstico";
+const formTitulo = "Fale agora com um especialista ISO 42001";
+const formSub = "Preencha o formulário e um especialista entrará em contato.";
+const formCta = "Solicite uma proposta";
 const oQueE = "É a primeira norma internacional de sistema de gestão de inteligência artificial, publicada em dezembro de 2023. Ela orienta como desenvolver, fornecer ou usar IA de forma responsável e controlada.";
-const tempo = "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista é definido no diagnóstico gratuito.";
+const tempo = "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista sai na proposta.";
 const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria.";
 const validade = "3 anos, com auditorias de manutenção anuais.";
 const faqPrioritarias = [
@@ -66,18 +66,18 @@ const faqSchema = {
   })),
 };
 const etapasCert = [
-  "Diagnóstico gratuito: mapeamos onde a empresa usa ou desenvolve inteligência artificial e definimos escopo e cronograma.",
+  "Mapeamos onde a empresa usa ou desenvolve inteligência artificial e definimos escopo e cronograma.",
   "Implementação do sistema de gestão de IA, com a Templum conduzindo cada etapa (política, avaliação de riscos e impactos, controles e responsabilidades).",
   "Auditoria interna.",
   "Auditoria de certificação, feita por um organismo certificador acreditado.",
   "Certificado emitido, válido por 3 anos, com auditorias de manutenção anuais.",
 ];
-const custo = "O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade do uso de inteligência artificial na empresa. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma são apresentados no diagnóstico gratuito, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.";
+const custo = "O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade do uso de inteligência artificial na empresa. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.";
 ---
 
 <LpBase
   title="Consultoria e Certificação ISO 42001 (Gestão de IA) | Templum"
-  description="Consultoria para certificação ISO/IEC 42001, o sistema de gestão de inteligência artificial, com garantia de 200% em contrato. Diagnóstico gratuito."
+  description="Consultoria para certificação ISO/IEC 42001, o sistema de gestão de inteligência artificial, com garantia de 200% em contrato. Solicite uma proposta."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta={formCta}
@@ -117,7 +117,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
         </div>
         <p class="cs-custo">{oQueE}</p>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -162,7 +162,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
         </ol>
         <p class="cs-caminho-fim">A Templum conduz a sua empresa do diagnóstico até a auditoria. O certificado é emitido pelo organismo certificador.</p>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -175,7 +175,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
         </div>
         <p class="cs-custo">{custo}</p>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -286,10 +286,10 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
-          <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado, sem compromisso.</p>
+          <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
+          <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
@@ -303,7 +303,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       <div class="container md">
         <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
         <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#contato" class="btn btn--dark btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
   </div>

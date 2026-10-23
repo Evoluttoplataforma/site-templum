@@ -21,12 +21,12 @@ const heroChips = [
 ];
 const heroTitulo = ["Consultoria e certificação ISO 9001 de forma ", "simples e ágil", ""];
 const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a\u00A0certificação.";
-const heroCta = "Solicitar diagnóstico";
-const formTitulo = "Diagnóstico gratuito da sua certificação ISO 9001";
-const formSub = "Num diagnóstico com um especialista, entendemos o seu cenário e mostramos o caminho até o certificado, com prazo e investimento sob medida.";
-const formCta = "Quero meu diagnóstico";
+const heroCta = "Solicite uma proposta";
+const formTitulo = "Fale agora com um especialista ISO 9001";
+const formSub = "Preencha o formulário e um especialista entrará em contato.";
+const formCta = "Solicite uma proposta";
 const faqExtras = [
-  { q: "Quanto tempo leva para conseguir a ISO 9001?", a: "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista é definido no diagnóstico gratuito." },
+  { q: "Quanto tempo leva para conseguir a ISO 9001?", a: "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista sai na proposta." },
   { q: "A ISO 9001 é obrigatória?", a: "Não por lei, mas é muito exigida por clientes, licitações e cadeias de fornecimento." },
   { q: "Quem emite o certificado ISO 9001?", a: "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria." },
   { q: "Qual é a validade do certificado?", a: "3 anos, com auditorias de manutenção anuais." },
@@ -47,7 +47,7 @@ const faqSchema = {
   })),
 };
 const etapasCert = [
-  "Diagnóstico gratuito: entendemos o cenário da empresa e definimos escopo e cronograma.",
+  "Entendemos o cenário da empresa e definimos escopo e cronograma.",
   "Implementação do sistema de gestão da qualidade, com a Templum conduzindo cada etapa.",
   "Auditoria interna, para corrigir o que for preciso antes da auditoria oficial.",
   "Auditoria de certificação, feita por um organismo certificador acreditado.",
@@ -63,7 +63,7 @@ const prazos2026 = [
 
 <LpBase
   title="Consultoria e Certificação ISO 9001 | Templum"
-  description="Consultoria para certificação ISO 9001 com garantia de 200% em contrato. Saiba como conseguir a certificação e receba um diagnóstico gratuito."
+  description="Consultoria para certificação ISO 9001 com garantia de 200% em contrato. Saiba como conseguir a certificação e solicite uma proposta."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta={heroCta}
@@ -136,7 +136,7 @@ const prazos2026 = [
         </ol>
         <p class="cs-caminho-fim">A Templum conduz a sua empresa do diagnóstico até a auditoria. O certificado é emitido pelo organismo certificador.</p>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -148,9 +148,9 @@ const prazos2026 = [
           <span class="tag-pill">Investimento</span>
           <h2>Quanto custa a certificação <em class="accent">ISO 9001?</em></h2>
         </div>
-        <p class="cs-custo">O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma são apresentados no diagnóstico gratuito, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
+        <p class="cs-custo">O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -199,7 +199,7 @@ const prazos2026 = [
           </table>
         </div>
         <p class="cs-nova-close">Menos tempo procurando como fazer. Mais agilidade para fazer acontecer.</p>
-        <a href="#form" class="btn btn--primary btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
 
@@ -305,7 +305,7 @@ const prazos2026 = [
           {prazos2026.map((item) => <li>{item}</li>)}
         </ul>
         <div class="cs-sec-cta">
-          <a href="#form" class="btn btn--primary btn--lg">Quero meu diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
       </div>
     </section>
@@ -325,15 +325,15 @@ const prazos2026 = [
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
-          <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado, sem compromisso.</p>
+          <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
+          <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Solicitar diagnóstico" sub="Preencha o formulário para solicitar o diagnóstico." cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} whatsappLinha={wppLinha} />
+        <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-9001-obrigado" simples={true} cargo={true} whatsapp={true} whatsappLinha={wppLinha} />
       </div>
     </section>
 
@@ -342,7 +342,7 @@ const prazos2026 = [
       <div class="container md">
         <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
         <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Solicitar diagnóstico <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#contato" class="btn btn--dark btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
   </div>

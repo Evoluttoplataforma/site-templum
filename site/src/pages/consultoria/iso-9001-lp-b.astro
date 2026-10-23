@@ -84,7 +84,7 @@ if (faqItems.length) {
           <a href="#metodo" class="cs-ver-metodo" data-cta="cta_ver_metodo">Ver o método</a>
         </div>
         <div class="cs-hero-form" id="form">
-          <LeadForm norma={norma.nome} titulo="Agende agora uma reunião" sub="Preencha o formulário e um especialista entrará em contato." cta="Quero meu diagnóstico" colapsavel={true} />
+          <LeadForm norma={norma.nome} titulo={`Fale agora com um especialista ${norma.nome}`} sub="Preencha o formulário e um especialista entrará em contato." cta="Solicite uma proposta" colapsavel={true} />
         </div>
       </div>
     </section>
@@ -219,15 +219,15 @@ if (faqItems.length) {
       <div class="container lg cs-form-grid">
         <div class="cs-form-pitch">
           <span class="tag-pill tag-pill--glow">Comece agora</span>
-          <h2>Receba um <em class="accent">diagnóstico gratuito</em> da sua certificação {norma.nome}</h2>
-          <p>Um especialista analisa o cenário da sua empresa e mostra o caminho mais curto até o certificado — sem compromisso.</p>
+          <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
+          <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Diagnóstico e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
         </div>
-        <LeadForm norma={norma.nome} titulo="Fale com um especialista" sub="Resposta em até 1 dia útil. Sem compromisso." colapsavel={true} />
+        <LeadForm norma={norma.nome} titulo={`Fale agora com um especialista ${norma.nome}`} sub="Preencha o formulário e um especialista entrará em contato." cta="Solicite uma proposta" colapsavel={true} />
       </div>
     </section>
 
@@ -236,7 +236,7 @@ if (faqItems.length) {
       <div class="container md">
         <h2>Conquiste sua <em>certificação {norma.nome}</em> com garantia</h2>
         <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <a href="#contato" class="btn btn--dark btn--lg">Falar com um especialista <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+        <a href="#contato" class="btn btn--dark btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
       </div>
     </section>
   </div>
