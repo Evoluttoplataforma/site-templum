@@ -102,6 +102,7 @@
       "lpPath": "/mes-da-qualidade-2026/",
       "crmTags": ["mês da qualidade", "imersão sg"],
       "crmSource": "Mês da Qualidade",
+      "crmDest": "lives",
       "titleStyle": "contact",
       "notes": "Inscrição na Imersão SG de Alta Performance, de 3 a 6 de novembro de 2026.",
       "customFields": true,
