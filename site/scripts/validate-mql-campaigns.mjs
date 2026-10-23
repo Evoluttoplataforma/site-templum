@@ -57,8 +57,11 @@ for (const c of campaigns) {
       : join(root, "src", "pages", "index.astro");
     const pageIndex = rel ? join(root, "src", "pages", rel, "index.astro") : pageFile;
     const page = existsSync(pageFile) ? pageFile : pageIndex;
-    if (!existsSync(page)) {
-      errors.push(`${c.slug}: lpPath ${c.lpPath} sem ${pageFile.replace(root + "\\", "")}`);
+    const publicIndex = rel ? join(root, "public", rel, "index.html") : "";
+    const publicFile = rel ? join(root, "public", rel + ".html") : "";
+    const published = existsSync(page) || (publicIndex && existsSync(publicIndex)) || (publicFile && existsSync(publicFile));
+    if (!published) {
+      errors.push(`${c.slug}: lpPath ${c.lpPath} sem página Astro nem HTML em public/`);
     }
     const utm = c.utmDefaults;
     if (!utm || typeof utm !== "object") {

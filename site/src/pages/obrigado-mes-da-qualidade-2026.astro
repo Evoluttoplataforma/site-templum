@@ -1,0 +1,59 @@
+---
+import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+---
+
+<CampanhaIsolada
+  title="Inscrição confirmada | Mês da Qualidade Templum 2026"
+  description="Sua vaga na Imersão SG de Alta Performance, de 3 a 6 de novembro, está reservada. As instruções chegam por e-mail e WhatsApp."
+>
+  <main class="ob">
+    <article>
+      <p class="kicker">3 a 6 de novembro</p>
+      <h1>Sua vaga está reservada.</h1>
+      <p>As instruções de acesso da Imersão SG de Alta Performance chegam por e-mail e WhatsApp.</p>
+      <a href="/mes-da-qualidade-2026/">Voltar para a página</a>
+    </article>
+  </main>
+  <style>
+    .ob {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      padding: 48px 20px;
+      background: #222831;
+      color: #fff4dd;
+      font-family: Montserrat, "Segoe UI", sans-serif;
+    }
+    .ob article { max-width: 36rem; }
+    .kicker {
+      margin: 0 0 12px;
+      color: #ff5925;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 48px); line-height: 1.1; }
+    p { margin: 0 0 24px; font-size: 18px; line-height: 1.5; }
+    a { color: #ff5925; font-weight: 700; }
+  </style>
+  <script is:inline>
+    (function () {
+      var raw = null;
+      try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      if (!raw) return;
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      var done = false;
+      function fire() {
+        if (done) return; done = true;
+        try { if (window.trk && typeof window.trk.lead === "function") window.trk.lead({ email: d.email, phone: d.phone, name: d.name }); } catch (_) {}
+      }
+      var n = 0, t = setInterval(function () {
+        n++;
+        var ready = window.trk && typeof window.trk.lead === "function";
+        if (ready || n > 60) { clearInterval(t); fire(); }
+      }, 250);
+    })();
+  </script>
+</CampanhaIsolada>

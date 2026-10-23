@@ -94,6 +94,24 @@
         "e0SentTag": "e0:nova-era-2026:enviado",
         "automationId": "b25bdb1a-45d3-4be6-8d89-62053018cdb1"
       }
+    },
+    {
+      "key": "mes_qualidade_2026",
+      "slug": "mes-da-qualidade-2026",
+      "label": "Mês da Qualidade Templum 2026 · Imersão SG de Alta Performance",
+      "lpPath": "/mes-da-qualidade-2026/",
+      "crmTags": ["mês da qualidade", "imersão sg"],
+      "crmSource": "Mês da Qualidade",
+      "titleStyle": "contact",
+      "notes": "Inscrição na Imersão SG de Alta Performance, de 3 a 6 de novembro de 2026.",
+      "customFields": true,
+      "manychatTags": ["mês da qualidade", "imersão sg"],
+      "mailchimpTags": ["mês da qualidade", "imersão sg"],
+      "utmDefaults": {
+        "utm_source": "site",
+        "utm_medium": "lp",
+        "utm_campaign": "mes-da-qualidade-2026"
+      }
     }
   ]
 }
