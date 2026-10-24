@@ -3,11 +3,12 @@ import Base from "../../layouts/Base.astro";
 ---
 
 <Base
-  title="Diagnóstico solicitado — ISO 42001 | Templum"
+  title="Proposta solicitada | ISO 42001 | Templum"
   description="Recebemos sua solicitação. Um especialista em ISO 42001 entrará em contato em breve."
   noindex={true}
   noHeaderFooter={true}
   hideWpp={true}
+  orgDescription="Consultoria de certificações ISO com método próprio e garantia de 200%: há mais de 30 anos organiza a gestão de empresas da proposta à auditoria, com atendimento 100% online em todo o Brasil."
 >
 
   <section class="ob9-hero">
@@ -16,7 +17,7 @@ import Base from "../../layouts/Base.astro";
       <div class="ob9-check">
         <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
       </div>
-      <span class="ob9-badge">ISO 42001 · Diagnóstico solicitado</span>
+      <span class="ob9-badge">ISO 42001 · Proposta solicitada</span>
       <h1>Ótimo! Recebemos<br /><em>sua solicitação.</em></h1>
       <p class="ob9-lead">Um especialista em ISO 42001 da Templum entrará em contato em <strong>até 1 hora útil</strong> pelo WhatsApp ou telefone que você informou.</p>
 
@@ -31,7 +32,7 @@ import Base from "../../layouts/Base.astro";
         <div class="ob9-next-item">
           <span class="ob9-next-n">2</span>
           <div>
-            <strong>Diagnóstico gratuito</strong>
+            <strong>Proposta</strong>
             <span>Apresentamos o caminho mais curto até a certificação.</span>
           </div>
         </div>
@@ -39,7 +40,7 @@ import Base from "../../layouts/Base.astro";
           <span class="ob9-next-n">3</span>
           <div>
             <strong>Proposta personalizada</strong>
-            <span>Cronograma e investimento sob medida para o seu negócio.</span>
+            <span>Prazo e investimento sob medida para o seu negócio.</span>
           </div>
         </div>
       </div>
@@ -65,6 +66,7 @@ import Base from "../../layouts/Base.astro";
       if (!raw) return;
       try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
       var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
+      if (d.modo_teste) return;
       var PRODUCT = { content_name: 'ISO 42001', content_category: 'Gestão de Inteligência Artificial' };
       var done = false;
       function fire() {

@@ -26,6 +26,7 @@ const {
   preloadImageSizes = "",
   /** Last-touch na conversão quando a URL não traz utm_source/medium/campaign (igual CampanhaIsolada). */
   utmDefaults = null,
+  orgDescription = "Consultoria de certificações ISO com método próprio e garantia de 200%: há mais de 30 anos organiza a gestão de empresas do diagnóstico à auditoria, com atendimento 100% online em todo o Brasil.",
 } = Astro.props;
 
 const SITE = (Astro.site?.href || "https://templum.com.br/").replace(/\/$/, "");
@@ -43,8 +44,7 @@ const orgSchema = {
   url: `${SITE}/`,
   logo: { "@type": "ImageObject", url: `${SITE}/assets/logo/templum.png` },
   image: `${SITE}/assets/og/templum-og.jpg`,
-  description:
-    "Consultoria de certificações ISO com método próprio e garantia de 200%: há mais de 30 anos organiza a gestão de empresas do diagnóstico à auditoria, com atendimento 100% online em todo o Brasil.",
+  description: orgDescription,
   slogan: "Certificação ISO com garantia de 200%",
   areaServed: { "@type": "Country", name: "Brasil" },
   knowsAbout: [
@@ -317,8 +317,8 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       };
     </script>
 
-    <script is:inline src="/js/form-funil.js?v=20261022"></script>
-    <script is:inline src="/js/tpl-turnstile.js?v=2"></script>
+    <script is:inline src="/js/form-funil.js?v=20261023h1"></script>
+    <script is:inline src="/js/tpl-turnstile.js?v=3"></script>
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
          Supabase + Mailchimp + Templum OS INBOUND/ManyChat), dispara o Lead do Meta Pixel
          SÓ depois de confirmar que o Supabase salvou o cadastro, e redireciona.
@@ -350,6 +350,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         // duplo submit, re-interação) — mesmo antes do botão ser desabilitado.
         if (form.dataset.leadSubmitted === "1") return;
         form.dataset.leadSubmitted = "1";
+        var marca = window.tplLeadMarca ? window.tplLeadMarca(form) : "";
 
         var btn = form.querySelector('[type="submit"]');
         if (btn) { btn.disabled = true; }
@@ -366,8 +367,12 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
         // é o que permite o Meta deduplicar em vez de contar 2 leads.
         var leadEventId = window.__tplUuid();
-        var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+        var tokenPromise = window.tplPrecisaTurnstile ? window.tplPrecisaTurnstile() : Promise.reject();
+        function tentativaAtual() {
+          return !marca || !window.tplLeadMarcaAtual || window.tplLeadMarcaAtual(form, marca);
+        }
         tokenPromise.then(function (token) {
+        if (!tentativaAtual()) return;
         // GA4/Ads/TikTok (via trk.lead) continuam disparando na /obrigado.
         // O relógio de 5s só começa depois do token, para a verificação não
         // disparar o redirect antes do POST.
@@ -375,6 +380,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
             event_id: leadEventId,
+            modo_teste: !!(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste),
           }));
         } catch (_) {}
         var _t = setTimeout(_go, 5000);
@@ -460,7 +466,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
             // Supabase salvou o cadastro (res.body.supabase.ok === true).
             var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
             clearTimeout(_t);
-            if (saved) {
+            if (saved && !(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)) {
               window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
               // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
               // forma assíncrona e o navegador CANCELA requisição em andamento na
@@ -477,7 +483,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           if (window.tplTurnstileReset) window.tplTurnstileReset();
           _go();
         }
-        }).catch(function () { _failTurnstile(); });
+        }).catch(function () { if (tentativaAtual()) _failTurnstile(); });
       });
     </script>
 

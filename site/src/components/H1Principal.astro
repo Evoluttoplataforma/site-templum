@@ -1,0 +1,11 @@
+---
+const { experimento } = Astro.props;
+const controle = (experimento?.variantes || []).find((item) => item.n === 1);
+---
+
+{controle && (
+  <h1 id="tpl-h1" class="cs-title">{controle.antes}{controle.destaque && <span class="cs-hl">{controle.destaque}</span>}{controle.depois}</h1>
+)}
+<script is:inline>
+  if (window.tplH1Aplicar) window.tplH1Aplicar();
+</script>

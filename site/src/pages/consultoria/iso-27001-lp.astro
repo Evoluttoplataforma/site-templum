@@ -7,8 +7,11 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
+import H1Principal from "../../components/H1Principal.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/iso-27001.js";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
+import { passosDaProposta, porquesDaProposta } from "../../lib/lp-proposta.js";
 
 const slug = "iso-27001";
 const norma = normas.find((n) => n.slug === slug) || {};
@@ -16,6 +19,15 @@ const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre a ISO 27001
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const h1 = experimentoH1("iso27001");
+const passos = passosDaProposta(d.passos);
+const porques = porquesDaProposta(d.porques);
+const faqTexto = {
+  "Quanto tempo leva para conseguir a certificação?": "Depende do tamanho e da maturidade da empresa. Na proposta apresentamos um prazo realista. O método e a plataforma Templum OS encurtam o caminho.",
+  "É possível adaptar o projeto à minha realidade?": "Sim, o escopo e o prazo são definidos a partir da proposta para a sua empresa.",
+  "E se eu tiver urgência?": "Conseguimos priorizar etapas e intensificar o ritmo conforme a sua necessidade. Na proposta definimos um prazo realista que respeite a sua urgência.",
+};
+const faqItems = (d.detalhes.faq || []).map((f) => (faqTexto[f.q] ? { ...f, a: faqTexto[f.q] } : f));
 ---
 
 <LpBase
@@ -24,6 +36,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta="Solicite uma proposta"
+  h1Experimento={h1}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -32,7 +45,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
-          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <H1Principal experimento={h1} />
           <nav class="cs-atalhos" aria-label="Atalhos da página">
             <a href="#metodo">Como funciona</a>
             <a href="#investimento">Investimento</a>
@@ -83,7 +96,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl">
         <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
         <div class="step-grid">
-          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -93,7 +106,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
-          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -171,7 +184,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container md">
         <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
         <div class="faq-list">
-          {d.detalhes.faq.map((f) => <details class="faq-item" id={f.q === "O investimento é por projeto ou por hora?" ? "investimento" : undefined}><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+          {faqItems.map((f) => <details class="faq-item" id={f.q === "O investimento é por projeto ou por hora?" ? "investimento" : undefined}><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
         </div>
       </div>
     </section>
@@ -184,7 +197,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
           <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
           <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
@@ -202,7 +215,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       </div>
     </section>
   </div>
-  <SaidaPesquisa norma={norma.nome} />
+  <SaidaPesquisa norma={norma.nome} oferta="proposta" />
 </LpBase>
 
 <style>
@@ -227,7 +240,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .cs-hero-text { max-width: 600px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  :global(#tpl-h1.cs-title) { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
   .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
   .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   .cs-atalhos a:hover { color: var(--cream); }
@@ -238,7 +251,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-page .why-card { cursor: default; }
   .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
   .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
-  .cs-hl { color: var(--accent-lt); }
+  :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
   .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
   .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }

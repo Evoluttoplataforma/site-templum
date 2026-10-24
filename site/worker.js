@@ -72,6 +72,7 @@
 
 import mqlCampaignsConfig from "./config/mql-campaigns.json";
 import { sanitizeFormEvento } from "./form-evento.js";
+import { camposH1, notaH1, leadEhTesteH1 } from "./h1-experimento.js";
 import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
 import { resolveZoomShortLink } from "./zoom-short-link.js";
 import {
@@ -936,7 +937,7 @@ async function handleFormEvento(request, env) {
       },
       body: JSON.stringify(row),
     });
-    if (r.ok) return corsJson({ ok: true });
+    if (r.ok || r.status === 409) return corsJson({ ok: true });
     const err = await r.text().catch(() => "");
     console.error("[form-evento]", r.status, err.slice(0, 180));
     return corsJson({ ok: false }, 502);
@@ -1039,6 +1040,7 @@ async function handleLead(request, env, ctx) {
     // Mesmo id do Lead da Meta e do transaction_id do Google Ads.
     lead_event_id: String(body.lead_event_id || body.meta_event_id || "").slice(0, 80),
   };
+  Object.assign(lead, camposH1(body));
 
   if (lead.evento === "nova-era-certificacao-iso" || lead.evento === REPLAY_NE_EVENT) {
     const d = brMobileDigits(lead.telefone);
@@ -1078,8 +1080,9 @@ async function handleLead(request, env, ctx) {
 
   const isResultado = lead.evento === "isca-resultado";
   const isReplay = lead.evento === REPLAY_NE_EVENT;
+  const testeH1 = leadEhTesteH1(lead);
   const bgTasks = [];
-  if (!isResultado && !isReplay) {
+  if (!testeH1 && !isResultado && !isReplay) {
     bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
     bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
@@ -1088,7 +1091,9 @@ async function handleLead(request, env, ctx) {
     lead.evento === "curso-entendimento-iso-9001-2026" ||
     String(lead.evento || "").startsWith("curso-");
 
-  if (isReplay) {
+  if (testeH1) {
+    console.log("[lead:h1-teste]", lead.experimento_id || "", lead.lp_id || "", lead.variante_h1 || "");
+  } else if (isReplay) {
     bgTasks.push(["replay", saveReplayCadastro(lead, env)]);
   } else if (isCursoAluno) {
     bgTasks.push(["orbit", saveToOrbit(lead, env, {
@@ -1157,6 +1162,19 @@ async function saveToSupabase(lead, env) {
     };
     if (lead.lead_event_id) payload.lead_event_id = lead.lead_event_id;
     if (lead.status_pagamento) payload.status_pagamento = lead.status_pagamento;
+    if (lead.experimento_id) {
+      payload.experimento_id = lead.experimento_id;
+      payload.lp_id = lead.lp_id || "";
+      if (lead.variante_h1) payload.variante_h1 = lead.variante_h1;
+      if (lead.angulo) payload.angulo = lead.angulo;
+      if (lead.variante_exposta) payload.variante_exposta = lead.variante_exposta;
+      if (lead.angulo_exposto) payload.angulo_exposto = lead.angulo_exposto;
+      if (lead.modo_teste) payload.modo_teste = true;
+      if (lead.visitante_id) payload.visitante_id = lead.visitante_id;
+      if (lead.sessao_id) payload.sessao_id = lead.sessao_id;
+      if (lead.persistencia) payload.persistencia = lead.persistencia;
+      if (lead.estado) payload.estado = lead.estado;
+    }
 
     const r = await fetch(`${sbUrl}/rest/v1/site_leads`, {
       method: "POST",
@@ -1574,7 +1592,9 @@ async function saveToOrbit(lead, env, dest) {
       : "",
     lead.referrer ? "Referrer: " + lead.referrer : "",
   ].filter(Boolean).join("\n");
-  if (notes) body.notes = notes;
+  const h1nota = notaH1(lead);
+  const notasFinais = [notes, h1nota].filter(Boolean).join("\n");
+  if (notasFinais) body.notes = notasFinais;
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
   // Etiqueta canônica do INBOUND é ISO9001 (junto). "ISO 9001" abria uma etiqueta nova.

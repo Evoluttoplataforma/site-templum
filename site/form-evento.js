@@ -12,6 +12,9 @@ const EVENTOS = new Set([
   "erro_servidor",
   "erro_rede",
   "whatsapp_clique",
+  "envio_sem_resposta",
+  "h1_exposto",
+  "h1_falha",
 ]);
 
 const DISPOSITIVOS = new Set(["mobile", "tablet", "desktop"]);
@@ -29,6 +32,8 @@ const NAVEGADORES = new Set([
   "Samsung Internet",
   "Outro",
 ]);
+
+import { camposH1 } from "./h1-experimento.js";
 
 const EMAIL = /[^\s@]+@[^\s@]+\.[^\s@]+/g;
 const FONE = /\+?\d[\d\s().-]{7,}\d/g;
@@ -118,7 +123,9 @@ export function sanitizeFormEvento(input) {
     evento === "erro_validacao" ||
     evento === "erro_turnstile" ||
     evento === "erro_servidor" ||
-    evento === "erro_rede"
+    evento === "erro_rede" ||
+    evento === "envio_sem_resposta" ||
+    evento === "h1_falha"
   ) {
     const code = token(input.erro_codigo, 40);
     if (code) row.erro_codigo = code;
@@ -142,6 +149,14 @@ export function sanitizeFormEvento(input) {
   if (us) row.utm_source = us;
   if (um) row.utm_medium = um;
   if (uc) row.utm_campaign = uc;
+
+  const h1 = camposH1(input);
+  if (h1.experimento_id) {
+    const sessao = row.sessao_id;
+    Object.assign(row, h1);
+    if (sessao) row.sessao_id = sessao;
+    if (evento !== "h1_falha") delete row.h1_texto;
+  }
 
   return row;
 }

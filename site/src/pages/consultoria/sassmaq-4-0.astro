@@ -7,14 +7,17 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
+import H1Principal from "../../components/H1Principal.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/sassmaq.js";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
 
 const slug = "sassmaq";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const h1 = experimentoH1("sassmaq40");
 const formTitulo = "Fale agora com um especialista SASSMAQ 4.0";
 const formSub = "Preencha o formulário e um especialista entrará em contato.";
 const formCta = "Solicite uma proposta";
@@ -91,6 +94,7 @@ const pageSchemas = [
   headerAnchorDesktop="#contato"
   headerCta={ctaCurto}
   schemas={pageSchemas}
+  h1Experimento={h1}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <section class="cs-hero">
@@ -98,7 +102,7 @@ const pageSchemas = [
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">SASSMAQ 4.0</span>
-          <h1 class="cs-title">Sua transportadora está preparada para a certificação <span class="cs-hl">SASSMAQ 4.0</span>?</h1>
+          <H1Principal experimento={h1} />
           <p class="cs-sub">Consultoria para identificar os gaps, adequar a operação e chegar à auditoria com especialistas. A transição vai até 11 de março de 2027.</p>
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
@@ -160,7 +164,7 @@ const pageSchemas = [
       </div>
     </section>
 
-    <section id="diagnostico" class="section">
+    <section id="proposta" class="section">
       <div class="container md cs-oferta">
         <span class="tag-pill">Proposta</span>
         <h2>{formTitulo}</h2>
@@ -275,7 +279,7 @@ const pageSchemas = [
       </div>
     </section>
   </div>
-  <SaidaPesquisa norma="SASSMAQ 4.0" />
+  <SaidaPesquisa norma="SASSMAQ 4.0" oferta="proposta" />
 </LpBase>
 
 <style>
@@ -301,8 +305,8 @@ const pageSchemas = [
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .cs-hero-text { max-width: 640px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(30px, 3.8vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
-  .cs-hl { color: var(--accent-lt); }
+  :global(#tpl-h1.cs-title) { font-size: clamp(30px, 3.8vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
   .cs-sub { font-size: clamp(17px, 1.8vw, 20px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 18px; max-width: 560px; line-height: 1.45; }
   .cs-hero-note { font-size: 15.5px; color: rgba(255,244,221,0.72); margin-top: 14px; max-width: 540px; line-height: 1.55; }
   .cs-guarantee { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; font-size: 14.5px; font-weight: 600; color: rgba(255,244,221,0.92); max-width: 540px; line-height: 1.5; }

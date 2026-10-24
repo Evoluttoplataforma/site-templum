@@ -6,8 +6,11 @@ import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import H1Principal from "../../components/H1Principal.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/iso-42001.js";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
+import { passosDaProposta, porquesDaProposta } from "../../lib/lp-proposta.js";
 
 const slug = "iso-42001";
 const norma = normas.find((n) => n.slug === slug) || {};
@@ -18,12 +21,15 @@ const heroChips = [
   { t: "30 anos de experiência", href: "#seguranca" },
   { t: "Sem limite de horas", href: "#seguranca" },
 ];
+const h1 = experimentoH1("iso42001");
+const passos = passosDaProposta(d.passos);
+const porques = porquesDaProposta(d.porques);
 const formTitulo = "Fale agora com um especialista ISO 42001";
 const formSub = "Preencha o formulário e um especialista entrará em contato.";
 const formCta = "Solicite uma proposta";
 const oQueE = "É a primeira norma internacional de sistema de gestão de inteligência artificial, publicada em dezembro de 2023. Ela orienta como desenvolver, fornecer ou usar IA de forma responsável e controlada.";
-const tempo = "Depende do escopo, do porte e da maturidade da empresa. O cronograma realista sai na proposta.";
-const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa do diagnóstico até a auditoria.";
+const tempo = "Depende do escopo, do porte e da maturidade da empresa. O prazo realista sai na proposta.";
+const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa da proposta até a auditoria.";
 const validade = "3 anos, com auditorias de manutenção anuais.";
 const faqPrioritarias = [
   { q: "O que é a ISO/IEC 42001?", a: oQueE },
@@ -66,13 +72,13 @@ const faqSchema = {
   })),
 };
 const etapasCert = [
-  "Mapeamos onde a empresa usa ou desenvolve inteligência artificial e definimos escopo e cronograma.",
+  "Mapeamos onde a empresa usa ou desenvolve inteligência artificial e definimos o escopo do projeto.",
   "Implementação do sistema de gestão de IA, com a Templum conduzindo cada etapa (política, avaliação de riscos e impactos, controles e responsabilidades).",
   "Auditoria interna.",
   "Auditoria de certificação, feita por um organismo certificador acreditado.",
   "Certificado emitido, válido por 3 anos, com auditorias de manutenção anuais.",
 ];
-const custo = "O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade do uso de inteligência artificial na empresa. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o cronograma saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.";
+const custo = "O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade do uso de inteligência artificial na empresa. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o prazo saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.";
 ---
 
 <LpBase
@@ -82,6 +88,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
   headerAnchorDesktop="#contato"
   headerCta={formCta}
   schemas={[faqSchema]}
+  h1Experimento={h1}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -90,7 +97,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
-          <h1 class="cs-title">Consultoria e certificação <span class="cs-hl">ISO 42001:</span> a inteligência artificial da sua empresa sob governança</h1>
+          <H1Principal experimento={h1} />
           <nav class="cs-atalhos" aria-label="Atalhos da página">
             <a href="#o-que-e">O que é</a>
             <a href="#como-conseguir">Como conseguir</a>
@@ -160,7 +167,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
             </li>
           ))}
         </ol>
-        <p class="cs-caminho-fim">A Templum conduz a sua empresa do diagnóstico até a auditoria. O certificado é emitido pelo organismo certificador.</p>
+        <p class="cs-caminho-fim">A Templum conduz a sua empresa da proposta até a auditoria. O certificado é emitido pelo organismo certificador.</p>
         <div class="cs-sec-cta">
           <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>
@@ -188,7 +195,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       <div class="container xl">
         <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>Implementação da <em class="accent">ISO 42001</em> em 7 passos</h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
         <div class="step-grid">
-          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -198,7 +205,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
-          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -289,7 +296,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
           <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
           <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
@@ -341,7 +348,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .cs-hero-text { max-width: 640px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  :global(#tpl-h1.cs-title) { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
   .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
   .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
   .cs-atalhos a:hover { color: var(--cream); }
@@ -351,7 +358,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
   .cs-page .why-card { cursor: default; }
   .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
   .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
-  .cs-hl { color: var(--accent-lt); }
+  :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
   .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
   .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }

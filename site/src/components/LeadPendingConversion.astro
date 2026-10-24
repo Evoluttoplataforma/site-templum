@@ -20,6 +20,10 @@ const { contentName = "", contentCategory = "" } = Astro.props;
     }
     var d = {};
     try { d = JSON.parse(raw) || {}; } catch (_) {}
+    if (d.modo_teste) {
+      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+      return;
+    }
     var attempts = 0;
     var timer = setInterval(function () {
       attempts++;

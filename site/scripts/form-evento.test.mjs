@@ -81,4 +81,19 @@ assert.equal(
   "110200",
 );
 
+const semResposta = sanitizeFormEvento({ ...base, evento: "envio_sem_resposta", erro_codigo: "15s" });
+assert.equal(semResposta.evento, "envio_sem_resposta");
+assert.equal(semResposta.erro_codigo, "15s");
+
+const motivo = sanitizeFormEvento({
+  ...base,
+  evento: "erro_validacao",
+  campo: "telefone",
+  erro_codigo: "sem_ddd",
+  erro_msg: "falta ddd",
+});
+assert.equal(motivo.campo, "telefone");
+assert.equal(motivo.erro_codigo, "sem_ddd");
+assert.equal(motivo.erro_msg, "falta ddd");
+
 console.log("form-evento: ok");

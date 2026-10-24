@@ -4,7 +4,7 @@
 (function () {
   if (window.tplFormEvento) return;
 
-  var UMA_VEZ = { form_visivel: 1, form_inicio: 1, envio_clique: 1, envio_ok: 1 };
+  var UMA_VEZ = { form_visivel: 1, form_inicio: 1, envio_clique: 1 };
   var WPP_SEND_TO = "AW-17896226473/yuvnCL_ZgpwdEKn9ytVC";
   var REF_ALFABETO = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
   var leadAberto = 0;
@@ -12,6 +12,24 @@
   var comecou = false;
   var valStamp = 0;
   var valCampos = {};
+  var espera = null;
+  var TERMINAL = {
+    envio_ok: 1,
+    erro_validacao: 1,
+    erro_turnstile: 1,
+    erro_servidor: 1,
+    erro_rede: 1,
+    envio_sem_resposta: 1,
+  };
+  var MOTIVO_MSG = {
+    vazio: "vazio",
+    formato: "formato",
+    incompleto: "incompleto",
+    invalido: "invalido",
+    sem_ddd: "falta ddd",
+    sem_nove: "falta o 9",
+    ddd: "ddd invalido",
+  };
 
   function ler(chave) {
     try { return sessionStorage.getItem(chave) || ""; } catch (_) { return ""; }
@@ -102,7 +120,17 @@
     return form;
   }
 
-  function jaViu(evento) {
+  function jaViu(evento, extra) {
+    if (evento === "envio_ok") {
+      var id = extra && String(extra.lead_event_id || "");
+      if (!/^[A-Za-z0-9-]{8,80}$/.test(id)) return false;
+      var ok = {};
+      try { ok = JSON.parse(ler("tpl_funil_ok") || "{}") || {}; } catch (_) { ok = {}; }
+      if (ok[id]) return true;
+      ok[id] = 1;
+      gravar("tpl_funil_ok", JSON.stringify(ok));
+      return false;
+    }
     if (!UMA_VEZ[evento]) return false;
     var cur = {};
     try { cur = JSON.parse(ler("tpl_funil_once") || "{}") || {}; } catch (_) { cur = {}; }
@@ -182,11 +210,50 @@
     });
   }
 
+  function cancelarEspera() {
+    if (!espera) return;
+    espera.aberta = false;
+    clearTimeout(espera.timer);
+    espera = null;
+  }
+
+  function vencerEspera(item) {
+    if (!item || !item.aberta || espera !== item) return;
+    if (leadAberto > 0 && item.fase < 1) {
+      item.fase = 1;
+      item.timer = setTimeout(function () { vencerEspera(item); }, 15000);
+      return;
+    }
+    var evento = leadAberto > 0 ? "erro_rede" : "envio_sem_resposta";
+    item.aberta = false;
+    clearTimeout(item.timer);
+    if (espera === item) espera = null;
+    var extra = { evento: evento, norma: item.norma || "" };
+    if (evento === "envio_sem_resposta") extra.erro_codigo = item.saiu ? "saiu" : "15s";
+    else {
+      extra.erro_codigo = "timeout";
+      extra.erro_msg = "tempo esgotado";
+    }
+    window.tplFormEvento(extra);
+    if (evento === "envio_sem_resposta") {
+      try { document.dispatchEvent(new CustomEvent("tpl:envio-sem-resposta")); } catch (_) {}
+    }
+  }
+
+  function armarEspera(norma) {
+    cancelarEspera();
+    var item = { norma: norma || "", aberta: true, fase: 0, saiu: false };
+    espera = item;
+    item.timer = setTimeout(function () { vencerEspera(item); }, 15000);
+  }
+
   window.tplFormEvento = function (extra) {
     try {
       extra = extra || {};
       var evento = String(extra.evento || "");
-      if (!evento || jaViu(evento)) return;
+      if (!evento) return;
+      if (TERMINAL[evento]) cancelarEspera();
+      if (jaViu(evento, extra)) return;
       var ctx = contexto();
       var payload = {
         sessao_id: sessaoId(),
@@ -204,6 +271,14 @@
       if (extra.erro_codigo) payload.erro_codigo = String(extra.erro_codigo).slice(0, 40);
       if (extra.erro_msg) payload.erro_msg = String(extra.erro_msg).slice(0, 200);
       if (extra.lead_event_id) payload.lead_event_id = String(extra.lead_event_id).slice(0, 80);
+      var h1 = {};
+      try { h1 = window.tplH1ParaLead ? window.tplH1ParaLead() : {}; } catch (_) { h1 = {}; }
+      if (h1 && h1.experimento_id) {
+        ["experimento_id", "lp_id", "variante_h1", "angulo", "variante_exposta", "angulo_exposto", "visitante_id", "persistencia", "estado"].forEach(function (k) {
+          if (h1[k] !== "" && h1[k] != null) payload[k] = h1[k];
+        });
+        if (h1.modo_teste === true) payload.modo_teste = true;
+      }
       enviar(payload);
     } catch (_) {}
   };
@@ -256,10 +331,24 @@
     window.tplFormEvento({ evento: "form_inicio", norma: normaDo(form) });
   });
 
+  function motivoValidacao(el) {
+    var codigo = el && el.dataset ? String(el.dataset.telMotivo || "") : "";
+    if (!/^[a-z0-9_]{1,40}$/.test(codigo)) {
+      var v = el && el.validity;
+      codigo = "invalido";
+      if (v && v.valueMissing) codigo = "vazio";
+      else if (v && (v.typeMismatch || v.patternMismatch)) codigo = "formato";
+      else if (v && (v.tooShort || v.tooLong)) codigo = "incompleto";
+    }
+    return codigo;
+  }
+
   document.addEventListener("submit", function (e) {
     var form = formLead(e.target);
     if (!form) return;
-    window.tplFormEvento({ evento: "envio_clique", norma: normaDo(form) });
+    var norma = normaDo(form);
+    window.tplFormEvento({ evento: "envio_clique", norma: norma });
+    armarEspera(norma);
   }, true);
 
   document.addEventListener("invalid", function (e) {
@@ -268,6 +357,7 @@
     if (!form) return;
     var nome = (t && t.name) || "";
     if (!/^[A-Za-z][A-Za-z0-9_-]{0,39}$/.test(nome)) return;
+    try { form.dataset.funilVal = "1"; } catch (_) {}
     var agora = Date.now();
     if (agora - valStamp > 500) {
       valCampos = {};
@@ -275,7 +365,14 @@
     }
     if (valCampos[nome]) return;
     valCampos[nome] = 1;
-    window.tplFormEvento({ evento: "erro_validacao", campo: nome, norma: normaDo(form) });
+    var codigo = motivoValidacao(t);
+    window.tplFormEvento({
+      evento: "erro_validacao",
+      campo: nome,
+      erro_codigo: codigo,
+      erro_msg: MOTIVO_MSG[codigo] || "invalido",
+      norma: normaDo(form),
+    });
   }, true);
 
   document.addEventListener("tpl:turnstile-fail", function (e) {
@@ -330,6 +427,54 @@
     });
   }
 
+  function medicaoViva() {
+    try {
+      var vivo = window.__tplH1 && window.__tplH1.medicao;
+      if (vivo && vivo.experimento_id) return vivo;
+    } catch (_) {}
+    try {
+      var salvo = JSON.parse(sessionStorage.getItem("tpl_h1_origem") || "null");
+      if (salvo && salvo.experimento_id) return salvo;
+    } catch (_) {}
+    return null;
+  }
+
+  window.tplH1ParaLead = function () {
+    var m = medicaoViva();
+    if (!m) return {};
+    return {
+      experimento_id: m.experimento_id || "",
+      lp_id: m.lp_id || "",
+      variante_h1: m.variante_h1 || "",
+      angulo: m.angulo || "",
+      variante_exposta: m.variante_exposta || "",
+      angulo_exposto: m.angulo_exposto || "",
+      modo_teste: m.modo_teste === true,
+      visitante_id: m.visitante_id || "",
+      sessao_id: m.sessao_id || "",
+      persistencia: m.persistencia || "",
+      estado: m.estado || "",
+    };
+  };
+
+  function enriquecerLead(init) {
+    if (!init || typeof init.body !== "string") return init;
+    var extra = window.tplH1ParaLead ? window.tplH1ParaLead() : null;
+    if (!extra || !extra.experimento_id) return init;
+    try {
+      var parsed = JSON.parse(init.body);
+      if (!parsed || typeof parsed !== "object") return init;
+      Object.keys(extra).forEach(function (k) {
+        if (extra[k] === "" || extra[k] == null) return;
+        if (parsed[k] == null || parsed[k] === "") parsed[k] = extra[k];
+      });
+      if (extra.modo_teste === true) parsed.modo_teste = true;
+      return Object.assign({}, init, { body: JSON.stringify(parsed) });
+    } catch (_) {
+      return init;
+    }
+  }
+
   if (typeof window.fetch === "function") {
     var fetchOriginal = window.fetch.bind(window);
     window.fetch = function (input, init) {
@@ -338,6 +483,7 @@
       var caminho = "";
       try { caminho = new URL(url, location.origin).pathname; } catch (_) {}
       if (caminho !== "/api/lead") return fetchOriginal(input, init);
+      init = enriquecerLead(init);
       var meta = metaDoEnvio(init);
       leadAberto++;
       return fetchOriginal(input, init).then(function (res) {
@@ -372,8 +518,31 @@
         erro_codigo: "timeout",
         erro_msg: "tempo esgotado",
       });
+      return;
+    }
+    if (espera && espera.aberta) {
+      espera.saiu = true;
+      vencerEspera(espera);
     }
   });
+
+  window.tplPrecisaTurnstile = function () {
+    if (typeof window.tplTurnstileToken === "function") return window.tplTurnstileToken();
+    try {
+      document.dispatchEvent(new CustomEvent("tpl:turnstile-fail", { detail: { codigo: "script" } }));
+    } catch (_) {}
+    return Promise.reject(new Error("turnstile_script"));
+  };
+
+  window.tplLeadMarca = function (form) {
+    var marca = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    if (form) form.dataset.leadAttempt = marca;
+    return marca;
+  };
+
+  window.tplLeadMarcaAtual = function (form, marca) {
+    return !!form && form.dataset.leadSubmitted === "1" && form.dataset.leadAttempt === marca;
+  };
 
   function paginaDeLp() {
     if (document.documentElement.getAttribute("data-tpl-lp") === "1") return true;

@@ -4,6 +4,8 @@ import TrackingKit from "../components/TrackingKit.astro";
 import MetaPixel from "../components/MetaPixel.astro";
 import OaiqPixel from "../components/OaiqPixel.astro";
 import ClarityDiag from "../components/ClarityDiag.astro";
+import { clientJs } from "../../h1-experimento.js";
+import { configCliente } from "../data/h1-experimentos.js";
 
 const {
   title = "Templum Consultoria — Certificação ISO com garantia de 200%",
@@ -14,7 +16,10 @@ const {
   headerAnchorDesktop = "",
   headerCta = "Falar com especialista",
   schemas = [],
+  h1Experimento = null,
 } = Astro.props;
+
+const h1Config = configCliente(h1Experimento);
 
 const desktopAnchor = headerAnchorDesktop || formAnchor;
 const splitHeaderCta = desktopAnchor !== formAnchor;
@@ -31,6 +36,25 @@ const allSchemas = schemas;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    {h1Config && (
+      <>
+        <style is:inline>
+          html.tpl-h1-wait h1#tpl-h1 { visibility: hidden; }
+          h1#tpl-h1 { text-wrap: balance; overflow-wrap: break-word; }
+        </style>
+        <script is:inline define:vars={{ h1Config }}>
+          window.__TPL_H1_CONFIG = h1Config;
+          try {
+            var liga = h1Config.estado === "em_execucao" || h1Config.estado === "encerrado" || /(?:\?|&)h1=[1-5](?:&|$)/.test(location.search);
+            if (liga) {
+              document.documentElement.classList.add("tpl-h1-wait");
+              setTimeout(function () { document.documentElement.classList.remove("tpl-h1-wait"); }, 1500);
+            }
+          } catch (e) {}
+        </script>
+        <script is:inline set:html={clientJs()}></script>
+      </>
+    )}
 
     <!-- Meta Pixel: código base OFICIAL, carrega imediato (init + PageView). -->
     <MetaPixel />
@@ -262,8 +286,9 @@ const allSchemas = schemas;
       };
     </script>
 
-    <script is:inline src="/js/form-funil.js?v=20261022"></script>
-    <script is:inline src="/js/tpl-turnstile.js?v=2"></script>
+    <script is:inline src="/js/form-funil.js?v=20261023h1"></script>
+    <script is:inline src="/js/tpl-turnstile.js?v=3"></script>
+    <script is:inline src="/js/telefone-br.js?v=20261023"></script>
     <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
          depois de confirmar que o Supabase salvou o cadastro. trk.lead()
          continua na /obrigado, tratando GA4/Ads/TikTok (inalterado). -->
@@ -272,7 +297,36 @@ const allSchemas = schemas;
         var form = e.target && e.target.closest && e.target.closest("form[data-trk-event]");
         if (!form) return;
         e.preventDefault();
-        if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
+        if (window.tplClearLeadError) window.tplClearLeadError(form);
+        var telEl = form.querySelector('input[name="telefone"]');
+        if (telEl && window.tplTelefone) window.tplTelefone.aplicar(telEl, { mostrar: true, rolar: true });
+        try { delete form.dataset.funilVal; } catch (_) {}
+        var segue = true;
+        try {
+          if (form.reportValidity) segue = form.reportValidity();
+          else if (form.checkValidity) segue = form.checkValidity();
+        } catch (_) { segue = true; }
+        if (!segue) {
+          if (form.dataset.funilVal !== "1" && window.tplFormEvento) {
+            var ruim = form.querySelector(":invalid");
+            var campo = ruim && ruim.name && /^[A-Za-z][A-Za-z0-9_-]{0,39}$/.test(ruim.name) ? ruim.name : "form";
+            var codigo = (ruim && ruim.dataset && ruim.dataset.telMotivo) || "";
+            if (!codigo && ruim && ruim.validity && ruim.validity.valueMissing) codigo = "vazio";
+            if (!codigo) codigo = "invalido";
+            var normaInput = form.querySelector('input[name="norma"], select[name="norma"]');
+            window.tplFormEvento({
+              evento: "erro_validacao",
+              campo: campo,
+              erro_codigo: codigo,
+              erro_msg: codigo,
+              norma: normaInput ? normaInput.value : "",
+            });
+          }
+          try {
+            if (document.activeElement === telEl && telEl && telEl.blur) telEl.blur();
+          } catch (_) {}
+          return;
+        }
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
         var evt =
@@ -288,6 +342,7 @@ const allSchemas = schemas;
         // Trava de disparo único: o mesmo form não processa 2x.
         if (form.dataset.leadSubmitted === "1") return;
         form.dataset.leadSubmitted = "1";
+        var marca = window.tplLeadMarca ? window.tplLeadMarca(form) : "";
 
         var btn = form.querySelector('[type="submit"]');
         if (btn) { btn.disabled = true; }
@@ -304,12 +359,17 @@ const allSchemas = schemas;
         // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
         // é o que permite o Meta deduplicar em vez de contar 2 leads.
         var leadEventId = window.__tplUuid();
-        var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+        var tokenPromise = window.tplPrecisaTurnstile ? window.tplPrecisaTurnstile() : Promise.reject();
+        function tentativaAtual() {
+          return !marca || !window.tplLeadMarcaAtual || window.tplLeadMarcaAtual(form, marca);
+        }
         tokenPromise.then(function (token) {
+        if (!tentativaAtual()) return;
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
             event_id: leadEventId,
+            modo_teste: !!(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste),
           }));
         } catch (_) {}
         var _t = setTimeout(_go, 5000);
@@ -379,7 +439,7 @@ const allSchemas = schemas;
             }
             var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
             clearTimeout(_t);
-            if (saved) {
+            if (saved && !(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)) {
               window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
               // Gancho p/ eventos extras da campanha (ex.: lead qualificado por
               // faturamento). A LP escuta e dispara o que precisar ANTES dos 400ms
@@ -404,7 +464,7 @@ const allSchemas = schemas;
           if (window.tplTurnstileReset) window.tplTurnstileReset();
           _go();
         }
-        }).catch(function () { _failTurnstile(); });
+        }).catch(function () { if (tentativaAtual()) _failTurnstile(); });
       });
     </script>
 
@@ -431,21 +491,23 @@ const allSchemas = schemas;
       })();
     </script>
 
-    <!-- Máscara telefone -->
+    <!-- Máscara e validação do WhatsApp (DDD, +55, espaço, 9 na frente). -->
     <script is:inline>
+      function ehTelefone(el) {
+        return el && el.tagName === "INPUT" && el.name === "telefone" && window.tplTelefone;
+      }
       document.addEventListener("input", function (e) {
-        var el = e.target;
-        if (!el || el.tagName !== "INPUT" || el.name !== "telefone") return;
-        var d = el.value.replace(/\D/g, "").substring(0, 11);
-        var len = d.length;
-        var mask = "";
-        if (len === 0) { el.value = ""; return; }
-        if (len <= 2) { mask = "(" + d; }
-        else if (len <= 6) { mask = "(" + d.slice(0,2) + ") " + d.slice(2); }
-        else if (len <= 10) { mask = "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6); }
-        else { mask = "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7); }
-        el.value = mask;
+        if (!ehTelefone(e.target)) return;
+        window.tplTelefone.aplicar(e.target, { mostrar: false });
       });
+      document.addEventListener("change", function (e) {
+        if (!ehTelefone(e.target)) return;
+        window.tplTelefone.aplicar(e.target, { mostrar: true });
+      });
+      document.addEventListener("blur", function (e) {
+        if (!ehTelefone(e.target)) return;
+        window.tplTelefone.aplicar(e.target, { mostrar: true });
+      }, true);
     </script>
 
   </body>

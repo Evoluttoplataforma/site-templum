@@ -7,8 +7,11 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
+import H1Principal from "../../components/H1Principal.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/pbqp-h.js";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
+import { passosDaProposta, porquesDaProposta } from "../../lib/lp-proposta.js";
 
 const slug = "pbqp-h";
 const norma = normas.find((n) => n.slug === slug) || {};
@@ -16,6 +19,9 @@ const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o PBQP-H.";
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const h1 = experimentoH1("pbqph");
+const passos = passosDaProposta(d.passos);
+const porques = porquesDaProposta(d.porques);
 ---
 
 <LpBase
@@ -24,6 +30,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   formAnchor="#form"
   headerAnchorDesktop="#contato"
   headerCta="Solicite uma proposta"
+  h1Experimento={h1}
 >
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
@@ -32,7 +39,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
-          <h1 class="cs-title">{d.hero.titulo[0]}<span class="cs-hl">{d.hero.titulo[1]}</span>{d.hero.titulo[2]}</h1>
+          <H1Principal experimento={h1} />
           <p class="cs-sub">{d.hero.sub}</p>
           {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
@@ -77,7 +84,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container xl">
         <div class="section-header"><span class="tag-pill">Como implementamos</span><h2>7 passos até a sua <em class="accent">certificação</em></h2><p>Facilitamos a transmissão do conhecimento para você certificar na {norma.nome}.</p></div>
         <div class="step-grid">
-          {d.passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {passos.map((p, i) => <div class="step-card reveal"><span class="step-num">{String(i + 1).padStart(2, "0")}</span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -87,7 +94,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       <div class="container lg">
         <div class="section-header"><span class="tag-pill tag-pill--glow">Por que a Templum</span><h2>Segurança, experiência e <em class="accent">garantia em contrato</em></h2></div>
         <div class="why-grid">
-          {d.porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+          {porques.map((p) => <div class="why-card reveal"><span class="why-ico"><iconify-icon icon={p.icon}></iconify-icon></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
         </div>
       </div>
     </section>
@@ -178,7 +185,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
           <h2>Fale agora com um especialista <em class="accent">{norma.nome}</em></h2>
           <p>Preencha o formulário e um especialista entrará em contato.</p>
           <ul class="check-list">
-            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta e cronograma sob medida</li>
+            <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Proposta sob medida</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Garantia de 200% em contrato</li>
             <li class="check-item"><span class="check-circle"><iconify-icon icon="solar:check-read-linear"></iconify-icon></span> Atendimento 100% online</li>
           </ul>
@@ -196,7 +203,7 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
       </div>
     </section>
   </div>
-  <SaidaPesquisa norma={norma.nome} />
+  <SaidaPesquisa norma={norma.nome} oferta="proposta" />
 </LpBase>
 
 <style>
@@ -221,8 +228,8 @@ const heroChips = d.hero.chips || d.chipsPadrao || [];
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .cs-hero-text { max-width: 600px; }
   .cs-hero .tag-pill { margin-bottom: 20px; }
-  .cs-title { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
-  .cs-hl { color: var(--accent-lt); }
+  :global(#tpl-h1.cs-title) { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); }
+  :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
   .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
   .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
   .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
