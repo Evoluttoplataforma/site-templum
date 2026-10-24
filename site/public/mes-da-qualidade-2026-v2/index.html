@@ -416,13 +416,17 @@
   .faq summary:focus-visible{outline-offset:-3px}
 
   /* ---------- Final CTA ---------- */
-  .final{background:var(--cream-2); color:var(--ink); text-align:left; overflow:hidden; position:relative}
-  .final h2{font-size:clamp(1.9rem,3.8vw,3rem); color:var(--navy); margin-bottom:24px; max-width:18em}
+  .final{background:var(--navy); color:var(--cream); text-align:left; overflow:hidden; position:relative; isolation:isolate}
+  .final::before{
+    content:""; position:absolute; left:50%; bottom:-40%; transform:translateX(-50%); width:min(1100px,160vw); height:760px; z-index:-1;
+    background:radial-gradient(closest-side, rgba(255,89,37,.26), rgba(255,89,37,0) 70%);
+  }
+  .final h2{font-size:clamp(1.9rem,3.8vw,3rem); color:var(--cream); margin-bottom:24px; max-width:18em}
   .final h2 .dot{color:var(--orange)}
-  .final p{color:var(--muted)}
+  .final p{color:var(--muted-dark)}
   .final .lead{margin-bottom:44px}
   .final__row{display:flex; flex-wrap:wrap; gap:20px 28px; align-items:center}
-  .final__row small{font-size:14px; color:var(--muted)}
+  .final__row small{font-size:14px; color:var(--muted-dark)}
   .footer{background:var(--navy); color:var(--muted-dark); padding-block:28px; border-top:1px solid var(--navy-line); font-size:13px}
   .footer .wrap{display:flex; flex-wrap:wrap; gap:12px 28px; justify-content:space-between; align-items:center}
 
