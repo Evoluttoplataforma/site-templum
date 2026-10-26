@@ -300,9 +300,12 @@
 /nucleos/*  /solucoes-de-ia/  301
 /ia/*  /solucoes-de-ia/  301
 
-# Política de privacidade (linkada como /privacidade em alguns landers) → /page
-/privacidade  /page/  301
-/privacidade/  /page/  301
+# Política de privacidade. O endereço público é /politica-de-privacidade/.
+# /page era o arquivo antigo. /privacidade aparece em landers antigos.
+/page  /politica-de-privacidade/  301
+/page/  /politica-de-privacidade/  301
+/privacidade  /politica-de-privacidade/  301
+/privacidade/  /politica-de-privacidade/  301
 
 # LP Diagnóstico de Gestão (Meta Ads) — variações sem hífen usadas em anúncio
 /diagnosticodegestao  /diagnostico-de-gestao/  301
