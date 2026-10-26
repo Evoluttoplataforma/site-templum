@@ -3,7 +3,7 @@ import LpBase from "../../layouts/LpBase.astro";
 import { experimentoH1 } from "../../data/h1-experimentos.js";
 
 // Layout visual da LP mkt /iso-9001/variant-a/, com o texto da consultoria ISO 27001.
-// O sorteio tpl_h1_iso27001v2_r01 vale só nesta página.
+// O sorteio tpl_h1_iso27001v2_r02 vale só nesta página.
 // A LP dos anúncios (/consultoria/iso-27001-lp/) segue na rodada tpl_h1_iso27001_r01.
 // O formulário usa os mesmos campos do funil (cargo e mensagem) para a proposta chegar no CRM.
 
@@ -93,7 +93,7 @@ const faturamentos = [
       <div class="i27-wrap i27-hero-grid">
         <div class="i27-hero-copy">
           <p class="i27-kicker">Consultoria para certificação ISO&nbsp;27001</p>
-          <h1 id="tpl-h1">Seus clientes exigem a <span>ISO 27001</span>? Prepare sua empresa para atender.</h1>
+          <h1 id="tpl-h1">Seus clientes exigem a <span>ISO 27001</span>? Prepare sua empresa.</h1>
           <script is:inline>
             if (window.tplH1Aplicar) window.tplH1Aplicar();
           </script>
@@ -946,9 +946,16 @@ const faturamentos = [
     .i27-wrap { width: min(1180px, calc(100% - 32px)); }
     .i27-jumps, .form-row, .i27-cards, .i27-sectors { grid-template-columns: 1fr; }
     .i27-form { padding: 20px; }
+    .i27 h1 { font-size: 28px; line-height: 1.12; }
+    .i27 h1 :global(span) { white-space: nowrap; }
+    .i27-hero { padding: 20px 0 40px; }
+    .i27-hero-copy { gap: 12px; }
+    .i27-hero .i27-sub { font-size: 15px; line-height: 1.45; }
+    .i27-hero .i27-checks { gap: 8px; margin: 0; }
+    .i27-hero .i27-checks li { font-size: 14.5px; line-height: 1.35; }
+    .i27-hero-actions { margin-top: 0; gap: 8px; }
     .i27-photo { aspect-ratio: 1 / 1; border-radius: 4.5rem 4.5rem 20px 20px; }
     .i27-float { position: static; max-width: none; margin-top: 16px; }
-    .i27-hero { padding-bottom: 48px; }
     .i27-sec, .i27-block, .i27-formsec, .i27-case, .i27-cover, .i27-final { padding: 64px 0; }
   }
   @media (max-width: 767px) {

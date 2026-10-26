@@ -337,8 +337,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-01-templum-os.mp4" type="video/mp4" />
+          <video width="720" height="812" muted loop playsinline preload="none" data-motion poster="/assets/lp/iso9001-v2/m/iso-01.jpg">
+            <source data-src="/assets/lp/iso9001-v2/m/iso-01-m.mp4" type="video/mp4" />
           </video>
         </article>
 
@@ -353,8 +353,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-02-templum-os.mp4" type="video/mp4" />
+          <video width="720" height="812" muted loop playsinline preload="none" data-motion poster="/assets/lp/iso9001-v2/m/iso-02.jpg">
+            <source data-src="/assets/lp/iso9001-v2/m/iso-02-m.mp4" type="video/mp4" />
           </video>
         </article>
 
@@ -369,8 +369,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-03-templum-os.mp4" type="video/mp4" />
+          <video width="720" height="812" muted loop playsinline preload="none" data-motion poster="/assets/lp/iso9001-v2/m/iso-03.jpg">
+            <source data-src="/assets/lp/iso9001-v2/m/iso-03-m.mp4" type="video/mp4" />
           </video>
         </article>
 
@@ -385,8 +385,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-04.webm" type="video/webm" />
+          <video width="720" height="758" muted loop playsinline preload="none" data-motion poster="/assets/lp/iso9001-v2/m/iso-04.jpg">
+            <source data-src="/assets/lp/iso9001-v2/m/iso-04-m.mp4" type="video/mp4" />
           </video>
         </article>
       </div>
@@ -636,16 +636,28 @@ const videos = [
         });
       });
       var vids = document.querySelectorAll("video[data-motion]");
-      if (!("IntersectionObserver" in window)) return;
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var v = entry.target;
-          v.play().catch(function () {});
-          io.unobserve(v);
+      function armarVideo(v) {
+        if (v.getAttribute("data-armed") === "1") return;
+        v.setAttribute("data-armed", "1");
+        v.querySelectorAll("source[data-src]").forEach(function (s) {
+          s.src = s.getAttribute("data-src");
         });
-      }, { rootMargin: "120px" });
-      vids.forEach(function (v) { io.observe(v); });
+        v.load();
+        var play = v.play();
+        if (play && play.catch) play.catch(function () {});
+      }
+      if (!("IntersectionObserver" in window)) {
+        vids.forEach(armarVideo);
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            armarVideo(entry.target);
+            io.unobserve(entry.target);
+          });
+        }, { rootMargin: "160px" });
+        vids.forEach(function (v) { io.observe(v); });
+      }
     })();
   </script>
 </LpBase>
@@ -834,7 +846,8 @@ const videos = [
     .v2-nums ul { flex-wrap: wrap; justify-content: flex-start; }
   }
   @media (max-width: 860px) {
-    .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos, .v2-perks { grid-template-columns: 1fr 1fr; direction: ltr; }
+    .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos, .v2-perks { grid-template-columns: 1fr; direction: ltr; }
+    .v2-feat { gap: 24px; padding: 40px 0; }
     .v2-etapas { grid-template-columns: 1fr; }
     .v2-cards { flex-direction: column; }
     .v2-cards article { padding: 24px; gap: 20px; }
