@@ -13,6 +13,7 @@ const EVENTOS = new Set([
   "erro_rede",
   "whatsapp_clique",
   "envio_sem_resposta",
+  "cta_clique",
   "h1_exposto",
   "h1_falha",
 ]);
@@ -117,6 +118,11 @@ export function sanitizeFormEvento(input) {
   if (evento === "erro_validacao") {
     const c = campo(input.campo);
     if (c) row.campo = c;
+  }
+
+  if (evento === "cta_clique") {
+    const pos = token(input.campo, 40);
+    if (pos === "topo" || pos === "meio" || pos === "final" || pos === "menu") row.campo = pos;
   }
 
   if (

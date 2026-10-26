@@ -229,6 +229,15 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
   }
   .lead-wpp:hover { color: var(--text-2); }
 
+  /* 16px no celular: o Safari dá zoom se o campo tem menos que isso e a tela
+     pula, escondendo o botão de envio atrás do teclado. */
+  @media (max-width: 767px) {
+    .lead-card .input,
+    .lead-card .select,
+    .lead-card .textarea { font-size: 16px; }
+    .lead-card .btn[type="submit"] { scroll-margin-bottom: 120px; }
+  }
+
   .lead-wpp-fixo {
     display: none;
   }

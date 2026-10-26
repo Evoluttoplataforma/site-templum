@@ -17,6 +17,8 @@ const {
   headerCta = "Falar com especialista",
   schemas = [],
   h1Experimento = null,
+  hideChrome = false,
+  lcpImage = "",
 } = Astro.props;
 
 const h1Config = configCliente(h1Experimento);
@@ -104,6 +106,7 @@ const allSchemas = schemas;
       })();
     </script>
 
+    <slot name="head" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <title>{title}</title>
@@ -123,6 +126,7 @@ const allSchemas = schemas;
       <script type="application/ld+json" set:html={JSON.stringify(s)} />
     ))}
 
+    {lcpImage && <link rel="preload" as="image" href={lcpImage} type="image/avif" fetchpriority="high" />}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-500.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-800.woff2" crossorigin />
@@ -133,7 +137,7 @@ const allSchemas = schemas;
   </head>
   <body>
 
-    <!-- ── HEADER LP ── -->
+    {hideChrome ? null : (
     <header class="lp-header">
       <div class="lp-header-inner">
         <span class="lp-logo">
@@ -160,12 +164,13 @@ const allSchemas = schemas;
         </div>
       </div>
     </header>
+    )}
 
     <main>
       <slot />
     </main>
 
-    <!-- ── FOOTER LP ── -->
+    {hideChrome ? null : (
     <footer class="lp-footer">
       <div class="lp-footer-inner">
         <div class="lp-footer-brand">
@@ -179,6 +184,7 @@ const allSchemas = schemas;
         </div>
       </div>
     </footer>
+    )}
 
     <!-- Reveal on scroll -->
     <script is:inline>
@@ -286,7 +292,7 @@ const allSchemas = schemas;
       };
     </script>
 
-    <script is:inline src="/js/form-funil.js?v=20261023h1"></script>
+    <script is:inline src="/js/form-funil.js?v=20261026lpv2"></script>
     <script is:inline src="/js/tpl-turnstile.js?v=3"></script>
     <script is:inline src="/js/telefone-br.js?v=20261023"></script>
     <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara

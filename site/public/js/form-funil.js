@@ -291,6 +291,8 @@
       alvos.push(form);
     });
     if (!alvos.length || viuForm) return;
+    alvos = alvos.filter(function (form) { return !form.closest("dialog"); });
+    if (!alvos.length) return;
     function marcar(form) {
       if (viuForm) return;
       viuForm = true;
@@ -559,11 +561,23 @@
   }
 
   document.addEventListener("click", function (e) {
+    var abre = e.target && e.target.closest ? e.target.closest("[data-abre-form]") : null;
+    if (abre && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+      var pos = String(abre.getAttribute("data-cta-pos") || "");
+      var extraCta = { evento: "cta_clique", norma: normaDo(abre.closest("form") || document.querySelector("form[data-trk-event]")) };
+      if (pos === "topo" || pos === "meio" || pos === "final" || pos === "menu") extraCta.campo = pos;
+      window.tplFormEvento(extraCta);
+    }
     if (!paginaDeLp()) return;
     if (e.defaultPrevented) return;
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
     if (!a || !ehWhatsapp(a.href)) return;
+    // Link com número e texto fixos (ex.: confirmação do Mês da Qualidade).
+    // O kit não reescreve o href nem troca pelo WhatsApp genérico do site.
+    // Mensagem travada (ex.: confirmação do Mês da Qualidade) não ganha código.
+    // O botão fixo da LP traz os dois atributos e segue o fluxo do código.
+    if (a.getAttribute("data-wpp-fixo") === "1" && a.getAttribute("data-wpp-ref") !== "1") return;
     var ref = "";
     var normaWpp = "";
     if (a.getAttribute("data-wpp-ref") === "1") {

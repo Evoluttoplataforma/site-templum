@@ -96,4 +96,9 @@ assert.equal(motivo.campo, "telefone");
 assert.equal(motivo.erro_codigo, "sem_ddd");
 assert.equal(motivo.erro_msg, "falta ddd");
 
+const cta = sanitizeFormEvento({ ...base, evento: "cta_clique", campo: "topo" });
+assert.equal(cta.evento, "cta_clique");
+assert.equal(cta.campo, "topo");
+assert.equal(sanitizeFormEvento({ ...base, evento: "cta_clique", campo: "rodape" }).campo, undefined);
+
 console.log("form-evento: ok");
