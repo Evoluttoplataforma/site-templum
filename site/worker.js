@@ -16,7 +16,8 @@
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
-//                             LP /iso-9001-advocacia-v2/ e /consultoria/iso-9001-lp-v2/:
+//                             LP /iso-9001-advocacia-v2/, /consultoria/iso-9001-lp-v2/
+//                             e /consultoria/pbqp-h-lp-v2/:
 //                             faixas acima de R$ 100 mil vão ao INBOUND.
 //                             Até R$ 100 mil vai ao MQL.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
@@ -1899,6 +1900,11 @@ const FATURAMENTO_SPLIT_LPS = {
     tag: "iso9001-ate-100mil",
     source: "LP ISO 9001",
     note: "LP ISO 9001.",
+  },
+  "/consultoria/pbqp-h-lp-v2/": {
+    tag: "pbqph-ate-100mil",
+    source: "LP PBQP-H",
+    note: "LP PBQP-H.",
   },
 };
 const FATURAMENTO_INBOUND = new Set([
