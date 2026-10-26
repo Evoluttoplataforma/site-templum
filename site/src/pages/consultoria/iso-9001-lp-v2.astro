@@ -228,7 +228,6 @@ const videos = [
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{preco} com o Templum OS, nosso software com IA que padroniza processos, indica não conformidades e muito mais.</span></li>
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Certificação garantida em contrato.</span></li>
           </ul>
-          <p class="v2-price-note">O valor de partida depende do porte, das unidades, dos processos e da maturidade da gestão. A taxa da certificadora é cobrada à parte.</p>
           <div class="v2-cta-block">
             <button type="button" class="v2-split v2-split--primary v2-split--lg" data-abre-form data-cta-pos="topo">
               <span class="v2-split__arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -458,7 +457,7 @@ const videos = [
         <p class="v2-os-cap">Não é apenas consultoria. É uma nova forma de implementar a ISO 9001.</p>
         <div class="v2-table" role="table">
           <div class="v2-table-head" role="row">
-            <span class="v2-sem"><span>Sem a</span><strong>Templum</strong></span>
+            <span class="v2-sem">Jeito tradicional</span>
             <span class="v2-tem"><img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="92" height="24" /></span>
           </div>
           {comparativo.map((linha) => (
@@ -693,8 +692,7 @@ const videos = [
   .v2-checks, .v2-feat ul, .v2-points { margin: 18px 0; padding: 0; list-style: none; display: grid; gap: 10px; }
   .v2-checks li, .v2-feat li, .v2-points li { padding-left: 26px; position: relative; }
   .v2-checks li::before, .v2-feat li::before, .v2-points li::before { content: ""; position: absolute; left: 0; top: .35em; width: 14px; height: 8px; border-left: 2px solid var(--hot); border-bottom: 2px solid var(--hot); transform: rotate(-45deg); }
-  .v2-hero .v2-checks { gap: 16px; margin: 48px 0 16px; }
-  .v2-price-note { margin: 0 0 28px; max-width: 560px; color: #200801cc; font-size: 14px; line-height: 1.45; }
+  .v2-hero .v2-checks { gap: 16px; margin: 48px 0 28px; }
   .v2-hero .v2-checks li { display: flex; align-items: flex-start; gap: 16px; padding: 0; font-size: 16px; line-height: 1.4; color: #200801cc; }
   .v2-hero .v2-checks li::before { content: none; }
   .v2-check { width: 32px; height: 32px; min-width: 32px; margin-top: -3px; border-radius: 999px; background: #2008010d; display: flex; align-items: center; justify-content: center; }
@@ -780,9 +778,8 @@ const videos = [
   .v2-table-head, .v2-table-row { display: grid; grid-template-columns: .92fr 1.08fr; gap: 8px; align-items: stretch; }
   .v2-table-head span { display: flex; justify-content: center; align-items: center; min-height: 88px; padding: 16px 20px; border-radius: 16px; text-align: center; }
   .v2-table-head img { width: 128px; height: auto; }
-  .v2-table-head span.v2-sem { flex-direction: column; gap: 2px; background: #fff; border: 1px solid #eadfd6; font-size: 16px; font-weight: 500; line-height: 1.1; color: #212730; }
+  .v2-table-head span.v2-sem { background: #fff; border: 1px solid #eadfd6; font-size: 22px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; color: #212730; }
   .v2-table-head span.v2-tem { background: #fff4ed; border: 1px solid #ffe0d2; }
-  .v2-sem strong { display: block; color: #e7000b; font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1; white-space: nowrap; }
   .v2-cell { display: flex; align-items: center; min-height: 92px; padding: 22px 28px; border-radius: 16px; font-size: 17px; line-height: 1.4; color: #212730; }
   .v2-cell--sem { background: #fff; border: 1px solid #eadfd6; }
   .v2-cell--tem { background: #fff4ed; border: 1px solid #ffe0d2; font-weight: 600; }
