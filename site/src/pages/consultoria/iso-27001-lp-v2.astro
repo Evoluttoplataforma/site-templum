@@ -10,6 +10,7 @@ import { experimentoH1 } from "../../data/h1-experimentos.js";
 const h1 = experimentoH1("iso27001v2");
 const cta = "Solicite uma proposta";
 const norma = "ISO 27001";
+const wpp = "https://wa.me/5519993521270?text=" + encodeURIComponent("Olá! Vim pelo site da Templum e quero saber sobre a ISO 27001.");
 
 const passos = [
   { href: "#escopo", n: "01", t: "Escopo alinhado à sua necessidade." },
@@ -49,9 +50,9 @@ const motivos = [
           <img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="120" height="32" />
         </a>
         <nav class="i27-nav" aria-label="Seções" data-i27-nav>
-          <a href="#incluido">O que está incluído</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#acompanhamento">Acompanhamento</a>
+          <a href="#dores">Dores</a>
+          <a href="#metodo">Método</a>
+          <a href="#garantia">Garantia</a>
         </nav>
         <a class="i27-cta i27-cta--sm" href="#proposta">
           <span class="i27-cta-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -71,9 +72,9 @@ const motivos = [
         </button>
       </div>
       <nav aria-label="Seções">
-        <a href="#incluido">O que está incluído</a>
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#acompanhamento">Acompanhamento</a>
+        <a href="#dores">Dores</a>
+        <a href="#metodo">Método</a>
+        <a href="#garantia">Garantia</a>
       </nav>
       <a class="i27-cta i27-cta--block" href="#proposta">
         <span class="i27-cta-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -89,7 +90,7 @@ const motivos = [
           <script is:inline>
             if (window.tplH1Aplicar) window.tplH1Aplicar();
           </script>
-          <p class="i27-sub">Prepare sua empresa para a auditoria e para as exigências de segurança dos seus clientes.</p>
+          <p class="i27-sub">Implemente um sistema de gestão de segurança da informação com apoio especializado, método estruturado e tecnologia para acompanhar cada etapa.</p>
           <ul class="i27-checks">
             <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Consultor especialista para orientar sua equipe durante a implementação.</li>
             <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Documentação prevista no projeto e acompanhamento pelo Templum OS.</li>
@@ -124,32 +125,90 @@ const motivos = [
       </div>
     </section>
 
-    <section class="i27-sec" aria-labelledby="i27-autoridade">
+    <section class="i27-sec" id="dores">
       <div class="i27-wrap">
-        <h2 id="i27-autoridade">Experiência em sistemas de gestão para apoiar sua implementação.</h2>
-        <div class="i27-stats">
-          <article class="i27-stat">
-            <p class="i27-stat-n"><em>+8 mil</em></p>
-            <p>Empresas fortalecidas em diferentes sistemas de gestão.</p>
+        <p class="i27-kicker i27-kicker--teal">Dores</p>
+        <h2>O que impede sua empresa de atender aos requisitos de segurança.</h2>
+        <p class="i27-lede">Estas situações travam a resposta ao cliente e a preparação para a auditoria.</p>
+        <div class="i27-cards">
+          <article>
+            <h3>Seu cliente exige certificação</h3>
+            <p>A empresa precisa demonstrar atendimento aos requisitos para participar de determinadas negociações.</p>
           </article>
-          <article class="i27-stat i27-stat--orange">
-            <p class="i27-stat-n"><em>100% online</em></p>
-            <p>Consultoria com acompanhamento pelo Templum OS.</p>
+          <article>
+            <h3>As evidências estão espalhadas</h3>
+            <p>Políticas, controles, riscos e responsabilidades não estão organizados para a auditoria.</p>
           </article>
-          <article class="i27-stat i27-stat--navy">
-            <p class="i27-stat-n"><em>+30 anos</em></p>
-            <p>De experiência em consultoria e sistemas de gestão.</p>
+          <article>
+            <h3>Os riscos não estão mapeados</h3>
+            <p>Falta clareza sobre informações críticas, acessos e medidas de proteção.</p>
+          </article>
+          <article>
+            <h3>A equipe já está sobrecarregada</h3>
+            <p>Existe a necessidade de implementar o sistema de gestão, mas faltam tempo e orientação especializada.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="i27-sec i27-sec--tight" id="incluido">
+    <section class="i27-sec i27-sec--tight" id="beneficios">
       <div class="i27-wrap">
-        <p class="i27-kicker">Implementação da ISO&nbsp;27001</p>
-        <h2>Da exigência do cliente a um plano de implementação.</h2>
+        <p class="i27-kicker i27-kicker--teal">Benefícios</p>
+        <h2>Contratos, confiança, riscos e evidências no mesmo sistema.</h2>
+        <p class="i27-lede">A ISO 27001 organiza o que o cliente pede para ver antes de contratar, renovar ou homologar.</p>
+        <div class="i27-cards">
+          <article>
+            <h3>Contratos</h3>
+            <p>A empresa comprova segurança da informação quando o comprador exige isso para seguir a negociação.</p>
+          </article>
+          <article>
+            <h3>Confiança</h3>
+            <p>O cliente entende como as informações são protegidas, e a dúvida na hora de fechar diminui.</p>
+          </article>
+          <article>
+            <h3>Gestão de riscos</h3>
+            <p>Acessos, ativos e medidas de proteção ficam mapeados, com responsável e acompanhamento.</p>
+          </article>
+          <article>
+            <h3>Evidências</h3>
+            <p>Políticas, controles e registros ficam reunidos para a auditoria, em vez de espalhados pela operação.</p>
+          </article>
+        </div>
+        <div class="i27-who">
+          <div>
+            <p class="i27-pill">Para quem serve</p>
+            <h2>Para empresas de <span class="i27-teal">qualquer setor</span></h2>
+            <p>Segurança da informação para empresas que tratam dados críticos e querem confiança do mercado.</p>
+            <ul class="i27-sectors">
+              <li>Tecnologia e software</li>
+              <li>Serviços financeiros</li>
+              <li>Saúde e dados sensíveis</li>
+              <li>E-commerce</li>
+              <li>Telecom</li>
+              <li>Órgãos e cartórios</li>
+            </ul>
+          </div>
+          <aside class="i27-incluso">
+            <p class="i27-pill">O que está incluso</p>
+            <ul class="i27-checks">
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Consultor dedicado, sem limite de horas</li>
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Plataforma Templum OS para organizar toda a gestão</li>
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Todos os documentos elaborados por nós</li>
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Suporte diário com especialistas em horário comercial</li>
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Selo "Estamos Implementando" para exibir ao mercado</li>
+              <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Garantia de 200% registrada em contrato</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="i27-sec i27-sec--tight" id="metodo">
+      <div class="i27-wrap">
+        <p class="i27-kicker i27-kicker--teal">Método</p>
+        <h2>Como implementar com consultores e o Templum OS.</h2>
         <p class="i27-lede">Defina o que precisa ser feito, quem participa e como preparar sua empresa para a auditoria.</p>
-        <nav class="i27-jumps" id="como-funciona" aria-label="Etapas da implementação">
+        <nav class="i27-jumps" aria-label="Etapas da implementação">
           {passos.map((p) => (
             <a href={p.href}>
               <span>{p.n}</span>
@@ -248,6 +307,27 @@ const motivos = [
       </div>
     </section>
 
+    <section class="i27-sec" id="credibilidade">
+      <div class="i27-wrap">
+        <p class="i27-kicker i27-kicker--teal">Credibilidade</p>
+        <h2>Números da Templum e a prova na ISO&nbsp;27001.</h2>
+        <div class="i27-stats">
+          <article class="i27-stat">
+            <p class="i27-stat-n"><em>+8 mil</em></p>
+            <p>Empresas fortalecidas em diferentes sistemas de gestão.</p>
+          </article>
+          <article class="i27-stat i27-stat--teal">
+            <p class="i27-stat-n"><em>100% online</em></p>
+            <p>Consultoria com acompanhamento pelo Templum OS.</p>
+          </article>
+          <article class="i27-stat i27-stat--navy">
+            <p class="i27-stat-n"><em>+30 anos</em></p>
+            <p>De experiência em consultoria e sistemas de gestão.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="i27-case" id="case">
       <div class="i27-wrap">
         <p class="i27-kicker">Case ISO 27001:2022</p>
@@ -284,35 +364,84 @@ const motivos = [
       </div>
     </section>
 
-    <section class="i27-formsec" id="proposta">
-      <div class="i27-wrap i27-form-wrap">
-        <p class="i27-kicker">Proposta</p>
-        <h2>Solicite sua proposta de consultoria ISO&nbsp;27001.</h2>
-        <p class="i27-lede">Conte o que sua empresa precisa para conversarmos sobre escopo, implementação e investimento.</p>
+    <section class="i27-sec" id="garantia">
+      <div class="i27-wrap i27-split">
+        <div>
+          <p class="i27-kicker i27-kicker--teal">Garantia</p>
+          <h2>Certificação ou o dobro do dinheiro de volta.</h2>
+          <p>Ao concluir todas as etapas da consultoria e ainda assim não obter a certificação, devolvemos 200% do valor investido. A condição fica registrada em contrato e vale para quem segue o método até o fim.</p>
+          <p>A Templum implementa e prepara a empresa. A avaliação e a emissão do certificado continuam com o organismo certificador.</p>
+          <a class="i27-cta" href="#proposta"><span class="i27-cta-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="i27-cta-label">Quero a garantia de 200%</span></a>
+        </div>
+        <img src="/assets/img/garantia-200.webp" alt="Selo de garantia de 200% da Templum" width="640" height="658" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <section class="i27-sec i27-faq" id="faq">
+      <div class="i27-wrap i27-faq-wrap">
+        <p class="i27-kicker i27-kicker--teal">Perguntas frequentes</p>
+        <h2>Prazo, escopo, equipe, LGPD e auditoria.</h2>
+        <div class="i27-faq-list">
+          <details>
+            <summary>Quanto tempo leva para certificar?</summary>
+            <p>Depende do porte e do que a empresa já tem organizado. No início do projeto, o cronograma fica definido com a sua equipe.</p>
+          </details>
+          <details>
+            <summary>O escopo pode ser só uma parte da empresa?</summary>
+            <p>Sim. O escopo é delimitado com você: serviços, processos e operações que o cliente exige comprovar.</p>
+          </details>
+          <details>
+            <summary>Preciso ter equipe de TI interna?</summary>
+            <p>Não. A consultoria conduz a implementação e elabora os documentos previstos. A TI participa quando o controle depende dela.</p>
+          </details>
+          <details>
+            <summary>A ISO 27001 substitui a adequação à LGPD?</summary>
+            <p>Não. A ISO 27001 organiza a segurança da informação e ajuda a demonstrar controles. A LGPD segue como obrigação legal, com papéis e bases próprias.</p>
+          </details>
+          <details>
+            <summary>Quem faz a auditoria e emite o certificado?</summary>
+            <p>A Templum implementa e prepara a empresa, e acompanha a auditoria. A avaliação e o certificado ficam com um organismo certificador independente.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="i27-final" id="proposta">
+      <div class="i27-wrap i27-final-grid">
+        <div class="i27-final-copy">
+          <p class="i27-pill i27-pill--line">Comece agora</p>
+          <h2>Fale agora com um especialista <em>ISO 27001</em></h2>
+          <p>Preencha o formulário e um especialista entrará em contato.</p>
+          <ul class="i27-checks">
+            <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Proposta sob medida</li>
+            <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Garantia de 200% em contrato</li>
+            <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Atendimento 100% online</li>
+          </ul>
+        </div>
         <form class="form i27-form" data-trk-event="lead" novalidate data-obrigado="/consultoria/iso-27001-obrigado">
+          <h3>Fale agora com um especialista ISO&nbsp;27001</h3>
+          <p>Preencha o formulário e um especialista entrará em contato.</p>
           <input type="hidden" name="norma" value={norma} />
           <div class="form-row">
             <div class="field">
-              <label for="i27-nome">Nome completo</label>
+              <label for="i27-nome">Nome</label>
               <input class="input" id="i27-nome" name="nome" autocomplete="name" placeholder="Seu nome" required />
             </div>
             <div class="field">
-              <label for="i27-email">E-mail corporativo</label>
-              <input class="input" id="i27-email" type="email" name="email" autocomplete="email" placeholder="voce@empresa.com" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field">
-              <label for="i27-tel">WhatsApp</label>
+              <label for="i27-tel">Telefone / WhatsApp</label>
               <input class="input" id="i27-tel" type="tel" inputmode="numeric" name="telefone" autocomplete="tel" placeholder="(00) 00000-0000" required />
-            </div>
-            <div class="field">
-              <label for="i27-empresa">Nome da empresa</label>
-              <input class="input" id="i27-empresa" name="empresa" autocomplete="organization" placeholder="Razão social ou nome fantasia" required />
             </div>
           </div>
           <div class="field">
-            <label for="i27-papel">Seu papel no projeto</label>
+            <label for="i27-email">E-mail</label>
+            <input class="input" id="i27-email" type="email" name="email" autocomplete="email" placeholder="voce@empresa.com" required />
+          </div>
+          <div class="field">
+            <label for="i27-empresa">Empresa</label>
+            <input class="input" id="i27-empresa" name="empresa" autocomplete="organization" placeholder="Nome da empresa" required />
+          </div>
+          <div class="field">
+            <label for="i27-papel">Seu cargo</label>
             <select class="select" id="i27-papel" name="cargo" required>
               <option value="">Selecione</option>
               {papeis.map((p) => <option value={p}>{p}</option>)}
@@ -325,7 +454,8 @@ const motivos = [
               {motivos.map((m) => <option value={m}>{m}</option>)}
             </select>
           </div>
-          <button type="submit" class="i27-submit">Solicitar proposta</button>
+          <button type="submit" class="i27-submit">Solicite uma proposta</button>
+          <p class="i27-wpp"><a href={wpp}>Prefere conversar pelo WhatsApp?</a></p>
           <p class="i27-privacy">Usaremos seus dados para responder à solicitação. Consulte nossa <a href="/politica-de-privacidade/">Política de Privacidade</a>.</p>
         </form>
       </div>
@@ -392,6 +522,7 @@ const motivos = [
     --ink: #18191b;
     --ink-2: #3f424b;
     --soft: rgba(24, 25, 27, 0.62);
+    --teal: #14A7AF;
     background: var(--bg);
     color: var(--ink);
     font-weight: 500;
@@ -575,7 +706,7 @@ const motivos = [
   .i27-float p { font-size: 13px; line-height: 1.35; color: var(--ink-2); }
   .i27-float strong { display: block; color: var(--ink); font-size: 14px; }
 
-  .i27-sec, .i27-block, .i27-formsec, .i27-jumps, .i27-case, .i27-cover { scroll-margin-top: 84px; }
+  .i27-sec, .i27-block, .i27-formsec, .i27-jumps, .i27-case, .i27-cover, .i27-final, .i27-faq { scroll-margin-top: 84px; }
   .i27-sec, .i27-block { padding: 88px 0; border-top: 1px solid var(--border); }
   .i27-sec--tight { padding-bottom: 36px; }
   .i27-sec h2, .i27-formsec h2 { max-width: 20ch; }
@@ -733,6 +864,108 @@ const motivos = [
   .i27-cover img { width: 100%; height: auto; }
   .i27-cover .i27-cta { margin-top: 26px; }
 
+  .i27-kicker--teal { color: var(--teal); }
+  .i27-teal { color: var(--teal); font-style: normal; }
+  .i27-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .i27-cards article {
+    padding: 22px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .i27-cards h3 { font-size: 18px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .i27-cards p { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+  .i27-who {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+    align-items: start;
+    margin-top: 48px;
+  }
+  .i27-who h2 { max-width: 12ch; }
+  .i27-who > div > p { max-width: 46ch; margin-top: 12px; color: var(--ink-2); line-height: 1.5; }
+  .i27-pill {
+    display: inline-flex;
+    margin-bottom: 14px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    background: rgba(20, 167, 175, 0.1);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .i27-sectors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .i27-sectors li {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+  .i27-incluso {
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+  }
+  .i27-incluso .i27-checks { margin: 8px 0 0; }
+  .i27-incluso .i27-check { background: rgba(20, 167, 175, 0.14); color: var(--teal); }
+  .i27-stat--teal { background: var(--teal); border-color: transparent; }
+  .i27-stat--teal .i27-stat-n, .i27-stat--teal .i27-stat-n em, .i27-stat--teal p { color: var(--cream); }
+  .i27-garantia-img, #garantia img { width: min(100%, 420px); height: auto; margin-inline: auto; }
+  .i27-faq-wrap { max-width: 760px; }
+  .i27-faq-list { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .i27-faq-list details {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    padding: 0 18px;
+  }
+  .i27-faq-list summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .i27-faq-list summary::-webkit-details-marker { display: none; }
+  .i27-faq-list details p { padding-bottom: 16px; color: var(--ink-2); line-height: 1.5; }
+  .i27-final {
+    padding: 88px 0;
+    background: color-mix(in srgb, var(--teal) 24%, #0c1214);
+    color: var(--cream);
+  }
+  .i27-final-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.95fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .i27-final h2 { color: var(--cream); max-width: 14ch; }
+  .i27-final-copy > p { max-width: 42ch; margin: 14px 0 22px; color: rgba(255, 244, 221, 0.78); line-height: 1.5; }
+  .i27-final .i27-checks { color: var(--cream); }
+  .i27-final .i27-check { background: var(--orange); color: var(--cream); }
+  .i27-pill--line { background: transparent; color: var(--peach); border-color: rgba(253, 164, 125, 0.7); }
+  .i27-form h3 { font-size: 22px; letter-spacing: -0.03em; margin-bottom: 6px; }
+  .i27-form > p { margin-bottom: 18px; color: var(--ink-2); font-size: 14.5px; }
+  .i27-wpp { margin-top: 12px; text-align: center; }
+  .i27-wpp a { color: var(--ink-2); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+
   .i27-formsec { padding: 88px 0 96px; border-top: 1px solid var(--border); }
   .i27-form-wrap { max-width: 760px; }
   .i27-form {
@@ -770,7 +1003,7 @@ const motivos = [
   @media (max-width: 980px) {
     .i27-nav, .i27-bar .i27-cta { display: none; }
     .i27-burger { display: inline-flex; }
-    .i27-hero-grid, .i27-split, .i27-split--flip { grid-template-columns: 1fr; direction: ltr; }
+    .i27-hero-grid, .i27-split, .i27-split--flip, .i27-who, .i27-final-grid { grid-template-columns: 1fr; direction: ltr; }
     .i27-jumps { grid-template-columns: 1fr 1fr; }
     .i27-stats, .i27-results { grid-template-columns: 1fr; }
     .i27-case h2 { max-width: none; }
@@ -780,12 +1013,12 @@ const motivos = [
   }
   @media (max-width: 640px) {
     .i27-wrap { width: min(1180px, calc(100% - 32px)); }
-    .i27-jumps, .form-row { grid-template-columns: 1fr; }
+    .i27-jumps, .form-row, .i27-cards, .i27-sectors { grid-template-columns: 1fr; }
     .i27-form { padding: 20px; }
     .i27-photo { aspect-ratio: 1 / 1; border-radius: 4.5rem 4.5rem 20px 20px; }
     .i27-float { position: static; max-width: none; margin-top: 16px; }
     .i27-hero { padding-bottom: 48px; }
-    .i27-sec, .i27-block, .i27-formsec, .i27-case, .i27-cover { padding: 64px 0; }
+    .i27-sec, .i27-block, .i27-formsec, .i27-case, .i27-cover, .i27-final { padding: 64px 0; }
   }
   @media (max-width: 767px) {
     .i27-form .input, .i27-form .select { font-size: 16px; }
