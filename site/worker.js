@@ -1056,8 +1056,9 @@ async function handleLead(request, env, ctx) {
   applySegmentLpUtmDefaults(lead, body);
   applyLeadPaginaTracking(lead, body, request);
   applyBlogLeadAttribution(lead, body);
-  applyOrganicLeadAttribution(lead, body);
+  // Tira UTM herdada de outra página antes de preencher a campanha desta LP.
   applyConsultoriaLpCampaign(lead, body);
+  applyOrganicLeadAttribution(lead, body);
 
   const isIsca =
     lead.evento === "isca" ||
