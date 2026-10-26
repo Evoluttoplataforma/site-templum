@@ -15,7 +15,6 @@ const wpp = "https://wa.me/5519993521270?text=" + encodeURIComponent("Olá! Vim 
 const passos = [
   { href: "#diagnostico", n: "01", t: "Diagnóstico do escopo, dos controles e das lacunas." },
   { href: "#implementacao", n: "02", t: "Implementação com a equipe e a consultoria." },
-  { href: "#auditoria", n: "03", t: "Preparação para a auditoria de certificação." },
 ];
 
 const papeis = [
@@ -153,8 +152,8 @@ const motivos = [
     <section class="i27-sec i27-sec--tight" id="como-funciona">
       <div class="i27-wrap">
         <p class="i27-kicker i27-kicker--ink">Como funciona</p>
-        <h2>Diagnóstico, implementação e preparação para a auditoria.</h2>
-        <p class="i27-lede">A consultoria conduz as três etapas, do que o cliente exige até as evidências da auditoria.</p>
+        <h2>Diagnóstico e implementação.</h2>
+        <p class="i27-lede">A consultoria conduz as duas etapas, do que o cliente exige até o sistema funcionando na operação.</p>
         <nav class="i27-jumps" aria-label="Etapas da implementação">
           {passos.map((p) => (
             <a href={p.href}>
@@ -198,22 +197,6 @@ const motivos = [
       </div>
     </section>
 
-    <section class="i27-block" id="auditoria">
-      <div class="i27-wrap i27-split">
-        <div>
-          <p class="i27-kicker i27-kicker--ink">03 · Auditoria</p>
-          <h2>Chegue à auditoria com evidências organizadas.</h2>
-          <p>A preparação reúne documentos, registros e responsáveis. A Templum acompanha essa etapa. A avaliação e o certificado ficam com um organismo certificador independente.</p>
-          <a class="i27-cta" href="#proposta"><span class="i27-cta-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="i27-cta-label">{cta}</span></a>
-        </div>
-        <ol class="i27-panel">
-          <li><span>01</span><div><strong>Documentos</strong><p>Políticas e procedimentos previstos no escopo.</p></div></li>
-          <li><span>02</span><div><strong>Evidências</strong><p>Registros reunidos para a auditoria.</p></div></li>
-          <li><span>03</span><div><strong>Equipe</strong><p>Quem responde o que o auditor pergunta.</p></div></li>
-        </ol>
-      </div>
-    </section>
-
     <section class="i27-block i27-block--cream" id="diferenciais">
       <div class="i27-wrap i27-split i27-split--flip">
         <div>
@@ -226,6 +209,7 @@ const motivos = [
             <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Suporte diário com especialistas em horário comercial</li>
             <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Selo "Estamos Implementando" para exibir ao mercado</li>
             <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Garantia de 200% registrada em contrato</li>
+            <li><span class="i27-check" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 12 9" fill="none"><path d="M1 4.2L4.2 7.4L11 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tudo em um único lugar</li>
           </ul>
           <a class="i27-cta" href="#proposta"><span class="i27-cta-arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="i27-cta-label">{cta}</span></a>
         </div>
@@ -672,7 +656,7 @@ const motivos = [
 
   .i27-jumps {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     margin-top: 36px;
   }
