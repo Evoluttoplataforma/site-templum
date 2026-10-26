@@ -63,6 +63,18 @@ const prazos2026 = [
 
 const faq = [
   {
+    q: "Quanto tempo leva para conseguir a ISO 9001?",
+    a: "O prazo depende do porte, do escopo, da maturidade da gestão e da participação da empresa. Quem responde, valida os documentos e aplica o combinado no dia a dia avança no ritmo da proposta. O cronograma sai personalizado, com essa condição explícita.",
+  },
+  {
+    q: "Quem emite o certificado ISO 9001?",
+    a: "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa da proposta até a auditoria. O certificado não é emitido pela Templum.",
+  },
+  {
+    q: "Empresa pequena pode certificar?",
+    a: "Sim. A Templum atende empresas de qualquer porte. O escopo e o investimento se ajustam ao tamanho da operação.",
+  },
+  {
     q: "Como a ISO 9001 promove a melhoria contínua?",
     a: "A ISO 9001 segue o modelo PDCA (Plan-Do-Check-Act) para nutrir a melhoria contínua. Isso inclui monitoramento regular, auditorias internas, análises críticas pela direção e implementação de ações corretivas para melhorar continuamente a eficácia do sistema de gestão da qualidade.",
   },
@@ -115,9 +127,9 @@ const faqSchema = {
 };
 
 const videos = [
-  { id: "nyNr95SChG0", nome: "Construtora Carvalho Forte" },
-  { id: "JSiRLNSH2yE", nome: "Templum" },
-  { id: "h4lb_Ws0NFE", nome: "Templum" },
+  { id: "nyNr95SChG0", nome: "APAE Pedreira/SP" },
+  { id: "JSiRLNSH2yE", nome: "Work Lavanderia" },
+  { id: "h4lb_Ws0NFE", nome: "Miranda Feliciano" },
 ];
 ---
 
@@ -182,6 +194,7 @@ const videos = [
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{preco} com o Templum OS, nosso software com IA que padroniza processos, indica não conformidades e muito mais.</span></li>
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Certificação garantida em contrato.</span></li>
           </ul>
+          <p class="v2-price-note">O valor de partida depende do porte, das unidades, dos processos e da maturidade da gestão. A taxa da certificadora é cobrada à parte.</p>
           <div class="v2-cta-block">
             <button type="button" class="v2-split v2-split--primary v2-split--lg" data-abre-form data-cta-pos="topo">
               <span class="v2-split__arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -231,13 +244,23 @@ const videos = [
           </svg>
         </div>
       </div>
+      <div class="v2-wrap v2-triggers">
+        <h2>A certificação entra quando a empresa precisa responder a uma exigência</h2>
+        <ul>
+          <li><strong>Um cliente ou uma licitação pede a ISO 9001.</strong> Sem o certificado, a proposta fica de fora.</li>
+          <li><strong>Um contrato novo depende de gestão comprovada.</strong> O comprador olha a certificação antes de fechar.</li>
+          <li><strong>O retrabalho já custa caro.</strong> A norma faz o erro aparecer no processo, antes da entrega.</li>
+          <li><strong>A operação depende de poucas pessoas.</strong> O sistema tira o jeito de fazer da cabeça de quem conduz tudo.</li>
+          <li><strong>Falta tempo para implementar sozinho.</strong> A Templum elabora os documentos. A equipe valida e aplica no dia a dia.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="v2-nums">
       <div class="v2-nums-grid">
         <h2>Por que a Templum é a maior consultoria digital do Brasil?</h2>
         <ul>
-          <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 19v-1.2C3 15.6 5.2 14 8 14s5 1.6 5 3.8V19H3Zm10 .1V19c0-1.2-.4-2.3-1.1-3.2 1.5-.5 3.2-.8 4.6-.8 2.2 0 4.5 1.1 4.5 2.8V19h-8Z" fill="#ff5724"/></svg></span><span><strong>+ 8 mil</strong>clientes ativos</span></li>
+          <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 19v-1.2C3 15.6 5.2 14 8 14s5 1.6 5 3.8V19H3Zm10 .1V19c0-1.2-.4-2.3-1.1-3.2 1.5-.5 3.2-.8 4.6-.8 2.2 0 4.5 1.1 4.5 2.8V19h-8Z" fill="#ff5724"/></svg></span><span><strong>+8.000</strong> empresas fortalecidas</span></li>
           <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 4h8l1 2h5v11H5V4Z" stroke="#ff5724" stroke-width="1.6"/><path d="M5 17v3" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span><span><strong>+ 800 cidades</strong>no Brasil, Portugal e África.</span></li>
           <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 1.6 2.7-.2 1.2 2.4 2.4 1.2-.2 2.7L22 12l-1.6 2.2.2 2.7-2.4 1.2-1.2 2.4-2.7-.2L12 21l-2.2-1.6-2.7.2-1.2-2.4-2.4-1.2.2-2.7L2 12l1.6-2.2-.2-2.7 2.4-1.2 1.2-2.4 2.7.2L12 3Z" stroke="#ff5724" stroke-width="1.4"/><path d="M8.5 12.2 11 14.5 15.8 9.5" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>+ 30 anos</strong>de experiência de mercado</span></li>
         </ul>
@@ -283,8 +306,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-01-os.webm" type="video/webm" />
+          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
+            <source src="/assets/lp/iso9001-v2/iso-01.webm" type="video/webm" />
           </video>
         </article>
 
@@ -299,8 +322,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-02-os.webm" type="video/webm" />
+          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
+            <source src="/assets/lp/iso9001-v2/iso-02.webm" type="video/webm" />
           </video>
         </article>
 
@@ -315,8 +338,8 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-03-os.webm" type="video/webm" />
+          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
+            <source src="/assets/lp/iso9001-v2/iso-03.webm" type="video/webm" />
           </video>
         </article>
 
@@ -331,7 +354,7 @@ const videos = [
             </ul>
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
-          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
+          <video width="768" height="869" muted loop playsinline preload="metadata" data-motion>
             <source src="/assets/lp/iso9001-v2/iso-04.webm" type="video/webm" />
           </video>
         </article>
@@ -347,6 +370,7 @@ const videos = [
           <li>Consultoria 100% digital com especialistas em certificação ISO</li>
           <li>Atendimento em mais de 340 cidades no Brasil e exterior</li>
         </ul>
+        <p class="v2-fine">O investimento é por projeto, sem limite de horas de consultoria, e sai na proposta conforme porte, unidades, processos e maturidade. A garantia de 200% vale se a empresa concluir todas as etapas do método e, ainda assim, não certificar. A taxa do organismo que emite o certificado não está inclusa.</p>
         <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
       </div>
     </section>
@@ -398,11 +422,13 @@ const videos = [
     <section class="v2-block v2-compare">
       <div class="v2-wrap">
         <h2>Benefícios de escolher a empresa pioneira em certificações ISO no Brasil</h2>
+        <img class="v2-os" src="/assets/img/templum-os-notebook.webp" alt="Templum OS no computador e no celular, com números-chave e o espaço da equipe" width="1600" height="1000" loading="lazy" decoding="async" />
+        <p class="v2-os-cap">Não é apenas consultoria. É uma nova forma de implementar a ISO 9001.</p>
         <div class="v2-table" role="table">
           <div class="v2-table-head" role="row">
             <span></span>
             <span><img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="92" height="24" /></span>
-            <span class="v2-sem">Sem a <strong>Templum</strong></span>
+            <span class="v2-sem"><span>Sem a</span><strong>Templum</strong></span>
           </div>
           {comparativo.map((linha) => (
             <div class="v2-table-row" role="row">
@@ -468,14 +494,6 @@ const videos = [
           <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
         </div>
         <img src="/assets/lp/iso9001-v2/mapa.webp" alt="Cobertura da Templum no Brasil, Portugal e África" width="720" height="605" loading="lazy" decoding="async" />
-      </div>
-    </section>
-
-    <section class="v2-band">
-      <div class="v2-wrap">
-        <h2>Conquiste sua certificação ISO com eficiência, agilidade e o apoio de especialistas.</h2>
-        <p>Certificação garantida em contrato ou o dobro do seu investimento de volta.</p>
-        <button type="button" class="v2-btn" data-abre-form data-cta-pos="final">{cta}</button>
       </div>
     </section>
 
@@ -652,7 +670,13 @@ const videos = [
   .v2-checks, .v2-feat ul, .v2-points { margin: 18px 0; padding: 0; list-style: none; display: grid; gap: 10px; }
   .v2-checks li, .v2-feat li, .v2-points li { padding-left: 26px; position: relative; }
   .v2-checks li::before, .v2-feat li::before, .v2-points li::before { content: ""; position: absolute; left: 0; top: .35em; width: 14px; height: 8px; border-left: 2px solid var(--hot); border-bottom: 2px solid var(--hot); transform: rotate(-45deg); }
-  .v2-hero .v2-checks { gap: 16px; margin: 48px 0; }
+  .v2-hero .v2-checks { gap: 16px; margin: 48px 0 16px; }
+  .v2-price-note { margin: 0 0 28px; max-width: 560px; color: #200801cc; font-size: 14px; line-height: 1.45; }
+  .v2-triggers { padding: 8px 24px 72px; }
+  .v2-triggers h2 { max-width: 720px; margin: 0 0 20px; font-size: clamp(26px, 3vw, 36px); }
+  .v2-triggers ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+  .v2-triggers li { margin: 0; padding: 16px 18px; background: #fff; border-radius: 14px; color: #200801cc; font-size: 16px; line-height: 1.45; }
+  .v2-triggers strong { color: var(--ink); }
   .v2-hero .v2-checks li { display: flex; align-items: flex-start; gap: 16px; padding: 0; font-size: 16px; line-height: 1.4; color: #200801cc; }
   .v2-hero .v2-checks li::before { content: none; }
   .v2-check { width: 32px; height: 32px; min-width: 32px; margin-top: -3px; border-radius: 999px; background: #2008010d; display: flex; align-items: center; justify-content: center; }
@@ -677,7 +701,7 @@ const videos = [
   .v2-nums li { display: flex; align-items: center; gap: 16px; background: none; border-radius: 0; padding: 0; }
   .v2-num-ico { width: 48px; height: 48px; min-width: 48px; border-radius: 6px; background: #ffe5d480; display: flex; align-items: center; justify-content: center; }
   .v2-nums strong { display: block; font-size: 24px; font-weight: 700; line-height: 29px; }
-  .v2-nums li span:last-child { font-size: 14px; font-weight: 400; line-height: 17px; color: #200801cc; }
+  .v2-nums li span:last-child { max-width: 11.5em; font-size: 14px; font-weight: 400; line-height: 17px; color: #200801cc; }
   .v2-why, .v2-block, .v2-logos, .v2-cover, .v2-foot { background: #fff; }
   .v2-why { padding: 80px 0; text-align: center; }
   .v2-badge { display: inline-flex; align-items: center; height: 36px; margin: 0 0 24px; padding: 8px 16px; border-radius: 999px; background: #f6f7f9; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
@@ -697,7 +721,9 @@ const videos = [
   .v2-dark, .v2-band { background: #0d0d0d; color: #fff; }
   .v2-dark { padding: 120px 0; text-align: center; }
   .v2-dark .v2-kicker { color: #fff; background: #ffffff1a; display: inline-flex; border-radius: 999px; padding: 6px 12px; }
+  .v2-dark h2, .v2-band h2 { color: #fff; }
   .v2-dark h2 { max-width: 684px; margin: 16px auto; font-size: 40px; font-weight: 800; letter-spacing: -.04em; }
+  .v2-fine { max-width: 640px; margin: 0 auto 28px; color: #fff; font-size: 15px; line-height: 1.5; }
   .v2-dark .v2-checks { max-width: 640px; margin: 16px auto 28px; text-align: left; }
   .v2-reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
   .v2-reasons article, .v2-cases article { background: #fff; border: 1px solid #eceff2; border-radius: 20px; padding: 22px; }
@@ -709,14 +735,16 @@ const videos = [
   .v2-marquee div { display: flex; gap: 28px; width: max-content; animation: v2-slide 40s linear infinite; }
   .v2-marquee img { height: 42px; width: auto; }
   @keyframes v2-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .v2-compare h2 { max-width: 700px; margin: 0 auto 64px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .v2-compare h2 { max-width: 700px; margin: 0 auto 32px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .v2-os { display: block; width: min(920px, 100%); height: auto; margin: 0 auto 12px; }
+  .v2-os-cap { max-width: 640px; margin: 0 auto 40px; text-align: center; font-weight: 700; }
   .v2-table { position: relative; max-width: 948px; margin: 0 auto; }
   .v2-table-head, .v2-table-row { display: grid; grid-template-columns: 1fr 120px 120px; align-items: center; }
   .v2-table-head { margin-bottom: 8px; }
   .v2-table-head span { display: flex; justify-content: center; align-items: center; min-height: 56px; padding: 16px 12px; text-align: center; }
   .v2-table-head img { width: 92px; height: auto; }
-  .v2-sem { font-size: 14px; font-weight: 500; line-height: 1.2; color: #212730; }
-  .v2-sem strong { display: block; color: #e7000b; font-weight: 700; }
+  .v2-table-head span.v2-sem { display: flex; flex-direction: column; gap: 0; padding: 8px 4px; font-size: 13px; font-weight: 500; line-height: 1.1; color: #212730; overflow: hidden; }
+  .v2-sem strong { display: block; color: #e7000b; font-weight: 700; white-space: nowrap; }
   .v2-table-row { min-height: 72px; padding: 20px 24px; border-radius: 12px; }
   .v2-table-row:nth-child(even) { background: #f6f7f9; }
   .v2-table-row:nth-child(odd) { background: #fff; }
@@ -779,9 +807,12 @@ const videos = [
     .v2-cards { flex-direction: column; }
     .v2-cards article { padding: 24px; gap: 20px; }
     .v2-why h2, .v2-compare h2 { font-size: 32px; }
-    .v2-table-head, .v2-table-row { grid-template-columns: 1fr 80px 80px; }
-    .v2-col { width: 80px; }
-    .v2-col--yes { right: 80px; }
+    .v2-table-head, .v2-table-row { grid-template-columns: 1fr 96px 96px; }
+    .v2-table-head span { min-height: 44px; padding: 6px 2px; }
+    .v2-table-head img { width: 76px; max-width: 100%; }
+    .v2-table-head span.v2-sem { font-size: 12px; line-height: 1.05; padding: 4px 2px; }
+    .v2-col { width: 96px; }
+    .v2-col--yes { right: 96px; }
     .v2-passos li { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
