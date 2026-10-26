@@ -1,0 +1,772 @@
+---
+import LpBase from "../../layouts/LpBase.astro";
+import LeadForm from "../../components/LeadForm.astro";
+
+// Cópia do layout de absn.templum.com.br (PBQP-H).
+// O experimento tpl_h1_pbqph_r01 fica encerrado nesta página:
+// o título sai fixo no HTML, sem sorteio no navegador.
+// A LP dos anúncios (/consultoria/pbqp-h-lp/) não entra aqui.
+
+const preco = "Planos a partir de R$ 1.500/mês";
+const cta = "Solicite uma proposta";
+const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o PBQP-H.";
+
+const logos = [
+  { src: "logo-marx.webp", alt: "Marx Construtora", w: 105, h: 44 },
+  { src: "logo-impla.webp", alt: "Impla", w: 88, h: 48 },
+  { src: "logo-peconi.webp", alt: "Peconi", w: 145, h: 62 },
+  { src: "logo-acs.webp", alt: "ACS", w: 98, h: 49 },
+  { src: "logo-aclima.webp", alt: "AC Lima", w: 71, h: 61 },
+  { src: "logo-calu.webp", alt: "Calú", w: 80, h: 38 },
+  { src: "logo-casaviva.webp", alt: "CasaViva", w: 105, h: 44 },
+  { src: "logo-zarin.webp", alt: "Zarin", w: 112, h: 38 },
+  { src: "logo-cavec.webp", alt: "Cavec", w: 105, h: 37 },
+  { src: "logo-formasul.webp", alt: "Formasul", w: 105, h: 44 },
+  { src: "logo-tabelionato.webp", alt: "3º Tabelionato", w: 119, h: 41 },
+];
+
+const vantagens = [
+  { src: "vantagem-01.webp", t: "Organização interna", w: 172, h: 113 },
+  { src: "vantagem-02.webp", t: "Melhoria de desempenho", w: 161, h: 113 },
+  { src: "vantagem-03.webp", t: "Redução de custos", w: 161, h: 144 },
+  { src: "vantagem-04.webp", t: "Financiamento público", w: 161, h: 113 },
+  { src: "vantagem-05.webp", t: "Licitações estaduais e municipais", w: 161, h: 113 },
+  { src: "vantagem-06.webp", t: "Competitividade no setor", w: 161, h: 113 },
+  { src: "vantagem-07.webp", t: "Recursos da Caixa Econômica Federal", w: 157, h: 120 },
+  { src: "vantagem-08.webp", t: "Qualificação da mão de obra", w: 161, h: 113 },
+  { src: "vantagem-09.webp", t: "Processos padronizados", w: 161, h: 113 },
+  { src: "vantagem-10.webp", t: "Organização de materiais no canteiro de obras", w: 191, h: 113 },
+  { src: "vantagem-11.webp", t: "Controle de desempenho da sua obra", w: 161, h: 113 },
+  { src: "vantagem-12.webp", t: "Compras programadas sem desperdício", w: 161, h: 113 },
+  { src: "vantagem-13.webp", t: "Satisfação dos clientes", w: 161, h: 113 },
+  { src: "vantagem-14.webp", t: "Credibilidade da marca", w: 161, h: 113 },
+  { src: "vantagem-15.webp", t: "Colaboradores motivados", w: 161, h: 113 },
+];
+
+const passos = [
+  {
+    t: "Conversa com um especialista e proposta sob medida:",
+    d: "entendemos a sua operação e apresentamos a proposta com o escopo certo para a sua empresa.",
+  },
+  {
+    t: "Documentos elaborados para a implementação:",
+    d: "Nunca delegamos para você o que deve ser feito por nós. Elaboramos todos os documentos, alinhados à sua operação, para você implementar com rapidez, segurança e sem retrabalho.",
+  },
+  {
+    t: "Checkpoints e Ritmo:",
+    d: "Você dita o ritmo da sua implementação e passa por checkpoints de verificação obrigatório do consultor. Assim, garantimos um método à prova de falhas.",
+  },
+  {
+    t: "Especialista te ajudam sempre que precisar:",
+    d: "Todos os dias em horário comercial você poderá tirar dúvidas com seu consultor em tempo real.",
+  },
+  {
+    t: "Selo Reconhecido pelo Mercado:",
+    d: "Enquanto você implementa, emitimos um selo e um atestado para você comprovar para o mercado o status da sua implementação.",
+  },
+  {
+    t: "Garantia em Contrato:",
+    d: "Se sua empresa passar por todos os nossos processos e ainda assim não conseguir sua certificação, pagamos 200% do seu dinheiro de volta!",
+  },
+  {
+    t: "Estrutura Robusta:",
+    d: "Especialistas apaixonados pelo sucesso do cliente te acompanhando de perto.",
+  },
+];
+
+const faq = [
+  {
+    q: "Como o PBQP-H contribui para a sustentabilidade na construção?",
+    a: "O PBQP-H promove a redução de desperdícios, o uso racional de recursos e a melhoria da qualidade das construções, contribuindo para a sustentabilidade do setor. Além disso, incentiva a inovação e o uso de tecnologias mais eficientes e ambientalmente responsáveis.",
+  },
+  {
+    q: "Quais são os níveis de certificação do PBQP-H?",
+    a: "O PBQP-H possui níveis de aderência que vão do nível D ao nível A, sendo o nível A a conformidade total com os requisitos do programa.",
+  },
+  {
+    q: "Como o PBQP-H se relaciona com a ISO 9001?",
+    a: "O PBQP-H é baseado nos princípios da ISO 9001, adaptados para o setor da construção civil, facilitando a implementação de ambos os sistemas.",
+  },
+  {
+    q: "Qual é a validade da certificação PBQP-H?",
+    a: "A certificação tem validade e precisa ser renovada periodicamente através de auditorias de manutenção.",
+  },
+  {
+    q: "Como obter a certificação PBQP-H?",
+    a: "O processo envolve implementar o sistema de gestão e passar pela auditoria de um organismo certificador. A Templum acompanha da proposta até a auditoria.",
+  },
+  {
+    q: "Quais são os benefícios da implementação do PBQP-H?",
+    a: "Acesso a financiamentos da Caixa, participação em programas habitacionais, melhoria de processos, redução de custos e maior competitividade no mercado.",
+  },
+  {
+    q: "A certificação PBQP-H é obrigatória?",
+    a: "Para participar de programas habitacionais como Minha Casa Minha Vida e obter financiamentos pela Caixa Econômica, sim, a certificação PBQP-H é requisito.",
+  },
+  {
+    q: "Quais são os principais elementos do PBQP-H?",
+    a: "O programa abrange requisitos de gestão da qualidade, controle de processos, documentação técnica e melhoria contínua.",
+  },
+  {
+    q: "Quem pode aderir ao PBQP-H?",
+    a: "Empresas de construção civil de todos os portes que desejam melhorar seus processos e acessar financiamentos públicos.",
+  },
+  {
+    q: "Qual é o objetivo principal do PBQP-H?",
+    a: "Elevar os padrões de qualidade e produtividade da construção civil brasileira, com foco na melhoria da qualidade do habitat.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const videos = [
+  { id: "CiA6yRDMWyk", nome: "Construtora Carvalho Forte" },
+  { id: "h4lb_Ws0NFE", nome: "Templum" },
+];
+---
+
+<LpBase
+  title="Consultoria PBQP-H com a Templum: Certificação garantida"
+  description="Consultoria PBQP-H com a Templum, Qualidade na Construção: implante e certifique com método próprio, 100% online e garantia de 200% (certifique ou devolvemos o dobro)."
+  schemas={[faqSchema]}
+  hideChrome={true}
+  lcpImage="/assets/lp/pbqph-v2/hero.avif"
+  headerCta={cta}
+>
+  <link slot="head" rel="preconnect" href="https://fonts.googleapis.com" />
+  <link slot="head" rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <div class="v2">
+    <header class="v2-bar">
+      <div class="v2-bar-in">
+        <a class="v2-logo" href="/consultoria/pbqp-h-lp-v2/" aria-label="Templum">
+          <img src="/assets/lp/pbqph-v2/logo-templum.svg" alt="Templum" width="120" height="32" />
+        </a>
+        <nav class="v2-nav" aria-label="Seções">
+          <a href="#sobre">Sobre a Certificação</a>
+          <a href="#como-funciona">Como Funciona</a>
+          <a href="#beneficios">Benefícios</a>
+          <a href="#depoimentos">Depoimentos</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <button type="button" class="v2-split v2-split--outline v2-split--sm" data-abre-form data-cta-pos="menu">
+          <span class="v2-split__arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="v2-split__label">{cta}</span>
+        </button>
+        <button type="button" class="v2-menu" aria-label="Abrir menu" aria-expanded="false" data-menu>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+    <div class="v2-menu-panel" data-menu-panel hidden>
+      <button type="button" class="v2-menu-x" data-menu-close aria-label="Fechar menu">×</button>
+      <nav>
+        <a href="#sobre">Sobre a Certificação</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#beneficios">Benefícios</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <button type="button" class="v2-split v2-split--primary v2-split--lg" data-abre-form data-cta-pos="menu" data-menu-close>
+        <span class="v2-split__arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="v2-split__label">{cta}</span>
+      </button>
+    </div>
+
+    <section class="v2-hero">
+      <div class="v2-wrap v2-hero-grid">
+        <div class="v2-hero-copy">
+          <p class="v2-pill">A consultoria digital nº 1 do Brasil</p>
+          <h1>Certifique sua construtora no <span>PBQP-H ou receba 200%</span> do valor investido de volta</h1>
+          <ul class="v2-checks">
+            <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{preco} com o Templum OS, nosso software com IA que padroniza processos, indica não conformidades e muito mais.</span></li>
+            <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Acesse financiamentos da Caixa Econômica Federal.</span></li>
+          </ul>
+          <div class="v2-cta-block">
+            <button type="button" class="v2-split v2-split--primary v2-split--lg" data-abre-form data-cta-pos="topo">
+              <span class="v2-split__arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="v2-split__label">{cta}</span>
+            </button>
+          </div>
+          <div class="v2-proof">
+            <div class="v2-avatars" aria-hidden="true">
+              <img src="/assets/lp/pbqph-v2/avatar0.webp" alt="" width="32" height="32" />
+              <img src="/assets/lp/pbqph-v2/avatar1.webp" alt="" width="32" height="32" />
+              <img src="/assets/lp/pbqph-v2/avatar2.webp" alt="" width="32" height="32" />
+              <img src="/assets/lp/pbqph-v2/avatar3.webp" alt="" width="32" height="32" />
+            </div>
+            <div class="v2-rating">
+              <p class="v2-stars"><span aria-hidden="true">★★★★★</span> <strong>4,9</strong></p>
+              <p class="v2-reviews"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> +174 reviews</p>
+            </div>
+          </div>
+        </div>
+        <div class="v2-hero-photo">
+          <picture>
+            <source srcset="/assets/lp/pbqph-v2/hero.avif" type="image/avif" />
+            <img
+              src="/assets/lp/pbqph-v2/hero.webp"
+              alt="Profissional de obra com capacete, plantas e celular"
+              width="840"
+              height="907"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </picture>
+          <svg class="v2-seal" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <filter id="v2-seal-shadow"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.12"/></filter>
+              <path id="v2-seal-path" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0" />
+            </defs>
+            <circle cx="100" cy="100" r="96" fill="#fff" filter="url(#v2-seal-shadow)" />
+            <circle cx="100" cy="100" r="58" fill="none" stroke="#AEBBCB" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.33" />
+            <text font-size="13" font-weight="600" font-family="Inter, sans-serif" fill="#200801" letter-spacing="1.5">
+              <textPath href="#v2-seal-path" startOffset="0%">FINANCIAMENTOS  GARANTIDOS • MENOS CUSTO • CONTRATOS E</textPath>
+            </text>
+            <path d="M100 78l2.2 6.6H109l-5.5 4 2.1 6.6L100 91.2 94.4 95.2l2.1-6.6-5.5-4h6.8z" fill="#FF5724" />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-nums">
+      <div class="v2-nums-grid">
+        <h2>Por que a Templum é a maior consultoria digital do Brasil?</h2>
+        <ul>
+          <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 19v-1.2C3 15.6 5.2 14 8 14s5 1.6 5 3.8V19H3Zm10 .1V19c0-1.2-.4-2.3-1.1-3.2 1.5-.5 3.2-.8 4.6-.8 2.2 0 4.5 1.1 4.5 2.8V19h-8Z" fill="#ff5724"/></svg></span><span><strong>+ 8 mil</strong>clientes ativos</span></li>
+          <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 4h8l1 2h5v11H5V4Z" stroke="#ff5724" stroke-width="1.6"/><path d="M5 17v3" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span><span><strong>+ 800 cidades</strong>no Brasil, Portugal e África.</span></li>
+          <li><span class="v2-num-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 1.6 2.7-.2 1.2 2.4 2.4 1.2-.2 2.7L22 12l-1.6 2.2.2 2.7-2.4 1.2-1.2 2.4-2.7-.2L12 21l-2.2-1.6-2.7.2-1.2-2.4-2.4-1.2.2-2.7L2 12l1.6-2.2-.2-2.7 2.4-1.2 1.2-2.4 2.7.2L12 3Z" stroke="#ff5724" stroke-width="1.4"/><path d="M8.5 12.2 11 14.5 15.8 9.5" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>+ 30 anos</strong>de experiência de mercado</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="v2-block" id="sobre">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Por que escolher a Templum</p>
+        <h2>A consultoria completa para obter a certificação PBQP-H da sua empresa.</h2>
+        <div class="v2-reasons">
+          <article>
+            <p>Execute cada etapa com orientação técnica e validação contínua, em uma plataforma de consultoria disponível 24h.</p>
+          </article>
+          <article>
+            <p>Tire dúvidas pelo chat com especialistas, com resposta em até 1 minuto, e evite atrasos na implementação.</p>
+          </article>
+          <article>
+            <p>Reduza até 40% do tempo automatizando processos manuais e operacionais com o Templum OS.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-block" id="como-funciona">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Processo de certificação</p>
+        <h2>Descubra como preparamos sua empresa para acessar programas habitacionais e linhas de financiamento.</h2>
+
+        <article class="v2-feat">
+          <div>
+            <h3>Mais velocidade e controle de processos com o Templum OS</h3>
+            <ul>
+              <li>Crie, mapeie e gerencie planejamentos estratégicos e tarefas para execução no canteiro de obras em minutos.</li>
+              <li>Reduza até 85% dos erros operacionais centralizando tarefas, prazos e indicadores da sua construtora.</li>
+            </ul>
+            <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+          </div>
+          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
+            <source src="/assets/lp/pbqph-v2/pbqp-01.webm" type="video/webm" />
+          </video>
+        </article>
+
+        <article class="v2-feat v2-feat--flip">
+          <div>
+            <h3>Não perca contratos enquanto se certifica no PBQP-H</h3>
+            <ul>
+              <li>Selo e declaração oficial para mostrar que sua empresa já está implementando o PBQP-H, aumentando confiança e credibilidade.</li>
+              <li>Garanta financiamentos desde o início, com os documentos de certificação em dia.</li>
+            </ul>
+            <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+          </div>
+          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
+            <source src="/assets/lp/pbqph-v2/pbqp-02.webm" type="video/webm" />
+          </video>
+        </article>
+
+        <article class="v2-feat">
+          <div>
+            <h3>Orientação especializada e ágil em cada etapa do processo</h3>
+            <ul>
+              <li>Respostas rápidas no chat, com especialistas e tempo médio de resposta de até 1 minuto.</li>
+              <li>Revisão de documentos por videochamada, em até 4 horas úteis, para evitar erros e retrabalho.</li>
+              <li>Acompanhamento técnico disponível das 9h às 17h, em dias úteis.</li>
+            </ul>
+            <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+          </div>
+          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
+            <source src="/assets/lp/pbqph-v2/pbqp-03.webm" type="video/webm" />
+          </video>
+        </article>
+
+        <article class="v2-feat v2-feat--flip">
+          <div>
+            <h3>Gestão clara e segura de prazos, registros e cronogramas</h3>
+            <ul>
+              <li>Definimos tarefas semanais considerando o nº de obras, equipe, para garantir que cada requisito do PBQP-H seja cumprido.</li>
+              <li>Elaboramos manuais e documentos, incluindo PQO e registros de materiais, garantindo conformidade.</li>
+            </ul>
+            <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+          </div>
+          <video width="768" height="869" muted loop playsinline preload="none" data-motion>
+            <source src="/assets/lp/pbqph-v2/pbqp-04.webm" type="video/webm" />
+          </video>
+        </article>
+      </div>
+    </section>
+
+    <section class="v2-dark">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Certificação garantida</p>
+        <h2>Certificação ou o dobro do dinheiro de volta</h2>
+        <p>Somos a única consultoria no Brasil que devolve 200% do seu investimento se você não obtiver a certificação.</p>
+        <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+      </div>
+    </section>
+
+    <section class="v2-block">
+      <div class="v2-wrap v2-speed">
+        <div>
+          <p class="v2-kicker">Velocidade na certificação</p>
+          <h2>A forma mais rápida de implementar os critérios do PBQP-H.</h2>
+          <ul class="v2-checks">
+            <li>Com modelos personalizados, seus documentos já vêm prontos para uso, permitindo que você e sua equipe iniciem o processo imediatamente.</li>
+            <li>Automatize o preenchimento de documentos em minutos com o Templum OS e economize até 40% do seu tempo.</li>
+          </ul>
+          <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+        </div>
+        <img src="/assets/lp/pbqph-v2/interface.webp" alt="Tela do Templum OS com tarefas, indicadores e assistentes" width="960" height="482" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <section class="v2-logos">
+      <div class="v2-wrap">
+        <h2>Mais de 2.000 empresas de construção civil conquistaram a certificação PBQP-H com a Templum</h2>
+      </div>
+      <div class="v2-marquee">
+        <div>
+          {logos.map((logo) => <img src={`/assets/lp/pbqph-v2/${logo.src}`} alt={logo.alt} width={logo.w} height={logo.h} />)}
+          {logos.map((logo) => <img src={`/assets/lp/pbqph-v2/${logo.src}`} alt="" width={logo.w} height={logo.h} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-block" id="beneficios">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Benefícios para sua empresa</p>
+        <h2>3 motivos para você certificar a sua construtora</h2>
+        <div class="v2-reasons">
+          <article>
+            <h3>Construa com o dinheiro da Caixa</h3>
+            <p>Com a certificação, sua empresa fica apta a participar de programas habitacionais e acessar financiamentos que só aceitam construtoras qualificadas.</p>
+          </article>
+          <article>
+            <h3>Redução de custos e aumento da eficiência</h3>
+            <p>O PBQP-H organiza processos, corta desperdícios e retrabalhos, deixando sua obra mais produtiva e lucrativa.</p>
+          </article>
+          <article>
+            <h3>Abrir portas para o Geric da Caixa</h3>
+            <p>A certificação abre portas para novos contratos, aumenta sua credibilidade no mercado e acelera o crescimento com a ajuda dos recursos da Caixa Federal.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-selo">
+      <div class="v2-wrap v2-selo-grid">
+        <img src="/assets/lp/pbqph-v2/selo.webp" alt="Selo Templum: estamos implementando" width="504" height="461" loading="lazy" decoding="async" />
+        <div>
+          <h2>Selo reconhecido pelo mercado</h2>
+          <p>Enquanto você implementa o PBQP-H, emitimos um selo e uma declaração para comprovar ao mercado o status da implantação, mantendo contratos e oportunidades ativas.</p>
+          <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-block" id="depoimentos">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Depoimentos</p>
+        <h2>Empresas que se certificam com a Templum faturam, em média, 27% mais!</h2>
+        <p class="v2-lead">Veja os depoimentos de quem já conquistou o PBQP-H</p>
+        <div class="v2-cases">
+          <article>
+            <p>O vídeo apresenta um case de sucesso real da Construtora Carvalho Forte, que obteve melhoria significativa em sua gestão de qualidade e performance com a adoção do PBQP-H (Programa Brasileiro da Qualidade e Produtividade do Habitat) com o apoio da Templum Consultoria. A consultoria atuou orientando a empresa desde o início até a estruturação das práticas necessárias para alcançar os objetivos do programa, gerando resultados práticos e mensuráveis no desempenho da organização.</p>
+            <strong>Case de sucesso: Construtora Carvalho Forte</strong>
+          </article>
+          <article>
+            <p>Com a implementação, fortalecemos o que tínhamos de transparência, patrocinando financiamentos, gestão e recursos de doações.</p>
+            <strong>Case de sucesso: APAE</strong>
+          </article>
+        </div>
+        <div class="v2-videos">
+          {videos.map((v) => (
+            <button type="button" class="v2-video" data-yt={v.id} aria-label={`Reproduzir depoimento ${v.nome}`}>
+              <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" width="480" height="360" loading="lazy" decoding="async" />
+              <span>{v.nome}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-block">
+      <div class="v2-wrap">
+        <p class="v2-kicker">+ 10 vantagens garantidas</p>
+        <h2>Eleve sua construtora ao próximo nível com a certificação PBQP-H</h2>
+        <div class="v2-perks">
+          {vantagens.map((item) => (
+            <article>
+              <img src={`/assets/lp/pbqph-v2/${item.src}`} alt="" width={item.w} height={item.h} loading="lazy" decoding="async" />
+              <span>{item.t}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-cover">
+      <div class="v2-wrap v2-cover-grid">
+        <div>
+          <p class="v2-kicker">Estrutura preparada para operar em escala</p>
+          <h2>Consultoria 100% online, com atuação em mais de 800 cidades no Brasil, Portugal e África.</h2>
+          <p>Sistemas de gestão da qualidade para empresas dos mais diversos ramos de atividade e tamanho.</p>
+          <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+        </div>
+        <img src="/assets/lp/pbqph-v2/mapa.webp" alt="Cobertura da Templum no Brasil" width="674" height="566" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <section class="v2-block v2-passos" id="passos">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Passo a passo</p>
+        <h2>Facilitamos a transmissão do conhecimento para você certificar.</h2>
+        <p class="v2-lead">Veja os 7 passos de como implementamos.</p>
+        <ol>
+          {passos.map((p, i) => (
+            <li>
+              <span>Passo {i + 1}</span>
+              <p><strong>{p.t}</strong> {p.d}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="v2-dark">
+      <div class="v2-wrap">
+        <p class="v2-kicker">A escolha certa para sua construtora</p>
+        <h2>A consultoria validada por mais de 2.000 empresas para avançar no PBQP-H e atender às exigências da Caixa</h2>
+        <ul class="v2-checks">
+          <li>Mais de 30 anos atuando exclusivamente com sistemas de gestão ISO.</li>
+          <li>Devolvemos o dobro do investimento se sua empresa não conquistar o certificado.</li>
+          <li>Da proposta à auditoria externa, acompanhamos cada fase do processo.</li>
+        </ul>
+        <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
+      </div>
+    </section>
+
+    <section class="v2-block" id="faq">
+      <div class="v2-wrap v2-faq">
+        <p class="v2-kicker">Perguntas frequentes</p>
+        <h2>O PBQP-H em detalhes</h2>
+        {faq.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="v2-band">
+      <div class="v2-wrap v2-band-grid">
+        <div>
+          <h2>Construa o futuro da sua empresa com a consultoria PBQP-H.</h2>
+          <p>Pare agora de perder negócios por falta do PBQP-H</p>
+          <button type="button" class="v2-btn" data-abre-form data-cta-pos="final">{cta}</button>
+        </div>
+        <img src="/assets/lp/pbqph-v2/cta.webp" alt="Engenheiro no canteiro de obras com planta e rádio" width="701" height="531" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <footer class="v2-foot">
+      <div class="v2-wrap">
+        <img src="/assets/lp/pbqph-v2/logo-templum.svg" alt="Templum" width="120" height="32" />
+        <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a>
+        <a href="tel:+5519993521270">(19) 99352-1270</a>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="lp-form-modal" class="v2-modal">
+    <button type="button" class="v2-modal-x" data-fecha-form aria-label="Fechar">×</button>
+    <LeadForm
+      norma="PBQP-H"
+      titulo="Solicite uma proposta"
+      sub="Preencha os dados. Um especialista prepara a proposta para a sua empresa."
+      cta="Solicite uma proposta"
+      obrigado="/consultoria/pbqp-h-obrigado"
+      simples={true}
+      cargo={true}
+      whatsapp={true}
+      whatsappLinha={wppLinha}
+      whatsappFixo={true}
+    />
+  </dialog>
+
+  <script is:inline>
+    (function () {
+      var dlg = document.getElementById("lp-form-modal");
+      if (!dlg) return;
+      document.querySelectorAll("[data-abre-form]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (typeof dlg.showModal === "function" && !dlg.open) dlg.showModal();
+          document.body.classList.add("v2-modal-on");
+          if (window.tplFormEvento) {
+            var norma = dlg.querySelector('input[name="norma"]');
+            window.tplFormEvento({ evento: "form_visivel", norma: norma ? norma.value : "PBQP-H" });
+          }
+          var primeiro = dlg.querySelector('input:not([type="hidden"])');
+          if (primeiro) primeiro.focus();
+        });
+      });
+      dlg.querySelectorAll("[data-fecha-form]").forEach(function (btn) {
+        btn.addEventListener("click", function () { dlg.close(); });
+      });
+      dlg.addEventListener("close", function () {
+        document.body.classList.remove("v2-modal-on");
+      });
+      dlg.addEventListener("click", function (e) {
+        if (e.target === dlg) dlg.close();
+      });
+      var menuBtn = document.querySelector("[data-menu]");
+      var menuPanel = document.querySelector("[data-menu-panel]");
+      function fechaMenu() {
+        if (!menuPanel || !menuBtn) return;
+        menuPanel.hidden = true;
+        menuBtn.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+      if (menuBtn && menuPanel) {
+        menuBtn.addEventListener("click", function () {
+          menuPanel.hidden = false;
+          menuBtn.setAttribute("aria-expanded", "true");
+          document.body.style.overflow = "hidden";
+        });
+        menuPanel.querySelectorAll("[data-menu-close], a").forEach(function (el) {
+          el.addEventListener("click", fechaMenu);
+        });
+      }
+      document.querySelectorAll("[data-yt]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-yt");
+          if (!id) return;
+          var frame = document.createElement("iframe");
+          frame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1";
+          frame.title = btn.getAttribute("aria-label") || "Depoimento";
+          frame.width = "480";
+          frame.height = "360";
+          frame.allow = "autoplay; encrypted-media";
+          frame.setAttribute("allowfullscreen", "");
+          btn.replaceWith(frame);
+        });
+      });
+      var vids = document.querySelectorAll("video[data-motion]");
+      if (!("IntersectionObserver" in window)) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var v = entry.target;
+          v.play().catch(function () {});
+          io.unobserve(v);
+        });
+      }, { rootMargin: "120px" });
+      vids.forEach(function (v) { io.observe(v); });
+    })();
+  </script>
+</LpBase>
+
+<style>
+  .v2 { --hot: #ff5724; --ink: #200801; --pink: #fff9f3; --line: rgba(255, 87, 36, .08); color: var(--ink); background: var(--pink); font-family: Inter, sans-serif; }
+  .v2 h1, .v2 h2, .v2 h3, .v2 button { font-family: Inter, sans-serif; }
+  .v2-wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+  .v2-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 80px; background: var(--pink); }
+  .v2-bar-in { display: flex; align-items: center; justify-content: space-between; max-width: 1440px; height: 100%; margin: 0 auto; padding: 0 80px; }
+  .v2-logo img { display: block; width: 120px; height: 32px; }
+  .v2-nav { display: flex; align-items: center; gap: 40px; }
+  .v2-nav a { color: #200801cc; text-decoration: none; font-size: 14px; font-weight: 400; white-space: nowrap; }
+  .v2-nav a:hover { color: var(--hot); }
+  .v2-menu { display: none; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; }
+  .v2-menu-panel { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; gap: 20px; padding: 80px 24px 32px; background: var(--pink); }
+  .v2-menu-panel[hidden] { display: none; }
+  .v2-menu-panel nav { display: flex; flex-direction: column; gap: 16px; }
+  .v2-menu-panel a { color: var(--ink); font-size: 18px; text-decoration: none; }
+  .v2-menu-x { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: 0; background: none; color: var(--ink); font-size: 28px; cursor: pointer; }
+  .v2-split { display: inline-flex; align-items: center; gap: 2px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; }
+  .v2-split__arrow, .v2-split__label { display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+  .v2-split__arrow svg { transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
+  .v2-split:hover .v2-split__arrow svg { transform: translateX(6px); }
+  .v2-split--lg .v2-split__arrow { width: 56px; height: 56px; }
+  .v2-split--lg .v2-split__label { height: 56px; padding: 0 32px; font-size: 16px; font-weight: 500; }
+  .v2-split--sm .v2-split__arrow { width: 48px; height: 48px; border-radius: 8px; }
+  .v2-split--sm .v2-split__label { height: 48px; padding: 0 24px; border-radius: 8px; font-size: 14px; font-weight: 500; }
+  .v2-split--primary .v2-split__arrow, .v2-split--primary .v2-split__label { background: var(--hot); color: #fff; }
+  .v2-split--primary:hover .v2-split__arrow, .v2-split--primary:hover .v2-split__label { background: #f02d06; }
+  .v2-split--outline .v2-split__arrow, .v2-split--outline .v2-split__label { background: transparent; color: var(--hot); border: 1px solid var(--hot); }
+  .v2-split--outline:hover .v2-split__arrow, .v2-split--outline:hover .v2-split__label { background: #fff4ed; }
+  .v2-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--hot); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+  .v2-hero { padding: 140px 0 0; background-color: var(--pink); background-image: linear-gradient(to right, var(--line) 1px, transparent 1px), linear-gradient(to bottom, var(--line) 1px, transparent 1px); background-size: 96px 96px; }
+  .v2-hero .v2-wrap { width: min(1200px, 100%); padding: 0 24px; }
+  .v2-hero-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 97px; padding-bottom: 96px; }
+  .v2-hero-copy { display: flex; flex-direction: column; max-width: 631px; flex-shrink: 0; }
+  .v2-pill { display: inline-flex; width: fit-content; margin: 0 0 24px; padding: 8px 14px; border-radius: 999px; background: #2008010d; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .v2 h1 { margin: 0; font-size: 48px; font-weight: 800; line-height: 1.2; letter-spacing: -.06em; color: var(--ink); }
+  .v2 h1 span { color: var(--hot); }
+  .v2 h2 { margin: 0 0 12px; font-size: clamp(28px, 3vw, 40px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+  .v2 h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.25; }
+  .v2-lead, .v2-hero p, .v2-feat p, .v2-selo p, .v2-cover p, .v2-band p, .v2-dark p { line-height: 1.5; }
+  .v2-checks, .v2-feat ul { margin: 18px 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .v2-checks li, .v2-feat li { padding-left: 26px; position: relative; }
+  .v2-checks li::before, .v2-feat li::before { content: ""; position: absolute; left: 0; top: .35em; width: 14px; height: 8px; border-left: 2px solid var(--hot); border-bottom: 2px solid var(--hot); transform: rotate(-45deg); }
+  .v2-hero .v2-checks { gap: 16px; margin: 48px 0; }
+  .v2-hero .v2-checks li { display: flex; align-items: flex-start; gap: 16px; padding: 0; font-size: 16px; line-height: 1.4; color: #200801cc; }
+  .v2-hero .v2-checks li::before { content: none; }
+  .v2-check { width: 32px; height: 32px; min-width: 32px; margin-top: -3px; border-radius: 999px; background: #2008010d; display: flex; align-items: center; justify-content: center; }
+  .v2-cta-block { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 36px; }
+  .v2-proof { display: flex; align-items: center; gap: 16px; }
+  .v2-avatars { display: flex; }
+  .v2-avatars img { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #fff; margin-right: -8px; }
+  .v2-avatars img:last-child { margin-right: 0; }
+  .v2-stars { display: flex; align-items: center; gap: 4px; margin: 0; color: var(--hot); font-size: 16px; letter-spacing: 1px; }
+  .v2-stars strong { margin-left: 4px; color: var(--ink); font-size: 16px; font-weight: 600; letter-spacing: -.011em; }
+  .v2-reviews { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; color: var(--ink); font-size: 12px; font-weight: 600; }
+  .v2-hero-photo { position: relative; width: 450px; min-height: 486px; flex-shrink: 0; }
+  .v2-hero-photo img { display: block; width: 100%; height: auto; max-height: 486px; object-fit: contain; object-position: bottom center; background: none; }
+  .v2-seal { position: absolute; top: 52px; left: -55px; width: 120px; height: 120px; z-index: 3; animation: v2-spin 20s linear infinite; }
+  @keyframes v2-spin { to { transform: rotate(360deg); } }
+  .v2-nums { padding: 56px 0; background: var(--pink); }
+  .v2-nums-grid { display: flex; justify-content: space-between; align-items: center; gap: 56px; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+  .v2-nums h2 { max-width: 400px; margin: 0; font-size: 24px; font-weight: 700; line-height: 1.4; letter-spacing: 0; }
+  .v2-nums ul { display: flex; align-items: center; gap: 56px; margin: 0; padding: 0; list-style: none; }
+  .v2-nums li { display: flex; align-items: center; gap: 16px; }
+  .v2-num-ico { width: 48px; height: 48px; min-width: 48px; border-radius: 6px; background: #ffe5d480; display: flex; align-items: center; justify-content: center; }
+  .v2-nums strong { display: block; font-size: 24px; font-weight: 700; line-height: 29px; }
+  .v2-nums li span:last-child { font-size: 14px; font-weight: 400; line-height: 17px; color: #200801cc; }
+  .v2-block { padding: 72px 0; }
+  .v2-kicker { margin: 0 0 8px; color: var(--hot); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .v2-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; margin-top: 48px; }
+  .v2-feat--flip { direction: rtl; }
+  .v2-feat--flip > * { direction: ltr; }
+  .v2-feat video { width: 100%; height: auto; border-radius: 24px; background: #ffe5d4; aspect-ratio: 768 / 869; object-fit: cover; }
+  .v2-dark { background: #200801; color: #fff; padding: 72px 0; }
+  .v2-dark .v2-kicker { color: #ffb199; }
+  .v2-dark .v2-checks li::before { border-color: #ffb199; }
+  .v2-reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .v2-reasons article, .v2-cases article { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; }
+  .v2-reasons p, .v2-cases p { margin: 0; }
+  .v2-selo { padding: 48px 0 72px; }
+  .v2-selo-grid, .v2-cover-grid, .v2-speed, .v2-band-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .v2-selo img, .v2-cover img, .v2-speed img, .v2-band img { width: 100%; height: auto; }
+  .v2-logos { padding-bottom: 48px; overflow: hidden; }
+  .v2-marquee { overflow: hidden; margin-top: 20px; }
+  .v2-marquee div { display: flex; gap: 28px; align-items: center; width: max-content; animation: v2-slide 40s linear infinite; }
+  .v2-marquee img { height: 42px; width: auto; }
+  @keyframes v2-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .v2-cases, .v2-videos { display: grid; gap: 16px; margin-top: 20px; }
+  .v2-cases { grid-template-columns: 1fr 1fr; }
+  .v2-videos { grid-template-columns: 1fr 1fr; }
+  .v2-video { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
+  .v2-video img, .v2-videos iframe { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 16px; border: 0; }
+  .v2-video span { display: block; margin-top: 8px; font-weight: 700; }
+  .v2-perks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 24px; }
+  .v2-perks article { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
+  .v2-perks img { display: block; width: 100%; height: 88px; object-fit: cover; }
+  .v2-perks span { display: block; padding: 10px 12px 12px; font-size: 13px; font-weight: 700; line-height: 1.3; }
+  .v2-passos ol { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+  .v2-passos li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; background: #fff; border-radius: 16px; padding: 16px; }
+  .v2-passos li span { color: var(--hot); font-weight: 800; }
+  .v2-passos p { margin: 0; }
+  .v2-cover { padding: 24px 0 72px; }
+  .v2-band { background: #200801; color: #fff; padding: 64px 0; }
+  .v2-band img { border-radius: 20px; }
+  .v2-faq { max-width: 820px; }
+  .v2-faq details { background: #fff; border-radius: 14px; padding: 14px 16px; margin-top: 10px; }
+  .v2-faq summary { cursor: pointer; font-weight: 700; }
+  .v2-faq p { margin: 10px 0 0; }
+  .v2-foot { padding: 28px 0 40px; }
+  .v2-foot .v2-wrap { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .v2-foot img { height: 32px; width: auto; }
+  .v2-foot a { color: var(--ink); }
+  .v2-modal { width: min(560px, calc(100% - 24px)); height: fit-content; max-height: calc(100dvh - 24px); margin: auto; overflow: auto; border: 0; border-radius: 20px; padding: 12px; }
+  :global(body.v2-modal-on) .lead-wpp-fixo { display: none !important; }
+  .v2-modal::backdrop { background: rgba(26, 18, 14, .55); }
+  .v2-modal-x { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #efe7de; cursor: pointer; }
+  .v2 section[id] { scroll-margin-top: 84px; }
+  .v2 section:target { content-visibility: visible; }
+  .v2-block:not(#como-funciona), .v2-selo, .v2-logos, .v2-cover, .v2-dark, .v2-band { content-visibility: auto; contain-intrinsic-size: auto 640px; }
+  @media (max-width: 1280px) {
+    .v2-bar-in { padding: 0 24px; }
+    .v2-hero-grid { gap: 48px; }
+    .v2-hero-photo { width: 380px; min-height: 400px; }
+    .v2-nums-grid { padding: 0 24px; gap: 48px; }
+    .v2-nums ul { gap: 32px; }
+  }
+  @media (max-width: 1024px) {
+    .v2-nav { gap: 20px; }
+    .v2-nav a { font-size: 12px; }
+    .v2-hero { padding-top: 88px; }
+    .v2-hero-grid { flex-direction: column; gap: 48px; padding-bottom: 64px; }
+    .v2-hero-copy { max-width: 100%; }
+    .v2-hero-photo { width: 100%; max-width: 400px; min-height: 350px; margin: 0 auto; }
+    .v2-nums-grid { flex-direction: column; align-items: flex-start; gap: 32px; }
+    .v2-nums ul { flex-wrap: wrap; justify-content: flex-start; }
+    .v2-perks { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 860px) {
+    .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos, .v2-speed, .v2-band-grid { grid-template-columns: 1fr; direction: ltr; }
+  }
+  @media (max-width: 768px) {
+    .v2-bar { height: 64px; }
+    .v2-nav, .v2-bar .v2-split { display: none; }
+    .v2-menu { display: flex; }
+    .v2-hero { padding-top: 104px; }
+    .v2-hero-grid { gap: 0; padding-bottom: 48px; }
+    .v2 h1 { font-size: 32px; line-height: 1.1; }
+    .v2-hero .v2-checks { margin: 32px 0; }
+    .v2-hero .v2-checks li { font-size: 14px; gap: 12px; }
+    .v2-check { width: 24px; height: 24px; min-width: 24px; }
+    .v2-cta-block { margin-bottom: 24px; }
+    .v2-cta-block .v2-split { width: 100%; }
+    .v2-split--lg .v2-split__arrow { width: 48px; height: 48px; }
+    .v2-split--lg .v2-split__label { height: 48px; padding: 0 24px; font-size: 14px; flex: 1; }
+    .v2-hero-photo { max-width: 316px; min-height: 0; }
+    .v2-seal { width: 80px; height: 80px; top: 20px; left: -20px; }
+    .v2-nums { padding: 48px 24px; }
+    .v2-nums-grid { padding: 0; }
+    .v2-nums h2 { font-size: 20px; max-width: 100%; }
+    .v2-nums ul { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .v2-perks { grid-template-columns: 1fr 1fr; }
+    .v2-passos li { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) {
+    :global(.lead-wpp-fixo) { display: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .v2-marquee div, .v2-seal { animation: none; }
+  }
+</style>
