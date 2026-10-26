@@ -244,16 +244,6 @@ const videos = [
           </svg>
         </div>
       </div>
-      <div class="v2-wrap v2-triggers">
-        <h2>A certificação entra quando a empresa precisa responder a uma exigência</h2>
-        <ul>
-          <li><strong>Um cliente ou uma licitação pede a ISO 9001.</strong> Sem o certificado, a proposta fica de fora.</li>
-          <li><strong>Um contrato novo depende de gestão comprovada.</strong> O comprador olha a certificação antes de fechar.</li>
-          <li><strong>O retrabalho já custa caro.</strong> A norma faz o erro aparecer no processo, antes da entrega.</li>
-          <li><strong>A operação depende de poucas pessoas.</strong> O sistema tira o jeito de fazer da cabeça de quem conduz tudo.</li>
-          <li><strong>Falta tempo para implementar sozinho.</strong> A Templum elabora os documentos. A equipe valida e aplica no dia a dia.</li>
-        </ul>
-      </div>
     </section>
 
     <section class="v2-nums">
@@ -532,7 +522,7 @@ const videos = [
     <footer class="v2-foot">
       <div class="v2-wrap">
         <img src="/assets/logo/templum.png" alt="Templum" width="120" height="40" />
-        <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a>
+        <a href="/politica-de-privacidade/">Política de privacidade</a>
         <a href="tel:+5519993521270">(19) 99352-1270</a>
       </div>
     </footer>
@@ -672,11 +662,6 @@ const videos = [
   .v2-checks li::before, .v2-feat li::before, .v2-points li::before { content: ""; position: absolute; left: 0; top: .35em; width: 14px; height: 8px; border-left: 2px solid var(--hot); border-bottom: 2px solid var(--hot); transform: rotate(-45deg); }
   .v2-hero .v2-checks { gap: 16px; margin: 48px 0 16px; }
   .v2-price-note { margin: 0 0 28px; max-width: 560px; color: #200801cc; font-size: 14px; line-height: 1.45; }
-  .v2-triggers { padding: 8px 24px 72px; }
-  .v2-triggers h2 { max-width: 720px; margin: 0 0 20px; font-size: clamp(26px, 3vw, 36px); }
-  .v2-triggers ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .v2-triggers li { margin: 0; padding: 16px 18px; background: #fff; border-radius: 14px; color: #200801cc; font-size: 16px; line-height: 1.45; }
-  .v2-triggers strong { color: var(--ink); }
   .v2-hero .v2-checks li { display: flex; align-items: flex-start; gap: 16px; padding: 0; font-size: 16px; line-height: 1.4; color: #200801cc; }
   .v2-hero .v2-checks li::before { content: none; }
   .v2-check { width: 32px; height: 32px; min-width: 32px; margin-top: -3px; border-radius: 999px; background: #2008010d; display: flex; align-items: center; justify-content: center; }
@@ -730,12 +715,14 @@ const videos = [
   .v2-selo { padding: 48px 0 72px; background: linear-gradient(270deg, #fff9f300, #fff9f3), #fff9f3; }
   .v2-selo-grid, .v2-cover-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 32px; align-items: center; }
   .v2-selo img, .v2-cover img { width: 100%; height: auto; }
-  .v2-logos { padding: 80px 0 48px; overflow: hidden; }
+  .v2-logos { padding: 64px 0 40px; overflow: hidden; background: var(--hot); color: #fff; }
+  .v2-logos h2 { max-width: 16em; margin: 0 auto; text-align: center; color: #fff; font-size: clamp(28px, 3vw, 36px); line-height: 1.15; letter-spacing: -.03em; }
   .v2-marquee { overflow: hidden; margin-top: 20px; }
   .v2-marquee div { display: flex; gap: 28px; width: max-content; animation: v2-slide 40s linear infinite; }
   .v2-marquee img { height: 42px; width: auto; }
   @keyframes v2-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .v2-compare h2 { max-width: 700px; margin: 0 auto 32px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .v2-compare { padding-top: 64px; }
+  .v2-compare h2 { max-width: 18em; margin: 0 auto 28px; text-align: center; font-size: clamp(28px, 3vw, 36px); font-weight: 700; line-height: 1.15; letter-spacing: -.03em; }
   .v2-os { display: block; width: min(920px, 100%); height: auto; margin: 0 auto 12px; }
   .v2-os-cap { max-width: 640px; margin: 0 auto 40px; text-align: center; font-weight: 700; }
   .v2-table { position: relative; max-width: 948px; margin: 0 auto; }
