@@ -1,11 +1,13 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
 
 // Cópia do layout de absn.templum.com.br (PBQP-H).
-// O experimento tpl_h1_pbqph_r01 fica encerrado nesta página:
-// o título sai fixo no HTML, sem sorteio no navegador.
-// A LP dos anúncios (/consultoria/pbqp-h-lp/) não entra aqui.
+// O sorteio tpl_h1_pbqphv2_r01 vale só nesta página.
+// A LP dos anúncios (/consultoria/pbqp-h-lp/) segue na rodada tpl_h1_pbqph_r02.
+
+const h1 = experimentoH1("pbqphv2");
 
 const preco = "Planos a partir de R$ 1.500/mês";
 const cta = "Solicite uma proposta";
@@ -140,6 +142,7 @@ const videos = [
   hideChrome={true}
   lcpImage="/assets/lp/pbqph-v2/hero.avif"
   headerCta={cta}
+  h1Experimento={h1}
 >
   <link slot="head" rel="preconnect" href="https://fonts.googleapis.com" />
   <link slot="head" rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -185,7 +188,10 @@ const videos = [
       <div class="v2-wrap v2-hero-grid">
         <div class="v2-hero-copy">
           <p class="v2-pill">A consultoria digital nº 1 do Brasil</p>
-          <h1>Certifique sua construtora no <span>PBQP-H ou receba 200%</span> do valor investido de volta</h1>
+          <h1 id="tpl-h1">Certifique sua construtora no <span>PBQP-H ou receba 200%</span> do valor investido de volta</h1>
+          <script is:inline>
+            if (window.tplH1Aplicar) window.tplH1Aplicar();
+          </script>
           <ul class="v2-checks">
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{preco} com o Templum OS, nosso software com IA que padroniza processos, indica não conformidades e muito mais.</span></li>
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Acesse financiamentos da Caixa Econômica Federal.</span></li>

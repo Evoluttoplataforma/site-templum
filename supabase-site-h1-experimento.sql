@@ -79,7 +79,7 @@ select
 from public.site_form_eventos e
 where e.modo_teste = false
   and e.estado = 'em_execucao'
-  and e.variante_h1 between 1 and 5
+  and e.variante_h1 between 1 and 6
 group by e.experimento_id, e.lp_id, e.variante_h1;
 
 comment on view public.site_h1_rodada is

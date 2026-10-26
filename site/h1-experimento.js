@@ -4,7 +4,7 @@
 const ANGULOS = new Set(["controle", "exigencia", "execucao", "beneficio", "metodo", "proposta"]);
 const ESTADOS = new Set(["inativo", "em_execucao", "encerrado"]);
 const PERSISTENCIAS = new Set(["local", "sessao", "memoria", "fixa"]);
-const LP_IDS = new Set(["iso9001", "iso9001v2", "iso27001", "pbqph", "sassmaq40", "iso37001", "iso42001"]);
+const LP_IDS = new Set(["iso9001", "iso9001v2", "iso27001", "pbqph", "pbqphv2", "sassmaq40", "iso37001", "iso42001"]);
 
 function texto(value) {
   if (value == null) return "";

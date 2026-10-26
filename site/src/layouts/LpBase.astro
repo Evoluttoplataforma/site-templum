@@ -47,7 +47,7 @@ const allSchemas = schemas;
         <script is:inline define:vars={{ h1Config }}>
           window.__TPL_H1_CONFIG = h1Config;
           try {
-            var liga = h1Config.estado === "em_execucao" || h1Config.estado === "encerrado" || /(?:\?|&)h1=[1-5](?:&|$)/.test(location.search);
+            var liga = h1Config.estado === "em_execucao" || h1Config.estado === "encerrado" || /(?:\?|&)h1=[1-6](?:&|$)/.test(location.search);
             if (liga) {
               document.documentElement.classList.add("tpl-h1-wait");
               setTimeout(function () { document.documentElement.classList.remove("tpl-h1-wait"); }, 1500);

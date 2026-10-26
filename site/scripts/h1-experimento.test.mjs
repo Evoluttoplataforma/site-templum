@@ -272,7 +272,7 @@ limites.forEach((n, i) => {
 }
 
 for (const exp of Object.values(H1_EXPERIMENTOS)) {
-  assert.equal(exp.variantes.length, exp.lp_id === "pbqph" || exp.lp_id === "iso9001v2" ? 6 : 5);
+  assert.equal(exp.variantes.length, exp.lp_id === "pbqph" || exp.lp_id === "pbqphv2" || exp.lp_id === "iso9001v2" ? 6 : 5);
   assert.equal(exp.estado, "em_execucao");
   for (const item of exp.variantes) {
     const texto = textoDe(item);
@@ -293,6 +293,8 @@ assert.deepEqual(H1_EXPERIMENTOS.iso9001v2.variantes.map(textoDe), [
   "Sua empresa depende de você para tudo? Comece a mudar isso com a ISO 9001.",
   "Sua empresa precisa da ISO 9001, mas falta tempo para cuidar da implementação?",
 ]);
+assert.deepEqual(H1_EXPERIMENTOS.pbqphv2.variantes.map(textoDe), H1_EXPERIMENTOS.pbqph.variantes.map(textoDe));
+assert.equal(H1_EXPERIMENTOS.pbqphv2.experimento_id, "tpl_h1_pbqphv2_r01");
 assert.deepEqual(H1_EXPERIMENTOS.pbqph.variantes.map(textoDe), [
   "Certifique sua construtora no PBQP-H ou receba 200% do valor investido de volta",
   "Sua construtora pode estar a um passo de novas oportunidades com o PBQP-H.",

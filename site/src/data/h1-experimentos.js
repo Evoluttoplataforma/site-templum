@@ -76,6 +76,21 @@ export const H1_EXPERIMENTOS = {
       v(6, "metodo", "Novos contratos podem exigir o ", "PBQP-H", ". Sua construtora está preparada?"),
     ],
   },
+  pbqphv2: {
+    lp_id: "pbqphv2",
+    experimento_id: "tpl_h1_pbqphv2_r01",
+    rodada: "r01",
+    estado: "em_execucao",
+    variante_fixa: null,
+    variantes: [
+      v(1, "controle", "Certifique sua construtora no ", "PBQP-H", " ou receba 200% do valor investido de volta"),
+      v(2, "beneficio", "Sua construtora pode estar a um passo de novas oportunidades com o ", "PBQP-H", "."),
+      v(3, "proposta", "Sua construtora quer crescer? Prepare-se para novas oportunidades com o ", "PBQP-H", "."),
+      v(4, "execucao", "Conquistar o ", "PBQP-H", " não precisa ser mais uma complicação na sua obra."),
+      v(5, "exigencia", "Sua construtora precisa do ", "PBQP-H", ", mas falta tempo para cuidar da implementação?"),
+      v(6, "metodo", "Novos contratos podem exigir o ", "PBQP-H", ". Sua construtora está preparada?"),
+    ],
+  },
   sassmaq40: {
     lp_id: "sassmaq40",
     experimento_id: "tpl_h1_sassmaq40_r01",
