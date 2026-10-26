@@ -272,7 +272,7 @@ limites.forEach((n, i) => {
 }
 
 for (const exp of Object.values(H1_EXPERIMENTOS)) {
-  assert.equal(exp.variantes.length, exp.lp_id === "pbqph" || exp.lp_id === "pbqphv2" || exp.lp_id === "iso9001v2" ? 6 : 5);
+  assert.equal(exp.variantes.length, exp.lp_id === "pbqph" || exp.lp_id === "pbqphv2" || exp.lp_id === "iso9001v2" || exp.lp_id === "iso27001v2" ? 6 : 5);
   assert.equal(exp.estado, "em_execucao");
   for (const item of exp.variantes) {
     const texto = textoDe(item);
@@ -302,6 +302,15 @@ assert.deepEqual(H1_EXPERIMENTOS.pbqph.variantes.map(textoDe), [
   "Conquistar o PBQP-H não precisa ser mais uma complicação na sua obra.",
   "Sua construtora precisa do PBQP-H, mas falta tempo para cuidar da implementação?",
   "Novos contratos podem exigir o PBQP-H. Sua construtora está preparada?",
+]);
+assert.equal(H1_EXPERIMENTOS.iso27001v2.experimento_id, "tpl_h1_iso27001v2_r01");
+assert.deepEqual(H1_EXPERIMENTOS.iso27001v2.variantes.map(textoDe), [
+  "Seus clientes exigem a ISO 27001? Prepare sua empresa para atender.",
+  "Sua empresa pode perder contratos por não conseguir comprovar a segurança das informações?",
+  "Um vazamento de dados pode comprometer a confiança dos seus clientes. Sua empresa está preparada?",
+  "Você sabe quem acessa as informações críticas da sua empresa e como elas são protegidas?",
+  "Seu cliente pediu evidências de segurança da informação e sua empresa não sabe por onde começar?",
+  "Sua equipe está sobrecarregada para implementar a ISO 27001? Conte com apoio especializado.",
 ]);
 assert.equal(H1_EXPERIMENTOS.iso27001.variantes[0].destaque, "tecnologia");
 assert.equal(H1_EXPERIMENTOS.sassmaq40.variantes[0].depois, "?");

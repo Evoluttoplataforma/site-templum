@@ -47,6 +47,21 @@ export const H1_EXPERIMENTOS = {
       v(6, "proposta", "Sua empresa precisa da ", "ISO 9001", ", mas falta tempo para cuidar da implementação?"),
     ],
   },
+  iso27001v2: {
+    lp_id: "iso27001v2",
+    experimento_id: "tpl_h1_iso27001v2_r01",
+    rodada: "r01",
+    estado: "em_execucao",
+    variante_fixa: null,
+    variantes: [
+      v(1, "controle", "Seus clientes exigem a ", "ISO 27001", "? Prepare sua empresa para atender."),
+      v(2, "exigencia", "Sua empresa pode ", "perder contratos", " por não conseguir comprovar a segurança das informações?"),
+      v(3, "beneficio", "Um ", "vazamento de dados", " pode comprometer a confiança dos seus clientes. Sua empresa está preparada?"),
+      v(4, "metodo", "Você sabe quem acessa as ", "informações críticas", " da sua empresa e como elas são protegidas?"),
+      v(5, "execucao", "Seu cliente pediu ", "evidências de segurança da informação", " e sua empresa não sabe por onde começar?"),
+      v(6, "proposta", "Sua equipe está sobrecarregada para implementar a ", "ISO 27001", "? Conte com apoio especializado."),
+    ],
+  },
   iso27001: {
     lp_id: "iso27001",
     experimento_id: "tpl_h1_iso27001_r01",
