@@ -26,34 +26,37 @@ const logos = [
   { src: "logo-tabelionato.webp", alt: "3º Tabelionato", w: 119, h: 41 },
 ];
 
-const passos = [
+const dores = [
   {
-    t: "Conversa com um especialista e proposta sob medida:",
-    d: "entendemos a sua operação e apresentamos a proposta com o escopo certo para a sua empresa.",
+    t: "Contratos e clientes",
+    d: "Clientes e licitações podem pedir a ISO 9001 antes de fechar. Sem a certificação, a empresa deixa de entrar nessas conversas.",
   },
   {
-    t: "Documentos elaborados para a implementação:",
-    d: "Nunca delegamos para você o que deve ser feito por nós. Elaboramos todos os documentos, alinhados à sua operação, para você implementar com rapidez, segurança e sem retrabalho.",
+    t: "Retrabalho e desperdícios",
+    d: "Processo sem padrão repete erro, come margem e irrita o cliente. A norma organiza o que hoje depende de improviso.",
   },
   {
-    t: "Checkpoints e Ritmo:",
-    d: "Você dita o ritmo da sua implementação e passa por checkpoints de verificação obrigatório do consultor. Assim, garantimos um método à prova de falhas.",
+    t: "Dependência do dono",
+    d: "Quando toda decisão passa pelo dono, a operação trava. A ISO 9001 reparte responsabilidade e deixa o caminho registrado.",
+  },
+];
+
+const etapas = [
+  {
+    t: "Diagnóstico inicial",
+    d: "A conversa parte da operação real: porte, unidades, processos e maturidade. O cronograma nasce disso, sem tirar a empresa do expediente.",
   },
   {
-    t: "Especialista te ajudam sempre que precisar:",
-    d: "Todos os dias em horário comercial você poderá tirar dúvidas com seu consultor em tempo real.",
+    t: "Implementação orientada",
+    d: "A Templum elabora os documentos alinhados à operação. A equipe valida e aplica no trabalho, no ritmo da empresa.",
   },
   {
-    t: "Selo Reconhecido pelo Mercado:",
-    d: "Enquanto você implementa, emitimos um selo e um atestado para você comprovar para o mercado o status da sua implementação.",
+    t: "Acompanhamento",
+    d: "Consultores acompanham os checkpoints em horário comercial. A dúvida entra no chat e a operação segue.",
   },
   {
-    t: "Garantia em Contrato:",
-    d: "Se sua empresa passar por todos os nossos processos e ainda assim não conseguir sua certificação, pagamos 200% do seu dinheiro de volta!",
-  },
-  {
-    t: "Estrutura Robusta:",
-    d: "Especialistas apaixonados pelo sucesso do cliente te acompanhando de perto.",
+    t: "Preparação para auditoria",
+    d: "Requisitos, evidências e pendências ficam organizados antes da auditoria do organismo que emite o certificado.",
   },
 ];
 
@@ -290,31 +293,39 @@ const videos = [
 
     <section class="v2-why" id="sobre">
       <div class="v2-wrap">
-        <p class="v2-badge">Processo de certificação</p>
-        <h2>Descubra como a ISO 9001 ajuda empresas a crescerem, em média, 27% no faturamento</h2>
-        <p class="v2-lead">Estruture processos, garanta conformidade técnica e aumente o faturamento com a consultoria Templum</p>
-        <div class="v2-cards">
-          <article>
-            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#ff5724" stroke-width="1.6"/><path d="M8.5 12.2 11 14.5 15.8 9.5" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <p>Certificação garantida em contrato</p>
-          </article>
-          <article>
-            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 16a4 4 0 0 1 .2-8 5 5 0 0 1 9.6-1.2A3.5 3.5 0 1 1 17 16H7Z" stroke="#ff5724" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
-            <p>Certificação mais rápida, com até 40% menos tempo operacional.</p>
-          </article>
-          <article>
-            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#ff5724" stroke-width="1.6"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M5.8 5.8l1.4 1.4M16.8 16.8l1.4 1.4M18.2 5.8l-1.4 1.4M7.2 16.8l-1.4 1.4" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-            <p>Garanta a certificação ISO 9001 com a consultoria digital nº 1 do Brasil.</p>
-          </article>
-          <article>
-            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="#ff5724" stroke-width="1.6"/><path d="M6 19c.6-2.6 2.8-4 6-4s5.4 1.4 6 4" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-            <p>Acompanhamento preciso durante todo o processo de implementação.</p>
-          </article>
+        <p class="v2-badge">Dores do empresário</p>
+        <h2>Sua empresa está perdendo oportunidades por falta de processos e certificação?</h2>
+        <p class="v2-lead">Clientes exigindo ISO 9001, retrabalho constante e decisões que dependem do dono. Esses desafios podem limitar o crescimento da sua empresa. Com a ISO 9001, você estrutura a gestão e se prepara para atender novas exigências do mercado.</p>
+        <div class="v2-cards v2-cards--3">
+          {dores.map((item) => (
+            <article>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="v2-block" id="como-funciona">
+    <section class="v2-block v2-metodo" id="como-funciona">
+      <div class="v2-wrap">
+        <p class="v2-kicker">Como funciona</p>
+        <h2>Você cuida do seu negócio. A Templum ajuda a organizar o caminho até a certificação.</h2>
+        <p class="v2-lead">Com especialistas e o Templum OS, sua empresa recebe orientação para estruturar processos, organizar documentos, acompanhar requisitos e se preparar para a auditoria de certificação.</p>
+        <p class="v2-note-metodo">A operação não para. A equipe aplica o combinado no dia a dia, em horário comercial.</p>
+        <div class="v2-etapas">
+          {etapas.map((item, i) => (
+            <article>
+              <span>{i + 1}</span>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-block" id="templum-os">
       <div class="v2-wrap">
         <article class="v2-feat">
           <div>
@@ -462,17 +473,13 @@ const videos = [
 
     <section class="v2-block" id="depoimentos">
       <div class="v2-wrap">
-        <p class="v2-kicker">Depoimentos</p>
-        <h2>Empresas que se certificam com a Templum faturam, em média, 27% mais!</h2>
-        <p class="v2-lead">Veja os depoimentos de quem já conquistou a ISO 9001</p>
+        <p class="v2-kicker">Cases</p>
+        <h2>A APAE Pedreira usou a ISO 9001 para ampliar a confiança de quem financia o trabalho</h2>
+        <p class="v2-lead">O relato é de credibilidade junto a patrocinadores, órgãos públicos e financiadores. A certificação entrou numa exigência concreta da operação.</p>
         <div class="v2-cases">
           <article>
             <p>Com a implementação da ISO 9001, a APAE fortaleceu sua credibilidade institucional, o que tornou mais consistente e transparente sua atuação junto a patrocinadores, órgãos públicos e financiadores. Esse reconhecimento de gestão eficaz facilitou a captação de recursos e parcerias, elevando a confiança de doadores e apoiadores.</p>
-            <strong>Case de sucesso: APAE</strong>
-          </article>
-          <article>
-            <p>O vídeo da Construtora Carvalho Forte mostra a melhoria significativa em sua gestão de qualidade com a adoção do PBQP-H (Programa Brasileiro da Qualidade e Produtividade do Habitat) com a Templum. A consultoria auxiliou desde o início, implementando práticas e ferramentas para tornar os processos mais práticos e a gestão mais organizada.</p>
-            <strong>Case de sucesso: Construtora Carvalho Forte</strong>
+            <strong>APAE Pedreira/SP</strong>
           </article>
         </div>
         <div class="v2-videos">
@@ -498,22 +505,6 @@ const videos = [
             </article>
           ))}
         </div>
-      </div>
-    </section>
-
-    <section class="v2-block v2-passos" id="passos">
-      <div class="v2-wrap">
-        <p class="v2-kicker">Passo a passo</p>
-        <h2>Facilitamos a transmissão de conhecimento para você certificar.</h2>
-        <p class="v2-lead">Veja os 7 passos de como implementamos.</p>
-        <ol>
-          {passos.map((p, i) => (
-            <li>
-              <span>Passo {i + 1}</span>
-              <p><strong>{p.t}</strong> {p.d}</p>
-            </li>
-          ))}
-        </ol>
       </div>
     </section>
 
@@ -734,11 +725,20 @@ const videos = [
   .v2-why { padding: 80px 0; text-align: center; }
   .v2-badge { display: inline-flex; align-items: center; height: 36px; margin: 0 0 24px; padding: 8px 16px; border-radius: 999px; background: #f6f7f9; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
   .v2-why h2 { max-width: 986px; margin: 0 auto 24px; font-size: 40px; font-weight: 700; line-height: 1.2; }
-  .v2-why .v2-lead { max-width: 690px; margin: 0 auto; color: #4f627a; font-size: 20px; }
+  .v2-why .v2-lead { max-width: 820px; margin: 0 auto; color: #4f627a; font-size: 20px; }
   .v2-cards { display: flex; gap: 24px; margin-top: 56px; text-align: left; }
-  .v2-cards article { flex: 1; display: flex; flex-direction: column; gap: 32px; padding: 48px 32px; background: #f6f7f9; border: 1px solid rgba(32, 8, 1, .04); border-radius: 16px; }
-  .v2-card-ico { width: 48px; height: 48px; border-radius: 6px; background: #fff4ed; display: flex; align-items: center; justify-content: center; }
+  .v2-cards article { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 32px 28px; background: #f6f7f9; border: 1px solid rgba(32, 8, 1, .04); border-radius: 16px; }
+  .v2-cards h3 { margin: 0; font-size: 22px; line-height: 1.25; }
   .v2-cards p { margin: 0; font-size: 16px; line-height: 1.5; color: #200801cc; }
+  .v2-metodo { background: var(--gray); }
+  .v2-metodo h2 { max-width: 16em; }
+  .v2-metodo .v2-lead { max-width: 46em; color: #4f627a; font-size: 18px; }
+  .v2-note-metodo { margin: 12px 0 0; font-weight: 700; }
+  .v2-etapas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+  .v2-etapas article { background: #fff; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .v2-etapas span { color: var(--hot); font-weight: 800; }
+  .v2-etapas h3 { margin: 0; font-size: 20px; line-height: 1.25; }
+  .v2-etapas p { margin: 0; line-height: 1.45; color: #200801cc; }
   .v2-block { padding: 80px 0; }
   .v2-kicker { margin: 0 0 8px; color: var(--hot); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
   .v2-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; padding: 64px 0; }
@@ -786,7 +786,8 @@ const videos = [
   .v2-cell { display: flex; align-items: center; min-height: 92px; padding: 22px 28px; border-radius: 16px; font-size: 17px; line-height: 1.4; color: #212730; }
   .v2-cell--sem { background: #fff; border: 1px solid #eadfd6; }
   .v2-cell--tem { background: #fff4ed; border: 1px solid #ffe0d2; font-weight: 600; }
-  .v2-cases, .v2-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .v2-cases, .v2-videos { display: grid; gap: 16px; margin-top: 20px; }
+  .v2-cases { grid-template-columns: 1fr; max-width: 760px; }
   .v2-videos { grid-template-columns: repeat(3, 1fr); }
   .v2-video { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
   .v2-video img, .v2-videos iframe { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 16px; border: 0; }
@@ -826,6 +827,7 @@ const videos = [
   @media (max-width: 1024px) {
     .v2-nav { gap: 20px; }
     .v2-perks { grid-template-columns: repeat(3, 1fr); }
+    .v2-etapas { grid-template-columns: 1fr 1fr; }
     .v2-nav a { font-size: 12px; }
     .v2-hero { padding-top: 88px; }
     .v2-hero-grid { flex-direction: column; gap: 48px; padding-bottom: 64px; }
@@ -836,6 +838,7 @@ const videos = [
   }
   @media (max-width: 860px) {
     .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos, .v2-perks { grid-template-columns: 1fr 1fr; direction: ltr; }
+    .v2-etapas { grid-template-columns: 1fr; }
     .v2-cards { flex-direction: column; }
     .v2-cards article { padding: 24px; gap: 20px; }
     .v2-why h2, .v2-compare h2 { font-size: 32px; }
