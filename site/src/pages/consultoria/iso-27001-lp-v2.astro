@@ -31,6 +31,15 @@ const motivos = [
   "Implementação já iniciada",
   "Outra necessidade",
 ];
+
+const faturamentos = [
+  "Até R$ 50 mil",
+  "R$ 50 mil a R$ 100 mil",
+  "R$ 100 mil a R$ 300 mil",
+  "R$ 300 mil a R$ 500 mil",
+  "R$ 500 mil a R$ 1 milhão",
+  "Acima de R$ 1 milhão",
+];
 ---
 
 <LpBase
@@ -357,6 +366,13 @@ const motivos = [
           <div class="field">
             <label for="i27-empresa">Empresa</label>
             <input class="input" id="i27-empresa" name="empresa" autocomplete="organization" placeholder="Nome da empresa" required />
+          </div>
+          <div class="field">
+            <label for="i27-faturamento">Faturamento mensal</label>
+            <select class="select" id="i27-faturamento" name="faturamento" required>
+              <option value="">Selecione</option>
+              {faturamentos.map((f) => <option value={f}>{f}</option>)}
+            </select>
           </div>
           <div class="field">
             <label for="i27-papel">Seu cargo</label>
