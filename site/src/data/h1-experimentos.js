@@ -4,7 +4,7 @@
 //
 // estado, por página:
 //   inativo      não sorteia; a página mostra o controle
-//   em_execucao  sorteia 1 de 5 e grava no navegador
+//   em_execucao  sorteia 1 variante e grava no navegador
 //   encerrado    mostra variante_fixa para todo mundo
 //
 // Publicar o site com em_execucao liga o sorteio em produção.
@@ -32,6 +32,21 @@ export const H1_EXPERIMENTOS = {
       v(5, "metodo", "Consultoria ISO 9001 com ", "especialistas e Templum OS", " em cada etapa"),
     ],
   },
+  iso9001v2: {
+    lp_id: "iso9001v2",
+    experimento_id: "tpl_h1_iso9001v2_r01",
+    rodada: "r01",
+    estado: "em_execucao",
+    variante_fixa: null,
+    variantes: [
+      v(1, "controle", "Implemente a ", "ISO 9001 ou receba 200%", " do seu investimento de volta."),
+      v(2, "exigencia", "Seus clientes estão exigindo a ", "ISO 9001", "? Prepare sua empresa para atender."),
+      v(3, "beneficio", "Sua empresa está pronta para conquistar novos contratos que exigem a ", "ISO 9001", "?"),
+      v(4, "metodo", "Quanto o retrabalho está custando à sua empresa? A ", "ISO 9001", " pode ajudar a mudar isso."),
+      v(5, "execucao", "Sua empresa depende de você para tudo? Comece a mudar isso com a ", "ISO 9001", "."),
+      v(6, "proposta", "Sua empresa precisa da ", "ISO 9001", ", mas falta tempo para cuidar da implementação?"),
+    ],
+  },
   iso27001: {
     lp_id: "iso27001",
     experimento_id: "tpl_h1_iso27001_r01",
@@ -48,16 +63,17 @@ export const H1_EXPERIMENTOS = {
   },
   pbqph: {
     lp_id: "pbqph",
-    experimento_id: "tpl_h1_pbqph_r01",
-    rodada: "r01",
+    experimento_id: "tpl_h1_pbqph_r02",
+    rodada: "r02",
     estado: "em_execucao",
     variante_fixa: null,
     variantes: [
-      v(1, "controle", "Da proposta à certificação PBQP-H " + TRAVO + " com consultores experientes e ", "tecnologia", " que acelera cada etapa."),
-      v(2, "exigencia", "Sua construtora precisa do PBQP-H? ", "Prepare-se com a Templum"),
-      v(3, "execucao", "Consultoria PBQP-H com ", "documentos elaborados para a realidade da sua construtora"),
-      v(4, "beneficio", "Implemente o PBQP-H para ", "organizar processos e reduzir retrabalho na obra"),
-      v(5, "proposta", "Receba a proposta para certificar sua construtora no ", "PBQP-H"),
+      v(1, "controle", "Certifique sua construtora no ", "PBQP-H", " ou receba 200% do valor investido de volta"),
+      v(2, "beneficio", "Sua construtora pode estar a um passo de novas oportunidades com o ", "PBQP-H", "."),
+      v(3, "proposta", "Sua construtora quer crescer? Prepare-se para novas oportunidades com o ", "PBQP-H", "."),
+      v(4, "execucao", "Conquistar o ", "PBQP-H", " não precisa ser mais uma complicação na sua obra."),
+      v(5, "exigencia", "Sua construtora precisa do ", "PBQP-H", ", mas falta tempo para cuidar da implementação?"),
+      v(6, "metodo", "Novos contratos podem exigir o ", "PBQP-H", ". Sua construtora está preparada?"),
     ],
   },
   sassmaq40: {

@@ -4,7 +4,7 @@
 const ANGULOS = new Set(["controle", "exigencia", "execucao", "beneficio", "metodo", "proposta"]);
 const ESTADOS = new Set(["inativo", "em_execucao", "encerrado"]);
 const PERSISTENCIAS = new Set(["local", "sessao", "memoria", "fixa"]);
-const LP_IDS = new Set(["iso9001", "iso27001", "pbqph", "sassmaq40", "iso37001", "iso42001"]);
+const LP_IDS = new Set(["iso9001", "iso9001v2", "iso27001", "pbqph", "sassmaq40", "iso37001", "iso42001"]);
 
 function texto(value) {
   if (value == null) return "";
@@ -54,11 +54,11 @@ export function parseQa(search) {
     return null;
   }
   const raw = params.get("h1");
-  if (raw == null || !/^[1-5]$/.test(raw)) return null;
+  if (raw == null || !/^[1-6]$/.test(raw)) return null;
   return Number(raw);
 }
 
-function numeroSorteado(random) {
+function numeroSorteado(random, total) {
   let n = 0;
   try {
     n = typeof random === "function" ? Number(random()) : Math.random();
@@ -66,7 +66,8 @@ function numeroSorteado(random) {
     n = 0;
   }
   if (!Number.isFinite(n) || n < 0 || n >= 1) n = 0;
-  return Math.floor(n * 5) + 1;
+  const limite = Number.isInteger(total) && total >= 1 && total <= 6 ? total : 5;
+  return Math.floor(n * limite) + 1;
 }
 
 function randomPadrao() {
@@ -95,7 +96,7 @@ export function resolver(config, env) {
       atribuida = { variante: salva.n, angulo: salva.angulo };
       persistencia = lida.persistencia || "local";
     } else if (!modoTeste) {
-      const sorte = varianteDe(config, numeroSorteado(env.random || randomPadrao)) || controle;
+      const sorte = varianteDe(config, numeroSorteado(env.random || randomPadrao, (config.variantes || []).length)) || controle;
       if (sorte) {
         atribuida = { variante: sorte.n, angulo: sorte.angulo };
         persistencia = env.gravar ? env.gravar(config.experimento_id, atribuida) : "memoria";
@@ -162,7 +163,7 @@ export function lerAtribuicao(win, chave) {
       if (!raw) continue;
       const data = JSON.parse(raw);
       const n = Number(data && data.v);
-      if (Number.isInteger(n) && n >= 1 && n <= 5) {
+      if (Number.isInteger(n) && n >= 1 && n <= 6) {
         return { v: n, a: (data && data.a) || "", persistencia: locais[i][0] };
       }
     } catch (_) {}
@@ -172,7 +173,7 @@ export function lerAtribuicao(win, chave) {
     if (!mem) return null;
     const data = JSON.parse(mem);
     const n = Number(data && data.v);
-    if (Number.isInteger(n) && n >= 1 && n <= 5) {
+    if (Number.isInteger(n) && n >= 1 && n <= 6) {
       return { v: n, a: (data && data.a) || "", persistencia: "memoria" };
     }
   } catch (_) {}
@@ -394,7 +395,7 @@ export function instalarCliente() {
 
 function inteiroVariante(value) {
   const n = Number(value);
-  if (!Number.isInteger(n) || n < 1 || n > 5) return null;
+  if (!Number.isInteger(n) || n < 1 || n > 6) return null;
   return n;
 }
 

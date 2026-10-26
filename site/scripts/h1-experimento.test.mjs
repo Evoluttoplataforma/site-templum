@@ -104,7 +104,8 @@ const pbqp = configCliente(H1_EXPERIMENTOS.pbqph);
 
 assert.equal(parseQa("?h1=3"), 3);
 assert.equal(parseQa("?h1=0"), null);
-assert.equal(parseQa("?h1=6"), null);
+assert.equal(parseQa("?h1=6"), 6);
+assert.equal(parseQa("?h1=7"), null);
 assert.equal(parseQa("?h1=foo"), null);
 assert.equal(parseQa("?h1=1.5"), null);
 assert.equal(parseQa(""), null);
@@ -133,7 +134,15 @@ limites.forEach((n, i) => {
   resolver(iso, ambiente(box, "", () => 0.21));
   resolver(pbqp, ambiente(box, "", () => 0.81));
   assert.equal(JSON.parse(box.local.get("tpl_h1_iso9001_r01")).v, 2);
-  assert.equal(JSON.parse(box.local.get("tpl_h1_pbqph_r01")).v, 5);
+  assert.equal(JSON.parse(box.local.get("tpl_h1_pbqph_r02")).v, 5);
+}
+
+{
+  const box = loja();
+  const sexta = resolver(pbqp, ambiente(box, "", () => 0.99));
+  assert.equal(sexta.atribuida.variante, 6);
+  assert.equal(sexta.atribuida.angulo, "metodo");
+  assert.equal(JSON.parse(box.local.get("tpl_h1_pbqph_r02")).v, 6);
 }
 
 {
@@ -263,12 +272,12 @@ limites.forEach((n, i) => {
 }
 
 for (const exp of Object.values(H1_EXPERIMENTOS)) {
-  assert.equal(exp.variantes.length, 5);
+  assert.equal(exp.variantes.length, exp.lp_id === "pbqph" || exp.lp_id === "iso9001v2" ? 6 : 5);
   assert.equal(exp.estado, "em_execucao");
   for (const item of exp.variantes) {
     const texto = textoDe(item);
     assert.equal(/diagn[oó]stico|cronograma/i.test(texto), false, texto);
-    const controleComTravo = (exp.lp_id === "iso27001" || exp.lp_id === "pbqph") && item.n === 1;
+    const controleComTravo = exp.lp_id === "iso27001" && item.n === 1;
     if (!controleComTravo) {
       assert.equal(texto.includes("\u2014") || texto.includes("\u2013"), false, texto);
     }
@@ -276,7 +285,22 @@ for (const exp of Object.values(H1_EXPERIMENTOS)) {
 }
 
 assert.equal(textoDe(H1_EXPERIMENTOS.iso27001.variantes[0]).startsWith("Da proposta à certificação ISO 27001"), true);
-assert.equal(textoDe(H1_EXPERIMENTOS.pbqph.variantes[0]).startsWith("Da proposta à certificação PBQP-H"), true);
+assert.deepEqual(H1_EXPERIMENTOS.iso9001v2.variantes.map(textoDe), [
+  "Implemente a ISO 9001 ou receba 200% do seu investimento de volta.",
+  "Seus clientes estão exigindo a ISO 9001? Prepare sua empresa para atender.",
+  "Sua empresa está pronta para conquistar novos contratos que exigem a ISO 9001?",
+  "Quanto o retrabalho está custando à sua empresa? A ISO 9001 pode ajudar a mudar isso.",
+  "Sua empresa depende de você para tudo? Comece a mudar isso com a ISO 9001.",
+  "Sua empresa precisa da ISO 9001, mas falta tempo para cuidar da implementação?",
+]);
+assert.deepEqual(H1_EXPERIMENTOS.pbqph.variantes.map(textoDe), [
+  "Certifique sua construtora no PBQP-H ou receba 200% do valor investido de volta",
+  "Sua construtora pode estar a um passo de novas oportunidades com o PBQP-H.",
+  "Sua construtora quer crescer? Prepare-se para novas oportunidades com o PBQP-H.",
+  "Conquistar o PBQP-H não precisa ser mais uma complicação na sua obra.",
+  "Sua construtora precisa do PBQP-H, mas falta tempo para cuidar da implementação?",
+  "Novos contratos podem exigir o PBQP-H. Sua construtora está preparada?",
+]);
 assert.equal(H1_EXPERIMENTOS.iso27001.variantes[0].destaque, "tecnologia");
 assert.equal(H1_EXPERIMENTOS.sassmaq40.variantes[0].depois, "?");
 assert.equal(H1_EXPERIMENTOS.iso37001.variantes[0].destaque, "ISO 37001,");

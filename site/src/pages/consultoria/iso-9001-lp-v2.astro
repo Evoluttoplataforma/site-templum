@@ -1,11 +1,13 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import { experimentoH1 } from "../../data/h1-experimentos.js";
 
 // Cópia do layout de absn.templum.com.br/iso-9001.
-// O experimento tpl_h1_iso9001_r01 fica encerrado nesta página:
-// o título sai fixo no HTML, sem sorteio no navegador.
-// A LP dos anúncios (/consultoria/iso-9001-lp/) não entra aqui.
+// O sorteio tpl_h1_iso9001v2_r01 vale só nesta página.
+// A LP dos anúncios (/consultoria/iso-9001-lp/) segue na rodada tpl_h1_iso9001_r01.
+
+const h1 = experimentoH1("iso9001v2");
 
 const preco = "Planos a partir de R$ 2.500/mês";
 const cta = "Solicite uma proposta";
@@ -126,6 +128,7 @@ const videos = [
   hideChrome={true}
   lcpImage="/assets/lp/iso9001-v2/hero.avif"
   headerCta={cta}
+  h1Experimento={h1}
 >
   <link slot="head" rel="preconnect" href="https://fonts.googleapis.com" />
   <link slot="head" rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -171,7 +174,10 @@ const videos = [
       <div class="v2-wrap v2-hero-grid">
         <div class="v2-hero-copy">
           <p class="v2-pill">A consultoria digital nº 1 do Brasil</p>
-          <h1>Implemente a <span>ISO 9001 ou receba 200%</span> do seu investimento de volta</h1>
+          <h1 id="tpl-h1">Implemente a <span>ISO 9001 ou receba 200%</span> do seu investimento de volta.</h1>
+          <script is:inline>
+            if (window.tplH1Aplicar) window.tplH1Aplicar();
+          </script>
           <ul class="v2-checks">
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{preco} com o Templum OS, nosso software com IA que padroniza processos, indica não conformidades e muito mais.</span></li>
             <li><span class="v2-check" aria-hidden="true"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="#200801" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Certificação garantida em contrato.</span></li>
@@ -278,7 +284,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-01.webm?v=20261026os" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-01-os.webm" type="video/webm" />
           </video>
         </article>
 
@@ -294,7 +300,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-02.webm?v=20261026os" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-02-os.webm" type="video/webm" />
           </video>
         </article>
 
@@ -310,7 +316,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-03.webm?v=20261026os" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-03-os.webm" type="video/webm" />
           </video>
         </article>
 
@@ -639,7 +645,7 @@ const videos = [
   .v2-hero-copy { display: flex; flex-direction: column; max-width: 631px; flex-shrink: 0; }
   .v2-pill { display: inline-flex; width: fit-content; margin: 0 0 24px; padding: 8px 14px; border-radius: 999px; background: #2008010d; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
   .v2 h1 { margin: 0; font-size: 48px; font-weight: 800; line-height: 1.2; letter-spacing: -.06em; color: var(--ink); }
-  .v2 h1 span { color: var(--hot); }
+  .v2 h1 :global(span) { color: var(--hot); }
   .v2 h2 { margin: 0 0 12px; font-size: clamp(28px, 3vw, 40px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
   .v2 h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.25; }
   .v2-lead, .v2-hero p, .v2-feat p, .v2-selo p, .v2-cover p, .v2-band p { line-height: 1.5; }
