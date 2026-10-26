@@ -44,11 +44,11 @@ const passos = [
 ];
 
 const comparativo = [
-  "Garantia de 200% em contrato",
-  "Acesso 24 horas a plataforma de certificação",
-  "Suporte em até 1 minuto, direto pela plataforma.",
-  "100% online (sem custos com reuniões presenciais)",
-  "Acesso exclusivo ao Templum OS (IA)",
+  "Garantia de <strong>200%</strong> em contrato",
+  "Acesso <strong>24 horas</strong> a plataforma de certificação",
+  "Suporte em até <strong>1 minuto</strong>, direto pela plataforma.",
+  "<strong>100%</strong> online (sem custos com reuniões presenciais)",
+  "Acesso <strong>exclusivo</strong> ao Templum OS (IA)",
   "Selo de implementação",
 ];
 
@@ -238,18 +238,34 @@ const videos = [
       </div>
     </section>
 
-    <section class="v2-block" id="como-funciona">
+    <section class="v2-why" id="sobre">
       <div class="v2-wrap">
-        <p class="v2-kicker">Processo de certificação</p>
+        <p class="v2-badge">Processo de certificação</p>
         <h2>Descubra como a ISO 9001 ajuda empresas a crescerem, em média, 27% no faturamento</h2>
         <p class="v2-lead">Estruture processos, garanta conformidade técnica e aumente o faturamento com a consultoria Templum</p>
-        <ul class="v2-points">
-          <li>Certificação garantida em contrato</li>
-          <li>Certificação mais rápida, com até 40% menos tempo operacional.</li>
-          <li>Garanta a certificação ISO 9001 com a consultoria digital nº 1 do Brasil.</li>
-          <li>Acompanhamento preciso durante todo o processo de implementação.</li>
-        </ul>
+        <div class="v2-cards">
+          <article>
+            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#ff5724" stroke-width="1.6"/><path d="M8.5 12.2 11 14.5 15.8 9.5" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <p>Certificação garantida em contrato</p>
+          </article>
+          <article>
+            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 16a4 4 0 0 1 .2-8 5 5 0 0 1 9.6-1.2A3.5 3.5 0 1 1 17 16H7Z" stroke="#ff5724" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+            <p>Certificação mais rápida, com até 40% menos tempo operacional.</p>
+          </article>
+          <article>
+            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#ff5724" stroke-width="1.6"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M5.8 5.8l1.4 1.4M16.8 16.8l1.4 1.4M18.2 5.8l-1.4 1.4M7.2 16.8l-1.4 1.4" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            <p>Garanta a certificação ISO 9001 com a consultoria digital nº 1 do Brasil.</p>
+          </article>
+          <article>
+            <span class="v2-card-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="#ff5724" stroke-width="1.6"/><path d="M6 19c.6-2.6 2.8-4 6-4s5.4 1.4 6 4" stroke="#ff5724" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            <p>Acompanhamento preciso durante todo o processo de implementação.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
+    <section class="v2-block" id="como-funciona">
+      <div class="v2-wrap">
         <article class="v2-feat">
           <div>
             <h3>Automatizado, simplificado e certificado com o Templum OS</h3>
@@ -262,7 +278,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-01.webm" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-01.webm?v=20261026os" type="video/webm" />
           </video>
         </article>
 
@@ -278,7 +294,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-02.webm" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-02.webm?v=20261026os" type="video/webm" />
           </video>
         </article>
 
@@ -294,7 +310,7 @@ const videos = [
             <button type="button" class="v2-btn" data-abre-form data-cta-pos="meio">{cta}</button>
           </div>
           <video width="768" height="869" muted loop playsinline preload="none" data-motion>
-            <source src="/assets/lp/iso9001-v2/iso-03.webm" type="video/webm" />
+            <source src="/assets/lp/iso9001-v2/iso-03.webm?v=20261026os" type="video/webm" />
           </video>
         </article>
 
@@ -373,23 +389,24 @@ const videos = [
       </div>
     </section>
 
-    <section class="v2-block">
+    <section class="v2-block v2-compare">
       <div class="v2-wrap">
-        <p class="v2-kicker">Por que escolher a Templum</p>
         <h2>Benefícios de escolher a empresa pioneira em certificações ISO no Brasil</h2>
         <div class="v2-table" role="table">
           <div class="v2-table-head" role="row">
             <span></span>
-            <span>Templum</span>
-            <span>Sem a Templum</span>
+            <span><img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="92" height="24" /></span>
+            <span class="v2-sem">Sem a <strong>Templum</strong></span>
           </div>
           {comparativo.map((linha) => (
             <div class="v2-table-row" role="row">
-              <span>{linha}</span>
-              <span aria-label="Templum: sim">✓</span>
-              <span aria-label="Sem a Templum: não">✕</span>
+              <span set:html={linha} />
+              <span class="v2-yes" aria-label="Templum: sim"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.2 6.4 11 12.5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="v2-no" aria-label="Sem a Templum: não"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 5l6 6M11 5l-6 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
             </div>
           ))}
+          <span class="v2-col v2-col--yes" aria-hidden="true"></span>
+          <span class="v2-col v2-col--no" aria-hidden="true"></span>
         </div>
       </div>
     </section>
@@ -507,6 +524,8 @@ const videos = [
       obrigado="/consultoria/iso-9001-obrigado"
       simples={true}
       cargo={true}
+      faturamento={true}
+      faturamentoObrigatorio={true}
       whatsapp={true}
       whatsappLinha={wppLinha}
       whatsappFixo={true}
@@ -653,31 +672,56 @@ const videos = [
   .v2-num-ico { width: 48px; height: 48px; min-width: 48px; border-radius: 6px; background: #ffe5d480; display: flex; align-items: center; justify-content: center; }
   .v2-nums strong { display: block; font-size: 24px; font-weight: 700; line-height: 29px; }
   .v2-nums li span:last-child { font-size: 14px; font-weight: 400; line-height: 17px; color: #200801cc; }
-  .v2-block { padding: 72px 0; }
+  .v2-why, .v2-block, .v2-logos, .v2-cover, .v2-foot { background: #fff; }
+  .v2-why { padding: 80px 0; text-align: center; }
+  .v2-badge { display: inline-flex; align-items: center; height: 36px; margin: 0 0 24px; padding: 8px 16px; border-radius: 999px; background: #f6f7f9; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .v2-why h2 { max-width: 986px; margin: 0 auto 24px; font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .v2-why .v2-lead { max-width: 690px; margin: 0 auto; color: #4f627a; font-size: 20px; }
+  .v2-cards { display: flex; gap: 24px; margin-top: 56px; text-align: left; }
+  .v2-cards article { flex: 1; display: flex; flex-direction: column; gap: 32px; padding: 48px 32px; background: #f6f7f9; border: 1px solid rgba(32, 8, 1, .04); border-radius: 16px; }
+  .v2-card-ico { width: 48px; height: 48px; border-radius: 6px; background: #fff4ed; display: flex; align-items: center; justify-content: center; }
+  .v2-cards p { margin: 0; font-size: 16px; line-height: 1.5; color: #200801cc; }
+  .v2-block { padding: 80px 0; }
   .v2-kicker { margin: 0 0 8px; color: var(--hot); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-  .v2-points { grid-template-columns: 1fr 1fr; }
-  .v2-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; margin-top: 48px; }
+  .v2-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; padding: 64px 0; }
+  .v2-feat + .v2-feat { border-top: 1px solid #eceff2; }
   .v2-feat--flip { direction: rtl; }
   .v2-feat--flip > * { direction: ltr; }
-  .v2-feat video { width: 100%; height: auto; border-radius: 24px; background: #ffe5d4; aspect-ratio: 768 / 869; object-fit: cover; }
-  .v2-dark { background: #200801; color: #fff; padding: 72px 0; }
-  .v2-dark .v2-kicker { color: #ffb199; }
+  .v2-feat video { width: 100%; max-width: 550px; height: auto; border-radius: 16px; background: #f6f7f980; aspect-ratio: 1; object-fit: cover; justify-self: center; }
+  .v2-dark, .v2-band { background: #0d0d0d; color: #fff; }
+  .v2-dark { padding: 120px 0; text-align: center; }
+  .v2-dark .v2-kicker { color: #fff; background: #ffffff1a; display: inline-flex; border-radius: 999px; padding: 6px 12px; }
+  .v2-dark h2 { max-width: 684px; margin: 16px auto; font-size: 40px; font-weight: 800; letter-spacing: -.04em; }
+  .v2-dark .v2-checks { max-width: 640px; margin: 16px auto 28px; text-align: left; }
   .v2-reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-  .v2-reasons article, .v2-cases article { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; }
-  .v2-selo { padding: 48px 0 72px; }
+  .v2-reasons article, .v2-cases article { background: #fff; border: 1px solid #eceff2; border-radius: 20px; padding: 22px; }
+  .v2-selo { padding: 48px 0 72px; background: linear-gradient(270deg, #fff9f300, #fff9f3), #fff9f3; }
   .v2-selo-grid, .v2-cover-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 32px; align-items: center; }
   .v2-selo img, .v2-cover img { width: 100%; height: auto; }
-  .v2-logos { padding-bottom: 48px; overflow: hidden; }
+  .v2-logos { padding: 80px 0 48px; overflow: hidden; }
   .v2-marquee { overflow: hidden; margin-top: 20px; }
   .v2-marquee div { display: flex; gap: 28px; width: max-content; animation: v2-slide 40s linear infinite; }
   .v2-marquee img { height: 42px; width: auto; }
   @keyframes v2-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .v2-table { margin-top: 20px; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: #fff; }
-  .v2-table-head, .v2-table-row { display: grid; grid-template-columns: 1.4fr .6fr .8fr; gap: 8px; align-items: center; padding: 14px 18px; }
-  .v2-table-head { font-weight: 800; background: #fff7f4; }
-  .v2-table-row:nth-child(odd) { background: #fbf8f5; }
-  .v2-table-row span:nth-child(2) { color: #0d8a4a; font-weight: 800; }
-  .v2-table-row span:nth-child(3) { color: #c0392b; font-weight: 800; }
+  .v2-compare h2 { max-width: 700px; margin: 0 auto 64px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .v2-table { position: relative; max-width: 948px; margin: 0 auto; }
+  .v2-table-head, .v2-table-row { display: grid; grid-template-columns: 1fr 120px 120px; align-items: center; }
+  .v2-table-head { margin-bottom: 8px; }
+  .v2-table-head span { display: flex; justify-content: center; align-items: center; min-height: 56px; padding: 16px 12px; text-align: center; }
+  .v2-table-head img { width: 92px; height: auto; }
+  .v2-sem { font-size: 14px; font-weight: 500; line-height: 1.2; color: #212730; }
+  .v2-sem strong { display: block; color: #e7000b; font-weight: 700; }
+  .v2-table-row { min-height: 72px; padding: 20px 24px; border-radius: 12px; }
+  .v2-table-row:nth-child(even) { background: #f6f7f9; }
+  .v2-table-row:nth-child(odd) { background: #fff; }
+  .v2-table-row > span:first-child { font-size: 16px; line-height: 1.4; color: #212730; }
+  .v2-yes, .v2-no { display: flex; justify-content: center; align-items: center; }
+  .v2-yes svg, .v2-no svg { width: 32px; height: 32px; padding: 8px; border-radius: 50%; box-sizing: border-box; }
+  .v2-yes svg { background: #008236; }
+  .v2-no svg { background: #e7000b; }
+  .v2-col { position: absolute; top: 0; bottom: 0; width: 120px; border-radius: 16px; pointer-events: none; }
+  .v2-col--yes { right: 120px; border: 2px solid #008236; }
+  .v2-col--no { right: 0; border: 2px solid #e7000b; }
   .v2-cases, .v2-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
   .v2-videos { grid-template-columns: repeat(3, 1fr); }
   .v2-video { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
@@ -688,7 +732,7 @@ const videos = [
   .v2-passos li span { color: var(--hot); font-weight: 800; }
   .v2-passos p { margin: 0; }
   .v2-cover { padding: 24px 0 72px; }
-  .v2-band { background: #200801; color: #fff; text-align: center; padding: 64px 0; }
+  .v2-band { text-align: center; padding: 64px 0; }
   .v2-2026 { max-width: 820px; }
   .v2-2026 ul { margin: 16px 0 22px; padding: 0; list-style: none; display: grid; gap: 10px; }
   .v2-2026 li { background: #fff; border-radius: 14px; padding: 14px 16px; }
@@ -700,7 +744,7 @@ const videos = [
   .v2-foot .v2-wrap { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
   .v2-foot img { height: 32px; width: auto; }
   .v2-foot a { color: var(--ink); }
-  .v2-modal { width: min(560px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow: auto; border: 0; border-radius: 20px; padding: 12px; }
+  .v2-modal { position: fixed; inset: 0; width: min(560px, calc(100% - 32px)); height: fit-content; max-height: calc(100dvh - 32px); margin: auto; overflow: auto; border: 0; border-radius: 20px; padding: 12px; }
   :global(body.v2-modal-on) .lead-wpp-fixo { display: none !important; }
   .v2-modal::backdrop { background: rgba(26, 18, 14, .55); }
   .v2-modal-x { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #efe7de; cursor: pointer; }
@@ -725,8 +769,13 @@ const videos = [
     .v2-nums ul { flex-wrap: wrap; justify-content: flex-start; }
   }
   @media (max-width: 860px) {
-    .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos, .v2-points { grid-template-columns: 1fr; direction: ltr; }
-    .v2-table-head, .v2-table-row { grid-template-columns: 1fr auto auto; }
+    .v2-feat, .v2-feat--flip, .v2-reasons, .v2-selo-grid, .v2-cover-grid, .v2-cases, .v2-videos { grid-template-columns: 1fr; direction: ltr; }
+    .v2-cards { flex-direction: column; }
+    .v2-cards article { padding: 24px; gap: 20px; }
+    .v2-why h2, .v2-compare h2 { font-size: 32px; }
+    .v2-table-head, .v2-table-row { grid-template-columns: 1fr 80px 80px; }
+    .v2-col { width: 80px; }
+    .v2-col--yes { right: 80px; }
     .v2-passos li { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
