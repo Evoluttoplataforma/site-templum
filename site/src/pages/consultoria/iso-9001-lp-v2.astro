@@ -46,12 +46,18 @@ const passos = [
 ];
 
 const comparativo = [
-  "Garantia de <strong>200%</strong> em contrato",
-  "Acesso <strong>24 horas</strong> a plataforma de certificação",
-  "Suporte em até <strong>1 minuto</strong>, direto pela plataforma.",
-  "<strong>100%</strong> online (sem custos com reuniões presenciais)",
-  "Acesso <strong>exclusivo</strong> ao Templum OS (IA)",
-  "Selo de implementação",
+  {
+    sem: "Orientações concentradas no consultor",
+    tem: "Especialistas + Templum OS acompanhando a jornada de implementação",
+  },
+  {
+    sem: "Informações entre arquivos, planilhas, procedimentos e reuniões",
+    tem: "Uma central de inteligência que conecta informações e ajuda sua equipe a encontrar o caminho",
+  },
+  {
+    sem: "Sua equipe precisa transformar orientação em execução",
+    tem: "Agentes especializados ajudam a criar, estruturar e acelerar atividades da implementação",
+  },
 ];
 
 const prazos2026 = [
@@ -403,8 +409,12 @@ const videos = [
       </div>
       <div class="v2-marquee">
         <div>
-          {logos.map((n) => <img src={`/assets/clientes/cliente-${n}.svg`} alt="" width="120" height="48" />)}
-          {logos.map((n) => <img src={`/assets/clientes/cliente-${n}.svg`} alt="" width="120" height="48" />)}
+          {logos.map((n) => (
+            <span class="v2-client"><img src={`/assets/clientes/cliente-${n}.svg`} alt="" width="168" height="64" /></span>
+          ))}
+          {logos.map((n) => (
+            <span class="v2-client"><img src={`/assets/clientes/cliente-${n}.svg`} alt="" width="168" height="64" /></span>
+          ))}
         </div>
       </div>
     </section>
@@ -416,19 +426,15 @@ const videos = [
         <p class="v2-os-cap">Não é apenas consultoria. É uma nova forma de implementar a ISO 9001.</p>
         <div class="v2-table" role="table">
           <div class="v2-table-head" role="row">
-            <span></span>
-            <span><img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="92" height="24" /></span>
             <span class="v2-sem"><span>Sem a</span><strong>Templum</strong></span>
+            <span class="v2-tem"><img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="92" height="24" /></span>
           </div>
           {comparativo.map((linha) => (
             <div class="v2-table-row" role="row">
-              <span set:html={linha} />
-              <span class="v2-yes" aria-label="Templum: sim"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.2 6.4 11 12.5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="v2-no" aria-label="Sem a Templum: não"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 5l6 6M11 5l-6 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+              <span class="v2-cell v2-cell--sem">{linha.sem}</span>
+              <span class="v2-cell v2-cell--tem">{linha.tem}</span>
             </div>
           ))}
-          <span class="v2-col v2-col--yes" aria-hidden="true"></span>
-          <span class="v2-col v2-col--no" aria-hidden="true"></span>
         </div>
       </div>
     </section>
@@ -688,6 +694,8 @@ const videos = [
   .v2-nums strong { display: block; font-size: 24px; font-weight: 700; line-height: 29px; }
   .v2-nums li span:last-child { max-width: 11.5em; font-size: 14px; font-weight: 400; line-height: 17px; color: #200801cc; }
   .v2-why, .v2-block, .v2-logos, .v2-cover, .v2-foot { background: #fff; }
+  #como-funciona, #depoimentos, .v2-cover { background: var(--pink); }
+  #faq { background: #fff4ed; }
   .v2-why { padding: 80px 0; text-align: center; }
   .v2-badge { display: inline-flex; align-items: center; height: 36px; margin: 0 0 24px; padding: 8px 16px; border-radius: 999px; background: #f6f7f9; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
   .v2-why h2 { max-width: 986px; margin: 0 auto 24px; font-size: 40px; font-weight: 700; line-height: 1.2; }
@@ -715,48 +723,43 @@ const videos = [
   .v2-selo { padding: 48px 0 72px; background: linear-gradient(270deg, #fff9f300, #fff9f3), #fff9f3; }
   .v2-selo-grid, .v2-cover-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 32px; align-items: center; }
   .v2-selo img, .v2-cover img { width: 100%; height: auto; }
-  .v2-logos { padding: 64px 0 40px; overflow: hidden; background: var(--hot); color: #fff; }
+  .v2-logos { padding: 56px 0 36px; overflow: hidden; background: var(--hot); color: #fff; }
   .v2-logos h2 { max-width: 16em; margin: 0 auto; text-align: center; color: #fff; font-size: clamp(28px, 3vw, 36px); line-height: 1.15; letter-spacing: -.03em; }
-  .v2-marquee { overflow: hidden; margin-top: 20px; }
-  .v2-marquee div { display: flex; gap: 28px; width: max-content; animation: v2-slide 40s linear infinite; }
-  .v2-marquee img { height: 42px; width: auto; }
+  .v2-marquee { overflow: hidden; margin-top: 28px; }
+  .v2-marquee div { display: flex; gap: 32px; align-items: center; width: max-content; animation: v2-slide 40s linear infinite; }
+  .v2-client { display: grid; place-items: center; width: 168px; height: 64px; flex: 0 0 auto; overflow: hidden; }
+  .v2-marquee img { width: 240px; height: 240px; max-width: none; }
   @keyframes v2-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .v2-compare { padding-top: 64px; }
   .v2-compare h2 { max-width: 18em; margin: 0 auto 28px; text-align: center; font-size: clamp(28px, 3vw, 36px); font-weight: 700; line-height: 1.15; letter-spacing: -.03em; }
   .v2-os { display: block; width: min(920px, 100%); height: auto; margin: 0 auto 12px; }
   .v2-os-cap { max-width: 640px; margin: 0 auto 40px; text-align: center; font-weight: 700; }
-  .v2-table { position: relative; max-width: 948px; margin: 0 auto; }
-  .v2-table-head, .v2-table-row { display: grid; grid-template-columns: 1fr 120px 120px; align-items: center; }
-  .v2-table-head { margin-bottom: 8px; }
-  .v2-table-head span { display: flex; justify-content: center; align-items: center; min-height: 56px; padding: 16px 12px; text-align: center; }
+  .v2-table { max-width: 948px; margin: 0 auto; display: grid; gap: 12px; }
+  .v2-table-head, .v2-table-row { display: grid; grid-template-columns: 1fr 1.15fr; gap: 12px; align-items: stretch; }
+  .v2-table-head span { display: flex; justify-content: center; align-items: center; min-height: 64px; padding: 12px 16px; border-radius: 12px; text-align: center; }
   .v2-table-head img { width: 92px; height: auto; }
-  .v2-table-head span.v2-sem { display: flex; flex-direction: column; gap: 0; padding: 8px 4px; font-size: 13px; font-weight: 500; line-height: 1.1; color: #212730; overflow: hidden; }
+  .v2-table-head span.v2-sem { flex-direction: column; gap: 0; background: #fff; border: 1px solid #f0e4da; font-size: 14px; font-weight: 500; line-height: 1.1; color: #212730; }
+  .v2-table-head span.v2-tem { background: #fff4ed; }
   .v2-sem strong { display: block; color: #e7000b; font-weight: 700; white-space: nowrap; }
-  .v2-table-row { min-height: 72px; padding: 20px 24px; border-radius: 12px; }
-  .v2-table-row:nth-child(even) { background: #f6f7f9; }
-  .v2-table-row:nth-child(odd) { background: #fff; }
-  .v2-table-row > span:first-child { font-size: 16px; line-height: 1.4; color: #212730; }
-  .v2-yes, .v2-no { display: flex; justify-content: center; align-items: center; }
-  .v2-yes svg, .v2-no svg { width: 32px; height: 32px; padding: 8px; border-radius: 50%; box-sizing: border-box; }
-  .v2-yes svg { background: #008236; }
-  .v2-no svg { background: #e7000b; }
-  .v2-col { position: absolute; top: 0; bottom: 0; width: 120px; border-radius: 16px; pointer-events: none; }
-  .v2-col--yes { right: 120px; border: 2px solid #008236; }
-  .v2-col--no { right: 0; border: 2px solid #e7000b; }
+  .v2-cell { display: flex; align-items: center; padding: 20px 22px; border-radius: 12px; font-size: 16px; line-height: 1.45; color: #212730; }
+  .v2-cell--sem { background: #fff; border: 1px solid #f0e4da; }
+  .v2-cell--tem { background: #fff4ed; }
   .v2-cases, .v2-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
   .v2-videos { grid-template-columns: repeat(3, 1fr); }
   .v2-video { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
   .v2-video img, .v2-videos iframe { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 16px; border: 0; }
   .v2-video span { display: block; margin-top: 8px; font-weight: 700; }
   .v2-passos ol { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .v2-passos li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; background: #fff; border-radius: 16px; padding: 16px; }
+  .v2-passos li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; background: var(--pink); border-radius: 16px; padding: 16px; }
   .v2-passos li span { color: var(--hot); font-weight: 800; }
   .v2-passos p { margin: 0; }
   .v2-cover { padding: 24px 0 72px; }
   .v2-band { text-align: center; padding: 64px 0; }
   .v2-2026 { max-width: 820px; }
   .v2-2026 ul { margin: 16px 0 22px; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .v2-2026 li { background: #fff; border-radius: 14px; padding: 14px 16px; }
+  .v2-2026 li { border-radius: 14px; padding: 14px 16px; }
+  .v2-2026 li:nth-child(odd) { background: #fff4ed; }
+  .v2-2026 li:nth-child(even) { background: #fff; border: 1px solid #f0e4da; }
   .v2-faq { max-width: 820px; }
   .v2-faq details { background: #fff; border-radius: 14px; padding: 14px 16px; margin-top: 10px; }
   .v2-faq summary { cursor: pointer; font-weight: 700; }
@@ -794,12 +797,9 @@ const videos = [
     .v2-cards { flex-direction: column; }
     .v2-cards article { padding: 24px; gap: 20px; }
     .v2-why h2, .v2-compare h2 { font-size: 32px; }
-    .v2-table-head, .v2-table-row { grid-template-columns: 1fr 96px 96px; }
-    .v2-table-head span { min-height: 44px; padding: 6px 2px; }
-    .v2-table-head img { width: 76px; max-width: 100%; }
-    .v2-table-head span.v2-sem { font-size: 12px; line-height: 1.05; padding: 4px 2px; }
-    .v2-col { width: 96px; }
-    .v2-col--yes { right: 96px; }
+    .v2-table-head, .v2-table-row { grid-template-columns: 1fr; }
+    .v2-table-head span { min-height: 52px; }
+    .v2-cell { padding: 16px; }
     .v2-passos li { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
