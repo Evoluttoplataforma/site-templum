@@ -16,8 +16,9 @@
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
-//                             LP /iso-9001-advocacia-v2/: só as faixas mensais acima de
-//                             R$ 100 mil vão ao INBOUND. Até R$ 100 mil vai ao MQL.
+//                             LP /iso-9001-advocacia-v2/ e /consultoria/iso-9001-lp-v2/:
+//                             faixas acima de R$ 100 mil vão ao INBOUND.
+//                             Até R$ 100 mil vai ao MQL.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
 //   GET    /api/saida       → leitura da pesquisa (senha Templum@2026), p/ /saida-ads
@@ -1100,9 +1101,9 @@ async function handleLead(request, env, ctx) {
       pipeline_id: ORBIT_ATIVACAO_PIPELINE_ID,
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
     })]);
-  } else if (isAdvocaciaFaturamentoMql(lead)) {
-    // Até R$ 100 mil nesta LP não entra no INBOUND. Vai ao funil MQL.
-    bgTasks.push(["mql", saveToMqlAdvocacia(lead, env)]);
+  } else if (isFaturamentoMql(lead)) {
+    // Até R$ 100 mil nestas LPs não entra no INBOUND. Vai ao funil MQL.
+    bgTasks.push(["mql", saveToMqlPorFaturamento(lead, env)]);
   } else if (!isInscricaoEvento) {
     // CRM comercial: Templum OS, funil INBOUND, etapa NOVO LEAD. Sem Pipedrive.
     bgTasks.push(["orbit", saveToOrbit(lead, env)]);
@@ -1885,42 +1886,63 @@ async function orbitPostLead(headers, body) {
   }).catch(() => null);
 }
 
-const ADVOCACIA_LP_PATH = "/iso-9001-advocacia-v2/";
-const ADVOCACIA_FATURAMENTO_INBOUND = new Set([
+// Corte único: até R$ 100 mil (inclusive) vai ao MQL. A primeira faixa que
+// passa de R$ 100 mil vai ao INBOUND. As duas listas cobrem o seletor da
+// advocacia e o seletor da LP de consultoria.
+const FATURAMENTO_SPLIT_LPS = {
+  "/iso-9001-advocacia-v2/": {
+    tag: "advocacia-ate-100mil",
+    source: "LP Advocacia",
+    note: "LP ISO 9001 advocacia.",
+  },
+  "/consultoria/iso-9001-lp-v2/": {
+    tag: "iso9001-ate-100mil",
+    source: "LP ISO 9001",
+    note: "LP ISO 9001.",
+  },
+};
+const FATURAMENTO_INBOUND = new Set([
   "De R$ 100 mil a R$ 500 mil",
   "De R$ 500 mil a R$ 1 milhão",
   "De R$ 1 milhão a R$ 5 milhões",
   "Acima de R$ 5 milhões",
+  "R$ 100 mil a R$ 300 mil",
+  "R$ 300 mil a R$ 500 mil",
+  "R$ 500 mil a R$ 1 milhão",
+  "Acima de R$ 1 milhão",
 ]);
 
-function isAdvocaciaLp(lead) {
-  return normLpPath(pathOnly(lead && lead.pagina)).toLowerCase() === ADVOCACIA_LP_PATH;
+function faturamentoSplitCfg(lead) {
+  const path = normLpPath(pathOnly(lead && lead.pagina)).toLowerCase();
+  return FATURAMENTO_SPLIT_LPS[path] || null;
 }
 
-function isAdvocaciaFaturamentoInbound(lead) {
-  if (!isAdvocaciaLp(lead)) return false;
-  return ADVOCACIA_FATURAMENTO_INBOUND.has(String(lead.faturamento || "").trim());
+function isFaturamentoInbound(lead) {
+  if (!faturamentoSplitCfg(lead)) return false;
+  return FATURAMENTO_INBOUND.has(String(lead.faturamento || "").trim());
 }
 
-function isAdvocaciaFaturamentoMql(lead) {
-  return isAdvocaciaLp(lead) && !isAdvocaciaFaturamentoInbound(lead);
+function isFaturamentoMql(lead) {
+  return Boolean(faturamentoSplitCfg(lead)) && !isFaturamentoInbound(lead);
 }
 
-function advocaciaMqlTags(lead) {
-  return withNormaTags(["advocacia-ate-100mil"], lead.pagina).map((tag) =>
+function faturamentoMqlTags(lead) {
+  const cfg = faturamentoSplitCfg(lead);
+  return withNormaTags([cfg && cfg.tag], lead.pagina).map((tag) =>
     tag === "ISO 9001" ? "ISO9001" : tag,
   );
 }
 
-function advocaciaMqlNote(lead) {
+function faturamentoMqlNote(lead) {
+  const cfg = faturamentoSplitCfg(lead);
   const faixa = String(lead.faturamento || "").trim();
-  const lines = ["LP ISO 9001 advocacia."];
+  const lines = [cfg ? cfg.note : "LP com corte de faturamento."];
   lines.push(faixa ? "Faturamento mensal: " + faixa + "." : "Faturamento mensal não informado.");
   if (lead.pagina) lines.push(String(lead.pagina));
   return lines.join("\n");
 }
 
-function advocaciaMqlCustomFields(lead) {
+function faturamentoMqlCustomFields(lead) {
   const custom_fields = {};
   for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
     const val = lead[field];
@@ -1929,18 +1951,19 @@ function advocaciaMqlCustomFields(lead) {
   return custom_fields;
 }
 
-// LP advocacia, faixa até R$ 100 mil → funil MQL (não INBOUND). Dedup só no MQL.
-async function saveToMqlAdvocacia(lead, env) {
-  if (!isAdvocaciaFaturamentoMql(lead)) return { ok: true, skipped: true, reason: "not_advocacia_mql" };
+// Faixa até R$ 100 mil → funil MQL (não INBOUND). Dedup só no MQL.
+async function saveToMqlPorFaturamento(lead, env) {
+  if (!isFaturamentoMql(lead)) return { ok: true, skipped: true, reason: "not_faturamento_mql" };
+  const cfg = faturamentoSplitCfg(lead);
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
   const email = String(lead.email || "").trim().toLowerCase();
   if (!email || email.indexOf("@") === -1) return { ok: false, error: "invalid_email" };
 
-  const tags = advocaciaMqlTags(lead);
-  const note = advocaciaMqlNote(lead);
-  const custom_fields = advocaciaMqlCustomFields(lead);
+  const tags = faturamentoMqlTags(lead);
+  const note = faturamentoMqlNote(lead);
+  const custom_fields = faturamentoMqlCustomFields(lead);
   const headers = {
     "content-type": "application/json",
     authorization: "Bearer " + token,
@@ -1974,7 +1997,7 @@ async function saveToMqlAdvocacia(lead, env) {
       stage_id: ORBIT_MQL_STAGE_NOVO,
       contact_name: String(lead.nome || email),
       contact_email: email,
-      source: "LP Advocacia",
+      source: cfg.source,
       tags,
       notes: note,
     };
