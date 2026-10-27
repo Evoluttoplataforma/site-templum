@@ -38,7 +38,7 @@ const posts = [
     linha: "Olá! Vim pela página da ISO 9001 e quero saber o valor para a minha empresa.",
     slides: [
       { tipo: "capa", kicker: "ISO 9001", titulo: "Quanto <em>custa</em> a ISO 9001?", texto: "A resposta direta está no próximo slide →" },
-      { tipo: "laranja", kicker: "Investimento", destaque: "R$ 2.500", titulo: "por mês, a partir de", texto: "Sem limite de horas de consultoria e sem taxa escondida." },
+      { tipo: "laranja", kicker: "Investimento", antes: "A partir de", destaque: "R$ 2.500", titulo: "por mês", texto: "Sem limite de horas de consultoria e sem taxa escondida." },
       { tipo: "claro", titulo: "O valor final depende de 4 coisas", lista: ["Tamanho da equipe", "Quantas unidades a empresa tem", "Quantos processos entram no escopo", "O quanto a gestão já está organizada"] },
       { tipo: "claro", titulo: "O que está incluso", lista: ["Consultoria do diagnóstico até a auditoria", "Documentos elaborados pela Templum", "Templum OS: plataforma com agentes de IA", "Preparação para a auditoria"] },
       { tipo: "claro", titulo: "O que fica por fora", texto: "A taxa do organismo certificador. É ele quem audita e emite o certificado, e por regra precisa ser independente de quem implementa. A gente ajuda você a escolher." },
@@ -54,7 +54,7 @@ const posts = [
     linha: "Olá! Vim pela página da ISO 9001. Tenho prazo para certificar e quero saber se dá tempo.",
     slides: [
       { tipo: "capa", kicker: "ISO 9001", titulo: "Em quanto <em>tempo</em> eu tenho a ISO 9001?", texto: "Deslize para o lado →" },
-      { tipo: "laranja", kicker: "Prazo", destaque: "6 meses", titulo: "a partir de", texto: "Do primeiro dia de projeto até a auditoria de certificação." },
+      { tipo: "laranja", kicker: "Prazo", antes: "A partir de", destaque: "6 meses", texto: "Do primeiro dia de projeto até a auditoria de certificação." },
       { tipo: "claro", titulo: "O caminho até o certificado", etapas: ["Diagnóstico da operação", "Implementação dos processos", "Acompanhamento e ajustes", "Auditoria de certificação"] },
       { tipo: "claro", titulo: "O que acelera", lista: ["Uma pessoa da equipe responsável pelo projeto", "Documentos validados sem demora", "Auditoria agendada cedo com o certificador"] },
       { tipo: "claro", titulo: "O que atrasa", lista: ["Projeto sem dono dentro da empresa", "Validação parada esperando o chefe", "Mudança grande no meio do caminho"] },
@@ -127,7 +127,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         </span>
         <ul class="ig-stats">
           <li><strong>+2.000</strong><span>clientes</span></li>
-          <li><strong>+30</strong><span>anos</span></li>
+          <li><strong>200%</strong><span>garantia</span></li>
           <li><strong>4,9 ★</strong><span>204 no Google</span></li>
         </ul>
       </div>
@@ -137,8 +137,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         🧡 Apaixonada por qualidade<br />
         🏆 Maior especialista em normas ISO do Brasil<br />
         ⏳ 16 anos de experiência<br />
-        ✅ Mais de 2.000 empresas certificadas<br />
-        👇 Toque nas suas dúvidas
+        ✅ Mais de 2.000 empresas certificadas
       </p>
       <div class="ig-acoes">
         <a
@@ -203,8 +202,9 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
                     <div class="ig-slide-in">
                       {s.kicker && <p class="ig-kicker">{s.kicker}</p>}
                       {s.numero && <span class="ig-numero">{s.numero}</span>}
+                      {s.antes && <p class="ig-antes">{s.antes}</p>}
                       {s.destaque && <p class="ig-destaque-num">{s.destaque}</p>}
-                      <p class="ig-titulo" set:html={s.titulo} />
+                      {s.titulo && <p class="ig-titulo" set:html={s.titulo} />}
                       {s.texto && <p class="ig-texto" set:html={s.texto} />}
                       {s.lista && (
                         <ul class="ig-lista">
@@ -512,6 +512,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
     display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
     background: var(--orange); color: #fff; font-size: 20px; font-weight: 800;
   }
+  .ig-antes { margin: 0 0 -10px; font-size: 22px; font-weight: 800; line-height: 1.2; }
   .ig-destaque-num { margin: 0; font-size: clamp(48px, 15vw, 68px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
   .ig-slide--navy .ig-destaque-num { color: var(--orange); }
   .ig-titulo { margin: 0; font-size: clamp(24px, 6.6vw, 30px); font-weight: 800; line-height: 1.15; }
