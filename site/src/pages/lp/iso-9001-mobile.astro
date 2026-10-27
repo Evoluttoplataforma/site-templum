@@ -27,7 +27,7 @@ const posts = [
       { tipo: "navy", destaque: "+1 milhão", titulo: "de empresas certificadas no mundo", texto: "É a norma de gestão mais usada do planeta. Seu concorrente pode já ter, e usar isso para ganhar o cliente que seria seu." },
       { tipo: "claro", numero: "2", titulo: "Menos dinheiro jogado fora", texto: "Processo sem padrão repete erro. Retrabalho, devolução e desconto para cliente insatisfeito saem direto da sua margem." },
       { tipo: "claro", numero: "3", titulo: "Uma empresa que anda sem você", texto: "Quando tudo passa pelo dono, a empresa cresce até onde ele aguenta. A ISO deixa o caminho escrito e a equipe segue sozinha." },
-      { tipo: "laranja", destaque: "R$ 3,3 bi", titulo: "em ganhos gerados para clientes Templum", texto: "Quer saber quanto a ISO 9001 pode render na sua empresa?", cta: "Calcular comigo no WhatsApp" },
+      { tipo: "laranja", titulo: "Sua empresa está deixando dinheiro na mesa se:", lista: ["Um cliente já pediu o certificado", "Você não entrou numa licitação", "O mesmo erro se repete todo mês", "Tudo ainda passa por você"], depois: "Marcou algum? Bora conversar.", cta: "Calcular comigo no WhatsApp" },
     ],
   },
   {
@@ -214,6 +214,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
                           {s.etapas.map((item, n) => <li><span>{n + 1}</span>{item}</li>)}
                         </ol>
                       )}
+                      {s.depois && <p class="ig-texto ig-depois">{s.depois}</p>}
                       {s.cta && (
                         <button
                           class="ig-slide-cta"
@@ -586,6 +587,8 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-slide--navy { background: var(--navy-2); color: #fff; }
   .ig-slide--laranja { background: var(--orange); color: #fff; }
   .ig-slide--laranja .ig-texto { font-weight: 600; }
+  .ig-slide--laranja .ig-lista li { color: var(--text); padding: 10px 14px; }
+  .ig-depois { font-weight: 800 !important; }
   .ig-slide--depoimento { background: var(--cream); }
   .ig-slide--logos { background: var(--navy); color: #fff; }
 
