@@ -1,49 +1,97 @@
 ---
 import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
+
+const WPP =
+  "https://wa.me/551926603087?text=Quero%20confirmar%20minha%20inscri%C3%A7%C3%A3o%20no%20M%C3%AAs%20da%20Qualidade%20(MQ26)";
 ---
 
 <CampanhaIsolada
-  title="Inscrição confirmada | Mês da Qualidade Templum 2026"
-  description="Sua vaga na Imersão SG de Alta Performance, de 3 a 6 de novembro, está reservada. As instruções chegam por e-mail e WhatsApp."
+  title="Falta um passo para garantir sua vaga | Mês da Qualidade Templum 2026"
+  description="Confirme sua inscrição pelo WhatsApp. É por lá que você recebe o link de cada encontro da Imersão."
 >
-  <main class="ob">
-    <article>
-      <p class="kicker">3 a 6 de novembro</p>
-      <h1>Sua vaga está reservada.</h1>
-      <p>As instruções de acesso da Imersão SG de Alta Performance chegam por e-mail e WhatsApp.</p>
-      <a href="/mes-da-qualidade-2026/">Voltar para a página</a>
-    </article>
-  </main>
-  <style>
-    .ob {
-      min-height: 70vh;
-      display: grid;
-      place-items: center;
-      padding: 48px 20px;
-      background: #222831;
-      color: #fff4dd;
-      font-family: Montserrat, "Segoe UI", sans-serif;
-    }
-    .ob article { max-width: 36rem; }
-    .kicker {
-      margin: 0 0 12px;
-      color: #ff5925;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    h1 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 48px); line-height: 1.1; }
-    p { margin: 0 0 24px; font-size: 18px; line-height: 1.5; }
-    a { color: #ff5925; font-weight: 700; }
-  </style>
+  <div class="lp-nova">
+    <header class="header">
+      <div class="header-inner">
+        <a href="/mes-da-qualidade-2026-v2/" aria-label="Voltar para a página do Mês da Qualidade">
+          <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        </a>
+      </div>
+    </header>
+
+    <main class="ob-main">
+      <article class="ob-card">
+        <div class="ob-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+        </div>
+        <p class="kicker">Mês da Qualidade 2026 · Imersão prática</p>
+        <h1 id="ob-title">Falta um passo para garantir sua vaga.</h1>
+        <p class="lede">Confirme sua inscrição pelo WhatsApp. É por lá que você recebe o link de cada encontro da Imersão.</p>
+        <ul class="ob-facts">
+          <li><strong>3 a 6 de novembro, às 16h (horário de Brasília)</strong></li>
+          <li>Online e gratuito</li>
+        </ul>
+        <div class="ob-cta">
+          <a
+            id="ob-wpp"
+            class="btn-wpp"
+            data-wpp-fixo="1"
+            data-trk-cta="confirmacao_whatsapp"
+            href={WPP}
+            target="_blank"
+            rel="noopener"
+          >Confirmar minha inscrição pelo WhatsApp</a>
+          <figure class="ob-qr">
+            <svg role="img" aria-label="QR Code para confirmar a inscrição no WhatsApp" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 53 53" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h53v53H0z"/><path stroke="#000000" d="M4 4.5h7m4 0h2m3 0h5m1 0h3m1 0h1m3 0h3m3 0h1m1 0h7M4 5.5h1m5 0h1m5 0h1m8 0h1m2 0h2m1 0h6m2 0h1m2 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h1m1 0h1m3 0h1m2 0h1m1 0h6m4 0h1m2 0h2m1 0h1m2 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h5m3 0h1m2 0h1m1 0h1m1 0h1m2 0h1m3 0h1m2 0h1m1 0h2m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h10m1 0h2m2 0h6m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h2m2 0h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h3m1 0h1m1 0h2m4 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h3m1 0h1m1 0h1m1 0h5m3 0h1m3 0h1m3 0h1M4 12.5h1m1 0h5m2 0h1m4 0h1m1 0h1m1 0h8m1 0h4m3 0h2m2 0h5M4 13.5h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m3 0h6m1 0h2m5 0h1m8 0h2m1 0h2M4 14.5h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m1 0h3m4 0h3m3 0h2m1 0h3m2 0h3m2 0h2M4 15.5h6m3 0h8m1 0h7m1 0h2m2 0h2m1 0h2m1 0h3M4 16.5h2m1 0h2m1 0h2m2 0h3m4 0h2m1 0h1m3 0h3m2 0h1m1 0h1m3 0h2m2 0h4m1 0h1M4 17.5h3m1 0h2m2 0h1m1 0h3m2 0h1m1 0h8m1 0h1m3 0h1m2 0h2M4 18.5h1m1 0h3m1 0h2m1 0h2m10 0h1m2 0h2m1 0h1m4 0h1m2 0h1m1 0h1m1 0h2m1 0h1m1 0h1M4 19.5h5m4 0h1m2 0h1m1 0h2m2 0h1m2 0h1m5 0h2m1 0h1m1 0h1m5 0h3m1 0h2M10 20.5h1m1 0h1m2 0h5m1 0h1m2 0h2m3 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m3 0h2M6 21.5h3m5 0h2m5 0h2m1 0h3m1 0h1m1 0h1m3 0h2m2 0h5m3 0h1M4 22.5h2m1 0h1m2 0h1m2 0h2m2 0h2m1 0h1m2 0h1m3 0h2m2 0h3m1 0h1m1 0h3m5 0h1m1 0h1M5 23.5h2m4 0h1m1 0h3m5 0h2m1 0h1m2 0h2m1 0h1m6 0h3m3 0h1m2 0h1m1 0h1M4 24.5h2m1 0h7m1 0h1m2 0h3m1 0h7m1 0h1m2 0h2m3 0h1m1 0h5m3 0h1M8 25.5h1m3 0h3m1 0h2m1 0h2m2 0h2m3 0h1m1 0h1m1 0h5m2 0h2m3 0h4M4 26.5h1m1 0h1m1 0h1m1 0h1m1 0h2m5 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h1m2 0h2m1 0h1m1 0h1m1 0h1m1 0h2M5 27.5h2m1 0h1m3 0h1m1 0h5m4 0h2m3 0h5m1 0h4m1 0h2m3 0h4M4 28.5h10m3 0h2m2 0h1m2 0h6m1 0h5m3 0h7m2 0h1M7 29.5h1m4 0h2m3 0h1m1 0h2m1 0h1m9 0h1m2 0h3m1 0h3m1 0h2m3 0h1M4 30.5h1m3 0h3m1 0h1m2 0h5m1 0h2m1 0h1m1 0h3m5 0h1m1 0h5m1 0h2m1 0h1m1 0h1M4 31.5h1m2 0h1m3 0h1m3 0h1m1 0h1m2 0h2m2 0h2m1 0h1m2 0h2m3 0h1m1 0h2m5 0h2m2 0h1M4 32.5h5m1 0h3m1 0h6m1 0h1m1 0h3m1 0h1m2 0h6m1 0h2m3 0h1m1 0h1m1 0h3M5 33.5h1m1 0h1m1 0h1m1 0h4m3 0h1m1 0h1m6 0h1m6 0h3m2 0h1m2 0h1m4 0h1M4 34.5h1m3 0h1m1 0h1m1 0h2m2 0h2m1 0h1m4 0h4m1 0h1m1 0h1m4 0h1m6 0h1m1 0h2m1 0h1M4 35.5h1m2 0h1m3 0h3m1 0h1m2 0h3m11 0h1m1 0h1m1 0h2m4 0h2m3 0h1M7 36.5h2m1 0h2m2 0h6m1 0h2m2 0h1m1 0h2m1 0h1m4 0h1m1 0h3m2 0h3m3 0h1M4 37.5h1m2 0h1m4 0h1m1 0h2m1 0h1m1 0h4m2 0h2m1 0h2m2 0h1m1 0h2m1 0h4m2 0h1m2 0h2M8 38.5h1m1 0h1m1 0h2m2 0h1m1 0h3m5 0h1m3 0h2m3 0h8m2 0h1m2 0h1M5 39.5h4m4 0h2m1 0h2m1 0h1m2 0h2m1 0h2m1 0h1m1 0h1m2 0h1m2 0h2m1 0h3m1 0h2m1 0h1M4 40.5h1m2 0h2m1 0h1m1 0h2m4 0h1m1 0h2m1 0h7m1 0h1m2 0h1m3 0h1m1 0h5m1 0h3M12 41.5h1m1 0h1m2 0h1m1 0h1m3 0h2m3 0h1m1 0h2m3 0h2m2 0h2m3 0h4M4 42.5h7m2 0h3m1 0h1m2 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2M4 43.5h1m5 0h1m1 0h1m1 0h2m1 0h1m1 0h2m2 0h2m3 0h1m1 0h3m1 0h2m2 0h3m3 0h4M4 44.5h1m1 0h3m1 0h1m1 0h1m2 0h2m4 0h1m2 0h5m1 0h1m1 0h2m1 0h1m1 0h9m1 0h2M4 45.5h1m1 0h3m1 0h1m1 0h1m1 0h2m6 0h1m1 0h1m1 0h3m3 0h4m4 0h1m1 0h2M4 46.5h1m1 0h3m1 0h1m1 0h1m5 0h3m1 0h1m1 0h2m7 0h1m3 0h2m2 0h1m1 0h4M4 47.5h1m5 0h1m3 0h6m3 0h1m2 0h1m1 0h1m1 0h1m4 0h1m2 0h1m2 0h6M4 48.5h7m1 0h7m1 0h1m1 0h1m2 0h4m2 0h4m1 0h2m2 0h2m2 0h1m1 0h2"/></svg>
+
+            <figcaption>Está no computador? Aponte a câmera do celular.</figcaption>
+          </figure>
+        </div>
+        <p class="ob-hint">As instruções também chegam por e-mail.</p>
+        <p><a class="ob-back" href="/mes-da-qualidade-2026-v2/">Voltar para a página</a></p>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <img class="logo-templum" src="/assets/logo/templum.png" alt="Templum" width="389" height="129" />
+        <p>© 2026 Templum Consultoria Digital LTDA. · CNPJ 00.198.308/0001-93</p>
+      </div>
+    </footer>
+  </div>
+
   <script is:inline>
     (function () {
       var raw = null;
       try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+      var d = {};
+      if (raw) {
+        try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+        try { d = JSON.parse(raw) || {}; } catch (_) {}
+        var primeiro = String(d.name || "").trim().split(/\s+/)[0].replace(/[.,;:]+$/g, "");
+        if (primeiro) {
+          var h = document.getElementById("ob-title");
+          if (h) h.textContent = "Falta um passo, " + primeiro + ".";
+        }
+      }
+      var btn = document.getElementById("ob-wpp");
+      if (btn) {
+        btn.addEventListener("click", function () {
+          try {
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "confirmacao_whatsapp", {
+                event_category: "engagement",
+                event_label: "mq26_whatsapp"
+              });
+            }
+          } catch (_) {}
+          try {
+            if (window.trk && typeof window.trk.track === "function") {
+              window.trk.track("CTAClick", { cta: "confirmacao_whatsapp", href: btn.href });
+            }
+          } catch (_) {}
+        });
+      }
       if (!raw) return;
-      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
-      var d = {}; try { d = JSON.parse(raw) || {}; } catch (_) {}
       var done = false;
       function fire() {
         if (done) return; done = true;
@@ -56,4 +104,113 @@ import CampanhaIsolada from "../layouts/CampanhaIsolada.astro";
       }, 250);
     })();
   </script>
+
+<style is:global>
+  .lp-nova {
+    --ink: #fff4dd;
+    --muted: rgba(255, 244, 221, 0.72);
+    --line: rgba(255, 244, 221, 0.14);
+    --orange: #ff5925;
+    --orange-ink: #b23c0c;
+    --navy: #222831;
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: Barlow, "Segoe UI", sans-serif;
+    background: var(--navy);
+    line-height: 1.5;
+  }
+  .lp-nova *,
+  .lp-nova *::before,
+  .lp-nova *::after { box-sizing: border-box; }
+  .lp-nova img { max-width: 100%; height: auto; display: block; }
+  .lp-nova a { color: inherit; text-decoration: none; }
+  .lp-nova h1 { margin: 0; letter-spacing: -0.03em; line-height: 1.08; }
+  .lp-nova p { margin: 0; }
+  .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(34, 40, 49, 0.94);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    width: min(1120px, calc(100% - 40px));
+    margin: 0 auto;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+  }
+  .logo-templum { width: 132px; height: auto; filter: brightness(0) invert(1); }
+  .kicker {
+    display: inline-flex;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fff4dd;
+    color: var(--orange-ink);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .ob-main { padding: 48px 0 72px; background: var(--navy); min-height: 70vh; }
+  .ob-card {
+    width: min(680px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 32px 24px;
+    background: #fff;
+    color: #18191b;
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+  .ob-check {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: #fff;
+    display: grid;
+    place-items: center;
+  }
+  .ob-check svg { width: 28px; height: 28px; }
+  .ob-card h1 { font-size: clamp(34px, 5vw, 48px); }
+  .ob-card .lede { margin: 14px auto 0; color: #3f424b; }
+  .ob-facts { margin: 22px 0 0; padding: 0; list-style: none; color: #18191b; }
+  .ob-facts li + li { margin-top: 6px; }
+  .ob-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .btn-wpp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #128c7e;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .btn-wpp:hover { background: #0e7468; }
+  .ob-qr { display: none; margin: 0; }
+  .ob-qr svg { width: 132px; height: 132px; background: #fff; border-radius: 12px; }
+  .ob-qr figcaption { max-width: 148px; margin-top: 8px; color: #3f424b; font-size: 13px; line-height: 1.35; }
+  @media (min-width: 960px) {
+    .ob-cta { flex-direction: row; justify-content: center; align-items: center; gap: 28px; }
+    .ob-qr { display: block; }
+  }
+  .ob-hint { margin-top: 14px; color: #3f424b; font-size: 15px; }
+  .ob-back { display: inline-block; margin-top: 14px; color: var(--orange-ink); font-weight: 700; }
+  .footer { padding: 28px 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  .footer-inner { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+  .footer .logo-templum { width: 110px; }
+</style>
 </CampanhaIsolada>

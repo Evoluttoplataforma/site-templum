@@ -7,6 +7,9 @@
 # =========================================================
 
 # ---- 301 (templum.com.br) — URLs antigas → destino final ----
+# LP antiga do Mês da Qualidade saiu do ar. A página vigente é a v2.
+/mes-da-qualidade-2026  /mes-da-qualidade-2026-v2/  301
+/mes-da-qualidade-2026/  /mes-da-qualidade-2026-v2/  301
 # Apontam direto para o destino FINAL (sem cadeia). Com e sem barra final.
 # Query string / UTM são preservadas automaticamente pelo Cloudflare.
 /programa-transicao-iso-9001-2026  /curso-entendimento-iso-9001-2026/  301
