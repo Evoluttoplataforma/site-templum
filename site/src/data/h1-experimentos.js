@@ -49,8 +49,8 @@ export const H1_EXPERIMENTOS = {
   },
   iso27001v2: {
     lp_id: "iso27001v2",
-    experimento_id: "tpl_h1_iso27001v2_r02",
-    rodada: "r02",
+    experimento_id: "tpl_h1_iso27001v2_r03",
+    rodada: "r03",
     estado: "em_execucao",
     variante_fixa: null,
     variantes: [
@@ -58,8 +58,8 @@ export const H1_EXPERIMENTOS = {
       v(2, "exigencia", "Sem comprovar a segurança, sua empresa pode ", "perder contratos", "."),
       v(3, "beneficio", "Um ", "vazamento de dados", " abala a confiança dos seus clientes."),
       v(4, "metodo", "Quem acessa os ", "dados críticos", " da sua empresa?"),
-      v(5, "execucao", "O cliente pediu a ", "ISO 27001", " e falta por onde começar?"),
-      v(6, "proposta", "Equipe sobrecarregada com a ", "ISO 27001", "? Conte com apoio."),
+      v(5, "execucao", "O cliente pediu a ", "ISO 27001", ". Sua empresa já consegue comprovar?"),
+      v(6, "proposta", "Implemente a ", "ISO 27001", " com a sua equipe e o nosso apoio."),
     ],
   },
   iso27001: {
