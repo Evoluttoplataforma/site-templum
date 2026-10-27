@@ -12,11 +12,6 @@ const cta = "Solicite uma proposta";
 const norma = "ISO 27001";
 const wpp = "https://wa.me/5519993521270?text=" + encodeURIComponent("Olá! Vim pelo site da Templum e quero saber sobre a ISO 27001.");
 
-const passos = [
-  { href: "#diagnostico", n: "01", t: "Diagnóstico do escopo, dos controles e das lacunas." },
-  { href: "#implementacao", n: "02", t: "Implementação com a equipe e a consultoria." },
-];
-
 const papeis = [
   "Aprovo ou participo da aprovação",
   "Lidero a implementação",
@@ -57,8 +52,8 @@ const faturamentos = [
           <img src="/assets/lp/iso9001-v2/logo-templum.svg" alt="Templum" width="120" height="32" />
         </a>
         <nav class="i27-nav" aria-label="Seções" data-i27-nav>
-          <a href="#dores">Dores</a>
-          <a href="#como-funciona">Como funciona</a>
+          <a href="#diagnostico">Diagnóstico</a>
+          <a href="#implementacao">Implementação</a>
           <a href="#garantia">Garantia</a>
         </nav>
         <a class="i27-cta i27-cta--sm" href="#proposta">
@@ -79,8 +74,8 @@ const faturamentos = [
         </button>
       </div>
       <nav aria-label="Seções">
-        <a href="#dores">Dores</a>
-        <a href="#como-funciona">Como funciona</a>
+        <a href="#diagnostico">Diagnóstico</a>
+        <a href="#implementacao">Implementação</a>
         <a href="#garantia">Garantia</a>
       </nav>
       <a class="i27-cta i27-cta--block" href="#proposta">
@@ -129,48 +124,6 @@ const faturamentos = [
             <p><strong>100% online</strong>Acompanhamento pelo Templum OS.</p>
           </aside>
         </div>
-      </div>
-    </section>
-
-    <section class="i27-sec" id="dores">
-      <div class="i27-wrap">
-        <p class="i27-kicker i27-kicker--ink">Dores</p>
-        <h2>O que impede sua empresa de atender aos requisitos de segurança.</h2>
-        <p class="i27-lede">Estas situações travam a resposta ao cliente e a preparação para a auditoria.</p>
-        <div class="i27-cards">
-          <article>
-            <h3>Exigências de clientes</h3>
-            <p>O comprador pede a ISO 27001 para contratar, renovar ou homologar, e a empresa ainda não tem como demonstrar.</p>
-          </article>
-          <article>
-            <h3>Contratos</h3>
-            <p>Sem essa comprovação, a renovação ou a homologação pode parar.</p>
-          </article>
-          <article>
-            <h3>Riscos</h3>
-            <p>Informações críticas, acessos e medidas de proteção ainda não estão mapeados.</p>
-          </article>
-          <article>
-            <h3>Equipe sobrecarregada</h3>
-            <p>A implementação precisa acontecer, e faltam tempo e orientação especializada.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="i27-sec i27-sec--tight" id="como-funciona">
-      <div class="i27-wrap">
-        <p class="i27-kicker i27-kicker--ink">Como funciona</p>
-        <h2>Diagnóstico e implementação.</h2>
-        <p class="i27-lede">A consultoria conduz as duas etapas, do que o cliente exige até o sistema funcionando na operação.</p>
-        <nav class="i27-jumps" aria-label="Etapas da implementação">
-          {passos.map((p) => (
-            <a href={p.href}>
-              <span>{p.n}</span>
-              {p.t}
-            </a>
-          ))}
-        </nav>
       </div>
     </section>
 
@@ -922,14 +875,15 @@ const faturamentos = [
   .i27-submit:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 
   .i27-foot {
-    background: var(--navy);
-    color: rgba(255, 244, 221, 0.78);
+    background: var(--cream);
+    color: var(--ink-2);
     padding: 48px 0 56px;
+    border-top: 1px solid var(--border);
   }
-  .i27-foot img { filter: brightness(0) invert(1); margin-bottom: 18px; }
+  .i27-foot img { margin-bottom: 18px; }
   .i27-foot p { max-width: 62ch; font-size: 15px; line-height: 1.55; margin-top: 8px; }
-  .i27-foot strong { color: var(--cream); font-size: 18px; }
-  .i27-foot a { color: var(--peach); text-decoration: underline; text-underline-offset: 3px; }
+  .i27-foot strong { color: var(--ink); font-size: 18px; }
+  .i27-foot a { color: var(--orange-dark); text-decoration: underline; text-underline-offset: 3px; }
 
   @media (max-width: 980px) {
     .i27-nav, .i27-bar .i27-cta { display: none; }
