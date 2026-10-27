@@ -219,7 +219,7 @@ const videos = [
     <section class="v2-hero">
       <div class="v2-wrap v2-hero-grid">
         <div class="v2-hero-copy">
-          <p class="v2-pill">A consultoria digital nº 1 do Brasil</p>
+          <p class="v2-pill">Consultoria ISO 9001</p>
           <h1 id="tpl-h1">Implemente a <span>ISO 9001 ou receba 200%</span> do seu investimento de volta.</h1>
           <script is:inline>
             if (window.tplH1Aplicar) window.tplH1Aplicar();
@@ -360,7 +360,7 @@ const videos = [
 
         <article class="v2-feat">
           <div>
-            <h3>Garanta a certificação ISO 9001 com a consultoria digital nº 1 do Brasil</h3>
+            <h3>Garanta a certificação com a consultoria ISO 9001</h3>
             <p>Centralize toda a implementação da certificação em um único ambiente digital, com visão clara das etapas e entregas.</p>
             <ul>
               <li>Acesso 24h à Plataforma de Consultoria Templum durante todo o processo de certificação.</li>
@@ -852,9 +852,16 @@ const videos = [
     .v2-cards { flex-direction: column; }
     .v2-cards article { padding: 24px; gap: 20px; }
     .v2-why h2, .v2-compare h2 { font-size: 32px; }
-    .v2-table-head, .v2-table-row { grid-template-columns: 1fr; }
+    .v2-why, .v2-dark, .v2-band, .v2-compare h2, .v2-os-cap { text-align: left; }
+    .v2-why h2, .v2-why .v2-lead, .v2-compare h2, .v2-os-cap, .v2-fine, .v2-dark .v2-checks { margin-left: 0; margin-right: 0; }
+    .v2-table { display: flex; flex-direction: column; }
+    .v2-table-head, .v2-table-row { display: contents; }
+    .v2-table .v2-sem { order: 1; justify-content: flex-start; text-align: left; }
+    .v2-table .v2-cell--sem { order: 2; }
+    .v2-table .v2-tem { order: 3; margin-top: 16px; }
+    .v2-table .v2-cell--tem { order: 4; }
     .v2-table-head span { min-height: 52px; }
-    .v2-cell { padding: 16px; }
+    .v2-cell { justify-content: flex-start; text-align: left; padding: 16px; }
     .v2-passos li { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
