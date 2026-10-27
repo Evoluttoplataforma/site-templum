@@ -26,6 +26,7 @@ const h1 = experimentoH1("iso9001");
 const passos = passosDaProposta(d.passos);
 const porques = porquesDaProposta(d.porques);
 const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a\u00A0certificação.";
+const preco = "Planos a partir de R$ 2.500/mês";
 const heroCta = "Solicite uma proposta";
 const formTitulo = "Fale agora com um especialista ISO 9001";
 const formSub = "Preencha o formulário e um especialista entrará em contato.";
@@ -94,7 +95,7 @@ const prazos2026 = [
             <a href="#garantia">Garantia de 200%</a>
           </nav>
           <p class="cs-sub">{heroSub}</p>
-          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
+          <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {preco}</div>
           <div class="cs-chips">{heroChips.map((ch) => <a class="cs-chip" href={ch.href}><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch.t}</a>)}</div>
           <a href="#nova-forma" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
         </div>
@@ -158,7 +159,7 @@ const prazos2026 = [
           <span class="tag-pill">Investimento</span>
           <h2>Quanto custa a certificação <em class="accent">ISO 9001?</em></h2>
         </div>
-        <p class="cs-custo">O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o prazo saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
+        <p class="cs-custo">Planos a partir de R$ 2.500/mês. O investimento depende do porte da empresa, do número de unidades, dos processos e do nível de maturidade da gestão. Na Templum, o investimento é por projeto, sem limite de horas de consultoria. O valor e o prazo saem na proposta, de forma personalizada. E com a garantia de 200%: se a empresa concluir todas as etapas do método e não certificar, devolvemos o dobro do investimento.</p>
         <div class="cs-sec-cta">
           <a href="#form" class="btn btn--primary btn--lg">Solicite uma proposta <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
         </div>

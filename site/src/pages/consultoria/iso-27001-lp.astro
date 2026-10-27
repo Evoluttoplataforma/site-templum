@@ -19,6 +19,8 @@ const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre a ISO 27001
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a certificação.";
+const preco = "Por projeto, sem limite de horas";
 const h1 = experimentoH1("iso27001");
 const passos = passosDaProposta(d.passos);
 const porques = porquesDaProposta(d.porques);
@@ -52,8 +54,8 @@ const faqItems = (d.detalhes.faq || []).map((f) => (faqTexto[f.q] ? { ...f, a: f
             <a href="#garantia">Garantia</a>
             <a href="#perguntas">Perguntas frequentes</a>
           </nav>
-          <p class="cs-sub">{d.hero.sub}</p>
-          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
+          <p class="cs-sub">{heroSub}</p>
+          <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {preco}</div>
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
           <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
@@ -184,7 +186,18 @@ const faqItems = (d.detalhes.faq || []).map((f) => (faqTexto[f.q] ? { ...f, a: f
       <div class="container md">
         <div class="section-header"><span class="tag-pill">Tire suas dúvidas</span><h2>{d.detalhes.titulo}</h2><p>{d.detalhes.sub}</p></div>
         <div class="faq-list">
-          {faqItems.map((f) => <details class="faq-item" id={f.q === "O investimento é por projeto ou por hora?" ? "investimento" : undefined}><summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary><div class="faq-answer">{f.a}</div></details>)}
+          {faqItems.map((f) => {
+            const investimento = f.q === "O investimento é por projeto ou por hora?";
+            const resposta = investimento
+              ? "Por projeto, sem limite de horas. O valor sai na proposta. Você sabe o valor do início ao fim e não paga a mais por dúvidas ou reuniões extras."
+              : f.a;
+            return (
+              <details class="faq-item" id={investimento ? "investimento" : undefined} open={investimento || undefined}>
+                <summary class="faq-question">{f.q}<span class="faq-arrow">+</span></summary>
+                <div class="faq-answer">{resposta}</div>
+              </details>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -236,6 +249,7 @@ const faqItems = (d.detalhes.faq || []).map((f) => (faqTexto[f.q] ? { ...f, a: f
   .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
 
   .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  #investimento { scroll-margin-top: 88px; }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
   .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .cs-hero-text { max-width: 600px; }

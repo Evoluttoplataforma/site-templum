@@ -19,6 +19,8 @@ const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o PBQP-H.";
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
 const heroChips = d.hero.chips || d.chipsPadrao || [];
+const heroSub = "Com especialistas experientes e o Templum OS para organizar, orientar e acelerar sua jornada até a certificação.";
+const preco = "Planos a partir de R$ 1.500/mês";
 const h1 = experimentoH1("pbqph");
 const passos = passosDaProposta(d.passos);
 const porques = porquesDaProposta(d.porques);
@@ -40,8 +42,8 @@ const porques = porquesDaProposta(d.porques);
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
           <H1Principal experimento={h1} />
-          <p class="cs-sub">{d.hero.sub}</p>
-          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
+          <p class="cs-sub">{heroSub}</p>
+          <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {preco}</div>
           <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
           <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
           <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
