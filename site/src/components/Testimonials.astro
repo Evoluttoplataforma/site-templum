@@ -11,7 +11,7 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
     <p>Empresários e gestores contam como organizaram a empresa e certificaram com a Templum.</p>
     {nota && (
       <div class="tm-google">
-        <iconify-icon icon="logos:google-icon"></iconify-icon>
+        <img class="tm-google-mark" src="/assets/logo/google.svg" alt="" width="18" height="18" />
         <span class="tm-stars"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></span>
         <strong>{nota}</strong> de nota no Google
       </div>
@@ -63,6 +63,7 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
   .tm-head p { font-size: 16.5px; color: var(--text-mid); margin-top: 14px; }
   .tm-google { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 14px; color: var(--text-2); box-shadow: var(--shadow-soft); }
   .tm-google iconify-icon { font-size: 18px; }
+  .tm-google-mark { width: 18px; height: 18px; display: block; flex-shrink: 0; }
   .tm-google .tm-stars { display: inline-flex; color: #FBBF24; gap: 1px; }
   .tm-google .tm-stars iconify-icon { font-size: 15px; }
   .tm-google strong { color: var(--text); font-weight: 800; }

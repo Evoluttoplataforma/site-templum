@@ -27,7 +27,14 @@ const LARGURAS = [400, 740];
 // variante que o celular baixa é ganho direto de LCP, não só de bytes.
 const AVULSAS = [
   ...readdirSync("public/assets/img/hero").filter((f) => f.endsWith(".webp") && !/-\d{3,4}\.webp$/.test(f))
-    .map((f) => ({ src: `public/assets/img/hero/${f}`, larguras: [900] })),
+    .map((f) => ({
+      src: `public/assets/img/hero/${f}`,
+      larguras: [900],
+      // A variante de 900px da foto industrial é o LCP da home no celular.
+      // q 52 (27/10/2026) tira ~11 KB sem mudar o enquadramento; o original
+      // de 1774px segue em q 78 para o desktop.
+      qualidade: f === "templum-consultoria-industria.webp" ? 52 : 78,
+    })),
   { src: "public/assets/img/olivia_templum.webp", larguras: [420] },
 ];
 const kb = (n) => String(Math.round(n / 1024)).padStart(4);
@@ -54,7 +61,7 @@ for (const a of AVULSAS) {
   const base = a.src.replace(/\.webp$/, "");
   for (const w of a.larguras) {
     const out = `${base}-${w}.webp`;
-    execFileSync("cwebp", ["-quiet", "-q", "78", "-resize", String(w), "0", a.src, "-o", out]);
+    execFileSync("cwebp", ["-quiet", "-q", String(a.qualidade || 78), "-resize", String(w), "0", a.src, "-o", out]);
     console.log(`${kb(statSync(a.src).size)}KB → ${kb(statSync(out).size)}KB  ${w}px  ${out.replace("public", "")}`);
   }
 }
