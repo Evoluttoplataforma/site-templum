@@ -1,7 +1,8 @@
 ---
 // Obrigado da LP /lp/iso-9001-mobile. A pessoa chega aqui depois de deixar os dados na gaveta
 // do formulário. A página dispara a conversão (LeadPendingConversion lê tpl_lead_pending e
-// chama trk.lead) e só então abre o WhatsApp com nome, empresa e a frase do carrossel de onde
+// chama trk.lead, Conta 2026) e, no mesmo momento, a conversão da Templum Consultoria
+// (AW-1065643610). Só então abre o WhatsApp com nome, empresa e a frase do carrossel de onde
 // ela veio. Base (não LpBase) de propósito: o form-funil.js trata clique de WhatsApp em LP como
 // conversão própria, e aqui o lead já foi contado.
 import Base from "../../layouts/Base.astro";
@@ -33,7 +34,16 @@ const waPadrao = "https://wa.me/" + numero + "?text=" + encodeURIComponent(linha
     <p class="igo-fino" data-igo-aviso>Se o WhatsApp não abrir sozinho, toque no botão acima.</p>
   </section>
 
-  <LeadPendingConversion contentName="ISO 9001" contentCategory="Gestão da Qualidade" />
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+    gtag("config", "AW-1065643610");
+  </script>
+  <LeadPendingConversion
+    contentName="ISO 9001"
+    contentCategory="Gestão da Qualidade"
+    extraSendTo="AW-1065643610/v-PXCPnH56sdENrckfwD"
+  />
 
   <script is:inline define:vars={{ numero }}>
     (function () {

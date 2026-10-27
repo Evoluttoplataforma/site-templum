@@ -3,13 +3,16 @@
 // Se houver tpl_lead_pending, carrega o tracking-kit na hora e espera
 // window.trk.lead por até 20s. O item só sai do sessionStorage depois
 // que trk.lead() devolve o id do evento.
+// extraSendTo: segunda conta do Google Ads. Só entra na página que passar
+// o valor. O send_to da Conta 2026, dentro do tracking-kit, continua.
 interface Props {
   contentName?: string;
   contentCategory?: string;
+  extraSendTo?: string;
 }
-const { contentName = "", contentCategory = "" } = Astro.props;
+const { contentName = "", contentCategory = "", extraSendTo = "" } = Astro.props;
 ---
-<script is:inline define:vars={{ contentName, contentCategory }}>
+<script is:inline define:vars={{ contentName, contentCategory, extraSendTo }}>
   (function () {
     var PRODUCT = { content_name: contentName || "", content_category: contentCategory || "" };
     var raw = null;
@@ -45,6 +48,11 @@ const { contentName = "", contentCategory = "" } = Astro.props;
           props
         );
         if (!fired) return;
+        if (extraSendTo && typeof window.gtag === "function") {
+          var extra = { send_to: extraSendTo };
+          if (d.event_id) extra.transaction_id = d.event_id;
+          try { window.gtag("event", "conversion", extra); } catch (_) {}
+        }
         try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
       } catch (_) {}
     }, 100);

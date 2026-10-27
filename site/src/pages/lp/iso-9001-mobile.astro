@@ -105,6 +105,11 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   description="Quanto custa, quanto tempo leva e quanto a ISO 9001 rende para a sua empresa. Consultoria Templum com garantia de 200%. Fale no WhatsApp."
   hideChrome={true}
 >
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+    gtag("config", "AW-1065643610");
+  </script>
   <div class="ig">
     <header class="ig-top">
       <img src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" class="ig-logo" />
