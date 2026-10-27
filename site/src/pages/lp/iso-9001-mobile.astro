@@ -283,16 +283,6 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       <p><a href="https://templum.com.br">templum.com.br</a> · <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a></p>
     </footer>
 
-    <a
-      class="ig-wpp-fixo"
-      href={wa(linhaGeral)}
-      target="_blank"
-      rel="noopener"
-      data-wpp-ref="1"
-      data-wpp-fixo="1"
-      data-wpp-norma={norma}
-      data-wpp-linha={linhaGeral}
-    ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar no WhatsApp</a>
   </div>
 
   <script is:inline>
@@ -409,7 +399,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
     background: #fff;
     color: var(--text);
     font-family: var(--font-sans);
-    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
   }
   @media (min-width: 520px) {
     .ig { box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(24, 25, 27, 0.08); }
@@ -623,18 +613,6 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-rodape img { height: 26px; width: auto; }
   .ig-rodape p { margin: 8px 0 0; }
   .ig-rodape a { color: var(--text-2); }
-
-  /* Botão fixo do WhatsApp */
-  .ig-wpp-fixo {
-    position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
-    bottom: calc(12px + env(safe-area-inset-bottom));
-    width: calc(100% - 24px); max-width: calc(var(--ig-w) - 24px);
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 54px; padding: 12px 18px; border-radius: 16px;
-    background: #25D366; color: #fff; font-size: 16px; font-weight: 800; text-decoration: none;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
-  }
-  .ig-wpp-fixo iconify-icon { font-size: 24px; }
 
   @media (prefers-reduced-motion: reduce) {
     .ig-coracao.is-pop { animation: none; }
