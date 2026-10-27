@@ -8,6 +8,8 @@ export default defineConfig({
   site: 'https://templum.com.br',
   build: {
     format: 'directory', // /pagina/ → /pagina/index.html (URLs limpas, sem .html)
+    // Mesmas regras de hoje, dentro do HTML. O celular deixa de esperar os arquivos de CSS.
+    inlineStylesheets: 'always',
   },
   trailingSlash: 'ignore',
 });
