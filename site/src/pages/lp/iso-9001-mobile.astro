@@ -1,16 +1,16 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
-import { WHATSAPP_LP_NUMBER } from "../../data/whatsapp-lp.js";
 
 // LP de anúncio do Google Ads (campanha só celular) para dono de empresa que busca ISO 9001.
 // Formato de perfil do Instagram, com a Dani como rosto: destaques no topo e 5 carrosséis
 // que respondem as dúvidas da busca (dinheiro, custo, prazo, cases, método).
-// Conversão única: WhatsApp. Cada carrossel manda uma frase própria, assim o atendimento
-// sabe de onde o lead veio. O clique vira conversão do Ads pelo form-funil.js (data-wpp-ref).
+// Conversão: todo botão de WhatsApp abre antes uma gaveta com o formulário (nome, e-mail,
+// empresa, cargo, telefone). O envio usa o handler padrão do LpBase (/api/lead → INBOUND),
+// e a página de obrigado dispara a conversão e abre o WhatsApp com a frase do carrossel.
 // Cada slide visto vira evento no GA4 e tag no Clarity, para medir onde a pessoa para.
 
 const norma = "ISO 9001";
-const wa = (linha) => "https://wa.me/" + WHATSAPP_LP_NUMBER + "?text=" + encodeURIComponent(linha);
+const cargos = ["Dono(a) ou sócio(a)", "Diretor(a)", "Gerente", "Coordenador(a) ou analista", "Outro"];
 const linhaGeral = "Olá! Vim pela página da ISO 9001 e quero conversar sobre a certificação da minha empresa.";
 
 const posts = [
@@ -108,16 +108,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   <div class="ig">
     <header class="ig-top">
       <img src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" class="ig-logo" />
-      <a
+      <button
         class="ig-top-wpp"
-        href={wa(linhaGeral)}
-        target="_blank"
-        rel="noopener"
-        data-wpp-ref="1"
-        data-wpp-norma={norma}
-        data-wpp-linha={linhaGeral}
+        type="button"
+        data-ig-lead="topo"
+        data-linha={linhaGeral}
+        data-abre-form
+        data-cta-pos="menu"
         aria-label="Falar no WhatsApp"
-      ><iconify-icon icon="solar:chat-round-dots-bold" aria-hidden="true"></iconify-icon></a>
+      ><iconify-icon icon="solar:chat-round-dots-bold" aria-hidden="true"></iconify-icon></button>
     </header>
 
     <section class="ig-perfil">
@@ -140,15 +139,14 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         ✅ Mais de 2.000 empresas certificadas
       </p>
       <div class="ig-acoes">
-        <a
+        <button
           class="ig-btn ig-btn--primario"
-          href={wa(linhaGeral)}
-          target="_blank"
-          rel="noopener"
-          data-wpp-ref="1"
-          data-wpp-norma={norma}
-          data-wpp-linha={linhaGeral}
-        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>WhatsApp</a>
+          type="button"
+          data-ig-lead="perfil"
+          data-linha={linhaGeral}
+          data-abre-form
+          data-cta-pos="topo"
+        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>WhatsApp</button>
         <a class="ig-btn" href="#post-custo" data-ig-ir="custo">Ver valores</a>
       </div>
     </section>
@@ -217,16 +215,14 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
                         </ol>
                       )}
                       {s.cta && (
-                        <a
+                        <button
                           class="ig-slide-cta"
-                          href={wa(p.linha)}
-                          target="_blank"
-                          rel="noopener"
-                          data-wpp-ref="1"
-                          data-wpp-norma={norma}
-                          data-wpp-linha={p.linha}
-                          data-ig-cta={p.id}
-                        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>{s.cta}</a>
+                          type="button"
+                          data-ig-lead={p.id}
+                          data-linha={p.linha}
+                          data-abre-form
+                          data-cta-pos="meio"
+                        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>{s.cta}</button>
                       )}
                     </div>
                   )}
@@ -240,16 +236,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
 
           <div class="ig-post-barra">
             <button class="ig-icone" type="button" data-ig-like aria-pressed="false" aria-label="Curtir"><iconify-icon icon="solar:heart-linear"></iconify-icon></button>
-            <a
+            <button
               class="ig-icone"
-              href={wa(p.linha)}
-              target="_blank"
-              rel="noopener"
-              data-wpp-ref="1"
-              data-wpp-norma={norma}
-              data-wpp-linha={p.linha}
+              type="button"
+              data-ig-lead={p.id}
+              data-linha={p.linha}
+              data-abre-form
+              data-cta-pos="meio"
               aria-label="Enviar mensagem no WhatsApp"
-            ><iconify-icon icon="solar:plain-2-linear"></iconify-icon></a>
+            ><iconify-icon icon="solar:plain-2-linear"></iconify-icon></button>
             <span class="ig-dots" data-ig-dots>
               {p.slides.map((_, i) => <i class={i === 0 ? "is-on" : ""}></i>)}
             </span>
@@ -264,15 +259,14 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         </span>
         <h2>Ficou alguma dúvida?</h2>
         <p>Me chama no WhatsApp. Em uma conversa rápida você sai com o valor e o prazo para a sua empresa.</p>
-        <a
+        <button
           class="ig-btn ig-btn--primario ig-btn--grande"
-          href={wa(linhaGeral)}
-          target="_blank"
-          rel="noopener"
-          data-wpp-ref="1"
-          data-wpp-norma={norma}
-          data-wpp-linha={linhaGeral}
-        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar no WhatsApp</a>
+          type="button"
+          data-ig-lead="fim"
+          data-linha={linhaGeral}
+          data-abre-form
+          data-cta-pos="final"
+        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar no WhatsApp</button>
         <p class="ig-fino">A garantia de 200% vale se a empresa concluir todas as etapas do método e, ainda assim, não certificar. A taxa do organismo certificador não está inclusa.</p>
       </section>
     </div>
@@ -283,6 +277,51 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       <p><a href="https://templum.com.br">templum.com.br</a> · <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a></p>
     </footer>
 
+    <div class="ig-sheet" data-ig-sheet hidden>
+      <div class="ig-sheet-fundo" data-ig-fechar></div>
+      <div class="ig-sheet-painel" role="dialog" aria-modal="true" aria-labelledby="ig-sheet-titulo">
+        <span class="ig-sheet-alca" aria-hidden="true"></span>
+        <button class="ig-sheet-x" type="button" data-ig-fechar aria-label="Fechar"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+        <div class="ig-sheet-topo">
+          <span class="ig-avatar ig-avatar--sm">
+            <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="" width="192" height="192" loading="lazy" />
+          </span>
+          <div>
+            <p class="ig-sheet-titulo" id="ig-sheet-titulo">Antes de abrir o WhatsApp</p>
+            <p class="ig-sheet-sub">Deixa seus dados para a gente já te atender com a proposta certa.</p>
+          </div>
+        </div>
+        <form class="ig-form" data-trk-event="lead" data-obrigado="/lp/iso-9001-mobile-obrigado/" novalidate>
+          <input type="hidden" name="norma" value={norma} />
+          <input type="hidden" name="mensagem" value="" data-ig-mensagem />
+          <div class="field">
+            <label for="ig-nome">Nome</label>
+            <input class="input" id="ig-nome" name="nome" autocomplete="name" placeholder="Seu nome" required />
+          </div>
+          <div class="field">
+            <label for="ig-email">E-mail</label>
+            <input class="input" id="ig-email" type="email" name="email" autocomplete="email" placeholder="voce@empresa.com" required />
+          </div>
+          <div class="field">
+            <label for="ig-empresa">Empresa</label>
+            <input class="input" id="ig-empresa" name="empresa" autocomplete="organization" placeholder="Nome da empresa" required />
+          </div>
+          <div class="field">
+            <label for="ig-cargo">Cargo</label>
+            <select class="select" id="ig-cargo" name="cargo" required>
+              <option value="">Selecione</option>
+              {cargos.map((c) => <option value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="ig-tel">Telefone / WhatsApp</label>
+            <input class="input" id="ig-tel" type="tel" inputmode="numeric" name="telefone" autocomplete="tel" placeholder="(00) 00000-0000" required />
+          </div>
+          <button type="submit" class="ig-btn ig-btn--primario ig-btn--grande ig-form-enviar"><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Abrir o WhatsApp</button>
+          <p class="ig-form-priv">Usaremos seus dados para responder à sua solicitação. Consulte nossa <a href="/politica-de-privacidade/">Política de Privacidade</a>.</p>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script is:inline>
@@ -383,6 +422,53 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           alvo.scrollIntoView({ behavior: "smooth", block: "start" });
           evento("destaque_clique", { carrossel: a.getAttribute("data-ig-ir") });
         });
+      });
+
+      // Gaveta do formulário: todo botão de WhatsApp abre aqui antes.
+      // A frase do botão vai no campo "mensagem" (o comercial vê de qual dúvida veio)
+      // e fica guardada para a página de obrigado montar a mensagem do WhatsApp.
+      var sheet = root.querySelector("[data-ig-sheet]");
+      var form = sheet.querySelector("form");
+      var campoMsg = form.querySelector("[data-ig-mensagem]");
+      var ultimoFoco = null;
+      function abrirSheet(btn) {
+        var linha = btn.getAttribute("data-linha") || "";
+        var origem = btn.getAttribute("data-ig-lead") || "";
+        campoMsg.value = linha;
+        form.dataset.igOrigem = origem;
+        ultimoFoco = btn;
+        sheet.hidden = false;
+        document.documentElement.classList.add("ig-travado");
+        requestAnimationFrame(function () { sheet.classList.add("is-aberto"); });
+        evento("lead_form_aberto", { origem: origem });
+        setTimeout(function () { try { form.querySelector("#ig-nome").focus({ preventScroll: true }); } catch (_) {} }, 280);
+      }
+      function fecharSheet() {
+        sheet.classList.remove("is-aberto");
+        document.documentElement.classList.remove("ig-travado");
+        setTimeout(function () { sheet.hidden = true; }, 250);
+        if (ultimoFoco) try { ultimoFoco.focus({ preventScroll: true }); } catch (_) {}
+      }
+      root.querySelectorAll("[data-ig-lead]").forEach(function (btn) {
+        btn.addEventListener("click", function () { abrirSheet(btn); });
+      });
+      sheet.querySelectorAll("[data-ig-fechar]").forEach(function (el) {
+        el.addEventListener("click", fecharSheet);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !sheet.hidden) fecharSheet();
+      });
+      // Roda antes do handler do LpBase (que escuta no document).
+      form.addEventListener("submit", function () {
+        var d = new FormData(form);
+        try {
+          sessionStorage.setItem("tpl_iso9001m_wpp", JSON.stringify({
+            nome: String(d.get("nome") || "").trim(),
+            empresa: String(d.get("empresa") || "").trim(),
+            linha: campoMsg.value,
+            origem: form.dataset.igOrigem || "",
+          }));
+        } catch (_) {}
       });
     })();
   </script>
@@ -615,7 +701,42 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-rodape p { margin: 8px 0 0; }
   .ig-rodape a { color: var(--text-2); }
 
+  /* Gaveta do formulário */
+  :global(html.ig-travado), :global(html.ig-travado body) { overflow: hidden; }
+  .ig-sheet { position: fixed; inset: 0; z-index: 50; }
+  .ig-sheet[hidden] { display: none; }
+  .ig-sheet-fundo { position: absolute; inset: 0; background: rgba(24, 25, 27, 0.55); opacity: 0; transition: opacity .25s; }
+  .ig-sheet-painel {
+    position: absolute; left: 50%; bottom: 0; width: 100%; max-width: var(--ig-w);
+    max-height: 92vh; max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain;
+    background: #fff; border-radius: 20px 20px 0 0;
+    padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+    transform: translate(-50%, 100%); transition: transform .28s cubic-bezier(.2, .8, .2, 1);
+  }
+  .ig-sheet.is-aberto .ig-sheet-fundo { opacity: 1; }
+  .ig-sheet.is-aberto .ig-sheet-painel { transform: translate(-50%, 0); }
+  .ig-sheet-alca { display: block; width: 40px; height: 4px; border-radius: 4px; background: var(--border-3); margin: 0 auto 14px; }
+  .ig-sheet-x {
+    position: absolute; top: 10px; right: 10px; display: grid; place-items: center;
+    width: 40px; height: 40px; border: 0; background: none; color: var(--text-mid); font-size: 26px; cursor: pointer;
+  }
+  .ig-sheet-topo { display: flex; gap: 12px; align-items: center; padding-right: 36px; margin-bottom: 16px; }
+  .ig-sheet-titulo { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.25; }
+  .ig-sheet-sub { margin: 2px 0 0; font-size: 14px; line-height: 1.4; color: var(--text-2); }
+  .ig-form { display: flex; flex-direction: column; gap: 12px; }
+  .ig-form .field { display: flex; flex-direction: column; gap: 4px; }
+  .ig-form label { font-size: 13px; font-weight: 700; }
+  .ig-form .input, .ig-form .select { font-size: 16px; min-height: 48px; }
+  .ig-form-enviar { margin-top: 4px; border: 0; cursor: pointer; font-family: inherit; }
+  .ig-form-enviar:disabled { opacity: .6; }
+  .ig-form-priv { margin: 0; font-size: 12px; line-height: 1.4; color: var(--text-mid); text-align: center; }
+  .ig-form-priv a { color: var(--text-2); }
+
+  .ig-top-wpp, .ig-slide-cta, .ig-btn { border: 0; cursor: pointer; font-family: inherit; }
+  .ig-top-wpp { background: none; padding: 0; }
+
   @media (prefers-reduced-motion: reduce) {
+    .ig-sheet-painel, .ig-sheet-fundo { transition: none; }
     .ig-coracao.is-pop { animation: none; }
   }
 </style>

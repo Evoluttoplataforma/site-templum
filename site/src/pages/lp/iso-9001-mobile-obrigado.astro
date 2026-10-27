@@ -1,0 +1,100 @@
+---
+// Obrigado da LP /lp/iso-9001-mobile. A pessoa chega aqui depois de deixar os dados na gaveta
+// do formulário. A página dispara a conversão (LeadPendingConversion lê tpl_lead_pending e
+// chama trk.lead) e só então abre o WhatsApp com nome, empresa e a frase do carrossel de onde
+// ela veio. Base (não LpBase) de propósito: o form-funil.js trata clique de WhatsApp em LP como
+// conversão própria, e aqui o lead já foi contado.
+import Base from "../../layouts/Base.astro";
+import LeadPendingConversion from "../../components/LeadPendingConversion.astro";
+import { WHATSAPP_LP_NUMBER } from "../../data/whatsapp-lp.js";
+
+const numero = WHATSAPP_LP_NUMBER;
+const linhaPadrao = "Olá! Vim pela página da ISO 9001 e quero conversar sobre a certificação da minha empresa.";
+const waPadrao = "https://wa.me/" + numero + "?text=" + encodeURIComponent(linhaPadrao);
+---
+
+<Base
+  title="Abrindo o WhatsApp | ISO 9001 | Templum"
+  description="Recebemos seus dados. Estamos abrindo o WhatsApp para você falar com a Templum sobre a ISO 9001."
+  noindex={true}
+  noHeaderFooter={true}
+  hideWpp={true}
+>
+  <section class="igo">
+    <span class="igo-avatar">
+      <img src="/assets/img/lp-iso-9001-mobile/dani-240.jpg" alt="Daniela, sócia da Templum" width="240" height="240" />
+      <span class="igo-check"><iconify-icon icon="solar:check-circle-bold" aria-hidden="true"></iconify-icon></span>
+    </span>
+    <h1 data-igo-titulo>Pronto! Recebemos seus dados.</h1>
+    <p class="igo-texto">Estamos abrindo o WhatsApp com a sua mensagem pronta. É só tocar em enviar.</p>
+    <a class="igo-btn" href={waPadrao} data-igo-wpp>
+      <iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Abrir o WhatsApp
+    </a>
+    <p class="igo-fino" data-igo-aviso>Se o WhatsApp não abrir sozinho, toque no botão acima.</p>
+  </section>
+
+  <LeadPendingConversion contentName="ISO 9001" contentCategory="Gestão da Qualidade" />
+
+  <script is:inline define:vars={{ numero }}>
+    (function () {
+      var dados = null;
+      try { dados = JSON.parse(sessionStorage.getItem("tpl_iso9001m_wpp") || "null"); } catch (_) {}
+      if (!dados) return;
+      try { sessionStorage.removeItem("tpl_iso9001m_wpp"); } catch (_) {}
+
+      var primeiro = String(dados.nome || "").split(/\s+/)[0];
+      var linha = String(dados.linha || "").replace(/^Olá!\s*/, "");
+      if (!linha) linha = "Vim pela página da ISO 9001 e quero conversar sobre a certificação da minha empresa.";
+      var abertura = "Olá! Sou " + (dados.nome || "").trim() + (dados.empresa ? ", da " + dados.empresa.trim() : "") + ". ";
+      var msg = (dados.nome ? abertura : "Olá! ") + linha;
+      var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(msg);
+
+      var btn = document.querySelector("[data-igo-wpp]");
+      if (btn) btn.href = url;
+      var titulo = document.querySelector("[data-igo-titulo]");
+      if (titulo && primeiro) titulo.textContent = "Pronto, " + primeiro + "!";
+
+      // Abre o WhatsApp depois que a conversão saiu (o item some do sessionStorage)
+      // com uma folga para o envio terminar. Teto de 3,5s para não prender a pessoa.
+      var inicio = Date.now();
+      var foi = false;
+      function abrir() {
+        if (foi) return;
+        foi = true;
+        window.location.href = url;
+      }
+      var t = setInterval(function () {
+        var pendente = null;
+        try { pendente = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
+        if (!pendente) { clearInterval(t); setTimeout(abrir, 700); return; }
+        if (Date.now() - inicio > 3500) { clearInterval(t); abrir(); }
+      }, 150);
+    })();
+  </script>
+</Base>
+
+<style>
+  .igo {
+    min-height: 100vh; min-height: 100dvh; max-width: 480px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    padding: 32px 24px; text-align: center; background: #fff;
+  }
+  .igo-avatar {
+    position: relative; display: inline-grid; place-items: center; padding: 4px; border-radius: 50%;
+    background: conic-gradient(from 200deg, var(--yellow), var(--orange), var(--orange-dark), var(--yellow));
+  }
+  .igo-avatar img { width: 112px; height: 112px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; }
+  .igo-check {
+    position: absolute; right: -2px; bottom: 2px; display: grid; place-items: center;
+    width: 34px; height: 34px; border-radius: 50%; background: #fff; color: var(--success); font-size: 32px;
+  }
+  .igo h1 { margin: 8px 0 0; font-size: 26px; font-weight: 800; line-height: 1.2; }
+  .igo-texto { margin: 0; font-size: 16px; line-height: 1.45; color: var(--text-2); }
+  .igo-btn {
+    margin-top: 6px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 54px; padding: 12px 18px; border-radius: 14px;
+    background: #25D366; color: #fff; font-size: 17px; font-weight: 800; text-decoration: none;
+  }
+  .igo-btn iconify-icon { font-size: 24px; }
+  .igo-fino { margin: 0; font-size: 13px; color: var(--text-mid); }
+</style>
