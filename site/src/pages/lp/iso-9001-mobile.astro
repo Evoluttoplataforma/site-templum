@@ -1,0 +1,624 @@
+---
+import LpBase from "../../layouts/LpBase.astro";
+import { WHATSAPP_LP_NUMBER } from "../../data/whatsapp-lp.js";
+
+// LP de anúncio do Google Ads (campanha só celular) para dono de empresa que busca ISO 9001.
+// Formato de perfil do Instagram, com a Dani como rosto: destaques no topo e 5 carrosséis
+// que respondem as dúvidas da busca (dinheiro, custo, prazo, cases, método).
+// Conversão única: WhatsApp. Cada carrossel manda uma frase própria, assim o atendimento
+// sabe de onde o lead veio. O clique vira conversão do Ads pelo form-funil.js (data-wpp-ref).
+// Cada slide visto vira evento no GA4 e tag no Clarity, para medir onde a pessoa para.
+
+const norma = "ISO 9001";
+const wa = (linha) => "https://wa.me/" + WHATSAPP_LP_NUMBER + "?text=" + encodeURIComponent(linha);
+const linhaGeral = "Olá! Vim pela página da ISO 9001 e quero conversar sobre a certificação da minha empresa.";
+
+const posts = [
+  {
+    id: "dinheiro",
+    destaque: "Dinheiro",
+    icone: "solar:dollar-minimalistic-bold",
+    legenda: "A pergunta que todo dono faz antes de investir. Deslize para ver de onde vem o retorno.",
+    linha: "Olá! Vim pela página da ISO 9001 e quero entender quanto ela pode render na minha empresa.",
+    slides: [
+      { tipo: "capa", kicker: "ISO 9001", titulo: "A ISO 9001 traz mais <em>dinheiro</em> pra minha empresa?", texto: "Deslize para o lado →" },
+      { tipo: "claro", titulo: "Traz. E não é pelo quadro na parede.", texto: "O dinheiro vem de três lugares: <strong>novos contratos</strong>, <strong>menos desperdício</strong> e uma <strong>operação que não depende de você</strong>." },
+      { tipo: "claro", numero: "1", titulo: "Portas que hoje estão fechadas", texto: "Indústrias, grandes empresas e órgãos públicos pedem a ISO 9001 para cadastrar fornecedor. Sem ela, sua empresa nem entra na concorrência." },
+      { tipo: "navy", destaque: "+1 milhão", titulo: "de empresas certificadas no mundo", texto: "É a norma de gestão mais usada do planeta. Seu concorrente pode já ter, e usar isso para ganhar o cliente que seria seu." },
+      { tipo: "claro", numero: "2", titulo: "Menos dinheiro jogado fora", texto: "Processo sem padrão repete erro. Retrabalho, devolução e desconto para cliente insatisfeito saem direto da sua margem." },
+      { tipo: "claro", numero: "3", titulo: "Uma empresa que anda sem você", texto: "Quando tudo passa pelo dono, a empresa cresce até onde ele aguenta. A ISO deixa o caminho escrito e a equipe segue sozinha." },
+      { tipo: "laranja", destaque: "R$ 3,3 bi", titulo: "em ganhos gerados para clientes Templum", texto: "Quer saber quanto a ISO 9001 pode render na sua empresa?", cta: "Calcular comigo no WhatsApp" },
+    ],
+  },
+  {
+    id: "custo",
+    destaque: "Custo",
+    icone: "solar:tag-price-bold",
+    legenda: "Sem rodeio: o valor, do que ele depende e o que está incluso.",
+    linha: "Olá! Vim pela página da ISO 9001 e quero saber o valor para a minha empresa.",
+    slides: [
+      { tipo: "capa", kicker: "ISO 9001", titulo: "Quanto <em>custa</em> a ISO 9001?", texto: "A resposta direta está no próximo slide →" },
+      { tipo: "laranja", kicker: "Investimento", destaque: "R$ 2.500", titulo: "por mês, a partir de", texto: "Sem limite de horas de consultoria e sem taxa escondida." },
+      { tipo: "claro", titulo: "O valor final depende de 4 coisas", lista: ["Tamanho da equipe", "Quantas unidades a empresa tem", "Quantos processos entram no escopo", "O quanto a gestão já está organizada"] },
+      { tipo: "claro", titulo: "O que está incluso", lista: ["Consultoria do diagnóstico até a auditoria", "Documentos elaborados pela Templum", "Templum OS: plataforma com agentes de IA", "Preparação para a auditoria"] },
+      { tipo: "claro", titulo: "O que fica por fora", texto: "A taxa do organismo certificador. É ele quem audita e emite o certificado, e por regra precisa ser independente de quem implementa. A gente ajuda você a escolher." },
+      { tipo: "navy", destaque: "200%", titulo: "de garantia", texto: "Se a sua empresa cumprir todas as etapas do método e não certificar, devolvemos o dobro do que você pagou." },
+      { tipo: "laranja", titulo: "Quer o valor exato para a sua empresa?", texto: "Me conta o tamanho da sua operação e eu te passo a proposta.", cta: "Pedir meu valor no WhatsApp" },
+    ],
+  },
+  {
+    id: "prazo",
+    destaque: "Prazo",
+    icone: "solar:clock-circle-bold",
+    legenda: "Seu cliente deu prazo? Veja quanto tempo leva e o que acelera.",
+    linha: "Olá! Vim pela página da ISO 9001. Tenho prazo para certificar e quero saber se dá tempo.",
+    slides: [
+      { tipo: "capa", kicker: "ISO 9001", titulo: "Em quanto <em>tempo</em> eu tenho a ISO 9001?", texto: "Deslize para o lado →" },
+      { tipo: "laranja", kicker: "Prazo", destaque: "6 meses", titulo: "a partir de", texto: "Do primeiro dia de projeto até a auditoria de certificação." },
+      { tipo: "claro", titulo: "O caminho até o certificado", etapas: ["Diagnóstico da operação", "Implementação dos processos", "Acompanhamento e ajustes", "Auditoria de certificação"] },
+      { tipo: "claro", titulo: "O que acelera", lista: ["Uma pessoa da equipe responsável pelo projeto", "Documentos validados sem demora", "Auditoria agendada cedo com o certificador"] },
+      { tipo: "claro", titulo: "O que atrasa", lista: ["Projeto sem dono dentro da empresa", "Validação parada esperando o chefe", "Mudança grande no meio do caminho"] },
+      { tipo: "navy", kicker: "Hora boa para começar", titulo: "A ISO 9001:2026 saiu em setembro", texto: "Quem começa agora já certifica na versão nova e não precisa migrar depois." },
+      { tipo: "laranja", titulo: "Seu cliente deu um prazo?", texto: "Me fala a data e eu te digo se dá tempo.", cta: "Ver meu prazo no WhatsApp" },
+    ],
+  },
+  {
+    id: "cases",
+    destaque: "Cases",
+    icone: "solar:star-bold",
+    legenda: "Quem já passou pela certificação com a Templum conta como foi.",
+    linha: "Olá! Vim pela página da ISO 9001, vi os cases e quero fazer o mesmo na minha empresa.",
+    slides: [
+      { tipo: "capa", kicker: "Clientes Templum", titulo: "Quem já <em>certificou</em> com a gente", texto: "+2.000 clientes · 4,9 no Google" },
+      { tipo: "depoimento", nome: "Gleyse Nunes", empresa: "Cliente ISO 9001", texto: "Mesmo sendo uma consultoria remota, não nos sentimos sozinhos na execução das tarefas. Tivemos o retorno esperado, com a certificação em 10 meses de projeto." },
+      { tipo: "depoimento", nome: "Jessica Mesquita Lapa", empresa: "Agrimol Soluções Agrícolas", texto: "Os procedimentos, controles e formulários organizaram tanto a Operação quanto a Administração, gerando maior confiabilidade e rastreabilidade, e melhorando a tomada de decisão." },
+      { tipo: "depoimento", nome: "Daniela Migliavacca", empresa: "Cliente ISO 9001 e ISO 14001", texto: "Temos certeza de que foi a melhor escolha que fizemos. A plataforma facilita muito o entendimento e o acompanhamento da consultoria." },
+      { tipo: "logos", titulo: "Algumas empresas que confiam na Templum" },
+      { tipo: "laranja", destaque: "+30 anos", titulo: "levando empresas à certificação", texto: "A próxima pode ser a sua.", cta: "Quero ser o próximo case" },
+    ],
+  },
+  {
+    id: "metodo",
+    destaque: "Método",
+    icone: "solar:checklist-minimalistic-bold",
+    legenda: "Como a Templum leva sua empresa até o certificado sem parar a operação.",
+    linha: "Olá! Vim pela página da ISO 9001 e quero entender como funciona o método da Templum.",
+    slides: [
+      { tipo: "capa", kicker: "Metodologia Templum", titulo: "Como a gente leva sua empresa até o <em>certificado</em>", texto: "4 etapas · deslize →" },
+      { tipo: "claro", numero: "1", titulo: "Diagnóstico inicial", texto: "A conversa parte da sua operação real: porte, unidades, processos e maturidade. O cronograma nasce disso." },
+      { tipo: "claro", numero: "2", titulo: "Implementação orientada", texto: "A Templum elabora os documentos alinhados ao seu jeito de trabalhar. Sua equipe valida e aplica, no ritmo da empresa." },
+      { tipo: "claro", numero: "3", titulo: "Acompanhamento", texto: "Consultores acompanham cada checkpoint. A dúvida entra no chat e a operação segue." },
+      { tipo: "navy", kicker: "Templum OS", titulo: "Sua equipe não para", texto: "Uma plataforma com agentes de IA ajuda a criar, organizar e encontrar tudo da implementação. Nada de planilha perdida." },
+      { tipo: "claro", numero: "4", titulo: "Preparação para auditoria", texto: "Requisitos, evidências e pendências organizados antes da auditoria. Com garantia de 200% em contrato." },
+      { tipo: "laranja", titulo: "Quer ver o método aplicado na sua empresa?", texto: "Te mostro em uma conversa rápida.", cta: "Conversar no WhatsApp" },
+    ],
+  },
+];
+
+const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i + 1}.svg`);
+---
+
+<LpBase
+  title="Certificação ISO 9001 a partir de R$ 2.500/mês | Templum"
+  description="Quanto custa, quanto tempo leva e quanto a ISO 9001 rende para a sua empresa. Consultoria Templum com garantia de 200%. Fale no WhatsApp."
+  hideChrome={true}
+>
+  <div class="ig">
+    <header class="ig-top">
+      <img src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" class="ig-logo" />
+      <a
+        class="ig-top-wpp"
+        href={wa(linhaGeral)}
+        target="_blank"
+        rel="noopener"
+        data-wpp-ref="1"
+        data-wpp-norma={norma}
+        data-wpp-linha={linhaGeral}
+        aria-label="Falar no WhatsApp"
+      ><iconify-icon icon="solar:chat-round-dots-bold" aria-hidden="true"></iconify-icon></a>
+    </header>
+
+    <section class="ig-perfil">
+      <div class="ig-perfil-row">
+        <span class="ig-avatar ig-avatar--lg">
+          <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="Daniela, sócia da Templum" width="192" height="192" fetchpriority="high" />
+        </span>
+        <ul class="ig-stats">
+          <li><strong>+2.000</strong><span>clientes</span></li>
+          <li><strong>+30</strong><span>anos</span></li>
+          <li><strong>4,9</strong><span>no Google</span></li>
+        </ul>
+      </div>
+      <h1 class="ig-nome">Dani · Templum Consultoria</h1>
+      <p class="ig-cargo">Sócia · Certificação ISO 9001</p>
+      <p class="ig-bio">
+        Levo empresas até a ISO 9001 sem parar a operação.<br />
+        Garantia de 200%: certifica ou devolvemos o dobro.<br />
+        👇 Toque nas suas dúvidas
+      </p>
+      <div class="ig-acoes">
+        <a
+          class="ig-btn ig-btn--primario"
+          href={wa(linhaGeral)}
+          target="_blank"
+          rel="noopener"
+          data-wpp-ref="1"
+          data-wpp-norma={norma}
+          data-wpp-linha={linhaGeral}
+        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>WhatsApp</a>
+        <a class="ig-btn" href="#post-custo" data-ig-ir="custo">Ver valores</a>
+      </div>
+    </section>
+
+    <nav class="ig-destaques" aria-label="Dúvidas">
+      {posts.map((p) => (
+        <a class="ig-destaque" href={`#post-${p.id}`} data-ig-ir={p.id}>
+          <span class="ig-destaque-ring" data-ig-ring={p.id}>
+            <span class="ig-destaque-ico"><iconify-icon icon={p.icone} aria-hidden="true"></iconify-icon></span>
+          </span>
+          <span class="ig-destaque-txt">{p.destaque}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="ig-feed">
+      {posts.map((p) => (
+        <article class="ig-post" id={`post-${p.id}`} data-ig-post={p.id}>
+          <header class="ig-post-head">
+            <span class="ig-avatar ig-avatar--sm">
+              <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="" width="192" height="192" loading="lazy" />
+            </span>
+            <span class="ig-post-autor">
+              <strong>Dani · Templum</strong>
+              <small>Certificação {norma}</small>
+            </span>
+            <span class="ig-post-contador" data-ig-contador>1/{p.slides.length}</span>
+          </header>
+
+          <div class="ig-carrossel">
+            <div class="ig-track" data-ig-track tabindex="0" aria-label={`Carrossel: ${p.destaque}`}>
+              {p.slides.map((s, i) => (
+                <div class={`ig-slide ig-slide--${s.tipo}`} data-ig-slide={i + 1} aria-roledescription="slide" aria-label={`${i + 1} de ${p.slides.length}`}>
+                  {s.tipo === "depoimento" ? (
+                    <div class="ig-dep">
+                      <iconify-icon class="ig-dep-aspas" icon="mdi:format-quote-open" aria-hidden="true"></iconify-icon>
+                      <p class="ig-dep-texto">“{s.texto}”</p>
+                      <p class="ig-dep-autor"><strong>{s.nome}</strong><span>{s.empresa}</span></p>
+                    </div>
+                  ) : s.tipo === "logos" ? (
+                    <div class="ig-logos">
+                      <p class="ig-titulo ig-titulo--sm">{s.titulo}</p>
+                      <div class="ig-logos-grid">
+                        {logos.map((src) => <img src={src} alt="" width="800" height="800" loading="lazy" decoding="async" />)}
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="ig-slide-in">
+                      {s.kicker && <p class="ig-kicker">{s.kicker}</p>}
+                      {s.numero && <span class="ig-numero">{s.numero}</span>}
+                      {s.destaque && <p class="ig-destaque-num">{s.destaque}</p>}
+                      <p class="ig-titulo" set:html={s.titulo} />
+                      {s.texto && <p class="ig-texto" set:html={s.texto} />}
+                      {s.lista && (
+                        <ul class="ig-lista">
+                          {s.lista.map((item) => <li><iconify-icon icon="solar:check-circle-bold" aria-hidden="true"></iconify-icon>{item}</li>)}
+                        </ul>
+                      )}
+                      {s.etapas && (
+                        <ol class="ig-etapas">
+                          {s.etapas.map((item, n) => <li><span>{n + 1}</span>{item}</li>)}
+                        </ol>
+                      )}
+                      {s.cta && (
+                        <a
+                          class="ig-slide-cta"
+                          href={wa(p.linha)}
+                          target="_blank"
+                          rel="noopener"
+                          data-wpp-ref="1"
+                          data-wpp-norma={norma}
+                          data-wpp-linha={p.linha}
+                          data-ig-cta={p.id}
+                        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>{s.cta}</a>
+                      )}
+                    </div>
+                  )}
+                  <span class="ig-coracao" aria-hidden="true"><iconify-icon icon="solar:heart-bold"></iconify-icon></span>
+                </div>
+              ))}
+            </div>
+            <button class="ig-seta ig-seta--prev" type="button" data-ig-prev aria-label="Slide anterior" hidden><iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon></button>
+            <button class="ig-seta ig-seta--next" type="button" data-ig-next aria-label="Próximo slide"><iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon></button>
+          </div>
+
+          <div class="ig-post-barra">
+            <button class="ig-icone" type="button" data-ig-like aria-pressed="false" aria-label="Curtir"><iconify-icon icon="solar:heart-linear"></iconify-icon></button>
+            <a
+              class="ig-icone"
+              href={wa(p.linha)}
+              target="_blank"
+              rel="noopener"
+              data-wpp-ref="1"
+              data-wpp-norma={norma}
+              data-wpp-linha={p.linha}
+              aria-label="Enviar mensagem no WhatsApp"
+            ><iconify-icon icon="solar:plain-2-linear"></iconify-icon></a>
+            <span class="ig-dots" data-ig-dots>
+              {p.slides.map((_, i) => <i class={i === 0 ? "is-on" : ""}></i>)}
+            </span>
+          </div>
+          <p class="ig-legenda"><strong>Dani · Templum</strong> {p.legenda}</p>
+        </article>
+      ))}
+
+      <section class="ig-fim">
+        <span class="ig-avatar ig-avatar--xl">
+          <img src="/assets/img/lp-iso-9001-mobile/dani-240.jpg" alt="Daniela, sócia da Templum" width="240" height="240" loading="lazy" />
+        </span>
+        <h2>Ficou alguma dúvida?</h2>
+        <p>Me chama no WhatsApp. Em uma conversa rápida você sai com o valor e o prazo para a sua empresa.</p>
+        <a
+          class="ig-btn ig-btn--primario ig-btn--grande"
+          href={wa(linhaGeral)}
+          target="_blank"
+          rel="noopener"
+          data-wpp-ref="1"
+          data-wpp-norma={norma}
+          data-wpp-linha={linhaGeral}
+        ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar no WhatsApp</a>
+        <p class="ig-fino">A garantia de 200% vale se a empresa concluir todas as etapas do método e, ainda assim, não certificar. A taxa do organismo certificador não está inclusa.</p>
+      </section>
+    </div>
+
+    <footer class="ig-rodape">
+      <img src="/assets/logo/templum.png" alt="Templum Consultoria" width="389" height="129" />
+      <p>Certificação ISO com garantia de 200%</p>
+      <p><a href="https://templum.com.br">templum.com.br</a> · <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a></p>
+    </footer>
+
+    <a
+      class="ig-wpp-fixo"
+      href={wa(linhaGeral)}
+      target="_blank"
+      rel="noopener"
+      data-wpp-ref="1"
+      data-wpp-fixo="1"
+      data-wpp-norma={norma}
+      data-wpp-linha={linhaGeral}
+    ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar no WhatsApp</a>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var root = document.querySelector(".ig");
+      if (!root) return;
+
+      function evento(nome, dados) {
+        try { if (typeof window.gtag === "function") window.gtag("event", nome, dados); } catch (_) {}
+        try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: nome }, dados)); } catch (_) {}
+      }
+      function clarityTag(chave, valor) {
+        try { if (typeof window.clarity === "function") window.clarity("set", chave, String(valor)); } catch (_) {}
+      }
+
+      // Carrosséis: contador, bolinhas, setas e o slide mais longe que a pessoa chegou.
+      root.querySelectorAll("[data-ig-post]").forEach(function (post) {
+        var id = post.getAttribute("data-ig-post");
+        var track = post.querySelector("[data-ig-track]");
+        var slides = track.querySelectorAll("[data-ig-slide]");
+        var total = slides.length;
+        var dots = post.querySelectorAll("[data-ig-dots] i");
+        var contador = post.querySelector("[data-ig-contador]");
+        var prev = post.querySelector("[data-ig-prev]");
+        var next = post.querySelector("[data-ig-next]");
+        var ring = root.querySelector('[data-ig-ring="' + id + '"]');
+        var atual = 0;
+        var maximo = 0;
+
+        function indice() {
+          var w = track.clientWidth || 1;
+          return Math.max(0, Math.min(total - 1, Math.round(track.scrollLeft / w)));
+        }
+        function atualizar() {
+          var i = indice();
+          atual = i;
+          contador.textContent = (i + 1) + "/" + total;
+          dots.forEach(function (d, n) { d.classList.toggle("is-on", n === i); });
+          if (prev) prev.hidden = i === 0;
+          if (next) next.hidden = i === total - 1;
+          if (i > maximo) {
+            maximo = i;
+            evento("carrossel_slide", { carrossel: id, slide: i + 1, total: total });
+            clarityTag("carrossel_" + id, i + 1);
+            if (i === total - 1) {
+              evento("carrossel_fim", { carrossel: id });
+              if (ring) ring.classList.add("is-visto");
+            }
+          }
+        }
+        var raf = 0;
+        track.addEventListener("scroll", function () {
+          if (raf) return;
+          raf = requestAnimationFrame(function () { raf = 0; atualizar(); });
+        }, { passive: true });
+
+        function ir(n) {
+          track.scrollTo({ left: n * track.clientWidth, behavior: "smooth" });
+        }
+        if (prev) prev.addEventListener("click", function () { ir(Math.max(0, atual - 1)); });
+        if (next) next.addEventListener("click", function () { ir(Math.min(total - 1, atual + 1)); });
+        track.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight") { e.preventDefault(); ir(Math.min(total - 1, atual + 1)); }
+          if (e.key === "ArrowLeft") { e.preventDefault(); ir(Math.max(0, atual - 1)); }
+        });
+
+        // Curtir: botão ou toque duplo no slide, como no Instagram.
+        var like = post.querySelector("[data-ig-like]");
+        function curtir(forcar) {
+          var on = forcar === true ? true : like.getAttribute("aria-pressed") !== "true";
+          like.setAttribute("aria-pressed", on ? "true" : "false");
+          like.querySelector("iconify-icon").setAttribute("icon", on ? "solar:heart-bold" : "solar:heart-linear");
+          if (on) evento("carrossel_curtir", { carrossel: id, slide: atual + 1 });
+        }
+        like.addEventListener("click", function () { curtir(); });
+        var ultimoToque = 0;
+        track.addEventListener("pointerup", function (e) {
+          if (e.target.closest("a")) return;
+          var agora = Date.now();
+          if (agora - ultimoToque < 300) {
+            var slide = slides[atual];
+            var c = slide && slide.querySelector(".ig-coracao");
+            if (c) { c.classList.remove("is-pop"); void c.offsetWidth; c.classList.add("is-pop"); }
+            if (like.getAttribute("aria-pressed") !== "true") curtir(true);
+            ultimoToque = 0;
+          } else {
+            ultimoToque = agora;
+          }
+        });
+      });
+
+      // Destaques e "Ver valores" rolam até o post certo.
+      root.querySelectorAll("[data-ig-ir]").forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          var alvo = document.getElementById("post-" + a.getAttribute("data-ig-ir"));
+          if (!alvo) return;
+          e.preventDefault();
+          alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+          evento("destaque_clique", { carrossel: a.getAttribute("data-ig-ir") });
+        });
+      });
+    })();
+  </script>
+</LpBase>
+
+<style>
+  :global(body) { background: var(--cream-2); }
+
+  .ig {
+    --ig-w: 480px;
+    max-width: var(--ig-w);
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #fff;
+    color: var(--text);
+    font-family: var(--font-sans);
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 520px) {
+    .ig { box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(24, 25, 27, 0.08); }
+  }
+
+  /* Barra do topo */
+  .ig-top {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .ig-logo { height: 28px; width: auto; }
+  .ig-top-wpp { display: grid; place-items: center; width: 40px; height: 40px; color: var(--text); font-size: 26px; }
+
+  /* Perfil */
+  .ig-perfil { padding: 18px 16px 8px; }
+  .ig-perfil-row { display: flex; align-items: center; gap: 22px; }
+  .ig-avatar {
+    flex-shrink: 0; display: inline-grid; place-items: center; border-radius: 50%;
+    background: conic-gradient(from 200deg, var(--yellow), var(--orange), var(--orange-dark), var(--yellow));
+  }
+  .ig-avatar img { border-radius: 50%; border: 3px solid #fff; object-fit: cover; background: #fff; }
+  .ig-avatar--lg { padding: 3px; }
+  .ig-avatar--lg img { width: 86px; height: 86px; }
+  .ig-avatar--sm { padding: 2px; }
+  .ig-avatar--sm img { width: 34px; height: 34px; border-width: 2px; }
+  .ig-avatar--xl { padding: 4px; }
+  .ig-avatar--xl img { width: 120px; height: 120px; border-width: 4px; }
+
+  .ig-stats { flex: 1; display: flex; justify-content: space-around; margin: 0; padding: 0; list-style: none; text-align: center; }
+  .ig-stats li { display: flex; flex-direction: column; }
+  .ig-stats strong { font-size: 18px; font-weight: 800; }
+  .ig-stats span { font-size: 13px; color: var(--text-2); }
+
+  .ig-nome { margin: 14px 0 0; font-size: 15px; font-weight: 800; line-height: 1.3; }
+  .ig-cargo { margin: 2px 0 0; font-size: 13px; color: var(--text-mid); }
+  .ig-bio { margin: 6px 0 0; font-size: 14px; line-height: 1.45; }
+
+  .ig-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .ig-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 40px; padding: 8px 14px; border-radius: 10px;
+    background: #EFEFEF; color: var(--text); font-size: 14px; font-weight: 700; text-decoration: none;
+  }
+  .ig-btn iconify-icon { font-size: 18px; }
+  .ig-btn--primario { background: var(--orange); color: #fff; }
+  .ig-btn--grande { min-height: 52px; font-size: 16px; width: 100%; }
+
+  /* Destaques */
+  .ig-destaques {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+    padding: 14px 12px 16px; border-bottom: 1px solid var(--border);
+  }
+  .ig-destaque { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text); min-width: 0; }
+  .ig-destaque-ring {
+    display: grid; place-items: center; width: 100%; max-width: 66px; aspect-ratio: 1; border-radius: 50%; padding: 3px;
+    background: conic-gradient(from 200deg, var(--yellow), var(--orange), var(--orange-dark), var(--yellow));
+    transition: background .3s;
+  }
+  .ig-destaque-ring.is-visto { background: var(--border-3); }
+  .ig-destaque-ico {
+    display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%;
+    background: var(--navy); border: 3px solid #fff; color: #fff; font-size: 24px;
+  }
+  .ig-destaque-txt { font-size: 12px; font-weight: 600; }
+
+  /* Post */
+  .ig-post { border-bottom: 1px solid var(--border); padding-bottom: 12px; scroll-margin-top: 60px; }
+  .ig-post-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+  .ig-post-autor { display: flex; flex-direction: column; line-height: 1.2; flex: 1; }
+  .ig-post-autor strong { font-size: 14px; }
+  .ig-post-autor small { font-size: 12px; color: var(--text-mid); }
+  .ig-post-contador {
+    font-size: 12px; font-weight: 700; color: #fff; background: rgba(24, 25, 27, 0.7);
+    padding: 3px 9px; border-radius: 999px;
+  }
+
+  .ig-carrossel { position: relative; }
+  .ig-track {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; outline: none;
+  }
+  .ig-track::-webkit-scrollbar { display: none; }
+  .ig-slide {
+    position: relative; flex: 0 0 100%; aspect-ratio: 4 / 5; scroll-snap-align: start; scroll-snap-stop: always;
+    display: flex; align-items: center; overflow: hidden; user-select: none; -webkit-user-select: none;
+  }
+  .ig-slide-in { width: 100%; padding: 30px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+  .ig-slide--capa { background: var(--navy); color: #fff; }
+  .ig-slide--capa .ig-slide-in { justify-content: center; }
+  .ig-slide--capa .ig-titulo { font-size: clamp(30px, 8.6vw, 40px); line-height: 1.08; }
+  .ig-slide--capa .ig-texto { color: var(--peach); font-weight: 700; }
+  .ig-slide--claro { background: var(--cream-2); }
+  .ig-slide--navy { background: var(--navy-2); color: #fff; }
+  .ig-slide--laranja { background: var(--orange); color: #fff; }
+  .ig-slide--laranja .ig-texto { font-weight: 600; }
+  .ig-slide--depoimento { background: var(--cream); }
+  .ig-slide--logos { background: var(--navy); color: #fff; }
+
+  .ig-kicker {
+    margin: 0; align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.14);
+  }
+  .ig-slide--claro .ig-kicker { background: rgba(255, 89, 37, 0.12); color: var(--orange-ink); }
+  .ig-numero {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--orange); color: #fff; font-size: 20px; font-weight: 800;
+  }
+  .ig-destaque-num { margin: 0; font-size: clamp(48px, 15vw, 68px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+  .ig-slide--navy .ig-destaque-num { color: var(--orange); }
+  .ig-titulo { margin: 0; font-size: clamp(24px, 6.6vw, 30px); font-weight: 800; line-height: 1.15; }
+  .ig-titulo--sm { font-size: 22px; }
+  .ig-titulo :global(em) { font-style: normal; color: var(--orange); }
+  .ig-texto { margin: 0; font-size: 17px; line-height: 1.45; font-weight: 500; }
+  .ig-slide--claro .ig-texto { color: var(--text-2); }
+  .ig-texto :global(strong) { font-weight: 800; color: var(--text); }
+
+  .ig-lista, .ig-etapas { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .ig-lista li {
+    display: flex; gap: 10px; align-items: flex-start; font-size: 16px; font-weight: 600; line-height: 1.35;
+    background: #fff; border-radius: 12px; padding: 12px 14px;
+  }
+  .ig-lista iconify-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .ig-etapas li {
+    display: flex; gap: 12px; align-items: center; font-size: 16px; font-weight: 700;
+    background: #fff; border-radius: 12px; padding: 12px 14px;
+  }
+  .ig-etapas span {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: var(--navy); color: #fff; font-size: 14px; font-weight: 800;
+  }
+
+  .ig-slide-cta {
+    margin-top: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 52px; padding: 12px 18px; border-radius: 14px;
+    background: #fff; color: var(--orange-ink); font-size: 16px; font-weight: 800; text-decoration: none;
+    box-shadow: 0 8px 20px rgba(79, 37, 27, 0.25);
+  }
+  .ig-slide-cta iconify-icon { font-size: 22px; color: #25D366; }
+
+  .ig-dep { width: 100%; padding: 30px 28px; display: flex; flex-direction: column; gap: 18px; }
+  .ig-dep-aspas { color: var(--orange); font-size: 44px; margin-bottom: -10px; }
+  .ig-dep-texto { margin: 0; font-size: 19px; line-height: 1.45; font-weight: 600; }
+  .ig-dep-autor { margin: 0; display: flex; flex-direction: column; font-size: 14px; }
+  .ig-dep-autor strong { font-size: 16px; }
+  .ig-dep-autor span { color: var(--text-mid); }
+
+  .ig-logos { width: 100%; padding: 30px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .ig-logos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; }
+  .ig-logos-grid img { width: 100%; height: 72px; object-fit: contain; opacity: 0.85; }
+
+  .ig-coracao {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0);
+    color: #fff; font-size: 96px; pointer-events: none; opacity: 0;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.3));
+  }
+  .ig-coracao.is-pop { animation: igPop .8s ease-out; }
+  @keyframes igPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    40% { transform: translate(-50%, -50%) scale(.95); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  }
+
+  .ig-seta {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    display: none; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 0;
+    background: rgba(255, 255, 255, 0.92); color: var(--text); font-size: 18px; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  }
+  .ig-seta--prev { left: 10px; }
+  .ig-seta--next { right: 10px; }
+  @media (hover: hover) and (pointer: fine) {
+    .ig-seta { display: grid; }
+    .ig-seta[hidden] { display: none; }
+  }
+
+  .ig-post-barra { position: relative; display: flex; align-items: center; gap: 4px; padding: 6px 8px 0; min-height: 44px; }
+  .ig-icone {
+    display: grid; place-items: center; width: 40px; height: 40px; border: 0; background: none; padding: 0;
+    color: var(--text); font-size: 26px; cursor: pointer; text-decoration: none;
+  }
+  .ig-icone[aria-pressed="true"] { color: #ED4956; }
+  .ig-dots { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .ig-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--border-3); transition: background .2s; }
+  .ig-dots i.is-on { background: var(--orange); }
+  .ig-legenda { margin: 6px 14px 0; font-size: 14px; line-height: 1.45; }
+
+  /* Fechamento */
+  .ig-fim { padding: 36px 24px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .ig-fim h2 { margin: 8px 0 0; font-size: 26px; font-weight: 800; }
+  .ig-fim > p { margin: 0; font-size: 16px; line-height: 1.45; color: var(--text-2); }
+  .ig-fino { font-size: 12px !important; color: var(--text-mid) !important; margin-top: 4px !important; }
+
+  .ig-rodape { padding: 24px 16px 20px; text-align: center; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-mid); }
+  .ig-rodape img { height: 26px; width: auto; }
+  .ig-rodape p { margin: 8px 0 0; }
+  .ig-rodape a { color: var(--text-2); }
+
+  /* Botão fixo do WhatsApp */
+  .ig-wpp-fixo {
+    position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    width: calc(100% - 24px); max-width: calc(var(--ig-w) - 24px);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 54px; padding: 12px 18px; border-radius: 16px;
+    background: #25D366; color: #fff; font-size: 16px; font-weight: 800; text-decoration: none;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  }
+  .ig-wpp-fixo iconify-icon { font-size: 24px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ig-coracao.is-pop { animation: none; }
+  }
+</style>
