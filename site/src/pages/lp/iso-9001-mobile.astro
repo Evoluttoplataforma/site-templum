@@ -4,13 +4,12 @@ import LpBase from "../../layouts/LpBase.astro";
 // LP de anúncio do Google Ads (campanha só celular) para dono de empresa que busca ISO 9001.
 // Formato de perfil do Instagram, com a Dani como rosto: destaques no topo e 5 carrosséis
 // que respondem as dúvidas da busca (dinheiro, custo, prazo, cases, método).
-// Conversão: todo botão de WhatsApp abre antes uma gaveta com o formulário (nome, e-mail,
-// empresa, cargo, telefone). O envio usa o handler padrão do LpBase (/api/lead → INBOUND),
+// Conversão: todo botão de WhatsApp abre antes uma gaveta com o formulário (só nome e e-mail:
+// com 5 campos, ninguém de fora enviou no primeiro dia). O envio usa o handler padrão do LpBase (/api/lead → INBOUND),
 // e a página de obrigado dispara a conversão e abre o WhatsApp com a frase do carrossel.
 // Cada slide visto vira evento no GA4 e tag no Clarity, para medir onde a pessoa para.
 
 const norma = "ISO 9001";
-const cargos = ["Dono(a) ou sócio(a)", "Diretor(a)", "Gerente", "Coordenador(a) ou analista", "Outro"];
 const linhaGeral = "Olá! Vim pela página da ISO 9001 e quero conversar sobre a certificação da minha empresa.";
 
 const posts = [
@@ -124,15 +123,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       ><iconify-icon icon="solar:chat-round-dots-bold" aria-hidden="true"></iconify-icon></button>
     </header>
 
-    <section class="ig-perfil">
+    <section class="ig-perfil" id="perfil">
       <div class="ig-perfil-row">
         <span class="ig-avatar ig-avatar--lg">
           <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="Daniela, sócia da Templum" width="192" height="192" fetchpriority="high" />
         </span>
         <ul class="ig-stats">
-          <li><strong>+2.000</strong><span>clientes</span></li>
-          <li><strong>200%</strong><span>garantia</span></li>
-          <li><strong>4,9 ★</strong><span>204 no Google</span></li>
+          <li><a href="#post-cases" data-ig-ir="cases"><strong>+2.000</strong><span>clientes</span></a></li>
+          <li><a href="#post-custo" data-ig-ir="custo"><strong>200%</strong><span>garantia</span></a></li>
+          <li><a href="#post-cases" data-ig-ir="cases"><strong>4,9 ★</strong><span>204 no Google</span></a></li>
         </ul>
       </div>
       <h1 class="ig-nome">Dani · Templum Consultoria</h1>
@@ -171,13 +170,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       {posts.map((p) => (
         <article class="ig-post" id={`post-${p.id}`} data-ig-post={p.id}>
           <header class="ig-post-head">
-            <span class="ig-avatar ig-avatar--sm">
-              <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="" width="192" height="192" loading="lazy" />
-            </span>
-            <span class="ig-post-autor">
-              <strong>Dani · Templum</strong>
-              <small>Certificação {norma}</small>
-            </span>
+            <a class="ig-post-perfil" href="#perfil" data-ig-ir="perfil">
+              <span class="ig-avatar ig-avatar--sm">
+                <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="" width="192" height="192" loading="lazy" />
+              </span>
+              <span class="ig-post-autor">
+                <strong>Dani · Templum</strong>
+                <small>Certificação {norma}</small>
+              </span>
+            </a>
             <span class="ig-post-contador" data-ig-contador>1/{p.slides.length}</span>
           </header>
 
@@ -294,7 +295,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           </span>
           <div>
             <p class="ig-sheet-titulo" id="ig-sheet-titulo">Antes de abrir o WhatsApp</p>
-            <p class="ig-sheet-sub">Deixa seus dados para a gente já te atender com a proposta certa.</p>
+            <p class="ig-sheet-sub">Só seu nome e e-mail. O WhatsApp abre na hora.</p>
           </div>
         </div>
         <form class="ig-form" data-trk-event="lead" data-obrigado="/lp/iso-9001-mobile-obrigado/" novalidate>
@@ -307,21 +308,6 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           <div class="field">
             <label for="ig-email">E-mail</label>
             <input class="input" id="ig-email" type="email" name="email" autocomplete="email" placeholder="voce@empresa.com" required />
-          </div>
-          <div class="field">
-            <label for="ig-empresa">Empresa</label>
-            <input class="input" id="ig-empresa" name="empresa" autocomplete="organization" placeholder="Nome da empresa" required />
-          </div>
-          <div class="field">
-            <label for="ig-cargo">Cargo</label>
-            <select class="select" id="ig-cargo" name="cargo" required>
-              <option value="">Selecione</option>
-              {cargos.map((c) => <option value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div class="field">
-            <label for="ig-tel">Telefone / WhatsApp</label>
-            <input class="input" id="ig-tel" type="tel" inputmode="numeric" name="telefone" autocomplete="tel" placeholder="(00) 00000-0000" required />
           </div>
           <button type="submit" class="ig-btn ig-btn--primario ig-btn--grande ig-form-enviar"><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Abrir o WhatsApp</button>
           <p class="ig-form-priv">Usaremos seus dados para responder à sua solicitação. Consulte nossa <a href="/politica-de-privacidade/">Política de Privacidade</a>.</p>
@@ -403,10 +389,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           if (on) evento("carrossel_curtir", { carrossel: id, slide: atual + 1 });
         }
         like.addEventListener("click", function () { curtir(); });
-        var ultimoToque = 0;
+        // Toque simples avança o slide, como nos stories (antes o toque não fazia nada
+        // e o Clarity marcava clique morto). Arrastar não conta como toque.
+        var ultimoToque = 0, toqueX = 0, toqueY = 0, timerToque = 0;
+        track.addEventListener("pointerdown", function (e) { toqueX = e.clientX; toqueY = e.clientY; }, { passive: true });
         track.addEventListener("pointerup", function (e) {
-          if (e.target.closest("a")) return;
+          if (e.target.closest("a, button")) return;
+          if (Math.abs(e.clientX - toqueX) > 10 || Math.abs(e.clientY - toqueY) > 10) return;
           var agora = Date.now();
+          clearTimeout(timerToque);
           if (agora - ultimoToque < 300) {
             var slide = slides[atual];
             var c = slide && slide.querySelector(".ig-coracao");
@@ -415,14 +406,21 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
             ultimoToque = 0;
           } else {
             ultimoToque = agora;
+            timerToque = setTimeout(function () {
+              if (atual < total - 1) {
+                ir(atual + 1);
+                evento("carrossel_toque", { carrossel: id, slide: atual + 2 });
+              }
+            }, 300);
           }
         });
       });
 
-      // Destaques e "Ver valores" rolam até o post certo.
+      // Destaques, números do perfil, "Ver valores" e o nome no post rolam até o lugar certo.
       root.querySelectorAll("[data-ig-ir]").forEach(function (a) {
         a.addEventListener("click", function (e) {
-          var alvo = document.getElementById("post-" + a.getAttribute("data-ig-ir"));
+          var ir = a.getAttribute("data-ig-ir");
+          var alvo = document.getElementById("post-" + ir) || document.getElementById(ir);
           if (!alvo) return;
           e.preventDefault();
           alvo.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -470,7 +468,6 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         try {
           sessionStorage.setItem("tpl_iso9001m_wpp", JSON.stringify({
             nome: String(d.get("nome") || "").trim(),
-            empresa: String(d.get("empresa") || "").trim(),
             linha: campoMsg.value,
             origem: form.dataset.igOrigem || "",
           }));
@@ -510,7 +507,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-top-wpp { display: grid; place-items: center; width: 40px; height: 40px; color: var(--text); font-size: 26px; }
 
   /* Perfil */
-  .ig-perfil { padding: 18px 16px 8px; }
+  .ig-perfil { padding: 18px 16px 8px; scroll-margin-top: 60px; }
   .ig-perfil-row { display: flex; align-items: center; gap: 22px; }
   .ig-avatar {
     flex-shrink: 0; display: inline-grid; place-items: center; border-radius: 50%;
@@ -525,7 +522,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-avatar--xl img { width: 120px; height: 120px; border-width: 4px; }
 
   .ig-stats { flex: 1; display: flex; justify-content: space-around; margin: 0; padding: 0; list-style: none; text-align: center; }
-  .ig-stats li { display: flex; flex-direction: column; }
+  .ig-stats a { display: flex; flex-direction: column; color: inherit; text-decoration: none; }
   .ig-stats strong { font-size: 18px; font-weight: 800; }
   .ig-stats span { font-size: 13px; color: var(--text-2); }
 
@@ -564,6 +561,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   /* Post */
   .ig-post { border-bottom: 1px solid var(--border); padding-bottom: 12px; scroll-margin-top: 60px; }
   .ig-post-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+  .ig-post-perfil { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; color: inherit; text-decoration: none; }
   .ig-post-autor { display: flex; flex-direction: column; line-height: 1.2; flex: 1; }
   .ig-post-autor strong { font-size: 14px; }
   .ig-post-autor small { font-size: 12px; color: var(--text-mid); }
