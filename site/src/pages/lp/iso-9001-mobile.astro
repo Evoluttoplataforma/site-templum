@@ -120,7 +120,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         data-abre-form
         data-cta-pos="menu"
         aria-label="Falar no WhatsApp"
-      ><iconify-icon icon="solar:chat-round-dots-bold" aria-hidden="true"></iconify-icon></button>
+      ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon></button>
     </header>
 
     <section class="ig-perfil" id="perfil">
@@ -183,6 +183,16 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           </header>
 
           <div class="ig-carrossel">
+            <div class="ig-tela-topo">
+              <span class="ig-tela-barras" data-ig-barras>
+                {p.slides.map((_, i) => <i class={i === 0 ? "is-on" : ""}></i>)}
+              </span>
+              <span class="ig-tela-autor">
+                <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="" width="192" height="192" loading="lazy" />
+                <strong>Dani · Templum</strong>
+              </span>
+              <button class="ig-tela-x" type="button" data-ig-sair aria-label="Fechar tela cheia"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+            </div>
             <div class="ig-track" data-ig-track tabindex="0" aria-label={`Carrossel: ${p.destaque}`}>
               {p.slides.map((s, i) => (
                 <div class={`ig-slide ig-slide--${s.tipo}`} data-ig-slide={i + 1} aria-roledescription="slide" aria-label={`${i + 1} de ${p.slides.length}`}>
@@ -329,6 +339,12 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         try { if (typeof window.clarity === "function") window.clarity("set", chave, String(valor)); } catch (_) {}
       }
 
+      var telas = [];
+      function sheetFechado() {
+        var sh = root.querySelector("[data-ig-sheet]");
+        return !sh || sh.hidden || !sh.classList.contains("is-aberto");
+      }
+
       // Carrosséis: contador, bolinhas, setas e o slide mais longe que a pessoa chegou.
       root.querySelectorAll("[data-ig-post]").forEach(function (post) {
         var id = post.getAttribute("data-ig-post");
@@ -336,6 +352,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         var slides = track.querySelectorAll("[data-ig-slide]");
         var total = slides.length;
         var dots = post.querySelectorAll("[data-ig-dots] i");
+        var barras = post.querySelectorAll("[data-ig-barras] i");
         var contador = post.querySelector("[data-ig-contador]");
         var prev = post.querySelector("[data-ig-prev]");
         var next = post.querySelector("[data-ig-next]");
@@ -352,6 +369,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           atual = i;
           contador.textContent = (i + 1) + "/" + total;
           dots.forEach(function (d, n) { d.classList.toggle("is-on", n === i); });
+          barras.forEach(function (b, n) { b.classList.toggle("is-on", n <= i); });
           if (prev) prev.hidden = i === 0;
           if (next) next.hidden = i === total - 1;
           if (i > maximo) {
@@ -389,13 +407,43 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
           if (on) evento("carrossel_curtir", { carrossel: id, slide: atual + 1 });
         }
         like.addEventListener("click", function () { curtir(); });
-        // Toque simples avança o slide, como nos stories (antes o toque não fazia nada
-        // e o Clarity marcava clique morto). Arrastar não conta como toque.
+        // Tela cheia, como os stories: um toque no carrossel abre; lá dentro, toque à direita
+        // avança, à esquerda volta, e depois do último slide passa para o próximo carrossel.
+        // No feed, o toque duplo continua curtindo. Arrastar não conta como toque.
+        function abrirTela(n, seguindo) {
+          if (!seguindo) { try { history.pushState({ igTela: 1 }, ""); } catch (_) {} }
+          post.classList.add("is-tela");
+          document.documentElement.classList.add("ig-travado");
+          track.scrollLeft = n * track.clientWidth;
+          atualizar();
+          evento("carrossel_tela", { carrossel: id, slide: n + 1 });
+        }
+        function fecharTela() {
+          post.classList.remove("is-tela");
+          if (sheetFechado()) document.documentElement.classList.remove("ig-travado");
+          track.scrollLeft = atual * track.clientWidth;
+          // Um quadro depois: no voltar do celular, o navegador restaura a rolagem antiga
+          // e desfaria esta.
+          requestAnimationFrame(function () {
+            var caixa = track.getBoundingClientRect();
+            if (caixa.top < 0 || caixa.bottom > innerHeight) post.scrollIntoView({ block: "start", behavior: "instant" });
+          });
+        }
+        telas.push({ post: post, abrir: abrirTela, fechar: fecharTela });
+        post.querySelector("[data-ig-sair]").addEventListener("click", function () { sairTela(); });
+
         var ultimoToque = 0, toqueX = 0, toqueY = 0, timerToque = 0;
         track.addEventListener("pointerdown", function (e) { toqueX = e.clientX; toqueY = e.clientY; }, { passive: true });
         track.addEventListener("pointerup", function (e) {
           if (e.target.closest("a, button")) return;
           if (Math.abs(e.clientX - toqueX) > 10 || Math.abs(e.clientY - toqueY) > 10) return;
+          if (post.classList.contains("is-tela")) {
+            var r = track.getBoundingClientRect();
+            if (e.clientX - r.left < r.width * 0.3) { if (atual > 0) ir(atual - 1); }
+            else if (atual < total - 1) ir(atual + 1);
+            else proximaTela();
+            return;
+          }
           var agora = Date.now();
           clearTimeout(timerToque);
           if (agora - ultimoToque < 300) {
@@ -406,14 +454,31 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
             ultimoToque = 0;
           } else {
             ultimoToque = agora;
-            timerToque = setTimeout(function () {
-              if (atual < total - 1) {
-                ir(atual + 1);
-                evento("carrossel_toque", { carrossel: id, slide: atual + 2 });
-              }
-            }, 300);
+            timerToque = setTimeout(function () { abrirTela(atual); }, 300);
           }
         });
+      });
+
+      function telaAberta() {
+        for (var i = 0; i < telas.length; i++) if (telas[i].post.classList.contains("is-tela")) return i;
+        return -1;
+      }
+      // O voltar do celular fecha a tela cheia em vez de sair da página.
+      function sairTela() {
+        if (telaAberta() < 0) return;
+        if (history.state && history.state.igTela) history.back();
+        else telas[telaAberta()].fechar();
+      }
+      // Quem fecha a tela cheia cai no post que estava vendo (fecharTela rola até ele).
+      function proximaTela() {
+        var i = telaAberta();
+        if (i < 0 || i === telas.length - 1) { sairTela(); return; }
+        telas[i].fechar();
+        telas[i + 1].abrir(0, true);
+      }
+      window.addEventListener("popstate", function () {
+        var i = telaAberta();
+        if (i >= 0) telas[i].fechar();
       });
 
       // Destaques, números do perfil, "Ver valores" e o nome no post rolam até o lugar certo.
@@ -449,7 +514,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       }
       function fecharSheet() {
         sheet.classList.remove("is-aberto");
-        document.documentElement.classList.remove("ig-travado");
+        if (telaAberta() < 0) document.documentElement.classList.remove("ig-travado");
         setTimeout(function () { sheet.hidden = true; }, 250);
         if (ultimoFoco) try { ultimoFoco.focus({ preventScroll: true }); } catch (_) {}
       }
@@ -460,7 +525,9 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         el.addEventListener("click", fecharSheet);
       });
       document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !sheet.hidden) fecharSheet();
+        if (e.key !== "Escape") return;
+        if (!sheet.hidden) fecharSheet();
+        else sairTela();
       });
       // Roda antes do handler do LpBase (que escuta no document).
       form.addEventListener("submit", function () {
@@ -504,7 +571,7 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
     border-bottom: 1px solid var(--border);
   }
   .ig-logo { height: 28px; width: auto; }
-  .ig-top-wpp { display: grid; place-items: center; width: 40px; height: 40px; color: var(--text); font-size: 26px; }
+  .ig-top-wpp { display: grid; place-items: center; width: 40px; height: 40px; color: #25D366; font-size: 28px; }
 
   /* Perfil */
   .ig-perfil { padding: 18px 16px 8px; scroll-margin-top: 60px; }
@@ -683,6 +750,33 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   @media (hover: hover) and (pointer: fine) {
     .ig-seta { display: grid; }
     .ig-seta[hidden] { display: none; }
+  }
+
+  /* Tela cheia (stories) */
+  .ig-tela-topo { display: none; }
+  .ig-post.is-tela::before { content: ""; position: fixed; inset: 0; z-index: 39; background: #000; }
+  .ig-post.is-tela .ig-carrossel {
+    position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 40;
+    max-width: var(--ig-w); margin: 0 auto; background: #000;
+  }
+  .ig-post.is-tela .ig-track { height: 100%; }
+  .ig-post.is-tela .ig-slide { aspect-ratio: auto; height: 100%; }
+  .ig-post.is-tela .ig-slide-in { padding-top: 76px; }
+  .ig-post.is-tela .ig-tela-topo {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px 8px;
+    padding: calc(10px + env(safe-area-inset-top)) 12px 18px;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), transparent);
+    pointer-events: none;
+  }
+  .ig-tela-barras { grid-column: 1 / -1; display: flex; gap: 3px; }
+  .ig-tela-barras i { flex: 1; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.4); transition: background .2s; }
+  .ig-tela-barras i.is-on { background: #fff; }
+  .ig-tela-autor { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 14px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
+  .ig-tela-autor img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+  .ig-tela-x {
+    pointer-events: auto; display: grid; place-items: center; width: 40px; height: 40px;
+    border: 0; background: none; color: #fff; font-size: 30px; cursor: pointer;
   }
 
   .ig-post-barra { position: relative; display: flex; align-items: center; gap: 4px; padding: 6px 8px 0; min-height: 44px; }
