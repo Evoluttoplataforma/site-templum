@@ -1,7 +1,8 @@
 /*
  * Rastreamento da LP ISO 9001 (Google Ads).
  * Mesmos IDs e a mesma ordem do site: Meta PageView, GA4, Google Ads e Clarity.
- * A conversão de lead só sai em LP_TRACK.onLeadSaved, depois do /api/lead confirmar o Supabase.
+ * O Lead do Meta sai em LP_TRACK.onLeadSaved, depois do /api/lead confirmar o Supabase.
+ * Google Ads e GA4 saem na página /consultoria/iso-9001-obrigado.
  */
 (function () {
   window.dataLayer = window.dataLayer || [];
@@ -178,39 +179,13 @@
     try { window.gtag("event", a.getAttribute("data-cta"), { page: location.pathname }); } catch (err) {}
   });
 
-  var ADS_SEND_TO = "AW-17896226473/aPsvCKnw27kcEKn9ytVC";
-
-  function fireLead(data) {
-    if (window.__lp9001LeadFired) return true;
-    var ready = window.trk && typeof window.trk.lead === "function";
-    if (!ready) return false;
-    try {
-      if (typeof window.__tplSetAdsUser === "function") window.__tplSetAdsUser(data);
-      var fired = window.trk.lead(
-        { email: data.email || "", phone: data.phone || "", name: data.name || "" },
-        {
-          content_name: "ISO 9001",
-          content_category: "Gestão da Qualidade",
-          event_id: data.eventId,
-          transaction_id: data.eventId
-        }
-      );
-      if (!fired) return false;
-      window.__lp9001LeadFired = true;
-      try { sessionStorage.removeItem("tpl_lead_pending"); } catch (e) {}
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   window.LP_TRACK = {
     uuid: window.__tplUuid,
     onLeadSaved: function (data) {
       data = data || {};
       var already = false;
       try { already = sessionStorage.getItem("tpl_lead_sent") === "1"; } catch (e) {}
-      if (already || window.__lp9001LeadFired) return;
+      if (already) return;
       try {
         sessionStorage.setItem("tpl_lead_sent", "1");
         sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
@@ -225,26 +200,6 @@
       if (typeof window.__tplBootTracking === "function") window.__tplBootTracking();
       if (typeof window.__loadMetaPixel === "function") window.__loadMetaPixel();
       window.fireMetaLead({ email: data.email, phone: data.phone }, "iso-9001", data.eventId);
-      try {
-        if (window.oaiq) oaiq("measure", "lead", { type: "customer_action", amount: 0, currency: "BRL" });
-      } catch (e) {}
-
-      var attempts = 0;
-      var timer = setInterval(function () {
-        attempts++;
-        if (fireLead(data) || attempts >= 200) {
-          clearInterval(timer);
-          if (!window.__lp9001LeadFired && typeof window.gtag === "function") {
-            try { if (typeof window.__gtagFallback === "function") window.__gtagFallback(); } catch (e) {}
-            try { if (typeof window.__tplSetAdsUser === "function") window.__tplSetAdsUser(data); } catch (e) {}
-            try {
-              window.gtag("event", "conversion", { send_to: ADS_SEND_TO, transaction_id: data.eventId || "" });
-              window.gtag("event", "generate_lead", { send_to: "G-2BW8QTYLB5", event_id: data.eventId || "" });
-            } catch (e) {}
-            window.__lp9001LeadFired = true;
-          }
-        }
-      }, 100);
     }
   };
 })();

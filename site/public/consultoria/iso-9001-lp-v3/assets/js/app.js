@@ -327,7 +327,11 @@
           sessionStorage.setItem("tpl_lp9001_dl_lead", "1");
         } catch (err) {}
         if (!sent) track("generate_lead", { form_id: "lp_iso9001_proposta" });
-        showStatus("check", "Solicitação recebida.", " Nossa equipe entrará em contato sobre seu projeto.");
+        // Folga para o Lead do Meta sair antes da navegação. Ads e GA4
+        // disparam na página de obrigado, a partir de tpl_lead_pending.
+        setTimeout(function () {
+          location.href = "/consultoria/iso-9001-obrigado";
+        }, 400);
       }).catch(function () {
         if (window.tplTurnstileReset) window.tplTurnstileReset();
         track("form_error", { error_fields: "submit" });
