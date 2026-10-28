@@ -15,7 +15,7 @@ const linhaGeral = "Olá! Vim pela página da ISO 9001 e quero conversar sobre a
 const posts = [
   {
     id: "dinheiro",
-    destaque: "Dinheiro",
+    destaque: "Vale a pena?",
     icone: "solar:dollar-minimalistic-bold",
     legenda: "A pergunta que todo dono faz antes de investir. Deslize para ver de onde vem o retorno.",
     linha: "Olá! Vim pela página da ISO 9001 e quero entender quanto ela pode render na minha empresa.",
@@ -31,7 +31,7 @@ const posts = [
   },
   {
     id: "custo",
-    destaque: "Custo",
+    destaque: "Investimento",
     icone: "solar:tag-price-bold",
     legenda: "Sem rodeio: o valor, do que ele depende e o que está incluso.",
     linha: "Olá! Vim pela página da ISO 9001 e quero saber o valor para a minha empresa.",
@@ -125,9 +125,9 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
 
     <section class="ig-perfil" id="perfil">
       <div class="ig-perfil-row">
-        <span class="ig-avatar ig-avatar--lg">
+        <button class="ig-avatar ig-avatar--lg" type="button" data-ig-foto aria-label="Ver a foto da Dani">
           <img src="/assets/img/lp-iso-9001-mobile/dani-192.jpg" alt="Daniela, sócia da Templum" width="192" height="192" fetchpriority="high" />
-        </span>
+        </button>
         <ul class="ig-stats">
           <li><a href="#post-cases" data-ig-ir="cases"><strong>+2.000</strong><span>clientes</span></a></li>
           <li><a href="#post-custo" data-ig-ir="custo"><strong>200%</strong><span>garantia</span></a></li>
@@ -271,9 +271,9 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       ))}
 
       <section class="ig-fim">
-        <span class="ig-avatar ig-avatar--xl">
+        <button class="ig-avatar ig-avatar--xl" type="button" data-ig-foto aria-label="Ver a foto da Dani">
           <img src="/assets/img/lp-iso-9001-mobile/dani-240.jpg" alt="Daniela, sócia da Templum" width="240" height="240" loading="lazy" />
-        </span>
+        </button>
         <h2>Ficou alguma dúvida?</h2>
         <p>Me chama no WhatsApp. Em uma conversa rápida você sai com o valor e o prazo para a sua empresa.</p>
         <button
@@ -293,6 +293,22 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       <p>Certificação ISO com garantia de 200%</p>
       <p><a href="https://templum.com.br">templum.com.br</a> · <a href="https://templum.com.br/politica-de-privacidade">Política de privacidade</a></p>
     </footer>
+
+    <div class="ig-foto" data-ig-foto-caixa role="dialog" aria-modal="true" aria-label="Foto da Dani" hidden>
+      <button class="ig-foto-x" type="button" data-ig-foto-fechar aria-label="Fechar foto"><iconify-icon icon="solar:close-circle-linear"></iconify-icon></button>
+      <figure class="ig-foto-fig">
+        <img src="/assets/img/lp-iso-9001-mobile/dani-600.webp" alt="Daniela, sócia da Templum" width="600" height="617" loading="lazy" />
+        <figcaption><strong>Dani · Templum Consultoria</strong><span>Sócia · Certificação ISO 9001</span></figcaption>
+      </figure>
+      <button
+        class="ig-btn ig-btn--primario ig-btn--grande"
+        type="button"
+        data-ig-lead="foto"
+        data-linha={linhaGeral}
+        data-abre-form
+        data-cta-pos="meio"
+      ><iconify-icon icon="ic:baseline-whatsapp" aria-hidden="true"></iconify-icon>Falar com a Dani</button>
+    </div>
 
     <div class="ig-sheet" data-ig-sheet hidden>
       <div class="ig-sheet-fundo" data-ig-fechar></div>
@@ -493,6 +509,31 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         });
       });
 
+      // Foto da Dani: toque na bolinha do perfil (ou do fim da página) mostra a foto grande.
+      // Antes o toque não fazia nada e o Clarity marcava clique morto.
+      var foto = root.querySelector("[data-ig-foto-caixa]");
+      var fotoOrigem = null;
+      function abrirFoto(btn) {
+        fotoOrigem = btn;
+        foto.hidden = false;
+        document.documentElement.classList.add("ig-travado");
+        evento("foto_dani", { origem: btn.closest(".ig-fim") ? "fim" : "perfil" });
+        try { foto.querySelector("[data-ig-foto-fechar]").focus({ preventScroll: true }); } catch (_) {}
+      }
+      function fecharFoto() {
+        if (foto.hidden) return;
+        foto.hidden = true;
+        if (telaAberta() < 0 && sheetFechado()) document.documentElement.classList.remove("ig-travado");
+        if (fotoOrigem) try { fotoOrigem.focus({ preventScroll: true }); } catch (_) {}
+      }
+      root.querySelectorAll("[data-ig-foto]").forEach(function (btn) {
+        btn.addEventListener("click", function () { abrirFoto(btn); });
+      });
+      foto.querySelector("[data-ig-foto-fechar]").addEventListener("click", fecharFoto);
+      foto.addEventListener("click", function (e) { if (e.target === foto) fecharFoto(); });
+      // O botão de WhatsApp da foto troca a foto pela gaveta do formulário.
+      foto.querySelector("[data-ig-lead]").addEventListener("click", function () { foto.hidden = true; });
+
       // Gaveta do formulário: todo botão de WhatsApp abre aqui antes.
       // A frase do botão vai no campo "mensagem" (o comercial vê de qual dúvida veio)
       // e fica guardada para a página de obrigado montar a mensagem do WhatsApp.
@@ -526,7 +567,8 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
       });
       document.addEventListener("keydown", function (e) {
         if (e.key !== "Escape") return;
-        if (!sheet.hidden) fecharSheet();
+        if (!foto.hidden) fecharFoto();
+        else if (!sheet.hidden) fecharSheet();
         else sairTela();
       });
       // Roda antes do handler do LpBase (que escuta no document).
@@ -608,13 +650,14 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   .ig-btn--grande { min-height: 52px; font-size: 16px; width: 100%; }
 
   /* Destaques */
+  /* Flex em vez de grade: "Investimento" é mais largo que a bolinha e precisa de espaço. */
   .ig-destaques {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+    display: flex; justify-content: space-between; gap: 4px;
     padding: 14px 12px 16px; border-bottom: 1px solid var(--border);
   }
   .ig-destaque { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text); min-width: 0; }
   .ig-destaque-ring {
-    display: grid; place-items: center; width: 100%; max-width: 66px; aspect-ratio: 1; border-radius: 50%; padding: 3px;
+    display: grid; place-items: center; width: clamp(54px, 16vw, 66px); aspect-ratio: 1; border-radius: 50%; padding: 3px;
     background: conic-gradient(from 200deg, var(--yellow), var(--orange), var(--orange-dark), var(--yellow));
     transition: background .3s;
   }
@@ -623,7 +666,8 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
     display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%;
     background: var(--navy); border: 3px solid #fff; color: #fff; font-size: 24px;
   }
-  .ig-destaque-txt { font-size: 12px; font-weight: 600; }
+  .ig-destaque-txt { font-size: 12px; font-weight: 600; white-space: nowrap; }
+  @media (max-width: 374px) { .ig-destaque-txt { font-size: 11px; } }
 
   /* Post */
   .ig-post { border-bottom: 1px solid var(--border); padding-bottom: 12px; scroll-margin-top: 60px; }
@@ -751,6 +795,28 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
     .ig-seta { display: grid; }
     .ig-seta[hidden] { display: none; }
   }
+
+  /* Foto grande da Dani */
+  button.ig-avatar { border: 0; cursor: pointer; font: inherit; }
+  .ig-foto {
+    position: fixed; inset: 0; z-index: 45;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    padding: calc(56px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+    background: rgba(16, 17, 19, 0.96);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .ig-foto[hidden] { display: none; }
+  .ig-foto-x {
+    position: absolute; top: calc(10px + env(safe-area-inset-top)); right: 10px;
+    display: grid; place-items: center; width: 44px; height: 44px;
+    border: 0; background: none; color: #fff; font-size: 32px; cursor: pointer;
+  }
+  .ig-foto-fig { margin: 0; width: 100%; max-width: 340px; text-align: center; color: #fff; }
+  .ig-foto-fig img { display: block; width: 100%; height: auto; border-radius: 20px; background: #fff; }
+  .ig-foto-fig figcaption { display: flex; flex-direction: column; gap: 2px; margin-top: 14px; }
+  .ig-foto-fig strong { font-size: 18px; font-weight: 800; }
+  .ig-foto-fig span { font-size: 14px; color: rgba(255, 255, 255, 0.75); }
+  .ig-foto .ig-btn { width: 100%; max-width: 340px; }
 
   /* Tela cheia (stories) */
   .ig-tela-topo { display: none; }
