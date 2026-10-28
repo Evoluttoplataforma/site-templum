@@ -344,8 +344,12 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Rodapé ---------- */
 .footer { background: #1a1f26; color: var(--texto-claro); padding: 28px 0 96px; font-size: var(--fs-sm); }
-.footer__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.footer__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; }
 .footer img { width: 100px; }
+.footer__legal { display: grid; gap: 4px; line-height: 1.45; }
+.footer__legal p { margin: 0; }
+.footer__legal a { text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 720px) { .footer__legal { text-align: right; } }
 
 /* ---------- CTA fixo no mobile ---------- */
 .mobile-cta {
