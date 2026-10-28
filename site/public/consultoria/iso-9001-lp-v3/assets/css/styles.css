@@ -191,6 +191,7 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Mercado ---------- */
 .market { display: grid; gap: 40px; align-items: center; }
+.market__ask { margin-top: 12px; font-size: var(--fs-base); color: var(--texto-suave); max-width: 42ch; }
 
 .chart { background: var(--branco); border-radius: var(--r-card); padding: 24px 20px 20px; border: 1px solid var(--linha); }
 .chart__title { font-weight: 700; font-size: var(--fs-base); margin-bottom: 8px; }
