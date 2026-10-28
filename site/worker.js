@@ -1464,11 +1464,11 @@ function normLpPath(p) {
   return s.endsWith("/") ? s : s + "/";
 }
 
-/** LP de consultoria (-lp e -lp-v2): UTMs e clique só entram se vieram nesta URL. A página fica em lead.pagina. */
+/** LP de consultoria (-lp, -lp-v2, -lp-v3): UTMs e clique só entram se vieram nesta URL. A página fica em lead.pagina. */
 function applyConsultoriaLpCampaign(lead, body) {
   if (String(lead.evento || "") !== "lead") return;
   const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
-  if (!/^\/consultoria\/[^/]+-lp(-v2)?\/$/.test(path)) return;
+  if (!/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return;
   const fromUrl = body && body.utm_from_url === true;
   const clickFromUrl = body && body.click_from_url === true;
   for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
