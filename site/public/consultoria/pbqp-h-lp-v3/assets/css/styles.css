@@ -42,3 +42,27 @@ dialog{border:0;border-radius:20px;padding:0;width:min(550px,calc(100% - 28px));
   .sticky-mobile{bottom:calc(68px + env(safe-area-inset-bottom))!important}
   .footer-main{padding-bottom:150px}
 }
+
+/* Ícones e faixa no mesmo desenho da LP ISO 9001 */
+.return-grid img.icon{width:64px;height:64px;padding:8px;object-fit:contain;box-sizing:border-box;background:#fff;border-radius:16px;border-bottom:3px solid #FDA47D}
+.diff-row img.icon{width:48px;height:48px;object-fit:contain;background:transparent;padding:0;border:0}
+.step-icon{width:76px;height:76px;border-radius:18px;background:#FFF4DD;display:grid;place-items:center;margin-bottom:22px}
+.step-icon img{width:48px;height:48px;object-fit:contain}
+.step-count{margin:0 0 4px;font-size:14px;font-weight:700;color:#ff7d55}
+.journey-detail .step-panel:before{display:none}
+.journey-detail .step-panel{display:flex;flex-direction:column}
+.step-note{display:flex;gap:10px;align-items:flex-start;margin-top:28px;font-size:14px;line-height:1.5;color:#d4dadd}
+.step-note svg{width:20px;height:20px;flex:none;color:var(--orange);margin-top:2px}
+.step-shield{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.5);color:#fff}
+.step-shield svg{width:20px;height:20px}
+#preparacao .step span{width:44px;height:44px;font-size:17px}
+#preparacao .step[aria-selected="true"] span{background:var(--orange);color:var(--ink)}
+.guarantee{padding:clamp(40px,6vw,64px) 0}
+.guarantee h2{color:#fff;font-size:clamp(1.625rem,1.2rem + 1.6vw,2.375rem);max-width:22ch;line-height:1.15}
+.guarantee p{font-size:1.125rem;font-weight:600;color:var(--ink);margin:10px 0 0;max-width:60ch}
+.guarantee .btn{background:var(--ink);color:#fff;font-size:14px;min-height:54px;padding:17px 24px}
+@media(min-width:960px){
+  .guarantee-grid{grid-template-columns:auto 1fr;column-gap:48px;row-gap:24px;align-items:center}
+  .guarantee-number{grid-row:span 2;font-size:clamp(3rem,2rem + 4vw,5rem);line-height:1}
+  .guarantee-grid>.btn{grid-column:2;justify-self:start}
+}
