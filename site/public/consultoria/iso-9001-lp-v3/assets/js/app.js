@@ -35,9 +35,22 @@
       track("cta_click", { cta_location: el.getAttribute("data-cta") });
     });
   });
-  $$('a[href="#proposta"]').forEach(function (a) {
-    a.addEventListener("click", function () {
-      setTimeout(function () { $("#f-nome").focus({ preventScroll: true }); }, 450);
+  $$('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      if (e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var id = (a.getAttribute("href") || "").slice(1);
+      var alvo = id && document.getElementById(id);
+      if (!alvo) return;
+      e.preventDefault();
+      alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+      try { history.pushState(null, "", location.pathname + location.search + "#" + id); } catch (err) {}
+      if (id === "proposta") {
+        setTimeout(function () {
+          var campo = $("#f-nome");
+          if (campo) campo.focus({ preventScroll: true });
+        }, 450);
+      }
     });
   });
 
@@ -236,6 +249,19 @@
       var invalid = Object.keys(rules).filter(function (n) { return check(n); });
       if (invalid.length) {
         track("form_error", { error_fields: invalid.join(",") });
+        invalid.forEach(function (n) {
+          var vazio = !String(f.elements[n].value || "").trim();
+          var codigo = vazio ? "vazio" : (n === "email" ? "formato" : "incompleto");
+          if (window.tplFormEvento) {
+            window.tplFormEvento({
+              evento: "erro_validacao",
+              campo: n,
+              erro_codigo: codigo,
+              erro_msg: codigo,
+              norma: "ISO 9001"
+            });
+          }
+        });
         f.elements[invalid[0]].focus();
         return;
       }

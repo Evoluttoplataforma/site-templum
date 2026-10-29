@@ -36,7 +36,7 @@
       ctaTracking: true, formAnalytics: true, videoTracking: true
     },
     consent: { required: false, defaultGranted: false, cookieName: "trk_consent" },
-    helpers: { whatsappNumber: "5519993521270", whatsappMessage: "Olá! Quero uma proposta de consultoria ISO 9001." },
+    helpers: { whatsappNumber: "5519993521270", whatsappMessage: "Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001." },
     integrations: { calendly: false, typeform: false, tally: false },
     crossDomain: { enabled: false, domains: [] }
   };

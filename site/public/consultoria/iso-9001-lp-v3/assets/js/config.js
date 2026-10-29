@@ -104,7 +104,7 @@ window.LP_CONFIG = {
   // WhatsApp (saída secundária do formulário). Número do rodapé de templum.com.br.
   whatsapp: {
     number: "5519993521270",
-    message: "Olá! Quero uma proposta de consultoria ISO 9001."
+    message: "Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001."
   },
 
   // ISO 9001:2026

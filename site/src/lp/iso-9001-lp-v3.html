@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-tpl-lp="1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,13 +20,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="canonical" href="https://templum.com.br/consultoria/iso-9001-lp-v3/">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261028n">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261029a">
 
-  <script src="assets/js/config.js?v=20261028j"></script>
+  <script src="assets/js/config.js?v=20261029a"></script>
   <script src="assets/js/variant.js?v=20261028j"></script>
   <script src="/js/tpl-turnstile.js?v=3"></script>
-<script src="assets/js/tracking.js?v=20261028k"></script>
-<script src="assets/js/app.js?v=20261028k" defer></script>
+  <script src="/js/form-funil.js?v=20261029b"></script>
+  <script src="assets/js/tracking.js?v=20261029a"></script>
+  <script src="assets/js/app.js?v=20261029b" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#proposta">Ir para o formulário de proposta</a>
@@ -34,7 +35,7 @@
   <header class="topbar">
     <div class="wrap topbar__inner">
       <img src="assets/img/logo-branco.png" alt="Templum" width="132" height="44" class="topbar__logo">
-      <a class="topbar__cta" href="#proposta" data-cta="topbar">Solicitar proposta</a>
+      <a class="topbar__cta" href="#proposta" data-cta="topbar" data-abre-form data-cta-pos="menu">Solicitar proposta</a>
     </div>
   </header>
 
@@ -73,7 +74,7 @@
 
         <div class="hero__form" id="proposta">
           <div class="slab">
-            <form class="lead-form" id="lead-form" novalidate>
+            <form class="lead-form" id="lead-form" novalidate data-trk-event="lead">
               <h2 class="lead-form__title">Solicite uma proposta ISO 9001</h2>
               <p class="lead-form__lede">Conte sobre sua empresa para que nossa equipe avalie seu projeto.</p>
 
@@ -104,12 +105,13 @@
                 <input id="f-site" name="website" type="text" tabindex="-1" autocomplete="off">
               </div>
               <input type="hidden" name="variant_id">
+              <input type="hidden" name="norma" value="ISO 9001">
               <div data-tracking-fields></div>
 
               <button class="btn btn--dark btn--block" type="submit" data-copy="cta" data-cta="hero_form">Solicitar proposta ISO 9001</button>
               <p class="lead-form__legal">Seus dados serão usados para contato sobre sua solicitação, conforme a <a href="#" data-privacy>Política de Privacidade</a>.</p>
               <div class="lead-form__status" role="status" aria-live="polite" hidden></div>
-              <p class="lead-form__alt">Prefere conversar agora? <a href="#" data-whatsapp data-cta="whatsapp_form" target="_blank" rel="noopener">Falar no WhatsApp</a></p>
+              <p class="lead-form__alt">Prefere conversar agora? <a href="#" data-whatsapp data-wpp-ref="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001." data-cta="whatsapp_form" target="_blank" rel="noopener">Falar no WhatsApp</a></p>
             </form>
           </div>
         </div>
@@ -145,7 +147,7 @@
         </ul>
         <div class="reasons__cta">
           <p>Reconheceu a sua situação? A proposta mostra o caminho para a sua empresa.</p>
-          <a class="btn btn--orange" href="#proposta" data-cta="situacoes">Solicitar proposta ISO 9001</a>
+          <a class="btn btn--orange" href="#proposta" data-cta="situacoes" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
         </div>
         </div>
         <figure class="motives__photo">
@@ -267,8 +269,8 @@
           <li data-transition-date><time datetime="2029-09-30">30/09/2029</time><p>Fim do prazo de transição para empresas certificadas na versão 2015</p></li>
         </ol>
         <p class="timeline2026__note" data-transition-date>Prazos de transição divulgados para a norma. Confirme as datas com o seu organismo certificador.</p>
-        <a class="btn btn--orange v2026__cta" href="#proposta" data-cta="iso2026">Solicitar proposta ISO 9001</a>
-        <p class="v2026__offer" data-transition-offer hidden>Sua empresa já é certificada na versão 2015? A Templum também conduz a transição para a 2026. <a href="#proposta" data-cta="transicao">Solicitar proposta</a></p>
+        <a class="btn btn--orange v2026__cta" href="#proposta" data-cta="iso2026" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
+        <p class="v2026__offer" data-transition-offer hidden>Sua empresa já é certificada na versão 2015? A Templum também conduz a transição para a 2026. <a href="#proposta" data-cta="transicao" data-abre-form data-cta-pos="meio">Solicitar proposta</a></p>
       </div>
     </section>
 
@@ -310,7 +312,7 @@
           <h2 id="garantia-title" class="guarantee__title">Certificação ou o dobro do dinheiro de volta.</h2>
           <p>Se a sua empresa passar por todos os processos do método e ainda assim não certificar, devolvemos 200% do investimento. A garantia está registrada em contrato.</p>
         </div>
-        <a class="btn btn--dark" href="#proposta" data-cta="garantia">Solicitar proposta ISO 9001</a>
+        <a class="btn btn--dark" href="#proposta" data-cta="garantia" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
       </div>
     </section>
 
@@ -390,7 +392,7 @@
         </div>
 
         <div class="proof__cta">
-          <a class="btn btn--orange" href="#proposta" data-cta="prova">Solicitar proposta ISO 9001</a>
+          <a class="btn btn--orange" href="#proposta" data-cta="prova" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
         </div>
       </div>
     </section>
@@ -414,7 +416,7 @@
         <div class="decision__text">
           <h2 id="decisao-title" class="h2">Clareza para quem aprova. Apoio para quem implementa.</h2>
           <p class="lede">Você conduz o projeto, mas a decisão passa pelo sócio ou pela diretoria? Leve a proposta para essa conversa: ela mostra o que a consultoria faz, o que fica com a sua equipe e as condições de contratação.</p>
-          <a class="btn btn--orange" href="#proposta" data-cta="decisao">Solicitar proposta ISO 9001</a>
+          <a class="btn btn--orange" href="#proposta" data-cta="decisao" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
         </div>
       </div>
     </section>
@@ -494,7 +496,7 @@
         </div>
         <h2 id="final-title" class="h2 h2--light h2--center">Seu próximo passo para a ISO 9001 começa com um plano.</h2>
         <p class="lede lede--light">Conte em que estágio sua empresa está. A proposta detalha o plano e o investimento para o seu caso.</p>
-        <a class="btn btn--orange" href="#proposta" data-cta="final">Solicitar proposta ISO 9001</a>
+        <a class="btn btn--orange" href="#proposta" data-cta="final" data-abre-form data-cta-pos="final">Solicitar proposta ISO 9001</a>
       </div>
     </section>
   </main>
@@ -510,7 +512,8 @@
   </footer>
 
   <div class="mobile-cta" aria-hidden="true" data-mobile-cta>
-    <a class="btn btn--orange btn--block" href="#proposta" data-cta="mobile_sticky" tabindex="-1">Solicitar proposta ISO 9001</a>
+    <a class="btn btn--orange btn--block" href="#proposta" data-cta="mobile_sticky" data-abre-form data-cta-pos="topo" tabindex="-1">Solicitar proposta ISO 9001</a>
   </div>
+  <a class="wpp-fixo" href="#" data-whatsapp data-wpp-ref="1" data-wpp-fixo="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001.">Falar no WhatsApp</a>
 </body>
 </html>

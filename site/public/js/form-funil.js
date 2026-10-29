@@ -549,7 +549,7 @@
   function paginaDeLp() {
     if (document.documentElement.getAttribute("data-tpl-lp") === "1") return true;
     var p = (location.pathname || "/").replace(/\/+$/, "") || "/";
-    return /^\/consultoria\/(?:[a-z0-9-]+-lp(?:-b)?|[a-z0-9-]+-obrigado|sassmaq-4-0)$/.test(p);
+    return /^\/consultoria\/(?:[a-z0-9-]+-lp(?:-b|-v\d+)?|[a-z0-9-]+-obrigado|sassmaq-4-0)$/.test(p);
   }
 
   function ehWhatsapp(href) {
@@ -642,6 +642,9 @@
     clearTimeout(timer);
     abrir();
   }, true);
+
+  adsDoClique();
+  contexto();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", observarFormularios);
