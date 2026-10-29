@@ -50,7 +50,8 @@ dialog{border:0;border-radius:20px;padding:0;width:min(550px,calc(100% - 28px));
 .step-icon img{width:48px;height:48px;object-fit:contain}
 .step-count{margin:0 0 4px;font-size:14px;font-weight:700;color:#ff7d55}
 .journey-detail .step-panel:before{display:none}
-.journey-detail .step-panel{display:flex;flex-direction:column}
+.journey-detail .step-panel{display:flex;flex-direction:column;gap:0}
+.journey-detail .step-icon{margin-bottom:22px}
 .step-note{display:flex;gap:10px;align-items:flex-start;margin-top:28px;font-size:14px;line-height:1.5;color:#d4dadd}
 .step-note svg{width:20px;height:20px;flex:none;color:var(--orange);margin-top:2px}
 .step-shield{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.5);color:#fff}
