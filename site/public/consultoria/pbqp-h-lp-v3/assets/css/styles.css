@@ -90,3 +90,22 @@ header .btn,header .btn:hover,.closing .btn,.closing .btn:hover,.hero-form .btn,
 .hero-form .btn:hover{background:#fff}
 .guarantee .btn,.guarantee .btn:hover{background:var(--brown);color:#fff}
 .hero-form .error{color:#FFE8D6}
+
+.proof-heading{grid-template-columns:minmax(0,1.15fr) auto;align-items:end}
+.proof-metrics{gap:28px;justify-content:flex-end}
+.proof-metrics span{font-size:13px;line-height:1.35;max-width:9.5em}
+.proof-grid{align-items:stretch}
+.proof-quotes{background:#fff1e8;padding:32px;border-radius:15px;display:flex;flex-direction:column}
+.proof-quotes .quote{margin:0}
+.proof-quotes blockquote{margin:0;font-size:15px;line-height:1.55;font-weight:600;letter-spacing:-.02em}
+.proof-quotes figcaption{margin-top:14px;font-size:13px;line-height:1.4;color:var(--muted)}
+.proof-quotes figcaption strong{display:block;color:var(--ink);font-size:15px}
+.proof-quotes .quote-small{margin-top:22px;padding-top:22px;border-top:1px solid rgba(34,40,49,.12)}
+.proof-quotes .quote-small blockquote{font-size:14px;font-weight:500}
+.proof-feature{background:#f3f5f6;border-radius:15px;padding:28px 28px 22px;display:flex;flex-direction:column}
+.proof-feature .eyebrow{margin-bottom:8px}
+.proof-feature h3{font-size:23px;margin:0 0 16px}
+.proof-feature .case-video{flex:1;min-height:280px}
+.proof-more{display:inline-block;margin-top:14px;font-size:12px;font-weight:800;color:var(--brown)}
+@media(max-width:900px){.proof-heading{grid-template-columns:1fr}.proof-metrics{justify-content:flex-start}}
+@media(max-width:600px){.proof-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.proof-metrics span{max-width:none}.proof-quotes,.proof-feature{padding:22px}}
