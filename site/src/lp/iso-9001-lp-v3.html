@@ -27,7 +27,8 @@
   <script src="/js/tpl-turnstile.js?v=3"></script>
   <script src="/js/form-funil.js?v=20261029b"></script>
   <script src="assets/js/tracking.js?v=20261029a"></script>
-  <script src="assets/js/app.js?v=20261029b" defer></script>
+  <script src="/js/telefone-br.js?v=20261029" defer></script>
+  <script src="assets/js/app.js?v=20261029c" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#proposta">Ir para o formulário de proposta</a>
@@ -90,7 +91,7 @@
               </div>
               <div class="field">
                 <label for="f-whatsapp">WhatsApp</label>
-                <input id="f-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required aria-describedby="e-whatsapp">
+                <input id="f-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required maxlength="15" aria-describedby="e-whatsapp">
                 <p class="field__error" id="e-whatsapp"></p>
               </div>
               <div class="field">

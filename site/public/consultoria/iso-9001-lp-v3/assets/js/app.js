@@ -185,14 +185,21 @@
       return '<input type="hidden" name="' + k + '" value="' + escapeHtml(LP.tracking[k]) + '">';
     }).join("");
 
-    // Máscara de WhatsApp: (11) 99999-9999
+    // Máscara e validação: celular com DDD, no máximo (00) 00000-0000.
     var phone = f.elements.whatsapp;
     phone.addEventListener("input", function () {
-      var d = phone.value.replace(/\D/g, "").slice(0, 11);
-      var out = d;
-      if (d.length > 2) out = "(" + d.slice(0, 2) + ") " + d.slice(2);
-      if (d.length > 6) out = "(" + d.slice(0, 2) + ") " + d.slice(2, d.length - 4) + "-" + d.slice(-4);
-      phone.value = out;
+      var masked;
+      if (window.tplTelefone) {
+        masked = window.tplTelefone.maskBR(window.tplTelefone.digitsBR(phone.value));
+      } else {
+        var d = phone.value.replace(/\D/g, "").slice(0, 11);
+        masked = d;
+        if (d.length > 2) masked = "(" + d.slice(0, 2) + ") " + d.slice(2);
+        if (d.length > 7) masked = "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+      }
+      if (phone.value === masked) return;
+      phone.value = masked;
+      if (phone.setSelectionRange) phone.setSelectionRange(masked.length, masked.length);
     });
 
     function markStart() {
@@ -205,9 +212,12 @@
       nome: function (v) { return v.trim() ? "" : "Preencha este campo."; },
       empresa: function (v) { return v.trim() ? "" : "Preencha este campo."; },
       whatsapp: function (v) {
+        if (window.tplTelefone) {
+          return window.tplTelefone.mensagemTelefone(window.tplTelefone.motivoTelefone(v));
+        }
         var d = v.replace(/\D/g, "");
-        if (!d) return "Preencha este campo.";
-        return d.length === 10 || d.length === 11 ? "" : "Informe um WhatsApp válido com DDD.";
+        if (!d) return "Informe o WhatsApp com DDD.";
+        return d.length === 11 ? "" : "Informe um WhatsApp válido com DDD.";
       },
       email: function (v) {
         v = v.trim().toLowerCase();
@@ -252,6 +262,9 @@
         invalid.forEach(function (n) {
           var vazio = !String(f.elements[n].value || "").trim();
           var codigo = vazio ? "vazio" : (n === "email" ? "formato" : "incompleto");
+          if (n === "whatsapp" && window.tplTelefone) {
+            codigo = window.tplTelefone.motivoTelefone(f.elements[n].value) || codigo;
+          }
           if (window.tplFormEvento) {
             window.tplFormEvento({
               evento: "erro_validacao",
