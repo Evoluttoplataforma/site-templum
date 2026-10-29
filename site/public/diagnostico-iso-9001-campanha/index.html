@@ -59,6 +59,7 @@
   .progress i b{display:block;height:100%;width:0;background:var(--orange);border-radius:99px;}
   .progress i.done b{width:100%;}
   .progress i.now b{width:55%;}
+  .intro{font-size:14.5px;color:var(--text-2);margin:0 0 16px;}
   .step{font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:8px;}
   .step strong{color:var(--ink);font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:11px;}
   h1{font-size:22px;line-height:1.25;font-weight:800;letter-spacing:-.02em;margin:0 0 18px;}
@@ -134,6 +135,7 @@
   </header>
 
   <section class="card" id="quiz">
+    <p class="intro" id="intro">6 perguntas curtas sobre como a empresa faz hoje. No final, a nota.</p>
     <div class="progress" id="progress"></div>
     <p class="step" id="step"></p>
     <h1 id="qText"></h1>
@@ -145,8 +147,8 @@
   </section>
 
   <section class="card gate" id="gate" hidden>
-    <h1>Seu diagnóstico está pronto.</h1>
-    <p>Deixe seu contato para ver a nota e o ponto que mais pesa.</p>
+    <h1>Sua nota está pronta.</h1>
+    <p>Informe o contato para ver o resultado e o que mais trava a gestão.</p>
     <form id="leadForm" novalidate>
       <input id="fNome" name="nome" type="text" autocomplete="name" placeholder="Nome" required>
       <input id="fTel" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="WhatsApp" required>
@@ -184,80 +186,80 @@
   "use strict";
 
   var OPTS = [
-    "Não fazemos isso",
-    "Fazemos, sem método",
-    "Fazemos de forma estruturada",
-    "Fazemos e revisamos"
+    "Não",
+    "Às vezes",
+    "Sim",
+    "Sempre"
   ];
 
   var QUESTIONS = [
     {
       name: "Estratégia",
-      text: "Os objetivos da empresa estão escritos e viram plano, com dono e prazo?",
+      text: "O que fica combinado na reunião vira tarefa no dia a dia?",
       gaps: [
-        "Objetivos ainda não estão escritos nem viram plano.",
-        "Os objetivos existem, mas ainda não têm dono e prazo.",
-        "Já existe plano com dono e prazo. A revisão ainda é irregular.",
-        "Objetivos, plano e revisão já fazem parte da rotina."
+        "O combinado da reunião fica na reunião.",
+        "Às vezes vira tarefa, cada um de um jeito.",
+        "O combinado vira tarefa no dia a dia. A revisão ainda falha.",
+        "O combinado vira tarefa e o andamento é revisto."
       ]
     },
     {
       name: "Riscos e oportunidades",
-      text: "Riscos e melhorias viram ação, com dono e prazo, antes do problema estourar?",
+      text: "Quando alguém avisa que algo pode dar errado, a empresa age antes de estourar?",
       gaps: [
-        "Risco e melhoria só aparecem quando o problema já estourou.",
-        "Riscos e melhorias são vistos, mas não viram ação com dono e prazo.",
-        "A ação existe. A revisão do cenário ainda falha.",
-        "Risco e melhoria viram ação e são revistos quando o cenário muda."
+        "O aviso só vira assunto quando o problema já estourou.",
+        "O time avisa, mas a ação nem sempre sai.",
+        "A empresa age antes de estourar. A revisão ainda falha.",
+        "O aviso vira ação e é revisto quando o cenário muda."
       ]
     },
     {
       name: "Processos",
-      text: "Os processos principais estão escritos, e quem executa sabe o que fazer quando falha?",
+      text: "Se o serviço sai errado ou o pedido atrasa, o time sabe o que fazer na hora?",
       gaps: [
-        "O jeito de fazer ainda mora na cabeça das pessoas.",
-        "Parte do processo está escrita, mas pouco usada ou desatualizada.",
-        "O processo está escrito e a falha gera correção. Falta medir se segurou.",
-        "Processo escrito, usado no dia a dia e corrigido pelo resultado."
+        "Quando sai errado, cada um resolve do próprio jeito.",
+        "Às vezes há um combinado, mas na hora cada um improvisa.",
+        "O time sabe o que fazer na hora. Falta rever se segurou.",
+        "O erro tem um jeito de resolver, e esse jeito é revisado."
       ]
     },
     {
       name: "Pessoas",
-      text: "Cada função tem responsabilidade definida, e o treinamento é avaliado pelo resultado?",
+      text: "Depois de treinar alguém, a empresa confere se o trabalho melhorou?",
       gaps: [
-        "Função e treinamento ainda não têm método.",
-        "A responsabilidade existe na prática, e o treinamento não é avaliado.",
-        "Função e treinamento estão definidos. Falta usar a avaliação para ajustar.",
-        "Função, treinamento e o resultado do treinamento são revisados."
+        "O treinamento acaba e ninguém olha se o trabalho melhorou.",
+        "Às vezes alguém olha, sem um jeito definido.",
+        "A empresa confere se o trabalho melhorou. Falta usar isso para ajustar.",
+        "O treinamento é revisto pelo que a pessoa passa a fazer no trabalho."
       ]
     },
     {
       name: "Indicadores",
-      text: "Os processos têm meta, e um número abaixo da meta vira plano?",
+      text: "Quando a meta do mês não fecha, a empresa monta um plano?",
       gaps: [
-        "Não há meta para acompanhar os processos.",
-        "Há algum número, sem meta clara ou sem plano quando fica abaixo.",
-        "Meta e plano existem. Falta checar se a causa foi resolvida.",
-        "Meta, plano e causa são acompanhados até o número voltar."
+        "A meta do mês não fecha e a conversa acaba na reunião.",
+        "Às vezes sai um plano, no improviso.",
+        "O plano sai. Falta checar se o número voltou.",
+        "O plano é acompanhado até o número voltar."
       ]
     },
     {
       name: "Cliente",
-      text: "A empresa mede a satisfação do cliente e usa esse retorno para melhorar?",
+      text: "O que o cliente reclama muda o jeito de trabalhar?",
       gaps: [
-        "A satisfação do cliente não é medida.",
-        "O retorno chega, mas quase não vira melhoria.",
-        "A satisfação é medida e gera melhoria.",
-        "Satisfação medida, melhoria feita e retorno dado ao cliente."
+        "A reclamação do cliente não muda o trabalho.",
+        "A reclamação chega, mas quase não muda o jeito de trabalhar.",
+        "A reclamação muda o jeito de trabalhar.",
+        "A empresa muda o trabalho e o cliente fica sabendo."
       ]
     }
   ];
 
   var SUMMARIES = [
     "A gestão ainda depende de memória e de apagar incêndio.",
-    "Algumas frentes já têm método. Outras ainda ficam na informalidade.",
-    "O método existe na maior parte. O que falta é revisar e sustentar.",
-    "As seis frentes já têm método e revisão."
+    "Parte da gestão já tem um jeito definido. Outra parte ainda é improviso.",
+    "O padrão existe na maior parte. O que falta é revisar e manter.",
+    "As seis áreas já têm padrão e revisão."
   ];
 
   var CONTENT_NAME = "diagnostico-iso-9001-campanha";
@@ -299,6 +301,7 @@
   function renderQuestion() {
     var q = QUESTIONS[current];
     renderProgress();
+    document.getElementById("intro").hidden = current !== 0;
     stepEl.innerHTML = "<strong>" + q.name + "</strong> · " + (current + 1) + " de " + QUESTIONS.length;
     qText.textContent = q.text;
     optsEl.innerHTML = "";
@@ -317,7 +320,7 @@
     });
     backBtn.hidden = current === 0;
     nextBtn.disabled = answers[current] === null;
-    nextBtn.textContent = current === QUESTIONS.length - 1 ? "Continuar" : "Próxima";
+    nextBtn.textContent = current === QUESTIONS.length - 1 ? "Ver minha nota" : "Próxima";
   }
 
   function showQuiz() {
@@ -369,7 +372,7 @@
       box.appendChild(el);
     });
     var weak = result.rows[0];
-    document.getElementById("askTitle").textContent = "O ponto que mais pesa é " + weak.name + ".";
+    document.getElementById("askTitle").textContent = "O que mais trava hoje é " + weak.name + ".";
     document.getElementById("askCopy").textContent = weak.gap + " Quer que a gente entre em contato para resolver isso?";
     document.getElementById("ask").hidden = false;
     document.getElementById("askChoices").hidden = false;
