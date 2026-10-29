@@ -1085,7 +1085,12 @@ async function handleLead(request, env, ctx) {
   const isReplay = lead.evento === REPLAY_NE_EVENT;
   const testeH1 = leadEhTesteH1(lead);
   const bgTasks = [];
-  if (!testeH1 && !isResultado && !isReplay) {
+  const contatoDiag = String(body.contato || "").trim().toLowerCase();
+  const diagEscolha = lead.evento === DIAG_9001_CAMPANHA && (contatoDiag === "sim" || contatoDiag === "nao");
+  const diagCadastro = lead.evento === DIAG_9001_CAMPANHA && !diagEscolha;
+
+  // O sim/não é o mesmo card. Não dispara outro Lead no Meta nem outra nutrição.
+  if (!testeH1 && !isResultado && !isReplay && !diagEscolha) {
     bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
     bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
@@ -1103,6 +1108,11 @@ async function handleLead(request, env, ctx) {
       pipeline_id: ORBIT_ATIVACAO_PIPELINE_ID,
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
     })]);
+  } else if (diagEscolha) {
+    // Sim move o card do MQL para o INBOUND. Não deixa o card no MQL.
+    bgTasks.push(["diag-contato", routeDiagnosticoContato(lead, env, contatoDiag === "sim")]);
+  } else if (diagCadastro) {
+    // Card criado antes da resposta HTTP, para o sim achar o mesmo lead.
   } else if (isFaturamentoMql(lead)) {
     // Até R$ 100 mil nestas LPs não entra no INBOUND. Vai ao funil MQL.
     bgTasks.push(["mql", saveToMqlPorFaturamento(lead, env)]);
@@ -1119,6 +1129,15 @@ async function handleLead(request, env, ctx) {
 
   // Loga falhas (ok:false ou exceção) de cada tarefa em background — sem isso,
   // erros ficam completamente invisíveis (ctx.waitUntil não expõe o resultado).
+  if (diagCadastro) {
+    const criar = saveToMqlInscricao(lead, env);
+    ctx.waitUntil(criar.then((r) => {
+      if (r && r.ok === false) console.error("[lead:diag-mql]", JSON.stringify(r));
+    }).catch((e) => console.error("[lead:diag-mql] exception", e && e.message)));
+    const crm = await timed(criar, 8000);
+    if (crm && crm.ok === false) console.error("[lead:diag-mql]", JSON.stringify(crm));
+  }
+
   ctx.waitUntil(Promise.all(bgTasks.map(([name, task]) =>
     task
       .then((r) => { if (r && r.ok === false) console.error(`[lead:${name}]`, JSON.stringify(r)); })
@@ -1429,6 +1448,7 @@ const FLUXOS_WEBHOOK_INBOUND_BASE =
   "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
+const DIAG_9001_CAMPANHA = "diagnostico-iso-9001-campanha";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
 const ORBIT_ATIVACAO_STAGE_IGNICAO = "1fec2ce2-2a71-47ce-8717-ea9746e98ecd";
 const ORBIT_TAG_PARCERIA_LSC = "Parceria LSC One";
@@ -2139,7 +2159,20 @@ function buildMqlInscricaoPatch(lead, cfg, existingMql, tags) {
     const cf = mqlInscricaoCustomFields(lead);
     if (Object.keys(cf).length) patch.custom_fields = cf;
   }
+  if (lead.evento === DIAG_9001_CAMPANHA && lead.mensagem) {
+    const prev = String(patch.notes || existingMql.notes || existingMql.note || "").trim();
+    patch.notes = appendUniqueNote(prev, lead.mensagem);
+  }
   return patch;
+}
+
+function appendUniqueNote(prev, extra) {
+  const line = String(extra || "").trim();
+  const base = String(prev || "").trim();
+  if (!line) return base;
+  if (!base) return line;
+  if (base.indexOf(line) !== -1) return base;
+  return base + "\n\n" + line;
 }
 
 function leadHasCrmTag(lead, tag) {
@@ -2368,6 +2401,9 @@ async function saveToMqlInscricao(lead, env) {
       tags,
     };
     if (cfg.notes) body.notes = cfg.notes;
+    if (lead.evento === DIAG_9001_CAMPANHA && lead.mensagem) {
+      body.notes = appendUniqueNote(body.notes, lead.mensagem);
+    }
     if (lead.telefone) body.contact_phone = lead.telefone;
     if (lead.empresa) body.company_name = lead.empresa;
     if (cfg.customFields) {
@@ -2407,6 +2443,75 @@ async function saveToMqlInscricao(lead, env) {
     }
     const e = r ? await r.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+function diagContatoTags(extra, pagina) {
+  return withNormaTags([extra], pagina).map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag));
+}
+
+function sleepMs(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function crmReadLead(headers, id) {
+  const one = await fetch(`${ORBIT_BASE}/leads/${id}`, { headers }).catch(() => null);
+  if (!one || !one.ok) return null;
+  const d = await one.json().catch(() => ({}));
+  return d.data || d.lead || d;
+}
+
+// Diagnóstico de campanha: o cadastro nasce no MQL. "Sim" move esse card
+// para o INBOUND. "Não" permanece no MQL, com a observação da escolha.
+async function routeDiagnosticoContato(lead, env, querContato) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, reason: "not_configured" };
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+  const note = String(lead.mensagem || "").trim() || (querContato
+    ? "Pediu contato para resolver o gargalo do diagnóstico."
+    : "Viu o diagnóstico e não pediu contato.");
+  const tag = querContato ? "pediu-contato" : "diag-sem-contato";
+
+  try {
+    let inbound = null;
+    let mql = null;
+    for (let i = 0; i < 4; i++) {
+      const found = await crmFindLeadsForIsca(token, lead.email, lead.telefone);
+      inbound = pickOpenLeadInPipeline(found, ORBIT_PIPELINE_ID);
+      mql = pickOpenMqlLead(found);
+      if (mql || inbound) break;
+      if (i < 3) await sleepMs(800);
+    }
+
+    if (!querContato && !mql && inbound) {
+      return { ok: true, lead_id: inbound.id, skipped: "already_inbound" };
+    }
+
+    const card = querContato ? (mql || inbound) : mql;
+    if (card) {
+      const full = await crmReadLead(headers, card.id) || card;
+      const patch = {
+        tags: mergeLeadTags(full.tags, diagContatoTags(tag, lead.pagina)),
+        notes: appendUniqueNote(full.notes || full.note, note),
+      };
+      if (querContato && full.pipeline_id !== ORBIT_PIPELINE_ID) {
+        patch.pipeline_id = ORBIT_PIPELINE_ID;
+        patch.stage_id = ORBIT_STAGE_ID;
+      }
+      const res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
+        method: "PATCH", headers, body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const e = await res.text().catch(() => "");
+        return { ok: false, error: e.slice(0, 180), lead_id: card.id };
+      }
+      return { ok: true, lead_id: card.id, moved: !!(querContato && full.pipeline_id !== ORBIT_PIPELINE_ID) };
+    }
+
+    if (querContato) return saveToOrbit(lead, env);
+    return saveToMqlInscricao(lead, env);
   } catch (e) {
     return { ok: false, error: "fetch_failed" };
   }

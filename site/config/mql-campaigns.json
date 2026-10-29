@@ -113,6 +113,24 @@
         "utm_medium": "lp",
         "utm_campaign": "mes-da-qualidade-2026"
       }
+    },
+    {
+      "key": "diagnostico_iso_9001_campanha",
+      "slug": "diagnostico-iso-9001-campanha",
+      "label": "Diagnóstico ISO 9001 · campanha",
+      "lpPath": "/diagnostico-iso-9001-campanha/",
+      "crmTags": ["diag 9001 campanha"],
+      "crmSource": "Diagnóstico ISO 9001",
+      "titleSuffix": "Diagnóstico ISO 9001",
+      "notes": "Diagnóstico ISO 9001, campanha. As respostas entram na observação.",
+      "customFields": true,
+      "manychatTags": ["diag 9001 campanha"],
+      "mailchimpTags": ["diag 9001 campanha"],
+      "utmDefaults": {
+        "utm_source": "site",
+        "utm_medium": "lp",
+        "utm_campaign": "diagnostico-iso-9001-campanha"
+      }
     }
   ]
 }
