@@ -2,6 +2,7 @@
 // LP da atualização SASSMAQ 4.0.
 // A página /consultoria/sassmaq/ e a LP de campanha sassmaq-lp permanecem como estão.
 import LpBase from "../../layouts/LpBase.astro";
+import AdsPageview from "../../components/AdsPageview.astro";
 import Testimonials from "../../components/Testimonials.astro";
 import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
@@ -96,6 +97,7 @@ const pageSchemas = [
   schemas={pageSchemas}
   h1Experimento={h1}
 >
+  <AdsPageview slot="head" />
   <div class="cs-page" style={`--accent:${c}`}>
     <section class="cs-hero">
       <div class="cs-hero-bg" aria-hidden="true"></div>

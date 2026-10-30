@@ -1,0 +1,23 @@
+---
+// Visita do Google Ads no carregamento, no mesmo padrão das LPs v3.
+// __tplAdsPageview impede o kit e o fallback de contarem a mesma visita de novo.
+---
+<script is:inline>
+  (function () {
+    if (window.__tplAdsPageview) return;
+    window.__tplAdsPageview = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+    var ads = document.createElement("script");
+    ads.async = true;
+    ads.src = "https://www.googletagmanager.com/gtag/js?id=AW-17896226473";
+    document.head.appendChild(ads);
+    gtag("js", new Date());
+    gtag("config", "AW-17896226473");
+    window.__gtagFallback = function () {
+      if (window.__gtagFbDone) return;
+      window.__gtagFbDone = true;
+      gtag("config", "G-2BW8QTYLB5", { send_page_view: false });
+    };
+  })();
+</script>

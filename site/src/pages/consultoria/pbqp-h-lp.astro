@@ -1,5 +1,6 @@
 ---
 import LpBase from "../../layouts/LpBase.astro";
+import AdsPageview from "../../components/AdsPageview.astro";
 import SeloImplementando from "../../components/SeloImplementando.astro";
 import Especialistas from "../../components/Especialistas.astro";
 import Testimonials from "../../components/Testimonials.astro";
@@ -34,6 +35,7 @@ const porques = porquesDaProposta(d.porques);
   headerCta="Solicite uma proposta"
   h1Experimento={h1}
 >
+  <AdsPageview slot="head" />
   <div class="cs-page" style={`--accent:${c}`}>
     <!-- HERO (escuro, foto da norma) -->
     <section class="cs-hero">
