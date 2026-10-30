@@ -1004,7 +1004,6 @@ async function handleLead(request, env, ctx) {
     urgencia: body.urgencia || "",
     funcionarios: body.funcionarios || "",
     faturamento: body.faturamento || "",
-    segmento: body.segmento || "",
     mensagem: body.mensagem || "",
     // "Maior desafio da empresa hoje" — select das LPs (ex.: /planejamento-estrategico-2027).
     // Separado de `mensagem` (texto livre) para virar campo próprio no Supabase e no CRM.
@@ -2464,26 +2463,8 @@ async function crmReadLead(headers, id) {
   return d.data || d.lead || d;
 }
 
-function diagQualificacaoNota(lead) {
-  return [
-    lead.funcionarios ? "Funcionários: " + String(lead.funcionarios).trim() : "",
-    lead.cargo ? "Cargo: " + String(lead.cargo).trim() : "",
-    lead.faturamento ? "Faturamento mensal: " + String(lead.faturamento).trim() : "",
-    lead.segmento ? "Segmento: " + String(lead.segmento).trim() : "",
-    lead.urgencia ? "Urgência: " + String(lead.urgencia).trim() : "",
-  ].filter(Boolean).join("\n");
-}
-
-function diagQualificacaoFields(lead) {
-  const cf = {};
-  if (lead.cargo) cf[ORBIT_FIELDS.cargo] = String(lead.cargo).trim();
-  if (lead.funcionarios) cf[ORBIT_FIELDS.funcionarios] = String(lead.funcionarios).trim();
-  if (lead.faturamento) cf[ORBIT_FIELDS.faturamento] = String(lead.faturamento).trim();
-  return cf;
-}
-
 // Diagnóstico de campanha: o cadastro nasce no MQL. "Sim" move esse card
-// para o INBOUND, com a qualificação e as respostas. "Não" permanece no MQL.
+// para o INBOUND. "Não" permanece no MQL, com a observação da escolha.
 async function routeDiagnosticoContato(lead, env, querContato) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
@@ -2511,33 +2492,17 @@ async function routeDiagnosticoContato(lead, env, querContato) {
     const card = querContato ? (mql || inbound) : mql;
     if (card) {
       const full = await crmReadLead(headers, card.id) || card;
-      let notes = appendUniqueNote(full.notes || full.note, note);
       const patch = {
         tags: mergeLeadTags(full.tags, diagContatoTags(tag, lead.pagina)),
+        notes: appendUniqueNote(full.notes || full.note, note),
       };
-      if (querContato) {
-        notes = appendUniqueNote(notes, diagQualificacaoNota(lead));
-        const extra = diagQualificacaoFields(lead);
-        if (Object.keys(extra).length) {
-          const prev = full.custom_fields && typeof full.custom_fields === "object" ? full.custom_fields : {};
-          patch.custom_fields = { ...prev, ...extra };
-        }
-        if (full.pipeline_id !== ORBIT_PIPELINE_ID) {
-          patch.pipeline_id = ORBIT_PIPELINE_ID;
-          patch.stage_id = ORBIT_STAGE_ID;
-        }
+      if (querContato && full.pipeline_id !== ORBIT_PIPELINE_ID) {
+        patch.pipeline_id = ORBIT_PIPELINE_ID;
+        patch.stage_id = ORBIT_STAGE_ID;
       }
-      patch.notes = notes;
-      let res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
+      const res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
         method: "PATCH", headers, body: JSON.stringify(patch),
       });
-      if (!res.ok && patch.custom_fields) {
-        const retry = { ...patch };
-        delete retry.custom_fields;
-        res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
-          method: "PATCH", headers, body: JSON.stringify(retry),
-        });
-      }
       if (!res.ok) {
         const e = await res.text().catch(() => "");
         return { ok: false, error: e.slice(0, 180), lead_id: card.id };
@@ -2545,11 +2510,7 @@ async function routeDiagnosticoContato(lead, env, querContato) {
       return { ok: true, lead_id: card.id, moved: !!(querContato && full.pipeline_id !== ORBIT_PIPELINE_ID) };
     }
 
-    if (querContato) {
-      const outbound = { ...lead };
-      if (String(lead.mensagem || "").includes("Urgência:")) outbound.urgencia = "";
-      return saveToOrbit(outbound, env);
-    }
+    if (querContato) return saveToOrbit(lead, env);
     return saveToMqlInscricao(lead, env);
   } catch (e) {
     return { ok: false, error: "fetch_failed" };

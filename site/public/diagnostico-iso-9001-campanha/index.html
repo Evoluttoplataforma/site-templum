@@ -104,19 +104,13 @@
   .next h2{margin:0 0 6px;font-size:20px;line-height:1.25;font-weight:800;}
   .next > p{margin:0 0 14px;font-size:14px;color:#C7C4B6;}
   .next > p.ask-q{font-size:15px;font-weight:800;line-height:1.35;color:#FFFAEB;}
-  .q-label{display:block;margin:12px 0 6px;font-size:13px;font-weight:800;color:#FFFAEB;}
-  #qualForm .btn-send{margin-top:16px;}
   .choices button{white-space:normal;line-height:1.3;text-align:center;}
   form{display:flex;flex-direction:column;gap:8px;}
   input{
     font-family:inherit;font-size:15px;font-weight:500;color:var(--text);
     border:0;border-radius:12px;padding:13px 14px;width:100%;background:#fff;
   }
-  input:focus,select:focus{outline:2px solid var(--orange);outline-offset:1px;}
-  select{
-    font-family:inherit;font-size:15px;font-weight:500;color:var(--text);
-    border:0;border-radius:12px;padding:13px 14px;width:100%;background:#fff;
-  }
+  input:focus{outline:2px solid var(--orange);outline-offset:1px;}
   .btn-send{background:var(--orange);color:#fff;width:100%;margin-top:4px;}
   .btn-send:hover{background:var(--orange-hover);}
   .btn-send:disabled{opacity:.55;cursor:not-allowed;}
@@ -185,65 +179,6 @@
         <button type="button" class="btn-no" id="noBtn">Não, prefiro continuar cometendo os mesmos erros</button>
       </div>
       <p class="ask-msg" id="askMsg" role="alert"></p>
-    </div>
-    <div class="next" id="qualify" hidden>
-      <h2>Antes de enviar ao time</h2>
-      <p>Estas respostas vão junto com o diagnóstico.</p>
-      <form id="qualForm" novalidate>
-        <label class="q-label" for="qFunc">Quantos funcionários a empresa tem?</label>
-        <select id="qFunc" name="funcionarios" required>
-          <option value="">Selecione</option>
-          <option>1 a 10</option>
-          <option>11 a 50</option>
-          <option>51 a 100</option>
-          <option>101 a 250</option>
-          <option>251 a 500</option>
-          <option>Mais de 500</option>
-        </select>
-        <label class="q-label" for="qCargo">Qual é o seu cargo?</label>
-        <select id="qCargo" name="cargo" required>
-          <option value="">Selecione</option>
-          <option>Proprietário</option>
-          <option>Diretor / C-level</option>
-          <option>Consultor</option>
-          <option>Funcionário buscando informações</option>
-          <option>Só estou curioso</option>
-        </select>
-        <label class="q-label" for="qFat">Qual é o faturamento mensal?</label>
-        <select id="qFat" name="faturamento" required>
-          <option value="">Selecione</option>
-          <option>Até R$ 50 mil</option>
-          <option>R$ 50 mil a R$ 100 mil</option>
-          <option>R$ 100 mil a R$ 300 mil</option>
-          <option>R$ 300 mil a R$ 500 mil</option>
-          <option>R$ 500 mil a R$ 1 milhão</option>
-          <option>Acima de R$ 1 milhão</option>
-        </select>
-        <label class="q-label" for="qSeg">Qual é o segmento da empresa?</label>
-        <select id="qSeg" name="segmento" required>
-          <option value="">Selecione</option>
-          <option>Indústria</option>
-          <option>Construção Civil</option>
-          <option>Alimentos e Bebidas</option>
-          <option>Saúde e Bem-estar</option>
-          <option>Tecnologia e TI</option>
-          <option>Serviços</option>
-          <option>Logística e Transporte</option>
-          <option>Comércio e Varejo</option>
-          <option>Agronegócio</option>
-          <option>Outro</option>
-        </select>
-        <label class="q-label" for="qUrg">Qual é a urgência?</label>
-        <select id="qUrg" name="urgencia" required>
-          <option value="">Selecione</option>
-          <option>Preciso resolver agora</option>
-          <option>Nos próximos 30 dias</option>
-          <option>Neste semestre</option>
-          <option>Ainda não tenho prazo</option>
-        </select>
-        <button class="btn-send" id="qualBtn" type="submit">Enviar para o time</button>
-        <p class="ask-msg" id="qualMsg" role="alert"></p>
-      </form>
     </div>
     <div class="ok" id="thanks" hidden></div>
     <button type="button" class="again" id="againBtn">Refazer as perguntas</button>
@@ -482,12 +417,6 @@
     document.getElementById("ask").hidden = false;
     document.getElementById("askChoices").hidden = false;
     document.getElementById("askMsg").textContent = "";
-    document.getElementById("qualify").hidden = true;
-    document.getElementById("qualForm").reset();
-    document.getElementById("qualMsg").textContent = "";
-    var qualBtn = document.getElementById("qualBtn");
-    qualBtn.disabled = false;
-    qualBtn.textContent = "Enviar para o time";
     document.getElementById("thanks").hidden = true;
     document.getElementById("againBtn").hidden = false;
     quizEl.hidden = true;
@@ -532,11 +461,6 @@
     sendBtn.textContent = "Ver meu diagnóstico";
     document.getElementById("yesBtn").disabled = false;
     document.getElementById("noBtn").disabled = false;
-    document.getElementById("qualForm").reset();
-    document.getElementById("qualMsg").textContent = "";
-    var qualBtn = document.getElementById("qualBtn");
-    qualBtn.disabled = false;
-    qualBtn.textContent = "Enviar para o time";
     showQuiz();
   });
 
@@ -653,44 +577,18 @@
     });
   });
 
-  function showQualify() {
-    if (!result) return;
-    document.getElementById("ask").hidden = true;
-    var box = document.getElementById("qualify");
-    box.hidden = false;
-    document.getElementById("qualMsg").textContent = "";
-    box.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function sendChoice(choice, extra) {
+  function sendChoice(choice) {
     if (!pessoa || !result) return;
     var yesBtn = document.getElementById("yesBtn");
     var noBtn = document.getElementById("noBtn");
     var askMsg = document.getElementById("askMsg");
-    var qualBtn = document.getElementById("qualBtn");
-    var qualMsg = document.getElementById("qualMsg");
-    if (choice === "sim") {
-      if (qualBtn.disabled) return;
-      qualBtn.disabled = true;
-      qualBtn.textContent = "Enviando...";
-      qualMsg.textContent = "";
-    } else {
-      if (yesBtn.disabled) return;
-      yesBtn.disabled = true;
-      noBtn.disabled = true;
-      askMsg.textContent = "";
-    }
+    if (yesBtn.disabled) return;
+    yesBtn.disabled = true;
+    noBtn.disabled = true;
+    askMsg.textContent = "";
     var weak = result.rows[0];
     var note = choice === "sim"
-      ? [
-          "Pediu contato para resolver: " + weak.name + ". " + weak.gap,
-          "Funcionários: " + extra.funcionarios,
-          "Cargo: " + extra.cargo,
-          "Faturamento mensal: " + extra.faturamento,
-          "Segmento: " + extra.segmento,
-          "Urgência: " + extra.urgencia,
-          mensagem()
-        ].join("\n")
+      ? "Pediu contato para resolver: " + weak.name + ". " + weak.gap
       : "Viu o diagnóstico e não pediu contato. Ponto mais fraco: " + weak.name + ".";
     var payload = {
       nome: pessoa.nome,
@@ -705,13 +603,6 @@
       landing: location.href,
       meta_content_name: CONTENT_NAME
     };
-    if (choice === "sim" && extra) {
-      payload.funcionarios = extra.funcionarios;
-      payload.cargo = extra.cargo;
-      payload.faturamento = extra.faturamento;
-      payload.segmento = extra.segmento;
-      payload.urgencia = extra.urgencia;
-    }
     var params = new URLSearchParams(location.search);
     ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid", "gbraid", "wbraid"].forEach(function (key) {
       var value = params.get(key);
@@ -732,19 +623,12 @@
     }).then(function (res) {
       if (window.tplTurnstileReset) window.tplTurnstileReset();
       if (!res.ok || !res.body || res.body.ok !== true) {
-        if (choice === "sim") {
-          qualBtn.disabled = false;
-          qualBtn.textContent = "Enviar para o time";
-          qualMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
-        } else {
-          yesBtn.disabled = false;
-          noBtn.disabled = false;
-          askMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
-        }
+        yesBtn.disabled = false;
+        noBtn.disabled = false;
+        askMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
         return;
       }
       document.getElementById("ask").hidden = true;
-      document.getElementById("qualify").hidden = true;
       document.getElementById("againBtn").hidden = true;
       var thanks = document.getElementById("thanks");
       thanks.hidden = false;
@@ -753,36 +637,13 @@
         : "Certo. O diagnóstico fica com você.";
     }).catch(function () {
       if (window.tplTurnstileReset) window.tplTurnstileReset();
-      if (choice === "sim") {
-        qualBtn.disabled = false;
-        qualBtn.textContent = "Enviar para o time";
-        qualMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
-      } else {
-        yesBtn.disabled = false;
-        noBtn.disabled = false;
-        askMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
-      }
+      yesBtn.disabled = false;
+      noBtn.disabled = false;
+      askMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
     });
   }
-  document.getElementById("yesBtn").addEventListener("click", showQualify);
+  document.getElementById("yesBtn").addEventListener("click", function () { sendChoice("sim"); });
   document.getElementById("noBtn").addEventListener("click", function () { sendChoice("nao"); });
-  document.getElementById("qualForm").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var extra = {
-      funcionarios: document.getElementById("qFunc").value,
-      cargo: document.getElementById("qCargo").value,
-      faturamento: document.getElementById("qFat").value,
-      segmento: document.getElementById("qSeg").value,
-      urgencia: document.getElementById("qUrg").value
-    };
-    var qualMsg = document.getElementById("qualMsg");
-    if (!extra.funcionarios || !extra.cargo || !extra.faturamento || !extra.segmento || !extra.urgencia) {
-      qualMsg.textContent = "Preencha as cinco respostas para enviar.";
-      return;
-    }
-    qualMsg.textContent = "";
-    sendChoice("sim", extra);
-  });
 
   showQuiz();
 })();
