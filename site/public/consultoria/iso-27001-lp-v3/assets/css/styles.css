@@ -67,16 +67,6 @@ dialog{border:0;border-radius:20px;padding:0;width:min(550px,calc(100% - 28px));
   .guarantee-grid>.btn{grid-column:2;justify-self:start}
 }
 
-/* Foto da etapa no mesmo quadro da ISO 9001 (5/4, imagem contida sobre a grade). */
-.journey-detail{align-items:start}
-.journey-detail .journey-photo{aspect-ratio:5/4;height:auto;min-height:0;padding:0;border-radius:24px;align-self:start}
-.journey-detail .journey-photo:before{left:30%;right:6%;top:22%;bottom:-10%;border-radius:24px;transform:skewY(-4deg)}
-.journey-detail .journey-photo img{position:absolute;bottom:0;left:50%;top:auto;right:auto;width:auto;height:auto;max-width:92%;max-height:90%;min-height:0;object-fit:contain;object-position:center bottom;border-radius:0;box-shadow:none;transform:translateX(-50%)}
-@media(max-width:600px){
-  .journey-detail .journey-photo{height:auto;min-height:0}
-  .journey-detail .journey-photo img{height:auto;min-height:0;max-height:90%}
-}
-
 /* Formulário na cor da ISO 27001 (Manual da Marca: #14A7AF). */
 .hero-form{color:#fff}
 .hero-form:before{background:#14A7AF}
