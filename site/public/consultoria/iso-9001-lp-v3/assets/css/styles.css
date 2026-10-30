@@ -225,10 +225,10 @@ button { font: inherit; color: inherit; }
           mask-image: radial-gradient(ellipse at 50% 40%, #000 35%, transparent 80%);
 }
 .cast__slab {
-  position: absolute; z-index: -1; left: 30%; right: 6%; top: 22%; bottom: -10%;
+  position: absolute; z-index: -1; left: 30%; right: 6%; top: 22%; bottom: 8%;
   background: #fda47d; border-radius: var(--r-slab); transform: skewY(-4deg);
 }
-.cast__img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: auto; height: auto; max-width: 92%; max-height: 90%; }
+.cast__img { position: absolute; bottom: 9%; left: 50%; transform: translateX(-50%); width: auto; height: auto; max-width: 92%; max-height: 80%; }
 .cast--duo .cast__img { max-width: 88%; }
 
 /* ---------- Apoio à decisão interna ---------- */
