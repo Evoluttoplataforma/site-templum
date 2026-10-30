@@ -8,7 +8,7 @@
     a: "Prepare sua construtora para a certificação PBQP-H.",
     b: "Entenda o caminho da certificação PBQP-H para sua construtora.",
     c: "A obra não pode parar. E sua equipe precisa de apoio para implementar o PBQP-H.",
-    d: "Consultoria PBQP-H do diagnóstico à preparação para auditoria.",
+    d: "Consultoria PBQP-H da conversa com um especialista à preparação para auditoria.",
     e: "Avance para a certificação PBQP-H com um plano de implementação para sua construtora."
   };
   var key = "tpl_lpbqph_variant";

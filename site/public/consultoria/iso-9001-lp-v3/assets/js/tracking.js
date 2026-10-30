@@ -8,6 +8,18 @@
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () { dataLayer.push(arguments); };
 
+  // Remarketing e visita do Google Ads no carregamento.
+  // O restante (GA4, Clarity, Meta) continua depois da primeira interação.
+  if (!window.__tplAdsPageview) {
+    window.__tplAdsPageview = true;
+    var ads = document.createElement("script");
+    ads.async = true;
+    ads.src = "https://www.googletagmanager.com/gtag/js?id=AW-17896226473";
+    document.head.appendChild(ads);
+    gtag("js", new Date());
+    gtag("config", "AW-17896226473");
+  }
+
   window.TRACKING_CONFIG = {
     client: { name: "Templum", debug: false, shadow: false },
     business: {
@@ -49,7 +61,7 @@
     function load(file, cb) {
       var s = document.createElement("script");
       s.async = false;
-      s.src = BASE + file + "?v=20261013b";
+      s.src = BASE + file + "?v=20261030a";
       if (cb) s.onload = cb;
       s.onerror = function () { if (typeof window.__gtagFallback === "function") window.__gtagFallback(); };
       document.head.appendChild(s);
@@ -156,7 +168,10 @@
         if (window.__gtagFbDone) return;
         window.__gtagFbDone = true;
         gtag("config", "G-2BW8QTYLB5", { send_page_view: false });
-        gtag("config", "AW-17896226473");
+        if (!window.__tplAdsPageview) {
+          window.__tplAdsPageview = true;
+          gtag("config", "AW-17896226473");
+        }
       };
       if (typeof window.__loadTrackingKit === "function") window.__loadTrackingKit();
       else window.__gtagFallback();

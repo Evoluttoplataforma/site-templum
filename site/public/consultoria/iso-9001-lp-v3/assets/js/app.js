@@ -1,4 +1,4 @@
-/* Comportamento da LP ISO 9001 — Templum. Depende de config.js e variant.js. */
+/* Comportamento da LP ISO 9001. Templum. Depende de config.js e variant.js. */
 (function () {
   var cfg = window.LP_CONFIG;
   var LP = window.LP;
@@ -108,7 +108,7 @@
   /* ---------- Linha do tempo do método ---------- */
   (function method() {
     var steps = [
-      { title: "Diagnóstico inicial", text: "Entender o cenário da empresa, o requisito recebido e as necessidades da implementação.", icon: "diagnostico" },
+      { title: "Conversa com um especialista", text: "Entender o cenário da empresa, o requisito recebido e as necessidades da implementação.", icon: "diagnostico" },
       { title: "Plano de implementação", text: "Definir etapas, responsáveis e prioridades considerando o escopo e a disponibilidade da equipe.", icon: "plano" },
       { title: "Implementação orientada", text: "Estruturar processos, documentos e evidências com os responsáveis internos.", icon: "implementacao" },
       { title: "Preparação para auditoria", text: "Verificar a prontidão do sistema de gestão para a avaliação do organismo certificador.", icon: "auditoria" }

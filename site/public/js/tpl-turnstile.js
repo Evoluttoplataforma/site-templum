@@ -80,10 +80,11 @@
         "error-callback": function (code) {
           var current = pending;
           pending = null;
-          if (!current) return;
+          if (!current) return true;
           var err = new Error("turnstile");
           err.code = code == null || code === "" ? "turnstile" : String(code);
           current.done(false, err);
+          return true;
         },
         "timeout-callback": function () {
           var current = pending;
@@ -102,13 +103,20 @@
     return renderPromise;
   }
 
+  var ultimoAviso = "";
+  var ultimoAvisoEm = 0;
   function avisarFalha(codigo) {
     if (codigo === "turnstile_timeout") codigo = "timeout";
     if (codigo === "turnstile_script") codigo = "script";
     if (codigo === "reset") return;
+    var chave = String(codigo || "turnstile").slice(0, 40);
+    var agora = Date.now();
+    if (chave === ultimoAviso && agora - ultimoAvisoEm < 1500) return;
+    ultimoAviso = chave;
+    ultimoAvisoEm = agora;
     try {
       document.dispatchEvent(new CustomEvent("tpl:turnstile-fail", {
-        detail: { codigo: String(codigo || "turnstile").slice(0, 40) },
+        detail: { codigo: chave },
       }));
     } catch (_) {}
   }

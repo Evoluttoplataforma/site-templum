@@ -270,7 +270,9 @@
       gtag('js', new Date());
       loaders.push(loadScript('https://www.googletagmanager.com/gtag/js?id=' + gtagId));
       if (hasGa4) gtag('config', C.ga4.measurementId, { send_page_view: false });
-      if (hasGAds) gtag('config', C.googleAds.conversionId);
+      // A LP v3 já dispara o page view do Ads no carregamento. Configurar de
+      // novo aqui contaria a visita duas vezes.
+      if (hasGAds && !window.__tplAdsPageview) gtag('config', C.googleAds.conversionId);
       log('gtag on', gtagId);
     }
 

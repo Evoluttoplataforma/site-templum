@@ -1,5 +1,5 @@
 /*
- * Configuração de conteúdo da LP ISO 9001 — Templum.
+ * Configuração de conteúdo da LP ISO 9001. Templum.
  * Edite este arquivo para trocar textos, variantes, cases e integrações
  * sem mexer no HTML. Itens marcados com "PENDENTE" dependem de aprovação.
  */
