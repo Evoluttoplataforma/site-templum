@@ -2489,7 +2489,8 @@ function diagFaturamentoInbound(lead) {
 // Diagnóstico de campanha: o cadastro nasce no MQL.
 // Sim com faturamento acima de R$ 100 mil vai ao INBOUND.
 // Até R$ 100 mil, e o Não, permanecem no MQL.
-// A troca de funil usa só a etapa de destino. pipeline_id no PATCH é ignorado.
+// A troca de funil vai num PATCH só com a etapa e o funil de destino.
+// No mesmo PATCH de notas e campos, a etapa de outro funil é ignorada.
 async function routeDiagnosticoContato(lead, env, querContato) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
@@ -2531,11 +2532,9 @@ async function routeDiagnosticoContato(lead, env, querContato) {
           const prev = full.custom_fields && typeof full.custom_fields === "object" ? full.custom_fields : {};
           patch.custom_fields = { ...prev, ...extra };
         }
-        if (moverInbound && full.pipeline_id !== ORBIT_PIPELINE_ID) {
-          patch.stage_id = ORBIT_STAGE_ID;
-        }
       }
       patch.notes = notes;
+      const movePipeline = moverInbound && full.pipeline_id !== ORBIT_PIPELINE_ID;
       let res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
         method: "PATCH", headers, body: JSON.stringify(patch),
       });
@@ -2550,7 +2549,21 @@ async function routeDiagnosticoContato(lead, env, querContato) {
         const e = await res.text().catch(() => "");
         return { ok: false, error: e.slice(0, 180), lead_id: card.id };
       }
-      return { ok: true, lead_id: card.id, moved: !!(moverInbound && full.pipeline_id !== ORBIT_PIPELINE_ID) };
+      if (movePipeline) {
+        const move = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({
+            stage_id: ORBIT_STAGE_ID,
+            pipeline_id: ORBIT_PIPELINE_ID,
+          }),
+        });
+        if (!move.ok) {
+          const e = await move.text().catch(() => "");
+          return { ok: false, error: e.slice(0, 180), lead_id: card.id, moved: false };
+        }
+      }
+      return { ok: true, lead_id: card.id, moved: movePipeline };
     }
 
     if (moverInbound) {
