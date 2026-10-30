@@ -188,7 +188,7 @@
     </div>
     <div class="next" id="qualify" hidden>
       <h2>Antes de enviar ao time</h2>
-      <p>Estas respostas vão junto com o diagnóstico.</p>
+      <p>Preencha os campos abaixo para um Especialista entrar em contato.</p>
       <form id="qualForm" novalidate>
         <label class="q-label" for="qFunc">Quantos funcionários a empresa tem?</label>
         <select id="qFunc" name="funcionarios" required>
@@ -749,7 +749,7 @@
       var thanks = document.getElementById("thanks");
       thanks.hidden = false;
       thanks.textContent = choice === "sim"
-        ? "Recebemos. O time entra em contato por este WhatsApp."
+        ? "Recebemos a sua solicitação. Um de nossos especialistas já vai entrar em contato com você."
         : "Certo. O diagnóstico fica com você.";
     }).catch(function () {
       if (window.tplTurnstileReset) window.tplTurnstileReset();

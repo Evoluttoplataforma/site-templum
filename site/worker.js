@@ -1110,7 +1110,7 @@ async function handleLead(request, env, ctx) {
       stage_id: ORBIT_ATIVACAO_STAGE_IGNICAO,
     })]);
   } else if (diagEscolha) {
-    // Sim move o card do MQL para o INBOUND. Não deixa o card no MQL.
+    // Acima de R$ 100 mil vai ao INBOUND. Até R$ 100 mil permanece no MQL.
     bgTasks.push(["diag-contato", routeDiagnosticoContato(lead, env, contatoDiag === "sim")]);
   } else if (diagCadastro) {
     // Card criado antes da resposta HTTP, para o sim achar o mesmo lead.
@@ -2482,16 +2482,23 @@ function diagQualificacaoFields(lead) {
   return cf;
 }
 
-// Diagnóstico de campanha: o cadastro nasce no MQL. "Sim" move esse card
-// para o INBOUND, com a qualificação e as respostas. "Não" permanece no MQL.
+function diagFaturamentoInbound(lead) {
+  return FATURAMENTO_INBOUND.has(String(lead && lead.faturamento || "").trim());
+}
+
+// Diagnóstico de campanha: o cadastro nasce no MQL.
+// Sim com faturamento acima de R$ 100 mil vai ao INBOUND.
+// Até R$ 100 mil, e o Não, permanecem no MQL.
+// A troca de funil usa só a etapa de destino. pipeline_id no PATCH é ignorado.
 async function routeDiagnosticoContato(lead, env, querContato) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
+  const moverInbound = Boolean(querContato) && diagFaturamentoInbound(lead);
   const note = String(lead.mensagem || "").trim() || (querContato
     ? "Pediu contato para resolver o gargalo do diagnóstico."
     : "Viu o diagnóstico e não pediu contato.");
-  const tag = querContato ? "pediu-contato" : "diag-sem-contato";
+  const tag = moverInbound ? "pediu-contato" : (querContato ? "" : "diag-sem-contato");
 
   try {
     let inbound = null;
@@ -2512,18 +2519,19 @@ async function routeDiagnosticoContato(lead, env, querContato) {
     if (card) {
       const full = await crmReadLead(headers, card.id) || card;
       let notes = appendUniqueNote(full.notes || full.note, note);
-      const patch = {
-        tags: mergeLeadTags(full.tags, diagContatoTags(tag, lead.pagina)),
-      };
+      const patch = {};
+      if (tag) patch.tags = mergeLeadTags(full.tags, diagContatoTags(tag, lead.pagina));
       if (querContato) {
         notes = appendUniqueNote(notes, diagQualificacaoNota(lead));
+        if (!moverInbound) {
+          notes = appendUniqueNote(notes, "Faturamento mensal até R$ 100 mil. Permanece no MQL.");
+        }
         const extra = diagQualificacaoFields(lead);
         if (Object.keys(extra).length) {
           const prev = full.custom_fields && typeof full.custom_fields === "object" ? full.custom_fields : {};
           patch.custom_fields = { ...prev, ...extra };
         }
-        if (full.pipeline_id !== ORBIT_PIPELINE_ID) {
-          patch.pipeline_id = ORBIT_PIPELINE_ID;
+        if (moverInbound && full.pipeline_id !== ORBIT_PIPELINE_ID) {
           patch.stage_id = ORBIT_STAGE_ID;
         }
       }
@@ -2542,10 +2550,10 @@ async function routeDiagnosticoContato(lead, env, querContato) {
         const e = await res.text().catch(() => "");
         return { ok: false, error: e.slice(0, 180), lead_id: card.id };
       }
-      return { ok: true, lead_id: card.id, moved: !!(querContato && full.pipeline_id !== ORBIT_PIPELINE_ID) };
+      return { ok: true, lead_id: card.id, moved: !!(moverInbound && full.pipeline_id !== ORBIT_PIPELINE_ID) };
     }
 
-    if (querContato) {
+    if (moverInbound) {
       const outbound = { ...lead };
       if (String(lead.mensagem || "").includes("Urgência:")) outbound.urgencia = "";
       return saveToOrbit(outbound, env);
