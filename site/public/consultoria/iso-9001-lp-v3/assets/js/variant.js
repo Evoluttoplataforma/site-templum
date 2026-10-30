@@ -52,6 +52,24 @@
     }
   });
 
+  function termHeadline(term, rules) {
+    if (!term) return "";
+    var t = term.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    for (var i = 0; i < rules.length; i++) {
+      for (var j = 0; j < rules[i].keys.length; j++) {
+        if (t.indexOf(rules[i].keys[j]) !== -1) return rules[i].text;
+      }
+    }
+    return "";
+  }
+
+  var utmHeadlines = [
+    { keys: ["consultoria"], text: "Consultoria ISO 9001: prepare sua empresa para conquistar a certificação" },
+    { keys: ["certifica"], text: "Certificação ISO 9001: prepare sua empresa com apoio especializado" },
+    { keys: ["custo", "preco", "valor"], text: "Quanto custa implementar a ISO 9001 na sua empresa?" },
+    { keys: ["implanta", "implementa"], text: "Implementação ISO 9001: prepare sua empresa para a certificação" }
+  ];
+
   window.LP = {
     variant: variant,
     variantSource: source,
@@ -60,8 +78,13 @@
 
     applyHero: function () {
       var v = cfg.variants[variant];
+      var fromTerm = termHeadline(params.get("utm_term"), utmHeadlines);
       document.querySelectorAll("[data-copy]").forEach(function (el) {
         var key = el.getAttribute("data-copy");
+        if (key === "headline" && fromTerm) {
+          el.textContent = fromTerm;
+          return;
+        }
         if (v[key]) el.textContent = v[key];
       });
       document.documentElement.setAttribute("data-variant", variant);

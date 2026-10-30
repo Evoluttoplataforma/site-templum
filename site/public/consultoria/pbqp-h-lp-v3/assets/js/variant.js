@@ -1,5 +1,6 @@
 /*
- * Sorteia só o título do hero da LP PBQP-H.
+ * Sorteia o título do hero da LP PBQP-H.
+ * Se o utm_term traz a palavra da busca, o título começa por ela.
  * A frase acima do título fica fixa.
  * Carregado sem defer para trocar o título antes da primeira pintura.
  */
@@ -24,11 +25,29 @@
   }
   try { localStorage.setItem(key, id); } catch (e) { /* armazenamento bloqueado */ }
 
+  function termHeadline(term) {
+    if (!term) return "";
+    var t = term.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    var rules = [
+      { keys: ["consultoria"], text: "Consultoria PBQP-H: prepare sua construtora para a certificação" },
+      { keys: ["certifica", "habilita"], text: "Certificação PBQP-H: prepare sua construtora para atender aos requisitos do SiAC" },
+      { keys: ["custo", "preco", "valor"], text: "Quanto custa implementar o PBQP-H na sua construtora?" },
+      { keys: ["implanta", "implementa"], text: "Implantação PBQP-H: prepare sua construtora para a certificação SiAC" }
+    ];
+    for (var i = 0; i < rules.length; i++) {
+      for (var j = 0; j < rules[i].keys.length; j++) {
+        if (t.indexOf(rules[i].keys[j]) !== -1) return rules[i].text;
+      }
+    }
+    return "";
+  }
+
   window.LP = {
     variant: id,
     applyHero: function () {
       var el = document.querySelector("[data-copy='headline']");
-      if (el) el.textContent = headlines[id];
+      var fromTerm = termHeadline(params.get("utm_term"));
+      if (el) el.textContent = fromTerm || headlines[id];
       document.documentElement.setAttribute("data-variant", id);
     }
   };
