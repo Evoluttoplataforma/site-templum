@@ -163,3 +163,17 @@ header .btn,header .btn:hover,.closing .btn,.closing .btn:hover,.hero-form .btn,
 .market-stat .market-compare small{display:block;font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.04em}
 .market-stat .market-compare strong{display:block;font-size:clamp(32px,4vw,44px);letter-spacing:-.05em;line-height:1.05;margin:6px 0 0}
 .market-stat .market-compare div:last-child strong{color:#08747b}
+
+/* No celular, as etapas ficam numa linha e a foto sai, para o texto permanecer na tela. */
+@media(max-width:600px){
+  #preparacao .step-list{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  #preparacao .step{min-height:64px;padding:12px 8px;text-align:center}
+  #preparacao .step span{width:32px;height:32px;margin:0 auto;font-size:14px}
+  #preparacao .step b{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  #preparacao .journey-photo{display:none}
+  #preparacao .independent-step{position:relative;flex-wrap:nowrap;align-items:center;gap:8px;width:max-content;max-width:100%;padding:4px 10px}
+  #preparacao .independent-step .step-shield{width:22px;height:22px;flex:none}
+  #preparacao .independent-step .step-shield svg{width:13px;height:13px}
+  #preparacao .independent-step b{font-size:12px;line-height:1.2;white-space:nowrap}
+  #preparacao .independent-step > span:not(.step-shield){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+}

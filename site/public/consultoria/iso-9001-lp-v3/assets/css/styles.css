@@ -87,10 +87,12 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Topo ---------- */
 .topbar {
-  position: absolute; inset: 0 0 auto; z-index: 5;
-  padding: 18px 0;
+  position: fixed; inset: 0 0 auto; z-index: 20;
+  padding: 0;
+  background: rgba(34, 40, 49, .98);
+  border-bottom: 1px solid #41464e;
 }
-.topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 82px; }
 .topbar__logo { width: 120px; height: auto; }
 .topbar__cta {
   /* 19px bold: texto grande, contraste AA do branco sobre o laranja */
@@ -99,6 +101,33 @@ button { font: inherit; color: inherit; }
   transition: background-color .15s ease;
 }
 .topbar__cta:hover { background: #ec4a17; }
+
+/* No celular, o cabeçalho fica fixo, no tamanho do PBQP-H. */
+@media (max-width: 959px) {
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 20;
+    padding: 0;
+    background: rgba(34, 40, 49, .98);
+    border-bottom: 1px solid #41464e;
+  }
+  .topbar__inner { height: 82px; }
+  .topbar__logo { width: 116px; }
+  .topbar__cta {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    line-height: 1.2;
+    padding: 11px 17px;
+    min-height: 43px;
+  }
+}
+@media (max-width: 600px) {
+  .topbar__inner { height: 70px; }
+  .topbar__logo { width: 96px; }
+  .topbar__cta { font-size: 10px; padding: 10px 12px; min-height: 40px; }
+}
 
 /* ---------- Hero ---------- */
 .hero {
