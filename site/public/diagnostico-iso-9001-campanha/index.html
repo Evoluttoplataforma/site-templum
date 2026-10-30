@@ -103,6 +103,8 @@
   }
   .next h2{margin:0 0 6px;font-size:20px;line-height:1.25;font-weight:800;}
   .next > p{margin:0 0 14px;font-size:14px;color:#C7C4B6;}
+  .next > p.ask-q{font-size:15px;font-weight:800;line-height:1.35;color:#FFFAEB;}
+  .choices button{white-space:normal;line-height:1.3;text-align:center;}
   form{display:flex;flex-direction:column;gap:8px;}
   input{
     font-family:inherit;font-size:15px;font-weight:500;color:var(--text);
@@ -135,7 +137,7 @@
   </header>
 
   <section class="card" id="quiz">
-    <p class="intro" id="intro">6 perguntas curtas sobre como a empresa faz hoje. No final, a nota.</p>
+    <p class="intro" id="intro">6 perguntas curtas sobre como a empresa faz hoje. No final, o seu diagnóstico e o momento em que a sua empresa está.</p>
     <div class="progress" id="progress"></div>
     <p class="step" id="step"></p>
     <h1 id="qText"></h1>
@@ -171,9 +173,10 @@
     <div class="next" id="ask">
       <h2 id="askTitle"></h2>
       <p id="askCopy"></p>
+      <p class="ask-q">Quer resolver este problema agora com a ISO 9001 ou prefere continuar cometendo os mesmos erros?</p>
       <div class="choices" id="askChoices">
-        <button type="button" class="btn-send" id="yesBtn">Sim, quero contato</button>
-        <button type="button" class="btn-no" id="noBtn">Agora não</button>
+        <button type="button" class="btn-send" id="yesBtn">Sim, quero resolver agora com a ISO 9001</button>
+        <button type="button" class="btn-no" id="noBtn">Não, prefiro continuar cometendo os mesmos erros</button>
       </div>
       <p class="ask-msg" id="askMsg" role="alert"></p>
     </div>
@@ -203,10 +206,10 @@
         "A tarefa tem responsável e prazo, e o andamento é revisto."
       ],
       closes: [
-        "O combinado morre na reunião. Sem responsável e prazo, o mês acaba e a meta continua no papel. Deixar para a próxima reunião custa mais um ciclo parado. Quer que a gente entre em contato para isso virar tarefa?",
-        "A tarefa sai às vezes, sem dono certo. Adiar faz o atraso virar costume e a meta do ano escorregar. Quer que a gente entre em contato para cada combinado ter responsável e prazo?",
-        "Já tem responsável e prazo. Sem revisão, a tarefa anda e ninguém vê se a meta andou junto. Esperar mais um mês é repetir o plano sem saber se segurou. Quer que a gente entre em contato para a revisão entrar na rotina?",
-        "Essa frente já tem responsável, prazo e revisão. O custo de afrouxar agora é a meta voltar a morrer na reunião. Quer que a gente entre em contato para isso não esfriar?"
+        "O combinado morre na reunião. Sem responsável e prazo, o mês acaba e a meta continua no papel. Deixar para a próxima reunião custa mais um ciclo parado.",
+        "A tarefa sai às vezes, sem dono certo. Adiar faz o atraso virar costume e a meta do ano escorregar.",
+        "Já tem responsável e prazo. Sem revisão, a tarefa anda e ninguém vê se a meta andou junto. Esperar mais um mês é repetir o plano sem saber se segurou.",
+        "Essa frente já tem responsável, prazo e revisão. O custo de afrouxar agora é a meta voltar a morrer na reunião."
       ]
     },
     {
@@ -219,10 +222,10 @@
         "A empresa age antes e revê o cenário quando ele muda."
       ],
       closes: [
-        "O problema só é tratado depois que estoura. Cada espera custa retrabalho, cliente irritado e prazo perdido. Adiar é marcar o próximo estouro. Quer que a gente entre em contato para agir antes?",
-        "Às vezes a empresa age antes. Na maior parte, espera estourar, e a conta se repete no mês seguinte. Deixar assim é pagar o mesmo prejuízo de novo. Quer que a gente entre em contato para isso deixar de ser exceção?",
-        "A empresa age antes de estourar. Sem revisão, o mesmo problema volta com outra cara. Adiar a revisão é refazer o trabalho. Quer que a gente entre em contato para a correção durar?",
-        "O risco já vira ação e é revisto. Afrouxar agora é o estouro voltar. Quer que a gente entre em contato para essa rotina não esfriar?"
+        "O problema só é tratado depois que estoura. Cada espera custa retrabalho, cliente irritado e prazo perdido. Adiar é marcar o próximo estouro.",
+        "Às vezes a empresa age antes. Na maior parte, espera estourar, e a conta se repete no mês seguinte. Deixar assim é pagar o mesmo prejuízo de novo.",
+        "A empresa age antes de estourar. Sem revisão, o mesmo problema volta com outra cara. Adiar a revisão é refazer o trabalho.",
+        "O risco já vira ação e é revisto. Afrouxar agora é o estouro voltar."
       ]
     },
     {
@@ -235,10 +238,10 @@
         "O erro tem um jeito de resolver, e esse jeito é revisado."
       ],
       closes: [
-        "Quando sai errado, cada um resolve do próprio jeito. O erro se repete, o prazo estoura e o cliente paga a conta. Adiar é mais uma entrega no improviso. Quer que a gente entre em contato para o time ter um jeito só de resolver?",
-        "Na hora do erro, cada um improvisa. O combinado não segura e o retrabalho volta na próxima entrega. Deixar para depois é mais uma semana no mesmo ciclo. Quer que a gente entre em contato para o combinado valer na hora?",
-        "O time sabe o que fazer na hora. Sem rever se segurou, o erro volta na semana seguinte. Adiar essa checagem é perder o que já foi corrigido. Quer que a gente entre em contato para a correção durar?",
-        "O erro já tem um jeito de resolver e ele é revisado. Afrouxar agora devolve o jeito para a cabeça de cada um. Quer que a gente entre em contato para isso não depender de quem está no dia?"
+        "Quando sai errado, cada um resolve do próprio jeito. O erro se repete, o prazo estoura e o cliente paga a conta. Adiar é mais uma entrega no improviso.",
+        "Na hora do erro, cada um improvisa. O combinado não segura e o retrabalho volta na próxima entrega. Deixar para depois é mais uma semana no mesmo ciclo.",
+        "O time sabe o que fazer na hora. Sem rever se segurou, o erro volta na semana seguinte. Adiar essa checagem é perder o que já foi corrigido.",
+        "O erro já tem um jeito de resolver e ele é revisado. Afrouxar agora devolve o jeito para a cabeça de cada um."
       ]
     },
     {
@@ -251,10 +254,10 @@
         "O treinamento é revisto pelo que a pessoa passa a fazer no trabalho."
       ],
       closes: [
-        "O treinamento acaba e o trabalho segue igual. O gasto fica no certificado e o erro continua na entrega. Adiar é pagar o próximo curso com o mesmo resultado. Quer que a gente entre em contato para o treinamento aparecer no trabalho?",
-        "Às vezes a empresa olha, sem um jeito definido. O mesmo erro volta na entrega e o treinamento não se paga. Deixar assim é repetir o gasto. Quer que a gente entre em contato para a conferência virar rotina?",
-        "A empresa confere se melhorou. Sem usar isso para ajustar, o próximo treinamento repete o mesmo gasto. Adiar é mais um curso sem mudança na entrega. Quer que a gente entre em contato para o resultado mudar o próximo treinamento?",
-        "O treinamento já é revisto pelo trabalho. Afrouxar agora é voltar a treinar só para constar. Quer que a gente entre em contato para isso continuar valendo na entrega?"
+        "O treinamento acaba e o trabalho segue igual. O gasto fica no certificado e o erro continua na entrega. Adiar é pagar o próximo curso com o mesmo resultado.",
+        "Às vezes a empresa olha, sem um jeito definido. O mesmo erro volta na entrega e o treinamento não se paga. Deixar assim é repetir o gasto.",
+        "A empresa confere se melhorou. Sem usar isso para ajustar, o próximo treinamento repete o mesmo gasto. Adiar é mais um curso sem mudança na entrega.",
+        "O treinamento já é revisto pelo trabalho. Afrouxar agora é voltar a treinar só para constar."
       ]
     },
     {
@@ -267,10 +270,10 @@
         "O plano é acompanhado até o número voltar."
       ],
       closes: [
-        "A meta do mês não fecha e a conversa acaba na reunião. O número ruim se repete e a causa fica sem plano. Adiar é mais um mês no vermelho sem ação. Quer que a gente entre em contato para o mês ruim virar plano?",
-        "Às vezes sai um plano, no improviso. Sem constância, o número abaixo da meta vira paisagem. Deixar para o mês que vem é aceitar o mesmo resultado. Quer que a gente entre em contato para todo mês ruim ter plano?",
-        "O plano sai. Sem checar se o número voltou, o plano vira arquivo e a meta continua aberta. Adiar a checagem é perder o mês. Quer que a gente entre em contato para o plano ir até o número voltar?",
-        "O plano já é acompanhado até o número voltar. Afrouxar a checagem agora faz a meta voltar a fechar só no discurso. Quer que a gente entre em contato para essa rotina não esfriar?"
+        "A meta do mês não fecha e a conversa acaba na reunião. O número ruim se repete e a causa fica sem plano. Adiar é mais um mês no vermelho sem ação.",
+        "Às vezes sai um plano, no improviso. Sem constância, o número abaixo da meta vira paisagem. Deixar para o mês que vem é aceitar o mesmo resultado.",
+        "O plano sai. Sem checar se o número voltou, o plano vira arquivo e a meta continua aberta. Adiar a checagem é perder o mês.",
+        "O plano já é acompanhado até o número voltar. Afrouxar a checagem agora faz a meta voltar a fechar só no discurso."
       ]
     },
     {
@@ -283,10 +286,10 @@
         "A reclamação muda a entrega e o cliente fica sabendo."
       ],
       closes: [
-        "A reclamação não muda a próxima entrega. O cliente reclama de novo, cancela ou deixa de indicar. Adiar é perder o próximo pedido pelo mesmo motivo. Quer que a gente entre em contato para a reclamação mudar a entrega?",
-        "A reclamação chega e quase não muda a entrega. O mesmo defeito volta e o cliente cansa antes da empresa agir. Deixar no registro não evita o cancelamento. Só adia. Quer que a gente entre em contato para a reclamação sair do papel?",
-        "A reclamação muda a entrega. Sem o cliente saber e sem rever se segurou, a confiança não volta. Adiar esse retorno é a melhoria ficar invisível. Quer que a gente entre em contato para a mudança chegar até o cliente?",
-        "A reclamação já muda a entrega e o cliente fica sabendo. Afrouxar agora é voltar a só registrar. Quer que a gente entre em contato para isso não sair da rotina?"
+        "A reclamação não muda a próxima entrega. O cliente reclama de novo, cancela ou deixa de indicar. Adiar é perder o próximo pedido pelo mesmo motivo.",
+        "A reclamação chega e quase não muda a entrega. O mesmo defeito volta e o cliente cansa antes da empresa agir. Deixar no registro não evita o cancelamento. Só adia.",
+        "A reclamação muda a entrega. Sem o cliente saber e sem rever se segurou, a confiança não volta. Adiar esse retorno é a melhoria ficar invisível.",
+        "A reclamação já muda a entrega e o cliente fica sabendo. Afrouxar agora é voltar a só registrar."
       ]
     }
   ];
