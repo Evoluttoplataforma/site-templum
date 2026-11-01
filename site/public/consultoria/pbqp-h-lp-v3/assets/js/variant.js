@@ -42,13 +42,44 @@
     return "";
   }
 
+  function gluePbqp(root) {
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var list = [];
+    while (walker.nextNode()) list.push(walker.currentNode);
+    list.forEach(function (node) {
+      var parent = node.parentNode;
+      if (!parent || parent.tagName === "SCRIPT" || parent.tagName === "STYLE") return;
+      if (parent.closest && (parent.closest("[data-pbqp-keep]") || parent.closest("header") || parent.closest(".btn") || parent.closest("button"))) return;
+      if (node.nodeValue.indexOf("PBQP-H") === -1) return;
+      var parts = node.nodeValue.split("PBQP-H");
+      var frag = document.createDocumentFragment();
+      parts.forEach(function (part, i) {
+        if (part) frag.appendChild(document.createTextNode(part));
+        if (i < parts.length - 1) {
+          var span = document.createElement("span");
+          span.setAttribute("data-pbqp-keep", "");
+          span.style.whiteSpace = "nowrap";
+          span.textContent = "PBQP-H";
+          frag.appendChild(span);
+        }
+      });
+      parent.replaceChild(frag, node);
+    });
+  }
+
   window.LP = {
     variant: id,
     applyHero: function () {
       var el = document.querySelector("[data-copy='headline']");
       var fromTerm = termHeadline(params.get("utm_term"));
       if (el) el.textContent = fromTerm || headlines[id];
+      gluePbqp(document.querySelector(".hero"));
       document.documentElement.setAttribute("data-variant", id);
     }
   };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    gluePbqp(document.body);
+  });
 })();
