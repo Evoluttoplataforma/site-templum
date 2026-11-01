@@ -194,6 +194,14 @@
     try { window.gtag("event", a.getAttribute("data-cta"), { page: location.pathname }); } catch (err) {}
   });
 
+  document.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest && e.target.closest("[data-bullet]");
+    if (!b || typeof window.gtag !== "function") return;
+    try {
+      window.gtag("event", "clique_bullet_dobra_1", { bullet_tipo: b.getAttribute("data-bullet") });
+    } catch (err) {}
+  });
+
   window.LP_TRACK = {
     uuid: window.__tplUuid,
     onLeadSaved: function (data) {

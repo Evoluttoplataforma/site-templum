@@ -18,13 +18,13 @@
 
   <link rel="preload" href="/fonts/montserrat/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://templum.com.br/consultoria/iso-9001-lp-v3/">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261030r">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261101a">
 
   <script src="assets/js/config.js?v=20261029a"></script>
   <script src="assets/js/variant.js?v=20261030u"></script>
   <script src="/js/tpl-turnstile.js?v=4" defer></script>
   <script src="/js/form-funil.js?v=20261029b" defer></script>
-  <script src="assets/js/tracking.js?v=20261030b" defer></script>
+  <script src="assets/js/tracking.js?v=20261101a" defer></script>
   <script src="/js/telefone-br.js?v=20261029" defer></script>
   <script src="assets/js/app.js?v=20261030b" defer></script>
 </head>
@@ -55,16 +55,22 @@
 
           <ul class="benefits">
             <li>
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
-              <div><strong>Atenda às exigências dos seus clientes</strong><span>Cumpra o que o seu cliente cobra do fornecedor.</span></div>
+              <a href="#investimento" data-bullet="investimento">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+                <div><strong>Quanto custa certificar sua empresa</strong><span>Investimento transparente, sem taxa escondida.</span></div>
+              </a>
             </li>
             <li>
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
-              <div><strong>Tenha clareza sobre a implementação</strong><span>Saiba o que precisa ser feito e por quem.</span></div>
+              <a href="#versao-2026" data-bullet="versao-2026">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                <div><strong>ISO 9001:2026, a nova versão da norma</strong><span>Entenda o que mudou e como se preparar.</span></div>
+              </a>
             </li>
             <li>
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <div><strong>Conte com especialistas</strong><span>Orientação durante a implementação e preparação para auditoria.</span></div>
+              <a href="#garantia" data-bullet="garantia">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                <div><strong>Garantia de 200% em contrato</strong><span>Se não certificar, devolvemos o dobro.</span></div>
+              </a>
             </li>
           </ul>
           <a class="hero__link" href="#metodo" data-cta="conhecer_metodo">Conhecer o método</a>
@@ -258,7 +264,7 @@
     </section>
 
     <!-- 3b. ISO 9001:2026 -->
-    <section class="section" id="iso-2026" aria-labelledby="iso2026-title">
+    <section class="section" id="versao-2026" aria-labelledby="iso2026-title">
       <div class="wrap v2026">
         <h2 id="iso2026-title" class="h2 h2--center">A ISO 9001:2026 já foi publicada. Quem começa agora implementa a versão nova.</h2>
         <p class="lede">Sua empresa não precisa esperar a norma nova e não vai precisar migrar depois: a implementação já segue o texto de 2026.</p>
@@ -304,7 +310,7 @@
     </section>
 
     <!-- 3d. Garantia -->
-    <section class="guarantee" aria-labelledby="garantia-title">
+    <section class="guarantee" id="garantia" aria-labelledby="garantia-title">
       <div class="wrap guarantee__inner">
         <p class="guarantee__num" aria-hidden="true">200%</p>
         <div class="guarantee__text">
@@ -451,7 +457,7 @@
         <div class="faq">
           <details class="faq__item" open>
             <summary>Vale esperar a ISO 9001:2026?</summary>
-            <p>Não precisa. A versão nova já foi publicada, e quem começa agora implementa o texto de 2026. <a href="#iso-2026">Ver os prazos</a></p>
+            <p>Não precisa. A versão nova já foi publicada, e quem começa agora implementa o texto de 2026. <a href="#versao-2026">Ver os prazos</a></p>
           </details>
           <details class="faq__item">
             <summary>Quanto minha equipe precisa participar?</summary>
