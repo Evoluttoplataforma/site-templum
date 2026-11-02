@@ -27,3 +27,8 @@
 /pe2027.ics
   Content-Type: text/calendar; charset=utf-8
   Cache-Control: public, max-age=600
+
+# Convite da imersão do Mês da Qualidade 2026 (3, 4 e 5/11, 16h).
+/mes-da-qualidade-2026.ics
+  Content-Type: text/calendar; charset=utf-8
+  Cache-Control: public, max-age=600
