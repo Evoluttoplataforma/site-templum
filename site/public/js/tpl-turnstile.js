@@ -103,6 +103,51 @@
     return renderPromise;
   }
 
+  var cached = null;
+  var inflight = null;
+  var TOKEN_MS = 240000;
+
+  function tokenPronto() {
+    return cached && (Date.now() - cached.at) < TOKEN_MS ? cached : null;
+  }
+
+  function pedirToken() {
+    if (inflight) return inflight;
+    inflight = getOneToken().then(function (token) {
+      cached = { token: token, at: Date.now() };
+      inflight = null;
+      return token;
+    }, function (err) {
+      inflight = null;
+      throw err;
+    });
+    return inflight;
+  }
+
+  function antecipar() {
+    if (tokenPronto() || inflight) return;
+    pedirToken().catch(function (err) {
+      if (err && err.code === "reset") setTimeout(antecipar, 80);
+    });
+  }
+
+  function entregarToken() {
+    var hit = tokenPronto();
+    if (hit) {
+      var guardado = hit.token;
+      cached = null;
+      window.tplTurnstileReset();
+      setTimeout(antecipar, 0);
+      return Promise.resolve(guardado);
+    }
+    return pedirToken().then(function (token) {
+      cached = null;
+      window.tplTurnstileReset();
+      setTimeout(antecipar, 0);
+      return token;
+    });
+  }
+
   var ultimoAviso = "";
   var ultimoAvisoEm = 0;
   function avisarFalha(codigo) {
@@ -138,7 +183,15 @@
           done(false, err);
         }, 8000);
         function done(ok, value) {
-          if (settled || my !== attempt || gen !== generation) return;
+          if (settled) return;
+          if (my !== attempt || gen !== generation) {
+            settled = true;
+            clearTimeout(timer);
+            var stale = new Error("turnstile_reset");
+            stale.code = "reset";
+            reject(stale);
+            return;
+          }
           settled = true;
           clearTimeout(timer);
           if (pending && pending.id === my) pending = null;
@@ -179,22 +232,7 @@
   }
 
   window.tplTurnstileToken = function () {
-    var run = gate.then(getOneToken, getOneToken);
-    gate = run.then(function () {
-      return new Promise(function (resolve) {
-        var opened = false;
-        function once() {
-          if (opened) return;
-          opened = true;
-          resolve();
-        }
-        releaseGate = once;
-        setTimeout(once, 15000);
-      });
-    }, function () {
-      return Promise.resolve();
-    });
-    return run;
+    return entregarToken();
   };
 
   window.tplTurnstileReset = function () {
@@ -292,9 +330,6 @@
     document.head.appendChild(style);
   }
 
-  function warm() {
-    ensureWidget().catch(function () {});
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", warm);
-  else warm();
+  document.addEventListener("pointerdown", antecipar, true);
+  document.addEventListener("keydown", antecipar, true);
 })();

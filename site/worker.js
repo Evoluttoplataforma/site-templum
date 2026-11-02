@@ -1209,7 +1209,11 @@ async function saveToSupabase(lead, env) {
       },
       body: JSON.stringify(payload),
     });
-    if (r.ok) return { ok: true };
+    if (r.ok) {
+      // Cancela o corpo para a resposta do formulário não esperar a conexão fechar.
+      try { if (r.body) await r.body.cancel(); } catch (_) {}
+      return { ok: true };
+    }
     const e = await r.text().catch(() => "");
     return { ok: false, error: e.slice(0, 120) };
   } catch (e) {
