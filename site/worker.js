@@ -66,8 +66,9 @@
 //   ZOOM_ACCOUNT_ID        (SECRETO) conta Server-to-Server do Zoom
 //   ZOOM_CLIENT_ID         (SECRETO)
 //   ZOOM_CLIENT_SECRET     (SECRETO)
-//                          Inscrição da live (funil LIVES) cria o participante e grava
-//                          o link curto no card. Vale até 20/10/2026 18h, horário de Brasília.
+//                          Inscrição do Mês da Qualidade (evento mes-da-qualidade-2026)
+//                          adiciona o inscrito no webinar e grava o link curto no card.
+//                          Vale até 05/11/2026, 23h59, horário de Brasília.
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 // Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
@@ -76,12 +77,14 @@ import mqlCampaignsConfig from "./config/mql-campaigns.json";
 import { sanitizeFormEvento } from "./form-evento.js";
 import { camposH1, notaH1, leadEhTesteH1 } from "./h1-experimento.js";
 import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
-import { resolveZoomShortLink } from "./zoom-short-link.js";
+import { mqAttendanceTag, resolveZoomShortLink } from "./zoom-short-link.js";
 import {
+  ZOOM_ERROR_TAG,
   ZOOM_JOIN_FIELD,
-  ZOOM_MEETING_ID,
+  ZOOM_MQ_EVENT,
   ZOOM_SHORT_FIELD,
-  addMeetingRegistrant,
+  ZOOM_WEBINAR_ID,
+  addWebinarRegistrant,
   splitZoomName,
   zoomAccessToken,
   zoomLinkFields,
@@ -263,7 +266,7 @@ export default {
     }
 
     const zoomShort = url.pathname.match(/^\/z\/([^/]+)\/?$/);
-    if (zoomShort) return handleZoomShortLink(zoomShort[1], request.method, env);
+    if (zoomShort) return handleZoomShortLink(zoomShort[1], request.method, env, ctx);
 
     // Verificação do Google Search Console (método "Arquivo HTML").
     // A camada de assets do Workers derruba o ".html" da URL (307 p/
@@ -309,7 +312,7 @@ export default {
   },
 };
 
-async function handleZoomShortLink(code, method, env) {
+async function handleZoomShortLink(code, method, env, ctx) {
   if (method !== "GET" && method !== "HEAD") {
     return new Response("Not found", { status: 404 });
   }
@@ -329,6 +332,9 @@ async function handleZoomShortLink(code, method, env) {
   if (result.status !== 302 || !result.location) {
     return new Response("Not found", { status: 404 });
   }
+  if (method === "GET" && result.lead && ctx && ctx.waitUntil) {
+    ctx.waitUntil(tagMqAttendance(headers, result.lead));
+  }
   return new Response(null, {
     status: 302,
     headers: {
@@ -336,6 +342,19 @@ async function handleZoomShortLink(code, method, env) {
       "cache-control": "private, no-store",
     },
   });
+}
+
+async function tagMqAttendance(headers, lead) {
+  const tag = mqAttendanceTag();
+  if (!tag || !lead || !lead.id) return;
+  const names = (lead.tags || []).map(tagName).filter(Boolean);
+  if (names.some((item) => item.toLowerCase() === tag.toLowerCase())) return;
+  if (names.length >= 20) return;
+  await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+    method: "PATCH",
+    headers: { ...headers, "content-type": "application/json" },
+    body: JSON.stringify({ tags: [...names, tag] }),
+  }).catch(() => null);
 }
 
 function json(data, status = 200) {
@@ -2282,8 +2301,8 @@ async function keepZoomFieldsOnPatch(headers, leadId, patch) {
   return { ...patch, custom_fields: { ...keep, ...(patch.custom_fields || {}) } };
 }
 
-// 20/10/2026 18:00 em Brasília. Depois disso a sala desta live não recebe inscrição nova.
-const ZOOM_LIVE_REGISTER_UNTIL_MS = Date.parse("2026-10-20T21:00:00.000Z");
+// 05/11/2026 23:59 em Brasília. Depois disso este webinar não recebe inscrição nova.
+const ZOOM_MQ_REGISTER_UNTIL_MS = Date.parse("2026-11-06T02:59:59.000Z");
 
 function zoomSignupEmail(email) {
   const value = String(email || "").trim().toLowerCase();
@@ -2293,22 +2312,43 @@ function zoomSignupEmail(email) {
   return value;
 }
 
-// Funil LIVES: inscreve no Zoom e grava o link curto. Falha aqui não desfaz o card.
+function appendCrmTag(tags, tag) {
+  const names = (tags || []).map(tagName).filter(Boolean);
+  if (names.some((item) => item.toLowerCase() === String(tag).toLowerCase())) {
+    return { tags: names, added: false };
+  }
+  if (names.length >= 20) return { tags: names, added: false, full: true };
+  return { tags: [...names, tag], added: true };
+}
+
+// Mês da Qualidade: inscreve no webinar e grava o link curto. Falha aqui não desfaz o card.
 async function attachZoomLiveRegistrant(env, headers, leadId, lead) {
   if (!leadId) return { ok: false, reason: "no_lead" };
-  if (Date.now() >= ZOOM_LIVE_REGISTER_UNTIL_MS) return { ok: false, reason: "after_live" };
+  if (!lead || lead.evento !== ZOOM_MQ_EVENT) return { ok: true, skipped: "other_event" };
+  if (Date.now() >= ZOOM_MQ_REGISTER_UNTIL_MS) return { ok: false, reason: "after_event" };
   const email = zoomSignupEmail(lead && lead.email);
   if (!email) return { ok: false, reason: "invalid_email" };
   if (!env.ZOOM_ACCOUNT_ID || !env.ZOOM_CLIENT_ID || !env.ZOOM_CLIENT_SECRET) {
     return { ok: false, reason: "not_configured" };
   }
+  let card = null;
   try {
     const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers });
     if (!get.ok) return { ok: false, reason: "lead_not_found" };
     const payload = await get.json().catch(() => ({}));
-    const card = payload.data || payload.lead || payload;
+    card = payload.data || payload.lead || payload;
     const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
-    if (prev[ZOOM_SHORT_FIELD] && prev[ZOOM_JOIN_FIELD]) return { ok: true, skipped: "already_linked" };
+    if (prev[ZOOM_JOIN_FIELD]) {
+      const fields = zoomLinkFields(leadId, prev[ZOOM_JOIN_FIELD]);
+      if (prev[ZOOM_SHORT_FIELD] === fields[ZOOM_SHORT_FIELD]) return { ok: true, skipped: "already_linked" };
+      const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ custom_fields: { ...prev, ...fields } }),
+      });
+      if (!res.ok) return { ok: false, reason: "crm_patch" };
+      return { ok: true, skipped: "rewritten" };
+    }
 
     const token = await zoomAccessToken({
       accountId: env.ZOOM_ACCOUNT_ID,
@@ -2316,9 +2356,9 @@ async function attachZoomLiveRegistrant(env, headers, leadId, lead) {
       clientSecret: env.ZOOM_CLIENT_SECRET,
     });
     const name = splitZoomName((lead && lead.nome) || card.contact_name || email);
-    const joinUrl = await addMeetingRegistrant({
+    const joinUrl = await addWebinarRegistrant({
       token,
-      meetingId: env.ZOOM_MEETING_ID || ZOOM_MEETING_ID,
+      webinarId: env.ZOOM_WEBINAR_ID || ZOOM_WEBINAR_ID,
       email,
       firstName: name.first_name,
       lastName: name.last_name,
@@ -2332,8 +2372,24 @@ async function attachZoomLiveRegistrant(env, headers, leadId, lead) {
     return { ok: true };
   } catch (err) {
     const code = err && err.body && err.body.code;
-    console.error("[lead:zoom]", JSON.stringify({ lead_id: leadId, status: err && err.status || 0, code: code || null }));
-    return { ok: false, reason: "zoom", code: code || null };
+    const message = err && err.body && err.body.message;
+    console.error("[lead:zoom]", JSON.stringify({
+      lead_id: leadId,
+      status: err && err.status || 0,
+      code: code || null,
+      message: message || null,
+    }));
+    if (card) {
+      const tagged = appendCrmTag(card.tags, ZOOM_ERROR_TAG);
+      if (tagged.added) {
+        await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ tags: tagged.tags }),
+        }).catch(() => null);
+      }
+    }
+    return { ok: false, reason: "zoom", code: code || null, message: message || null };
   }
 }
 
