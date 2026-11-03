@@ -8,6 +8,7 @@ import DepoimentosTexto from "../../components/DepoimentosTexto.astro";
 import ClientLogos from "../../components/ClientLogos.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import H1Principal from "../../components/H1Principal.astro";
+import SaidaPesquisa from "../../components/SaidaPesquisa.astro";
 import { normas } from "../../data/normas.js";
 import d from "../../data/consultoria/iso-37001.js";
 import { experimentoH1 } from "../../data/h1-experimentos.js";
@@ -304,6 +305,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
       </div>
     </section>
   </div>
+  <SaidaPesquisa norma={norma.nome} oferta="proposta" />
 </LpBase>
 
 <style is:global>
