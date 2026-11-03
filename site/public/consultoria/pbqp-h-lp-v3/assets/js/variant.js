@@ -73,7 +73,7 @@
     applyHero: function () {
       var el = document.querySelector("[data-copy='headline']");
       var fromTerm = termHeadline(params.get("utm_term"));
-      if (el) el.textContent = fromTerm || headlines[id];
+      if (el) el.textContent = fromTerm || "Consultoria PBQP-H: prepare sua construtora para a certificação";
       gluePbqp(document.querySelector(".hero"));
       document.documentElement.setAttribute("data-variant", id);
     }

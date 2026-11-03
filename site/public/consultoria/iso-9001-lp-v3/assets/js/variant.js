@@ -81,8 +81,8 @@
       var fromTerm = termHeadline(params.get("utm_term"), utmHeadlines);
       document.querySelectorAll("[data-copy]").forEach(function (el) {
         var key = el.getAttribute("data-copy");
-        if (key === "headline" && fromTerm) {
-          el.textContent = fromTerm;
+        if (key === "headline") {
+          el.textContent = fromTerm || "Consultoria ISO 9001: prepare sua empresa para conquistar a certificação";
           return;
         }
         if (v[key]) el.textContent = v[key];
