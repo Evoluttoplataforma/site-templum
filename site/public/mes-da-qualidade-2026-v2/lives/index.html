@@ -198,16 +198,29 @@
   .nota{margin:28px 0 8px; color:var(--muted)}
   .nota a{color:var(--orange-dark); font-weight:800}
 
-  .tarefa{padding:22px 0 4px}
+  .tarefa{padding:0}
   .tarefa__quando{
     margin:0 0 8px;
     font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
     color:var(--orange-dark);
   }
-  .tarefa h2{font-size:clamp(1.6rem,2.6vw,2.15rem)}
+  .tarefa h2{font-size:clamp(1.35rem,2.2vw,1.85rem); margin:0 0 8px}
 
-  .acoes{padding:36px 0 20px}
-  .acoes__botoes{display:flex; flex-wrap:wrap; gap:12px; margin-top:18px}
+  .pos-video{
+    display:grid; gap:28px 24px; margin-top:22px; align-items:start;
+  }
+  @media (min-width:900px){
+    .pos-video{grid-template-columns:1fr 1fr}
+  }
+  .pos-video__acoes .acoes__titulo{
+    margin:0 0 8px;
+    font-size:clamp(1.35rem,2.2vw,1.85rem);
+  }
+  .pos-video__acoes .sub{margin-top:0; margin-bottom:14px}
+  .pos-video__acoes .acoes__botoes{
+    display:flex; flex-direction:column; gap:12px; margin-top:0;
+  }
+  .pos-video__acoes .acao{width:100%; box-sizing:border-box}
   .acao{
     display:inline-flex; align-items:center; justify-content:center;
     font-weight:800; font-size:15px; text-decoration:none; text-align:center;
@@ -268,15 +281,23 @@
       <p class="sub">Três encontros seguidos para aumentar a performance do seu Sistema de Gestão.</p>
       <div data-hero hidden>
         <div class="destaque" data-destaque></div>
+        <div class="pos-video">
+          <div class="pos-video__acoes" aria-labelledby="acoes-titulo">
+            <h2 class="acoes__titulo" id="acoes-titulo">Coloque em prática<span class="dot">.</span></h2>
+            <p class="sub">Crie seu cadastro no Templum OS e entre no grupo do WhatsApp para acompanhar os encontros.</p>
+            <div class="acoes__botoes">
+              <a class="acao acao--os" href="https://app.templum.com.br/register" target="_blank" rel="noopener noreferrer">Criar meu cadastro no Templum OS</a>
+              <a class="acao acao--wa" href="https://chat.whatsapp.com/GcD73nj2r0L2LBgt7oHBK7" target="_blank" rel="noopener noreferrer">Entrar no grupo do WhatsApp</a>
+            </div>
+          </div>
+          <section class="tarefa" aria-labelledby="tarefa-titulo">
+            <p class="tarefa__quando">Para amanhã, 4 de novembro, às 16h</p>
+            <h2 id="tarefa-titulo">O que fazer antes do próximo encontro<span class="dot">.</span></h2>
+            <p class="sub">Finalize a parte de inteligência de mercado e alimente a base de conhecimento.</p>
+          </section>
+        </div>
       </div>
     </div>
-    <section class="tarefa" aria-labelledby="tarefa-titulo">
-      <div class="wrap">
-        <p class="tarefa__quando">Para amanhã, 4 de novembro, às 16h</p>
-        <h2 id="tarefa-titulo">O que fazer antes do próximo encontro<span class="dot">.</span></h2>
-        <p class="sub">Finalize a parte de inteligência de mercado e alimente a base de conhecimento.</p>
-      </div>
-    </section>
     <div class="faixa" data-faixa>
       <div class="wrap">
         <div class="grade grade--3" data-grade></div>
@@ -299,16 +320,6 @@
     </div>
   </section>
 
-  <section class="acoes" aria-labelledby="acoes-titulo">
-    <div class="wrap">
-      <h2 id="acoes-titulo">Coloque em prática<span class="dot">.</span></h2>
-      <p class="sub">Crie seu cadastro no Templum OS e entre no grupo do WhatsApp para acompanhar os encontros.</p>
-      <div class="acoes__botoes">
-        <a class="acao acao--os" href="https://app.templum.com.br/register" target="_blank" rel="noopener noreferrer">Criar meu cadastro no Templum OS</a>
-        <a class="acao acao--wa" href="https://chat.whatsapp.com/GcD73nj2r0L2LBgt7oHBK7" target="_blank" rel="noopener noreferrer">Entrar no grupo do WhatsApp</a>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
