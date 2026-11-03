@@ -95,6 +95,11 @@
   .sub{margin-top:8px; color:var(--muted); max-width:46ch}
 
   .destaque{margin-top:22px}
+  .destaque__video{
+    aspect-ratio:16/9; border-radius:28px; overflow:hidden;
+    box-shadow:0 30px 50px -28px rgba(79,37,27,.55); background:#222831;
+  }
+  .destaque__video iframe{display:block; width:100%; height:100%; border:0}
   .aula{
     display:block; width:100%; max-width:100%; min-width:0; padding:0; border:0; background:transparent;
     text-align:left; color:#fff; cursor:pointer;
@@ -193,7 +198,7 @@
   .nota{margin:28px 0 8px; color:var(--muted)}
   .nota a{color:var(--orange-dark); font-weight:800}
 
-  .tarefa{padding:28px 0 8px}
+  .tarefa{padding:22px 0 4px}
   .tarefa__quando{
     margin:0 0 8px;
     font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
@@ -265,18 +270,17 @@
         <div class="destaque" data-destaque></div>
       </div>
     </div>
+    <section class="tarefa" aria-labelledby="tarefa-titulo">
+      <div class="wrap">
+        <p class="tarefa__quando">Para amanhã, 4 de novembro, às 16h</p>
+        <h2 id="tarefa-titulo">O que fazer antes do próximo encontro<span class="dot">.</span></h2>
+        <p class="sub">Finalize a parte de inteligência de mercado e alimente a base de conhecimento.</p>
+      </div>
+    </section>
     <div class="faixa" data-faixa>
       <div class="wrap">
         <div class="grade grade--3" data-grade></div>
       </div>
-    </div>
-  </section>
-
-  <section class="tarefa" aria-labelledby="tarefa-titulo">
-    <div class="wrap">
-      <p class="tarefa__quando">Para amanhã, 4 de novembro, às 16h</p>
-      <h2 id="tarefa-titulo">O que fazer antes do próximo encontro<span class="dot">.</span></h2>
-      <p class="sub">Finalize a parte de inteligência de mercado e alimente a base de conhecimento.</p>
     </div>
   </section>
 
@@ -366,7 +370,14 @@
   function aberta(aula) { return !!videoDe(aula.video); }
 
   function escolher() {
-    var i, j, aula;
+    var i, j, aula, abertaUltima = null;
+    for (i = 0; i < grupos.length; i++) {
+      for (j = 0; j < grupos[i].aulas.length; j++) {
+        aula = grupos[i].aulas[j];
+        if (aberta(aula)) abertaUltima = { grupo: grupos[i], aula: aula };
+      }
+    }
+    if (abertaUltima) return abertaUltima;
     for (i = 0; i < grupos.length; i++) {
       for (j = 0; j < grupos[i].aulas.length; j++) {
         aula = grupos[i].aulas[j];
@@ -375,6 +386,19 @@
     }
     var ultimo = grupos[1];
     return { grupo: ultimo, aula: ultimo.aulas[ultimo.aulas.length - 1] };
+  }
+
+  function frameDe(aula, autoplay) {
+    var video = videoDe(aula.video);
+    var frame = document.createElement("iframe");
+    var base = video.tipo === "vimeo"
+      ? "https://player.vimeo.com/video/" + video.id
+      : "https://www.youtube-nocookie.com/embed/" + video.id;
+    frame.src = base + (autoplay ? "?autoplay=1" : "");
+    frame.title = aula.titulo;
+    frame.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
+    frame.allowFullscreen = true;
+    return frame;
   }
 
   function iconePlay() {
@@ -411,14 +435,7 @@
     var video = videoDe(aula.video);
     tela.replaceChildren();
     if (video) {
-      var frame = document.createElement("iframe");
-      frame.src = video.tipo === "vimeo"
-        ? "https://player.vimeo.com/video/" + video.id + "?autoplay=1"
-        : "https://www.youtube-nocookie.com/embed/" + video.id + "?autoplay=1";
-      frame.title = aula.titulo;
-      frame.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
-      frame.allowFullscreen = true;
-      tela.appendChild(frame);
+      tela.appendChild(frameDe(aula, true));
     } else {
       var p = document.createElement("p");
       p.textContent = "A gravação de " + aula.dia + " entra aqui assim que for publicada.";
@@ -507,7 +524,13 @@
       hero.hidden = !ativa;
       faixa.classList.toggle("is-laranja", ativa);
       if (ativa) {
-        hero.querySelector("[data-destaque]").replaceChildren(botao(alvo.aula, true));
+        var grande = aberta(alvo.aula) ? (function () {
+          var caixa = document.createElement("div");
+          caixa.className = "destaque__video";
+          caixa.appendChild(frameDe(alvo.aula, false));
+          return caixa;
+        })() : botao(alvo.aula, true);
+        hero.querySelector("[data-destaque]").replaceChildren(grande);
       }
       grade.replaceChildren();
       g.aulas.forEach(function (aula) {
