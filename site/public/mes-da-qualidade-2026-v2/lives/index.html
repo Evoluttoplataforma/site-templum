@@ -193,6 +193,18 @@
   .nota{margin:28px 0 8px; color:var(--muted)}
   .nota a{color:var(--orange-dark); font-weight:800}
 
+  .acoes{padding:36px 0 20px}
+  .acoes__botoes{display:flex; flex-wrap:wrap; gap:12px; margin-top:18px}
+  .acao{
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:15px; text-decoration:none; text-align:center;
+    padding:16px 22px; border-radius:999px; max-width:100%;
+  }
+  .acao--os{background:var(--orange); color:var(--navy)}
+  .acao--os:hover{background:#ff6d3d}
+  .acao--wa{background:var(--navy); color:var(--cream)}
+  .acao--wa:hover{background:var(--navy-2)}
+
   footer{margin-top:36px; background:var(--navy); color:var(--muted-dark); padding:28px 0}
   footer .wrap{display:flex; flex-wrap:wrap; gap:12px 28px; justify-content:space-between; align-items:center}
   footer span{font-size:13px}
@@ -263,6 +275,17 @@
     <div class="faixa" data-faixa>
       <div class="wrap">
         <div class="grade grade--4" data-grade></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="acoes" aria-labelledby="acoes-titulo">
+    <div class="wrap">
+      <h2 id="acoes-titulo">Coloque em prática<span class="dot">.</span></h2>
+      <p class="sub">Crie seu cadastro no Templum OS e entre no grupo do WhatsApp para acompanhar os encontros.</p>
+      <div class="acoes__botoes">
+        <a class="acao acao--os" href="https://app.templum.com.br/register" target="_blank" rel="noopener noreferrer">Criar meu cadastro no Templum OS</a>
+        <a class="acao acao--wa" href="https://chat.whatsapp.com/GcD73nj2r0L2LBgt7oHBK7" target="_blank" rel="noopener noreferrer">Entrar no grupo do WhatsApp</a>
       </div>
     </div>
   </section>
