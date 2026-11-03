@@ -530,10 +530,11 @@
 
   window.tplPrecisaTurnstile = function () {
     if (typeof window.tplTurnstileToken === "function") return window.tplTurnstileToken();
+    window.tplTurnstileStatus = "script";
     try {
       document.dispatchEvent(new CustomEvent("tpl:turnstile-fail", { detail: { codigo: "script" } }));
     } catch (_) {}
-    return Promise.reject(new Error("turnstile_script"));
+    return Promise.resolve("");
   };
 
   window.tplLeadMarca = function (form) {

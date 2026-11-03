@@ -375,7 +375,7 @@
 
   [hidden]{display:none!important;}
 </style>
-  <script src="/js/tpl-turnstile.js?v=1"></script>
+  <script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </head>
 <body data-slug="diagnostico-iso-9001">
 <div class="wrap">
@@ -687,9 +687,9 @@
   }
   function postLead(mensagem, evento) {
     var payload = leadPayload(mensagem, evento);
-    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject(new Error('Não conseguimos enviar agora. Tente de novo.'));
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
     return ready.then(function (token) {
-      payload.turnstile_token = token;
+      payload.turnstile_token = token || "";
       return fetch(LEAD_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

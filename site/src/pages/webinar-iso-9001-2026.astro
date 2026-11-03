@@ -709,13 +709,15 @@ const schemaEvent = {
       if ((window as any).tplLeadFail) (window as any).tplLeadFail(form, btn);
     }
 
-    const tokenPromise = (window as any).tplTurnstileToken ? (window as any).tplTurnstileToken() : Promise.reject();
+    const tokenPromise = (window as any).tplTurnstileToken ? (window as any).tplTurnstileToken() : Promise.resolve("");
     tokenPromise.then((token: string) => {
+      if (token) {
       try {
         sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
           email, phone: wpp, name: nome, norma: "ISO 9001",
         }));
       } catch (_) {}
+      }
       var fallback = setTimeout(goToObrigado, 5000);
       const attrib = (window as any).__tplAttrib ? (window as any).__tplAttrib() : {};
       fetch("/api/lead", {
@@ -728,7 +730,7 @@ const schemaEvent = {
           evento: "webinar01_01_07",
           pagina: location.pathname,
           ...attrib,
-          turnstile_token: token,
+          turnstile_token: token || "",
         }),
       }).then((r) => r.json().catch(() => ({})).then((body: any) => ({ httpOk: r.ok, body })))
         .then((res: any) => {
@@ -739,7 +741,7 @@ const schemaEvent = {
             return;
           }
           const saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
-          if (saved && (window as any).fireMetaLead) (window as any).fireMetaLead({ email, phone: wpp }, "webinar-iso-9001-2026");
+          if (saved && token && (window as any).fireMetaLead) (window as any).fireMetaLead({ email, phone: wpp }, "webinar-iso-9001-2026");
           clearTimeout(fallback); goToObrigado();
         }).catch(() => {
           clearTimeout(fallback);

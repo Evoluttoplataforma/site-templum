@@ -1,9 +1,47 @@
-/* Turnstile invisível dos formulários que criam lead.
-   A pessoa não vê widget nem campo novo. O token entra sozinho no POST /api/lead.
+/* Turnstile dos formulários que criam lead.
    Chave pública do widget templum-leads. O segredo fica só no Worker.
-   Se a verificação falhar ou o script não responder, a pessoa vê a mensagem,
-   o botão de tentar de novo e o WhatsApp da própria LP. */
+   Modo interaction-only: o desafio só aparece quando a Cloudflare pede clique.
+   Falha técnica (timeout, script, rede, 110200, 200100) não bloqueia o envio:
+   o POST segue com token vazio e window.tplTurnstileStatus.
+   Recusa do desafio (600xxx) e qualquer outro código rejeitam a promise.
+   O evento tpl:turnstile-fail continua, para o funil registrar a falha. */
 (function () {
+  function falhaTecnica(status) {
+    return status === "timeout" || status === "script" || status === "rede"
+      || status === "erro_110200" || status === "erro_200100";
+  }
+  function recusaTurnstile(status) {
+    var s = String(status || "");
+    if (!s || s === "ok" || s === "ausente" || falhaTecnica(s)) return false;
+    return true;
+  }
+  window.tplTurnstileRecusa = recusaTurnstile;
+
+  if (!window.tplFormLoadedAt) window.tplFormLoadedAt = Date.now();
+  if (!window.__tplLeadFetch && typeof window.fetch === "function") {
+    window.__tplLeadFetch = true;
+    var fetchOriginal = window.fetch.bind(window);
+    window.fetch = function (input, init) {
+      try {
+        var url = typeof input === "string" ? input : (input && input.url) || "";
+        if (String(url).indexOf("/api/lead") !== -1 && init && typeof init.body === "string") {
+          var parsed = JSON.parse(init.body);
+          if (parsed && typeof parsed === "object" && !parsed.turnstile_token) {
+            if (!parsed.turnstile_status) parsed.turnstile_status = window.tplTurnstileStatus || "ausente";
+            if (recusaTurnstile(parsed.turnstile_status)) {
+              return Promise.resolve(new Response(JSON.stringify({ ok: false, error: "turnstile" }), {
+                status: 400,
+                headers: { "content-type": "application/json" },
+              }));
+            }
+            if (parsed.form_age_ms == null) parsed.form_age_ms = Date.now() - (window.tplFormLoadedAt || 0);
+          }
+          init = Object.assign({}, init, { body: JSON.stringify(parsed) });
+        }
+      } catch (_) {}
+      return fetchOriginal(input, init);
+    };
+  }
   if (window.tplTurnstileToken) return;
 
   var SITE_KEY = "0x4AAAAAAFOylHIgVZ3_2VYE";
@@ -34,7 +72,7 @@
         var err = new Error("turnstile_timeout");
         err.code = "timeout";
         finish(false, err);
-      }, 6000);
+      }, 15000);
       var s = document.createElement("script");
       s.src = SCRIPT;
       s.async = true;
@@ -64,13 +102,13 @@
       if (!host) {
         host = document.createElement("div");
         host.id = "tpl-turnstile-host";
-        host.setAttribute("aria-hidden", "true");
-        host.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;";
+        host.style.cssText = "position:fixed;left:16px;bottom:16px;z-index:40;width:max-content;max-width:calc(100% - 32px);";
         (document.body || document.documentElement).appendChild(host);
       }
       widgetId = window.turnstile.render(host, {
         sitekey: SITE_KEY,
-        size: "invisible",
+        size: "flexible",
+        appearance: "interaction-only",
         execution: "execute",
         callback: function (token) {
           var current = pending;
@@ -80,11 +118,10 @@
         "error-callback": function (code) {
           var current = pending;
           pending = null;
-          if (!current) return true;
+          if (!current) return;
           var err = new Error("turnstile");
           err.code = code == null || code === "" ? "turnstile" : String(code);
           current.done(false, err);
-          return true;
         },
         "timeout-callback": function () {
           var current = pending;
@@ -111,12 +148,21 @@
     return cached && (Date.now() - cached.at) < TOKEN_MS ? cached : null;
   }
 
+  function statusTurnstile(codigo) {
+    var c = String(codigo || "");
+    if (c === "turnstile_timeout" || c === "timeout") return "timeout";
+    if (c === "turnstile_script" || c === "script" || c === "execute") return "script";
+    if (/^erro_[a-z0-9_]+$/i.test(c)) return c.toLowerCase().slice(0, 40);
+    if (/^\d+$/.test(c)) return ("erro_" + c).slice(0, 40);
+    return ("erro_" + c.replace(/[^a-z0-9_]/gi, "_")).toLowerCase().slice(0, 40);
+  }
+
   function pedirToken() {
     if (inflight) return inflight;
     inflight = getOneToken().then(function (token) {
-      cached = { token: token, at: Date.now() };
       inflight = null;
-      return token;
+      if (token) cached = { token: token, at: Date.now() };
+      return token || "";
     }, function (err) {
       inflight = null;
       throw err;
@@ -137,14 +183,17 @@
       var guardado = hit.token;
       cached = null;
       window.tplTurnstileReset();
+      window.tplTurnstileStatus = "ok";
       setTimeout(antecipar, 0);
       return Promise.resolve(guardado);
     }
     return pedirToken().then(function (token) {
+      var status = token ? "ok" : (window.tplTurnstileStatus || "ausente");
       cached = null;
       window.tplTurnstileReset();
-      setTimeout(antecipar, 0);
-      return token;
+      window.tplTurnstileStatus = status;
+      if (token) setTimeout(antecipar, 0);
+      return token || "";
     });
   }
 
@@ -181,7 +230,7 @@
           var err = new Error("turnstile_timeout");
           err.code = "timeout";
           done(false, err);
-        }, 8000);
+        }, 15000);
         function done(ok, value) {
           if (settled) return;
           if (my !== attempt || gen !== generation) {
@@ -197,11 +246,21 @@
           if (pending && pending.id === my) pending = null;
           if (!ok) {
             var codigo = (value && value.code) || (value && value.message) || "turnstile";
-            avisarFalha(codigo);
+            var status = statusTurnstile(codigo);
+            window.tplTurnstileStatus = status;
+            avisarFalha(status);
             try { window.turnstile.reset(widgetId); } catch (_) {}
+            if (recusaTurnstile(status)) {
+              var block = new Error("turnstile_block");
+              block.code = status;
+              reject(block);
+              return;
+            }
+            resolve("");
+            return;
           }
-          if (ok) resolve(value);
-          else reject(value);
+          window.tplTurnstileStatus = "ok";
+          resolve(value);
         }
         pending = { id: my, done: done };
         try {
@@ -220,8 +279,14 @@
       var codigo = err && (err.code || err.message) === "turnstile_script" ? "script" : ((err && err.code) || "turnstile");
       if (err && err.message === "turnstile_timeout") codigo = "timeout";
       if (err && err.message === "turnstile_script") codigo = "script";
-      avisarFalha(codigo);
-      return Promise.reject(err);
+      window.tplTurnstileStatus = statusTurnstile(codigo);
+      avisarFalha(window.tplTurnstileStatus);
+      if (recusaTurnstile(window.tplTurnstileStatus)) {
+        var block = new Error("turnstile_block");
+        block.code = window.tplTurnstileStatus;
+        return Promise.reject(block);
+      }
+      return "";
     });
   }
 
@@ -261,7 +326,8 @@
   }
 
   function whatsLink(form) {
-    var src = form && form.querySelector("a.lead-wpp[href], a[data-wpp-ref][href]");
+    var src = (form && form.querySelector("a.lead-wpp[href], a[data-wpp-ref][href]"))
+      || document.querySelector("a.lead-wpp[href], a[data-wpp-ref][href], a.whatsapp-float[href], a.wpp-fixo[href]");
     if (!src) return null;
     var a = document.createElement("a");
     a.href = src.getAttribute("href") || src.href;

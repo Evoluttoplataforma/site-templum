@@ -151,7 +151,7 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
 
         var d = {};
         new FormData(form).forEach(function (v, k) { d[k] = v; });
-        var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+        var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
         tokenPromise.then(function (token) {
           return fetch("/api/lead", {
             method: "POST",
@@ -164,7 +164,7 @@ const VIMEO = "https://player.vimeo.com/video/1238003425?h=da95e026af&title=0&by
               mensagem: d.mensagem || "",
               evento: EVENTO,
               pagina: location.pathname,
-              turnstile_token: token,
+              turnstile_token: token || "",
             }),
           }).then(function (r) {
             return r.json().catch(function () { return {}; }).then(function (body) {

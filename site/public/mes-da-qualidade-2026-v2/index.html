@@ -1019,9 +1019,11 @@
     ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','gbraid','wbraid'].forEach((key) => {
       if (params.get(key)) payload[key] = params.get(key);
     });
-    const tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    const tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
     tokenPromise.then((token) => {
-      payload.turnstile_token = token;
+      payload.turnstile_token = token || "";
+      payload.turnstile_status = token ? (window.tplTurnstileStatus || "ok") : (window.tplTurnstileStatus || "script");
+      payload.form_age_ms = Date.now() - (window.tplFormLoadedAt || 0);
       return fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1035,6 +1037,8 @@
         msg.textContent = 'Não conseguimos enviar agora. Tente de novo.';
         return;
       }
+      var naoVerificado = res.body.turnstile === "nao_verificado";
+      if (!naoVerificado) {
       try {
         sessionStorage.setItem('tpl_lead_pending', JSON.stringify({ email, phone: '+55' + telDigits, name: nome }));
       } catch (_) {}
@@ -1047,6 +1051,7 @@
           fbq('track', 'Lead', { content_name: contentName }, { eventID: leadEventId });
         }
       } catch (_) {}
+      }
       setTimeout(() => { location.href = OBRIGADO; }, 400);
     }).catch(() => {
       if (window.tplTurnstileReset) window.tplTurnstileReset();
@@ -1056,6 +1061,6 @@
     });
   });
 </script>
-<script src="/js/tpl-turnstile.js?v=2"></script>
+<script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </body>
 </html>

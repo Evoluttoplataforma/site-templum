@@ -327,10 +327,14 @@
 
       var tokenPromise = (window.tplTurnstileToken)
         ? window.tplTurnstileToken()
-        : Promise.reject(new Error("turnstile_script"));
+        : (window.tplTurnstileStatus = "script", Promise.resolve(""));
 
       tokenPromise.then(function (token) {
         payload.turnstile_token = token || "";
+        payload.turnstile_status = token ? (window.tplTurnstileStatus || "ok") : (window.tplTurnstileStatus || "script");
+        payload.form_age_ms = Date.now() - loadedAt;
+        var site = f.elements.website || f.querySelector('[name="website"]');
+        payload.website = site ? String(site.value || "") : "";
         return fetch(cfg.form.endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -345,14 +349,16 @@
         if (window.tplTurnstileReset) window.tplTurnstileReset();
         if (res.body && res.body.error === "turnstile") {
           track("form_error", { error_fields: "submit" });
-          showStatus("alert", "A verificação anti-robô falhou.", " Tente novamente em instantes.");
+          if (window.tplLeadFail) window.tplLeadFail(f, button);
+          else showStatus("alert", "A verificação anti-robô falhou.", " Tente novamente em instantes.");
           button.disabled = false;
           button.textContent = cfg.variants[LP.variant].cta;
           return;
         }
         var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
         if (!saved) throw new Error("not_saved");
-        if (window.LP_TRACK && window.LP_TRACK.onLeadSaved) {
+        var naoVerificado = res.body && res.body.turnstile === "nao_verificado";
+        if (!naoVerificado && window.LP_TRACK && window.LP_TRACK.onLeadSaved) {
           window.LP_TRACK.onLeadSaved({
             email: payload.email,
             phone: payload.telefone,
@@ -360,12 +366,14 @@
             eventId: leadEventId
           });
         }
-        var sent = false;
-        try {
-          sent = sessionStorage.getItem("tpl_lp9001_dl_lead") === "1";
-          sessionStorage.setItem("tpl_lp9001_dl_lead", "1");
-        } catch (err) {}
-        if (!sent) track("generate_lead", { form_id: "lp_iso9001_proposta" });
+        if (!naoVerificado) {
+          var sent = false;
+          try {
+            sent = sessionStorage.getItem("tpl_lp9001_dl_lead") === "1";
+            sessionStorage.setItem("tpl_lp9001_dl_lead", "1");
+          } catch (err) {}
+          if (!sent) track("generate_lead", { form_id: "lp_iso9001_proposta" });
+        }
         // Folga para o Lead do Meta sair antes da navegação. Ads e GA4
         // disparam na página de obrigado, a partir de tpl_lead_pending.
         setTimeout(function () {
@@ -373,6 +381,12 @@
         }, 400);
       }).catch(function () {
         if (window.tplTurnstileReset) window.tplTurnstileReset();
+        if (window.tplTurnstileRecusa && window.tplTurnstileRecusa(window.tplTurnstileStatus) && window.tplLeadFail) {
+          window.tplLeadFail(f, button);
+          button.disabled = false;
+          button.textContent = cfg.variants[LP.variant].cta;
+          return;
+        }
         track("form_error", { error_fields: "submit" });
         showStatus("alert", "Não foi possível confirmar o recebimento.", " Tente novamente em instantes.");
         button.disabled = false;

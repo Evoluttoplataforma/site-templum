@@ -617,7 +617,7 @@
       if (value) payload[key] = value;
     });
 
-    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : (window.tplTurnstileStatus = "script", Promise.resolve(""));
     ready.then(function (token) {
       payload.turnstile_token = token;
       return fetch("/api/lead", {
@@ -638,11 +638,13 @@
         msg.textContent = "Não conseguimos enviar agora. Tente de novo.";
         return;
       }
+      if (res.body.turnstile !== "nao_verificado") {
       try {
         if (typeof fbq === "function") {
           fbq("track", "Lead", { content_name: CONTENT_NAME }, { eventID: leadEventId });
         }
       } catch (err) {}
+      }
       showResult();
     }).catch(function () {
       if (window.tplTurnstileReset) window.tplTurnstileReset();
@@ -717,7 +719,7 @@
       var value = params.get(key);
       if (value) payload[key] = value;
     });
-    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : (window.tplTurnstileStatus = "script", Promise.resolve(""));
     ready.then(function (token) {
       payload.turnstile_token = token;
       return fetch("/api/lead", {
@@ -787,6 +789,6 @@
   showQuiz();
 })();
 </script>
-<script src="/js/tpl-turnstile.js?v=3"></script>
+<script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </body>
 </html>

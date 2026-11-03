@@ -27,7 +27,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"></noscript>
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer></script>
   <link rel="stylesheet" href="styles.css">
-  <script src="/js/tpl-turnstile.js?v=1"></script>
+  <script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </head>
 <body>
 
@@ -935,9 +935,9 @@
         meta_content_name: EVENTO,
       }, attrib());
 
-      var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+      var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
       tokenPromise.then(function (token) {
-        payload.turnstile_token = token;
+        payload.turnstile_token = token || "";
         var done = false;
         function finish() {
           if (done) return;
@@ -962,7 +962,7 @@
             statusEl.textContent = "Não conseguimos enviar agora. Tente de novo.";
             return;
           }
-          fireMetaLead(payload, leadEventId);
+          if (!(res.body && res.body.turnstile === "nao_verificado")) fireMetaLead(payload, leadEventId);
           clearTimeout(fallback);
           finish();
         }).catch(function () {

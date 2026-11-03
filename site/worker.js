@@ -60,9 +60,17 @@
 //                          buscar nome/e-mail do cliente por customer id (o webhook não manda isso)
 //   ASAAS_WEBHOOK_TOKEN    (SECRETO) token que você mesmo escolhe (32-255 chars) ao cadastrar o
 //                          webhook no painel Asaas — vem de volta no header "asaas-access-token"
-//   TURNSTILE_SECRET_KEY   (SECRETO) segredo do widget Turnstile invisível templum-leads.
-//                          POST /api/lead só grava com token válido. Se o siteverify
-//                          estiver fora, o lead segue (não perde cadastro real).
+//   TURNSTILE_SECRET_KEY   (SECRETO) segredo do widget Turnstile templum-leads.
+//                          Token válido segue normal. Falha técnica (timeout, script,
+//                          rede, 110200, 200100), com honeypot vazio e pelo menos 3s,
+//                          grava o lead marcado nao_verificado e não dispara a
+//                          conversão da Meta. Status 600xxx ou outro código fora
+//                          dessa lista recusa o envio (error turnstile), sem gravar.
+//                          TURNSTILE_ESTRITO=1 volta a recusar todo token ausente
+//                          ou inválido, sem novo deploy do critério. Honeypot
+//                          preenchido é descartado. No máximo 5 envios por IP
+//                          a cada hora. Se o siteverify estiver fora, o lead
+//                          segue verificado (não perde cadastro).
 //   ZOOM_ACCOUNT_ID        (SECRETO) conta Server-to-Server do Zoom
 //   ZOOM_CLIENT_ID         (SECRETO)
 //   ZOOM_CLIENT_SECRET     (SECRETO)
@@ -73,7 +81,7 @@
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 // Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
 
-import mqlCampaignsConfig from "./config/mql-campaigns.json";
+import mqlCampaignsConfig from "./config/mql-campaigns.json" with { type: "json" };
 import { sanitizeFormEvento } from "./form-evento.js";
 import { camposH1, notaH1, leadEhTesteH1 } from "./h1-experimento.js";
 import { sanitizeWhatsappRef } from "./whatsapp-ref.js";
@@ -771,6 +779,16 @@ function withNormaTags(tags, pagina) {
   return [...new Set([...(tags || []).filter(Boolean), ...normaTagsFromPagina(pagina)])];
 }
 
+function comTagNaoVerificado(tags, lead) {
+  const list = [...new Set((tags || []).filter(Boolean))];
+  if (!lead || !lead.turnstile_nao_verificado || list.includes("nao_verificado")) return list;
+  return list.concat("nao_verificado");
+}
+
+function mensagemPublica(lead) {
+  return String((lead && lead.mensagem) || "").replace(/^\[nao_verificado:[a-z0-9_]{1,40}\]\n?/, "");
+}
+
 function orbitTag32(value) {
   return String(value || "").trim().slice(0, 32);
 }
@@ -781,7 +799,7 @@ function iscaOrbitTags(lead) {
   for (const t of normaTagsFromPagina(lead.pagina)) tags.push(t);
   if (lead.isca) tags.push(orbitTag32(lead.isca));
   if (lead.evento === "isca-resultado") tags.push("diagnostico");
-  return [...new Set(tags.filter(Boolean))];
+  return comTagNaoVerificado([...new Set(tags.filter(Boolean))], lead);
 }
 
 // Confere Basic Auth (usuário é ignorado, só a senha importa) contra `expected`.
@@ -891,9 +909,9 @@ const TURNSTILE_FAIL_OPEN = new Set([
   "internal-error",
 ]);
 
-// Token ausente ou inválido bloqueia. Falha de rede, 5xx ou segredo
-// mal configurado libera o lead: parar o formulário porque a Cloudflare
-// não respondeu perderia cadastro de verdade.
+// Token válido, falha de rede, 5xx ou segredo mal configurado liberam o lead
+// como verificado. Token ausente ou inválido volta ok:false para o handleLead
+// decidir o fail-open (honeypot vazio e pelo menos 3 s desde o carregamento).
 async function verifyTurnstile(token, request, env) {
   const secret = env.TURNSTILE_SECRET_KEY;
   if (!secret) {
@@ -1002,12 +1020,79 @@ async function handleWhatsappRef(request, env) {
   }
 }
 
-async function handleLead(request, env, ctx) {
+function sanitizarTurnstileStatus(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (/^[a-z0-9_]{1,40}$/.test(raw) && raw !== "ok") return raw;
+  return "ausente";
+}
+
+function turnstileFalhaTecnica(status) {
+  return status === "timeout" || status === "script" || status === "rede" || status === "ausente"
+    || status === "erro_110200" || status === "erro_200100";
+}
+
+function turnstileRecusa(status) {
+  if (turnstileFalhaTecnica(status)) return false;
+  return !!status && status !== "ok";
+}
+
+function marcarLeadNaoVerificado(lead, status) {
+  lead.turnstile_status = status;
+  lead.turnstile_nao_verificado = true;
+  const marca = "[nao_verificado:" + status + "]";
+  if (String(lead.mensagem || "").indexOf(marca) !== 0) {
+    lead.mensagem = marca + (lead.mensagem ? "\n" + lead.mensagem : "");
+  }
+}
+
+async function leadDentroDoLimite(request) {
+  const ip = request.headers.get("cf-connecting-ip") || "";
+  if (!ip) return true;
+  const cache = globalThis.caches && caches.default;
+  if (!cache) return true;
+  const req = new Request("https://templum.com.br/api/lead-rate/" + encodeURIComponent(ip));
+  try {
+    const hit = await cache.match(req);
+    const count = hit ? Number(await hit.text()) || 0 : 0;
+    if (count >= 5) return false;
+    await cache.put(req, new Response(String(count + 1), {
+      headers: { "cache-control": "public, max-age=3600" },
+    }));
+    return true;
+  } catch (e) {
+    console.error("[lead:rate]", e && e.message);
+    return true;
+  }
+}
+
+export async function handleLead(request, env, ctx) {
   let body = {};
   try { body = await request.json(); } catch (_) { return corsJson({ ok: false, error: "invalid_json" }, 400); }
 
+  if (!(await leadDentroDoLimite(request))) {
+    return corsJson({ ok: false, error: "rate_limit" }, 429);
+  }
+  if (String(body.website || "").trim()) {
+    return corsJson({ ok: false, error: "honeypot" }, 400);
+  }
+
   const turnstile = await verifyTurnstile(body.turnstile_token, request, env);
-  if (!turnstile.ok) return corsJson({ ok: false, error: "turnstile" }, 403);
+  let naoVerificado = false;
+  let turnstileStatus = "ok";
+  if (!turnstile.ok) {
+    if (String(env.TURNSTILE_ESTRITO || "") === "1") {
+      return corsJson({ ok: false, error: "turnstile" }, 400);
+    }
+    turnstileStatus = sanitizarTurnstileStatus(body.turnstile_status);
+    if (turnstileRecusa(turnstileStatus)) {
+      return corsJson({ ok: false, error: "turnstile" }, 400);
+    }
+    const idade = Number(body.form_age_ms);
+    if (!Number.isFinite(idade) || idade < 3000) {
+      return corsJson({ ok: false, error: "too_fast" }, 400);
+    }
+    naoVerificado = true;
+  }
 
   const email = (body.email || "").trim().toLowerCase();
   if (!email || !email.includes("@")) return corsJson({ ok: false, error: "invalid_email" }, 422);
@@ -1079,6 +1164,7 @@ async function handleLead(request, env, ctx) {
   // Tira UTM herdada de outra página antes de preencher a campanha desta LP.
   applyConsultoriaLpCampaign(lead, body);
   applyOrganicLeadAttribution(lead, body);
+  if (naoVerificado) marcarLeadNaoVerificado(lead, turnstileStatus);
 
   const isIsca =
     lead.evento === "isca" ||
@@ -1112,7 +1198,7 @@ async function handleLead(request, env, ctx) {
   // O sim/não é o mesmo card. Não dispara outro Lead no Meta nem outra nutrição.
   if (!testeH1 && !isResultado && !isReplay && !diagEscolha) {
     bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
-    bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
+    if (!lead.turnstile_nao_verificado) bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
   }
   const isCursoAluno =
@@ -1172,7 +1258,11 @@ async function handleLead(request, env, ctx) {
     console.error("[lead:supabase] INSERT FALHOU", JSON.stringify(supabase));
   }
 
-  return corsJson({ ok: true, supabase });
+  return corsJson({
+    ok: true,
+    supabase,
+    turnstile: lead.turnstile_nao_verificado ? "nao_verificado" : "ok",
+  });
 }
 
 // ---- 1) Supabase -------------------------------------------------------
@@ -1273,7 +1363,7 @@ async function saveToMailchimp(lead, env) {
         merge_fields: {
           FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
           NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
-          FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem || lead.desafio,
+          FUNCIONARI: lead.funcionarios, MENSAGEM: mensagemPublica(lead) || lead.desafio,
           ORIGEM: lead.pagina || lead.evento || "site",
           LT_SOURCE: lead.utm_source,    LT_MEDIUM: lead.utm_medium,
           LT_CAMP: lead.utm_campaign,    LT_CONTENT: lead.utm_content,
@@ -1299,7 +1389,7 @@ async function saveToMailchimp(lead, env) {
             merge_fields: {
               FNAME: lead.nome, PHONE: lead.telefone, COMPANY: lead.empresa,
               NORMA: lead.norma, CARGO: lead.cargo, URGENCIA: lead.urgencia,
-              FUNCIONARI: lead.funcionarios, MENSAGEM: lead.mensagem || lead.desafio,
+              FUNCIONARI: lead.funcionarios, MENSAGEM: mensagemPublica(lead) || lead.desafio,
               ORIGEM: lead.pagina || lead.evento || "site",
               LT_SOURCE: lead.utm_source,    LT_MEDIUM: lead.utm_medium,
               LT_CAMP: lead.utm_campaign,    LT_CONTENT: lead.utm_content,
@@ -1644,6 +1734,7 @@ async function saveToOrbit(lead, env, dest) {
       ? "Formulário enviado em: " + lead.pagina_submit
       : "",
     lead.referrer ? "Referrer: " + lead.referrer : "",
+    lead.turnstile_nao_verificado ? "Turnstile: nao_verificado (" + lead.turnstile_status + ")." : "",
   ].filter(Boolean).join("\n");
   const h1nota = notaH1(lead);
   const notasFinais = [notes, h1nota].filter(Boolean).join("\n");
@@ -1651,8 +1742,11 @@ async function saveToOrbit(lead, env, dest) {
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
   // Etiqueta canônica do INBOUND é ISO9001 (junto). "ISO 9001" abria uma etiqueta nova.
-  const orbitTags = withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina)
-    .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag));
+  const orbitTags = comTagNaoVerificado(
+    withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina)
+      .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag)),
+    lead,
+  );
   if (orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
@@ -1735,6 +1829,7 @@ function webinarMqlNote(lead) {
     "Webinar ISO 9001: " + evento,
     pagina ? "Página: " + pagina : "",
     utm ? "UTM: " + utm : "",
+    lead.turnstile_nao_verificado ? "Turnstile: nao_verificado (" + lead.turnstile_status + ")." : "",
   ].filter(Boolean).join("\n");
 }
 
@@ -1798,7 +1893,7 @@ async function saveToMqlWebinar(lead, env) {
   const email = String(lead.email || "").trim().toLowerCase();
   if (!email || email.indexOf("@") === -1) return { ok: false, error: "invalid_email" };
 
-  const tags = withNormaTags(webinarMqlTags(lead.evento), lead.pagina);
+  const tags = comTagNaoVerificado(withNormaTags(webinarMqlTags(lead.evento), lead.pagina), lead);
   const note = webinarMqlNote(lead);
   const cf = webinarMqlCustomFields(lead);
   const headers = {
@@ -1990,8 +2085,11 @@ function isFaturamentoMql(lead) {
 
 function faturamentoMqlTags(lead) {
   const cfg = faturamentoSplitCfg(lead);
-  return withNormaTags([cfg && cfg.tag], lead.pagina).map((tag) =>
-    tag === "ISO 9001" ? "ISO9001" : tag,
+  return comTagNaoVerificado(
+    withNormaTags([cfg && cfg.tag], lead.pagina).map((tag) =>
+      tag === "ISO 9001" ? "ISO9001" : tag,
+    ),
+    lead,
   );
 }
 
@@ -2001,6 +2099,7 @@ function faturamentoMqlNote(lead) {
   const lines = [cfg ? cfg.note : "LP com corte de faturamento."];
   lines.push(faixa ? "Faturamento mensal: " + faixa + "." : "Faturamento mensal não informado.");
   if (lead.pagina) lines.push(String(lead.pagina));
+  if (lead.turnstile_nao_verificado) lines.push("Turnstile: nao_verificado (" + lead.turnstile_status + ").");
   return lines.join("\n");
 }
 
@@ -2402,7 +2501,7 @@ async function saveToMqlInscricao(lead, env) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
-  const tags = withNormaTags(cfg.tags, lead.pagina);
+  const tags = comTagNaoVerificado(withNormaTags(cfg.tags, lead.pagina), lead);
   const headers = { "content-type": "application/json", authorization: "Bearer " + token, accept: "application/json" };
   const destPipelineId = cfg.pipelineId || ORBIT_MQL_PIPELINE_ID;
   const destStageId = cfg.stageId || ORBIT_MQL_STAGE_NOVO;
@@ -2787,7 +2886,7 @@ function manyChatFieldsFor(lead) {
     ["Empresa", lead.empresa],
     ["n_funcionarios", lead.funcionarios],
     ["faturamento_mensal", lead.faturamento],
-    ["necessidade", lead.mensagem || lead.desafio],
+    ["necessidade", mensagemPublica(lead) || lead.desafio],
     ["produto", lead.norma],
     ["Urgência", lead.urgencia],
     ["url_cadastro", lead.pagina],

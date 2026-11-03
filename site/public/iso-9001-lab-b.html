@@ -613,7 +613,7 @@ footer {
 .footer-links a { font-size: 13px; color: var(--muted); transition: color .3s; }
 .footer-links a:hover { color: var(--cyan); }
 </style>
-  <script src="/js/tpl-turnstile.js?v=1"></script>
+  <script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </head>
 <body>
 
@@ -1183,13 +1183,15 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
   var btnLabel = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
 
-  var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+  var tokenPromise = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
   tokenPromise.then(function (token) {
+    if (token) {
     try {
       sessionStorage.setItem('tpl_lead_pending', JSON.stringify({
         email: d.email || '', phone: d.telefone || '', name: d.nome || '', norma: d.norma || '',
       }));
     } catch (_) {}
+    }
     return fetch('/api/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1200,7 +1202,7 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
         cargo: d.cargo || '', funcionarios: d.funcionarios || '',
         mensagem: 'Tipo de laboratório: ' + (d.tipo_lab || ''),
         evento: 'lead', pagina: location.pathname,
-        turnstile_token: token,
+        turnstile_token: token || "",
       }),
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (body) { return body; });

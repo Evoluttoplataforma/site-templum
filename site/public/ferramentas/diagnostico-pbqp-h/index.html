@@ -315,7 +315,7 @@ h1,h2,h3{font-family:'Sora', system-ui, sans-serif; text-wrap:balance; margin:0;
   .stamp{width:84px;height:84px;}
 }
 </style>
-  <script src="/js/tpl-turnstile.js?v=1"></script>
+  <script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </head>
 <body>
 
@@ -793,9 +793,9 @@ var DATA = {
       evento: "isca-resultado",
       pagina: location.pathname,
     };
-    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject();
+    var ready = window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve("");
     ready.then(function (token) {
-      payload.turnstile_token = token;
+      payload.turnstile_token = token || "";
       return fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -207,8 +207,8 @@ const allSchemas = schemas;
       </script>
     ) : null}
 
-    <script is:inline src="/js/form-funil.js?v=20261026lpv2"></script>
-    <script is:inline src="/js/tpl-turnstile.js?v=3"></script>
+    <script is:inline src="/js/form-funil.js?v=20261103a"></script>
+    <script is:inline src="/js/tpl-turnstile.js?v=20261103b"></script>
     <!-- Handler formulários (igual ao Base.astro) — Lead do Meta só dispara
          depois de confirmar que o Supabase salvou o cadastro. trk.lead()
          continua na /obrigado, tratando GA4/Ads/TikTok (inalterado). -->
@@ -251,12 +251,14 @@ const allSchemas = schemas;
         // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
         // é o que permite o Meta deduplicar em vez de contar 2 leads.
         var leadEventId = window.__tplUuid();
-        var tokenPromise = window.tplPrecisaTurnstile ? window.tplPrecisaTurnstile() : Promise.reject();
+        var tokenPromise = window.tplPrecisaTurnstile ? window.tplPrecisaTurnstile() : (window.tplTurnstileStatus = "script", Promise.resolve(""));
         function tentativaAtual() {
           return !marca || !window.tplLeadMarcaAtual || window.tplLeadMarcaAtual(form, marca);
         }
         tokenPromise.then(function (token) {
         if (!tentativaAtual()) return;
+        var turnstileStatus = token ? (window.tplTurnstileStatus || "ok") : (window.tplTurnstileStatus || "script");
+        if (token) {
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
@@ -264,6 +266,7 @@ const allSchemas = schemas;
             modo_teste: !!(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste),
           }));
         } catch (_) {}
+        }
         var _t = setTimeout(_go, 5000);
         try {
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual.
@@ -311,7 +314,10 @@ const allSchemas = schemas;
               status_pagamento: d.status_pagamento || "",
               evento: evt, pagina: location.pathname,
               meta_event_id: leadEventId, lead_event_id: leadEventId, meta_content_name: contentName,
-              turnstile_token: token,
+              turnstile_token: token || "",
+              turnstile_status: turnstileStatus,
+              form_age_ms: Date.now() - (window.tplFormLoadedAt || 0),
+              website: d.website || "",
             }, _attrib)),
           }).then(function (r) {
             return r.json().catch(function () { return {}; }).then(function (body) { return { httpOk: r.ok, body: body }; });
@@ -320,6 +326,13 @@ const allSchemas = schemas;
             if (res.body && res.body.error === "turnstile") {
               clearTimeout(_t);
               _failTurnstile();
+              return;
+            }
+            if (res.body && res.body.error === "honeypot") {
+              clearTimeout(_t);
+              try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+              delete form.dataset.leadSubmitted;
+              if (btn) btn.disabled = false;
               return;
             }
             if (res.body && res.body.error === "invalid_phone") {
@@ -333,6 +346,12 @@ const allSchemas = schemas;
               return;
             }
             var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
+            if (saved && res.body.turnstile === "nao_verificado") {
+              clearTimeout(_t);
+              try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+              _go();
+              return;
+            }
             clearTimeout(_t);
             if (saved && !(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)) {
               window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);

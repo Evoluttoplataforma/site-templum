@@ -144,7 +144,7 @@
       body { padding-bottom:68px; }
     }
   </style>
-  <script src="/js/tpl-turnstile.js?v=1"></script>
+  <script src="/js/tpl-turnstile.js?v=20261103b"></script>
 </head>
 <body>
 
@@ -368,8 +368,8 @@
     };
 
     try {
-      var token = await (window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.reject());
-      payload.turnstile_token = token;
+      var token = await (window.tplTurnstileToken ? window.tplTurnstileToken() : Promise.resolve(""));
+      payload.turnstile_token = token || "";
       var leadRes = await fetch('https://templum.com.br/api/lead',{ method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
       var leadData = await leadRes.json().catch(function(){ return {}; });
       if (window.tplTurnstileReset) window.tplTurnstileReset();
@@ -378,6 +378,7 @@
         if (window.tplLeadFail) window.tplLeadFail(document.getElementById('leadForm'), btn);
         return;
       }
+      if (!(leadData && leadData.turnstile === 'nao_verificado')) {
       var eid='aula-d-'+Date.now();
       if(typeof fbq==='function') fbq('track','Lead',{content_name:'aula-iso-9001-d-form'},{eventID:eid});
       fetch('https://templum.com.br/api/track',{ method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({
@@ -386,6 +387,7 @@
         page_url:location.href, fbp:payload.fbp, fbc:payload.fbc,
         properties:{content_name:'aula-iso-9001-d-form'},
       })});
+      }
     } catch(err) {
       if (!payload.turnstile_token) {
         if (window.tplTurnstileReset) window.tplTurnstileReset();
