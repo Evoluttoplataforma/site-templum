@@ -5,6 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Perdeu algum detalhe da Aula? · Mês da Qualidade 2026</title>
 <meta name="description" content="Assista às gravações da imersão prática de 3 a 5 de novembro e dos encontros de 9, 16, 23 e 30 de novembro. Mês da Qualidade 2026, Templum.">
+<script>
+  !function(f,b,e,v,n,t,s){
+    if (f.fbq) return;
+    n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if (!f._fbq) f._fbq = n;
+    n.push = n; n.loaded = true; n.version = "2.0"; n.queue = [];
+  }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", "1265191353683807");
+  fbq("init", "4177249519256900");
+  fbq("track", "PageView");
+  window.__loadMetaPixel = function () {
+    if (window.__metaPixelLoaded) return; window.__metaPixelLoaded = true;
+    var t = document.createElement("script");
+    t.async = true; t.src = "https://connect.facebook.net/en_US/fbevents.js";
+    var s = document.getElementsByTagName("script")[0];
+    if (s && s.parentNode) s.parentNode.insertBefore(t, s);
+    else (document.head || document.documentElement).appendChild(t);
+  };
+  (function () {
+    var done = false;
+    function boot() {
+      if (done) return; done = true;
+      window.__loadMetaPixel();
+    }
+    var evs = ["pointerdown", "touchstart", "keydown", "scroll"];
+    var opts = { once: true, passive: true, capture: true };
+    function once() {
+      evs.forEach(function (e) { window.removeEventListener(e, once, opts); });
+      boot();
+    }
+    evs.forEach(function (e) { window.addEventListener(e, once, opts); });
+    window.addEventListener("load", function () { setTimeout(boot, 6000); }, { once: true });
+  })();
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1" alt="" /></noscript>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=4177249519256900&ev=PageView&noscript=1" alt="" /></noscript>
 <link rel="icon" href="/favicon.png">
 <link rel="canonical" href="https://templum.com.br/mes-da-qualidade-2026-v2/lives/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
