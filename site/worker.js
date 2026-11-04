@@ -3123,6 +3123,11 @@ const SAIDA_PAGINAS = new Set([
   "/consultoria/iso-45001",
   "/consultoria/pbqp-h",
   "/consultoria/sassmaq-4-0",
+  "/consultoria/iso-9001-lp-v3",
+  "/consultoria/pbqp-h-lp-v3",
+  "/consultoria/iso-27001-lp-v3",
+  "https://iso9001.templum.com.br",
+  "https://iso9001.templum.com.br/diagnostico",
 ]);
 const SAIDA_MOTIVOS = {
   pesquisando: {
