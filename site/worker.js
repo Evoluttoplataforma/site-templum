@@ -16,10 +16,11 @@
 //                             ATIVAÇÃO DE ALUNOS (Ignição), não ao INBOUND.
 //                             Isca digital (evento "isca" / "isca-resultado") também vai
 //                             ao MQL (Novo Lead, tags isca + slug + produto), não ao INBOUND.
-//                             LP /iso-9001-advocacia-v2/, /consultoria/iso-9001-lp-v2/,
-//                             /consultoria/pbqp-h-lp-v2/ e /consultoria/iso-27001-lp-v2/:
-//                             faixas acima de R$ 100 mil vão ao INBOUND.
-//                             Até R$ 100 mil vai ao MQL.
+//                             LP /iso-9001-advocacia-v2/, /consultoria/pbqp-h-lp-v2/ e
+//                             /consultoria/iso-27001-lp-v2/: faixas acima de R$ 100 mil vão ao
+//                             INBOUND; até R$ 100 mil vai ao MQL.
+//                             /consultoria/iso-9001-lp-v2/ (piloto SDR): todo cadastro vai ao
+//                             funil Teste Igor (novo lead), independente do faturamento.
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
 //   GET    /api/saida       → leitura da pesquisa (senha Templum@2026), p/ /saida-ads
@@ -33,6 +34,9 @@
 //                             email-opt-out em TODOS os cards do CRM com aquele e-mail.
 //                             Os Fluxos leem a tag e param. Transição: também unsub
 //                             Mailchimp enquanto as lives ainda saem de lá.
+//   POST /api/tag-diagnostico-nova-era → fluxo do Templum OS (entrada em Interesse
+//                             comercial). Grava a tag "solicitou diagnóstico nova era"
+//                             no Mailchimp e no ManyChat. Não passa pelo Make.
 //   GET  /api/email-opt-out → gera link assinado (?email=&token=LEADS_PASSWORD)
 //
 // Secrets/vars (Cloudflare → Worker → Settings → Variables and Secrets):
@@ -48,6 +52,7 @@
 //   NOVA_ERA_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook E0 Nova Era (path nova-era-certificacao-iso-e0)
 //   MQL_E0_WEBHOOK_SECRETS (SECRETO, opcional) JSON { "<path_key>": "<secret>", ... } para várias campanhas E0
 //   MANYCHAT_API_KEY       (SECRETO) token da API do ManyChat (Settings → API)
+//   MAILCHIMP_TAG_WEBHOOK_SECRET (SECRETO) X-Fluxos-Secret do fluxo Interesse comercial
 //   LEADS_PASSWORD         senha para GET /api/leads (default: Templum@3321)
 //   MAPADOSITE_PASSWORD    senha (Basic Auth) para /mapadosite (default: Tp3321@)
 //   META_PIXEL_ID          ex.: 4177249519256900 — conta 1
@@ -249,6 +254,10 @@ export default {
       if (request.method === "POST") return handleEmailOptOut(request, env);
       if (request.method === "GET") return handleEmailOptOutLink(request, env);
       return json({ ok: false, error: "method_not_allowed" }, 405);
+    }
+    if (url.pathname === "/api/tag-diagnostico-nova-era") {
+      if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
+      return handleTagDiagnosticoNovaEra(request, env);
     }
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
@@ -1113,6 +1122,9 @@ export async function handleLead(request, env, ctx) {
     // "Maior desafio da empresa hoje" — select das LPs (ex.: /planejamento-estrategico-2027).
     // Separado de `mensagem` (texto livre) para virar campo próprio no Supabase e no CRM.
     desafio: body.desafio || "",
+    desafio_codigo: ["ALINHAR", "MEDIR", "ENGAJAR", "VALOR_GESTAO", "CERTIFICACAO", "OUTRO"].includes(String(body.desafio_codigo || "").trim())
+      ? String(body.desafio_codigo).trim()
+      : "",
     status_pagamento: body.status_pagamento || "",
     evento: body.evento || "lead",
     pagina: body.pagina || "",
@@ -1148,6 +1160,9 @@ export async function handleLead(request, env, ctx) {
     lead_event_id: String(body.lead_event_id || body.meta_event_id || "").slice(0, 80),
   };
   Object.assign(lead, camposH1(body));
+  if (lead.desafio_codigo && String(lead.mensagem || "").indexOf(lead.desafio_codigo) === -1) {
+    lead.mensagem = (lead.mensagem ? lead.mensagem + " " : "") + "Código do desafio: " + lead.desafio_codigo + ".";
+  }
 
   if (lead.evento === "nova-era-certificacao-iso" || lead.evento === REPLAY_NE_EVENT) {
     const d = brMobileDigits(lead.telefone);
@@ -1224,6 +1239,11 @@ export async function handleLead(request, env, ctx) {
     }
   } else if (diagCadastro) {
     // Card criado antes da resposta HTTP, para o sim achar o mesmo lead.
+  } else if (isIso9001LpV2Piloto(lead)) {
+    bgTasks.push(["orbit", saveToOrbit(lead, env, {
+      pipeline_id: ORBIT_TESTE_IGOR_PIPELINE_ID,
+      stage_id: ORBIT_TESTE_IGOR_STAGE_NOVO,
+    })]);
   } else if (isFaturamentoMql(lead)) {
     // Até R$ 100 mil nestas LPs não entra no INBOUND. Vai ao funil MQL.
     bgTasks.push(["mql", saveToMqlPorFaturamento(lead, env)]);
@@ -1575,6 +1595,9 @@ const ORBIT_MQL_PIPELINE_ID = "519a684f-c522-4aeb-b14d-371986de41c6";
 const ORBIT_MQL_STAGE_NOVO = "034f7c0f-6668-4d08-a053-061bb1ae050e";
 const ORBIT_LIVES_PIPELINE_ID = "9638c34e-def9-40b6-bb6a-b80210960f70";
 const ORBIT_LIVES_STAGE_NOVO_INSCRITO = "fa3c2273-29c8-4df4-bdb1-2f6a993c059f";
+const ORBIT_TESTE_IGOR_PIPELINE_ID = "81be2a19-2253-486a-8771-3ec19e499487";
+const ORBIT_TESTE_IGOR_STAGE_NOVO = "20a40448-b874-4f60-b5f6-00e400e08687";
+const LP_ISO9001_V2_PATH = "/consultoria/iso-9001-lp-v2/";
 const REPLAY_NE_EVENT = "nova-era-certificacao-iso-replay";
 const REPLAY_NE_TAG = "L2010_REPLAY_CADASTRO";
 const REPLAY_NE_MATERIAL = "/assets/nova-era-iso/material-de-apoio-nova-era.html";
@@ -2062,11 +2085,6 @@ const FATURAMENTO_SPLIT_LPS = {
     source: "LP Advocacia",
     note: "LP ISO 9001 advocacia.",
   },
-  "/consultoria/iso-9001-lp-v2/": {
-    tag: "iso9001-ate-100mil",
-    source: "LP ISO 9001",
-    note: "LP ISO 9001.",
-  },
   "/consultoria/pbqp-h-lp-v2/": {
     tag: "pbqph-ate-100mil",
     source: "LP PBQP-H",
@@ -2092,6 +2110,19 @@ const FATURAMENTO_INBOUND = new Set([
 function faturamentoSplitCfg(lead) {
   const path = normLpPath(pathOnly(lead && lead.pagina)).toLowerCase();
   return FATURAMENTO_SPLIT_LPS[path] || null;
+}
+
+function lpPathFromLead(lead) {
+  const candidates = [lead && lead.pagina, lead && lead.pagina_submit].filter(Boolean);
+  for (const raw of candidates) {
+    const path = normLpPath(pathOnly(raw)).toLowerCase();
+    if (path) return path;
+  }
+  return "";
+}
+
+function isIso9001LpV2Piloto(lead) {
+  return lpPathFromLead(lead) === LP_ISO9001_V2_PATH;
 }
 
 function isFaturamentoInbound(lead) {
@@ -2297,6 +2328,11 @@ function buildMqlInscricaoPatch(lead, cfg, existingMql, tags) {
     const prev = String(existingMql.notes || existingMql.note || "").trim();
     patch.notes =
       prev && prev.indexOf(cfg.notes) === -1 ? prev + "\n\n" + cfg.notes : prev || cfg.notes;
+  }
+  if (lead.desafio_codigo) {
+    const linha = "Código do desafio: " + lead.desafio_codigo;
+    const prev = String(patch.notes || existingMql.notes || existingMql.note || "").trim();
+    if (prev.indexOf(linha) === -1) patch.notes = prev ? prev + "\n" + linha : linha;
   }
   if (cfg.customFields) {
     const cf = mqlInscricaoCustomFields(lead);
@@ -2581,6 +2617,10 @@ async function saveToMqlInscricao(lead, env) {
       tags,
     };
     if (cfg.notes) body.notes = cfg.notes;
+    if (lead.desafio_codigo) {
+      const linha = "Código do desafio: " + lead.desafio_codigo;
+      body.notes = body.notes ? body.notes + "\n" + linha : linha;
+    }
     if (lead.evento === DIAG_9001_CAMPANHA && lead.mensagem) {
       body.notes = appendUniqueNote(body.notes, lead.mensagem);
     }
@@ -4263,6 +4303,104 @@ async function tagCrmLeadsOptOut(token, leads) {
     else errors.push({ id: lead.id, status: res.status });
   }
   return { tagged, errors };
+}
+
+const TAG_DIAGNOSTICO_NOVA_ERA = "solicitou diagnóstico nova era";
+
+async function addMailchimpTagOnly(email, env, tagName) {
+  if (!env.MAILCHIMP_API_KEY || !env.MAILCHIMP_LIST_ID) {
+    return { ok: false, skipped: true, reason: "not_configured" };
+  }
+  const dc = env.MAILCHIMP_API_KEY.split("-")[1];
+  if (!dc) return { ok: false, skipped: true, reason: "invalid_key" };
+  const auth = "Basic " + btoa("anystring:" + env.MAILCHIMP_API_KEY);
+  const headers = { "content-type": "application/json", authorization: auth };
+  const hash = md5hex(email);
+  const memberUrl = `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members/${hash}`;
+  try {
+    const existing = await fetch(memberUrl, { headers });
+    if (existing.status === 404) {
+      const created = await fetch(
+        `https://${dc}.api.mailchimp.com/3.0/lists/${env.MAILCHIMP_LIST_ID}/members`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ email_address: email, status: "subscribed", tags: [tagName] }),
+        },
+      );
+      if (created.ok) return { ok: true, created: true };
+      const e = await created.json().catch(() => ({}));
+      return { ok: false, error: e.title || "mailchimp_error" };
+    }
+    if (!existing.ok) {
+      const e = await existing.json().catch(() => ({}));
+      return { ok: false, error: e.title || "mailchimp_error" };
+    }
+    const member = await existing.json().catch(() => ({}));
+    if (member.status === "unsubscribed" || member.status === "cleaned" || member.status === "archived") {
+      return { ok: true, skipped: true, reason: member.status };
+    }
+    const tagged = await fetch(`${memberUrl}/tags`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ tags: [{ name: tagName, status: "active" }] }),
+    });
+    if (tagged.ok) return { ok: true };
+    const e = await tagged.json().catch(() => ({}));
+    return { ok: false, error: e.title || "mailchimp_error" };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+async function addManyChatTagOnly(phone, email, env, tagName) {
+  const token = env.MANYCHAT_API_KEY;
+  if (!token) return { ok: false, skipped: true, reason: "not_configured" };
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token };
+  try {
+    let subscriberId = null;
+    const e164 = toE164BR(phone);
+    if (e164) subscriberId = await findManyChatSubscriberByPhone(e164, headers);
+    if (!subscriberId && email) {
+      const r = await fetch(
+        `${MC_BASE}/fb/subscriber/findBySystemField?email=${encodeURIComponent(email)}`,
+        { headers },
+      ).catch(() => null);
+      if (r && r.ok) {
+        const d = await r.json().catch(() => ({}));
+        if (d.data && !Array.isArray(d.data) && d.data.id) subscriberId = d.data.id;
+      }
+    }
+    if (!subscriberId) return { ok: true, skipped: true, reason: "no_subscriber" };
+    const tagged = await fetch(`${MC_BASE}/fb/subscriber/addTagByName`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ subscriber_id: subscriberId, tag_name: tagName }),
+    });
+    if (tagged.ok) return { ok: true, subscriber_id: subscriberId };
+    const e = await tagged.json().catch(() => ({}));
+    return { ok: false, error: e.message || e.title || "manychat_error" };
+  } catch (e) {
+    return { ok: false, error: "fetch_failed" };
+  }
+}
+
+async function handleTagDiagnosticoNovaEra(request, env) {
+  const expected = env.MAILCHIMP_TAG_WEBHOOK_SECRET || "";
+  if (!expected) return json({ ok: false, error: "not_configured" }, 500);
+  const got = request.headers.get("X-Fluxos-Secret") || "";
+  if (!timingSafeEqual(got, expected)) return json({ ok: false, error: "unauthorized" }, 401);
+  let body = {};
+  try { body = await request.json(); } catch (_) { body = {}; }
+  const email = normalizeEmail(body.email || body.contact_email);
+  const phone = body.phone || body.contact_phone || body.telefone || "";
+  if (!email.includes("@")) return json({ ok: false, error: "invalid_email" }, 400);
+  const [mailchimp, manychat] = await Promise.all([
+    addMailchimpTagOnly(email, env, TAG_DIAGNOSTICO_NOVA_ERA),
+    addManyChatTagOnly(phone, email, env, TAG_DIAGNOSTICO_NOVA_ERA),
+  ]);
+  const ok = !!(mailchimp.ok || manychat.ok);
+  return json({ ok, mailchimp, manychat }, ok ? 200 : 502);
 }
 
 async function unsubMailchimp(email, env) {
