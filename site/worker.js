@@ -1163,6 +1163,7 @@ export async function handleLead(request, env, ctx) {
   applyBlogLeadAttribution(lead, body);
   // Tira UTM herdada de outra página antes de preencher a campanha desta LP.
   applyConsultoriaLpCampaign(lead, body);
+  applyAdsLandingUtm(lead, body);
   applyOrganicLeadAttribution(lead, body);
   if (naoVerificado) marcarLeadNaoVerificado(lead, turnstileStatus);
 
@@ -1614,6 +1615,21 @@ function applyConsultoriaLpCampaign(lead, body) {
       lead[k] = "";
     }
   }
+}
+
+/** /consultoria/iso-27001/ e /consultoria/pbqp-h/: clique do Google sem UTM nesta URL não herda campanha de e-mail. */
+function applyAdsLandingUtm(lead, body) {
+  if (String(lead.evento || "") !== "lead") return;
+  const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
+  const campaign = path === "/consultoria/iso-27001/" ? "iso-27001" : path === "/consultoria/pbqp-h/" ? "pbqp-h" : "";
+  if (!campaign) return;
+  if (body && body.utm_from_url === true) return;
+  if (!(lead.gclid || lead.gbraid || lead.wbraid)) return;
+  lead.utm_source = "google";
+  lead.utm_medium = "cpc";
+  lead.utm_campaign = campaign;
+  lead.utm_term = "";
+  lead.utm_content = "";
 }
 
 function applySegmentLpUtmDefaults(lead, body) {

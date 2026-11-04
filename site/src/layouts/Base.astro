@@ -249,7 +249,13 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           var f = {}, l = {};
           try { f = JSON.parse(localStorage.getItem("tpl_first") || "{}"); } catch (_) {}
           try { l = JSON.parse(localStorage.getItem("tpl_last") || "{}"); } catch (_) {}
-          function g(k) { return l[k] || f[k] || ""; } // last-touch (com fallback p/ first)
+          var adsLp = /^\/consultoria\/(iso-27001|pbqp-h)\/?$/.test(location.pathname);
+          var cliqueSemUtm = !!(l.gclid || l.gbraid || l.wbraid) && !l.utm_source && !l.utm_medium && !l.utm_campaign;
+          function g(k) {
+            if (l[k]) return l[k];
+            if (adsLp && cliqueSemUtm && k.indexOf("utm_") === 0) return "";
+            return f[k] || "";
+          }
           function ft(k) { return f[k] || ""; }          // first-touch (original)
           var sa = {
             device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop",
@@ -427,6 +433,16 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
                 _attrib.utm_campaign = _ck("lt_utm_campaign");
               }
             }
+          }
+          var _paidClick = ["gclid","gbraid","wbraid"].some(function (k) { return _attrib[k]; });
+          var _adsPath = location.pathname.replace(/\/$/, "");
+          var _adsCampaign = _adsPath === "/consultoria/iso-27001" ? "iso-27001" : _adsPath === "/consultoria/pbqp-h" ? "pbqp-h" : "";
+          if (_adsCampaign && _paidClick && !_hasUtmInUrl) {
+            _attrib.utm_source = "google";
+            _attrib.utm_medium = "cpc";
+            _attrib.utm_campaign = _adsCampaign;
+            _attrib.utm_term = "";
+            _attrib.utm_content = "";
           }
           var _submitUrl = location.origin + location.pathname;
           var _landingPath = (_attrib.landing || location.pathname || "/").split("?")[0];
