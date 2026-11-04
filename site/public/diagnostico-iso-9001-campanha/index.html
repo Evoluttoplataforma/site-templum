@@ -595,7 +595,6 @@
     pessoa = { nome: nome, email: email, telefone: "+55" + telDigits, empresa: empresa };
 
     var params = new URLSearchParams(location.search);
-    var leadEventId = uuid();
     var payload = {
       nome: nome,
       email: email,
@@ -606,8 +605,6 @@
       mensagem: mensagem(),
       pagina: location.pathname,
       landing: location.href,
-      meta_event_id: leadEventId,
-      lead_event_id: leadEventId,
       meta_content_name: CONTENT_NAME,
       fbp: cookie("_fbp"),
       fbc: cookie("_fbc")
@@ -637,13 +634,6 @@
         btn.textContent = "Ver meu diagnóstico";
         msg.textContent = "Não conseguimos enviar agora. Tente de novo.";
         return;
-      }
-      if (res.body.turnstile !== "nao_verificado") {
-      try {
-        if (typeof fbq === "function") {
-          fbq("track", "Lead", { content_name: CONTENT_NAME }, { eventID: leadEventId });
-        }
-      } catch (err) {}
       }
       showResult();
     }).catch(function () {
@@ -705,9 +695,15 @@
       mensagem: note,
       pagina: location.pathname,
       landing: location.href,
-      meta_content_name: CONTENT_NAME
+      meta_content_name: CONTENT_NAME,
+      fbp: cookie("_fbp"),
+      fbc: cookie("_fbc")
     };
+    var leadEventId = "";
     if (choice === "sim" && extra) {
+      leadEventId = uuid();
+      payload.meta_event_id = leadEventId;
+      payload.lead_event_id = leadEventId;
       payload.funcionarios = extra.funcionarios;
       payload.cargo = extra.cargo;
       payload.faturamento = extra.faturamento;
@@ -744,6 +740,13 @@
           askMsg.textContent = "Não conseguimos registrar agora. Tente de novo.";
         }
         return;
+      }
+      if (choice === "sim" && res.body.turnstile !== "nao_verificado") {
+        try {
+          if (typeof fbq === "function") {
+            fbq("track", "Lead", { content_name: CONTENT_NAME }, { eventID: leadEventId });
+          }
+        } catch (err) {}
       }
       document.getElementById("ask").hidden = true;
       document.getElementById("qualify").hidden = true;

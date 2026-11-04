@@ -1196,10 +1196,11 @@ export async function handleLead(request, env, ctx) {
   const diagEscolha = lead.evento === DIAG_9001_CAMPANHA && (contatoDiag === "sim" || contatoDiag === "nao");
   const diagCadastro = lead.evento === DIAG_9001_CAMPANHA && !diagEscolha;
 
-  // O sim/não é o mesmo card. Não dispara outro Lead no Meta nem outra nutrição.
+  // O sim/não atualiza o mesmo card. Nutrição e ManyChat não repetem.
+  // Lead da Meta sai só no segundo formulário (contato sim), não ao ver o resultado.
   if (!testeH1 && !isResultado && !isReplay && !diagEscolha) {
     bgTasks.push(["mailchimp", saveToMailchimp(lead, env)]);
-    if (!lead.turnstile_nao_verificado) bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
+    if (!lead.turnstile_nao_verificado && !diagCadastro) bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
     bgTasks.push(["manychat", saveToManyChat(lead, env)]);
   }
   const isCursoAluno =
@@ -1218,6 +1219,9 @@ export async function handleLead(request, env, ctx) {
   } else if (diagEscolha) {
     // Acima de R$ 100 mil vai ao INBOUND. Até R$ 100 mil permanece no MQL.
     bgTasks.push(["diag-contato", routeDiagnosticoContato(lead, env, contatoDiag === "sim")]);
+    if (contatoDiag === "sim" && !lead.turnstile_nao_verificado) {
+      bgTasks.push(["meta", sendMetaLead(lead, env, request)]);
+    }
   } else if (diagCadastro) {
     // Card criado antes da resposta HTTP, para o sim achar o mesmo lead.
   } else if (isFaturamentoMql(lead)) {
