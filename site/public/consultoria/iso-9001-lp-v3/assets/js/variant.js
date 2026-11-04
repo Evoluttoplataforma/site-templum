@@ -66,7 +66,7 @@
   var adHeadlines = [
     "ISO 9001 por R$ 99/dia, com especialista do seu lado",
     "Consultoria ISO 9001 com um especialista do seu lado, por R$ 99/dia",
-    "Certificação ISO 9001 a partir de R$ 99/dia",
+    "Certificação ISO 9001 por menos de R$ 99/dia",
     "ISO 9001 em média 6 meses, por R$ 99/dia",
     "ISO 9001:2026 já publicada. Veja o que muda no seu sistema"
   ];
