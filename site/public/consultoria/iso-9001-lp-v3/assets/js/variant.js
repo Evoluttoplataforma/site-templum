@@ -63,12 +63,40 @@
     return "";
   }
 
-  var utmHeadlines = [
-    { keys: ["consultoria"], text: "Consultoria ISO 9001: prepare sua empresa para conquistar a certificação" },
-    { keys: ["certifica"], text: "Certificação ISO 9001: prepare sua empresa com apoio especializado" },
-    { keys: ["custo", "preco", "valor"], text: "Quanto custa implementar a ISO 9001 na sua empresa?" },
-    { keys: ["implanta", "implementa"], text: "Implementação ISO 9001: prepare sua empresa para a certificação" }
+  var adHeadlines = [
+    "ISO 9001 por R$ 99/dia, com especialista do seu lado",
+    "Consultoria ISO 9001 com um especialista do seu lado, por R$ 99/dia",
+    "Certificação ISO 9001 a partir de R$ 99/dia",
+    "ISO 9001 em média 6 meses, por R$ 99/dia",
+    "ISO 9001:2026 já publicada. Veja o que muda no seu sistema"
   ];
+  var adRules = [
+    { n: 5, keys: ["2026", "publicada", "o que muda"] },
+    { n: 4, keys: ["6 meses", "seis meses"] },
+    { n: 2, keys: ["consultoria"] },
+    { n: 1, keys: ["99", "por dia", "preco", "custo", "valor"] },
+    { n: 3, keys: ["certificado", "cliente", "norma"] }
+  ];
+
+  function fold(value) {
+    return (value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  }
+
+  function pickAdHeadline(term) {
+    var t = fold(term);
+    if (!t || t === "direct" || t === "none") return 3;
+    var num = t.match(/^(?:v|titulo|h)?([1-5])$/);
+    if (num) return Number(num[1]);
+    for (var i = 0; i < adHeadlines.length; i++) {
+      if (fold(adHeadlines[i]) === t) return i + 1;
+    }
+    for (var r = 0; r < adRules.length; r++) {
+      for (var k = 0; k < adRules[r].keys.length; k++) {
+        if (t.indexOf(adRules[r].keys[k]) !== -1) return adRules[r].n;
+      }
+    }
+    return 3;
+  }
 
   window.LP = {
     variant: variant,
@@ -77,17 +105,11 @@
     preview: preview,
 
     applyHero: function () {
-      var v = cfg.variants[variant];
-      var fromTerm = termHeadline(params.get("utm_term"), utmHeadlines);
-      document.querySelectorAll("[data-copy]").forEach(function (el) {
-        var key = el.getAttribute("data-copy");
-        if (key === "headline") {
-          el.textContent = fromTerm || "Consultoria ISO 9001: prepare sua empresa para conquistar a certificação";
-          return;
-        }
-        if (v[key]) el.textContent = v[key];
-      });
+      var n = pickAdHeadline(params.get("utm_term"));
+      var h1 = document.querySelector("[data-copy='headline']");
+      if (h1) h1.textContent = adHeadlines[n - 1];
       document.documentElement.setAttribute("data-variant", variant);
+      document.documentElement.setAttribute("data-headline", String(n));
     }
   };
 

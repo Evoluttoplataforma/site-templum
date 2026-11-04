@@ -46,7 +46,7 @@ window.LP_CONFIG = {
       label: "C · Licitações",
       premise: "Algumas oportunidades exigem comprovação de qualidade certificada.",
       headline: "Sua empresa precisa da ISO 9001 para participar de licitações?",
-      subheadline: "Estruture sua implementação com especialistas e prepare-se para atender aos requisitos de certificação previstos nos processos aplicáveis.",
+      subheadline: "A Templum orienta a implementação da ISO 9001 para preparar sua empresa para os requisitos de certificação aplicáveis ao edital.",
       cta: "Solicitar proposta ISO 9001"
     },
     d: {

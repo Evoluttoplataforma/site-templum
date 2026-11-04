@@ -81,6 +81,8 @@ const sxCopia = copiaSaida(oferta === "proposta" ? "proposta" : "");
   var comentario = root.querySelector("[data-sx-comentario]");
   var sendBtn = root.querySelector("[data-sx-send]");
   var cta = root.querySelector("[data-sx-cta]");
+  var alvoForm = document.getElementById("form") || document.getElementById("contato") || document.getElementById("proposta") || document.getElementById("lead-form");
+  if (cta && alvoForm) cta.setAttribute("href", "#" + alvoForm.id);
   var later = root.querySelector("[data-sx-later]");
   var card = root.querySelector("[data-sx-card]");
   var norma = root.getAttribute("data-norma") || "esta certificação";

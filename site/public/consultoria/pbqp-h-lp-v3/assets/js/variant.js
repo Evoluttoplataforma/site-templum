@@ -68,14 +68,50 @@
     });
   }
 
+  var adHeadlines = [
+    "PBQP-H por R$ 50/dia, com apoio até a auditoria",
+    "Consultoria PBQP-H para construtoras, por R$ 50/dia",
+    "Certificação PBQP-H a partir de R$ 50/dia para construtoras",
+    "PBQP-H em média 6 meses, por R$ 50/dia",
+    "Seu financiamento ou edital pede PBQP-H? Veja o que falta"
+  ];
+  var adRules = [
+    { n: 5, keys: ["financiamento", "edital"] },
+    { n: 4, keys: ["6 meses", "seis meses"] },
+    { n: 2, keys: ["consultoria"] },
+    { n: 1, keys: ["50", "por dia", "preco", "custo", "valor"] },
+    { n: 3, keys: ["certificado"] }
+  ];
+
+  function fold(value) {
+    return (value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  }
+
+  function pickAdHeadline(term) {
+    var t = fold(term);
+    if (!t || t === "direct" || t === "none") return 3;
+    var num = t.match(/^(?:v|titulo|h)?([1-5])$/);
+    if (num) return Number(num[1]);
+    for (var i = 0; i < adHeadlines.length; i++) {
+      if (fold(adHeadlines[i]) === t) return i + 1;
+    }
+    for (var r = 0; r < adRules.length; r++) {
+      for (var k = 0; k < adRules[r].keys.length; k++) {
+        if (t.indexOf(adRules[r].keys[k]) !== -1) return adRules[r].n;
+      }
+    }
+    return 3;
+  }
+
   window.LP = {
     variant: id,
     applyHero: function () {
-      var el = document.querySelector("[data-copy='headline']");
-      var fromTerm = termHeadline(params.get("utm_term"));
-      if (el) el.textContent = fromTerm || "Consultoria PBQP-H: prepare sua construtora para a certificação";
+      var n = pickAdHeadline(params.get("utm_term"));
+      var h1 = document.querySelector("[data-copy='headline']");
+      if (h1) h1.textContent = adHeadlines[n - 1];
       gluePbqp(document.querySelector(".hero"));
       document.documentElement.setAttribute("data-variant", id);
+      document.documentElement.setAttribute("data-headline", String(n));
     }
   };
 

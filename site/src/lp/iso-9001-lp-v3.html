@@ -18,15 +18,15 @@
 
   <link rel="preload" href="/fonts/montserrat/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://templum.com.br/consultoria/iso-9001-lp-v3/">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261102b">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261104e">
 
-  <script src="assets/js/config.js?v=20261029a"></script>
-  <script src="assets/js/variant.js?v=20261102b"></script>
+  <script src="assets/js/config.js?v=20261104a"></script>
+  <script src="assets/js/variant.js?v=20261104f"></script>
   <script src="/js/tpl-turnstile.js?v=20261103b" defer></script>
   <script src="/js/form-funil.js?v=20261103a" defer></script>
   <script src="assets/js/tracking.js?v=20261101a" defer></script>
   <script src="/js/telefone-br.js?v=20261029" defer></script>
-  <script src="assets/js/app.js?v=20261103b" defer></script>
+  <script src="assets/js/app.js?v=20261104a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#proposta">Ir para o formulário de proposta</a>
@@ -34,7 +34,7 @@
   <header class="topbar">
     <div class="wrap topbar__inner">
       <img src="assets/img/logo-branco.png" alt="Templum" width="132" height="44" class="topbar__logo">
-      <a class="topbar__cta" href="#proposta" data-cta="topbar" data-abre-form data-cta-pos="menu">Solicitar proposta</a>
+      <a class="topbar__cta" href="#proposta" data-cta="topbar" data-abre-form data-cta-pos="menu">Solicitar proposta ISO 9001</a>
     </div>
   </header>
 
@@ -42,22 +42,23 @@
     <!-- 1. Primeira dobra -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero__grid">
-        <div class="hero__copy">
+        <div class="hero__intro">
           <p class="lockup">
             <span class="lockup__bang" aria-hidden="true"></span>
             <span class="lockup__name">ISO 9001</span>
             <span class="lockup__by">Consultoria Templum</span>
           </p>
 
-          <p class="hero__premise" data-copy="premise">O próximo grande contrato pode exigir ISO 9001.</p>
-          <h1 id="hero-title" class="hero__title" data-copy="headline">Consultoria ISO 9001: prepare sua empresa para conquistar a certificação</h1>
-          <p class="hero__sub" data-copy="subheadline">A Templum ajuda sua empresa a implementar os requisitos da ISO 9001 para atender às exigências de clientes, preparar-se para homologações e disputar novas oportunidades comerciais.</p>
-
+          <p class="hero__premise" data-copy="premise">Consultoria ISO 9001 para empresas</p>
+          <h1 id="hero-title" class="hero__title" data-copy="headline">Certificação ISO 9001 a partir de R$ 99/dia</h1>
+          <p class="hero__sub" data-copy="subheadline">Diagnóstico personalizado, documentos, treinamentos e acompanhamento até a auditoria, com especialistas guiando em cada etapa.</p>
+          <script>window.LP && window.LP.applyHero();</script>
+          <div class="hero__more">
           <ul class="benefits">
             <li>
-              <a href="#investimento" data-bullet="investimento">
-                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
-                <div><strong>Quanto custa certificar sua empresa</strong><span>Investimento transparente, sem taxa escondida.</span></div>
+              <a href="#motivos" data-bullet="motivo" data-cta="motivo">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div><strong>O cliente ou o edital pediu a certificação</strong></div>
               </a>
             </li>
             <li>
@@ -69,19 +70,19 @@
             <li>
               <a href="#garantia" data-bullet="garantia">
                 <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-                <div><strong>Garantia de 200% em contrato</strong><span>Se não certificar, devolvemos o dobro.</span></div>
+                <div><strong>Garantia de 200% em contrato</strong><span>Se você cumprir as etapas do método e não certificar, devolvemos 200% do investimento. Condição no contrato.</span></div>
               </a>
             </li>
           </ul>
           <a class="hero__link" href="#metodo" data-cta="conhecer_metodo">Conhecer o método</a>
+          </div>
         </div>
-        <script>window.LP && window.LP.applyHero();</script>
 
         <div class="hero__form" id="proposta">
           <div class="slab">
             <form class="lead-form" id="lead-form" novalidate data-trk-event="lead">
-              <h2 class="lead-form__title">Solicite uma proposta ISO 9001</h2>
-              <p class="lead-form__lede">Conte sobre sua empresa para que nossa equipe avalie seu projeto.</p>
+              <h2 class="lead-form__title">Solicite um diagnóstico</h2>
+              <p class="lead-form__lede">Conte sobre a sua empresa.</p>
 
               <div class="field">
                 <label for="f-nome">Nome</label>
@@ -114,9 +115,9 @@
               <div data-tracking-fields></div>
 
               <button class="btn btn--dark btn--block" type="submit" data-copy="cta" data-cta="hero_form">Solicitar proposta ISO 9001</button>
-              <p class="lead-form__legal">Seus dados serão usados para contato sobre sua solicitação, conforme a <a href="#" data-privacy>Política de Privacidade</a>.</p>
+              <p class="lead-form__legal">Seus dados serão usados para contato sobre sua solicitação, conforme a <a href="https://templum.com.br/politica-de-privacidade" data-privacy>Política de Privacidade</a>.</p>
               <div class="lead-form__status" role="status" aria-live="polite" hidden></div>
-              <p class="lead-form__alt">Prefere conversar agora? <a href="#" data-whatsapp data-wpp-ref="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001." data-cta="whatsapp_form" target="_blank" rel="noopener">Falar no WhatsApp</a></p>
+              <p class="lead-form__alt">Prefere conversar agora? <a href="https://wa.me/5519993521270?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Templum%20e%20quero%20saber%20sobre%20a%20ISO%209001." data-whatsapp data-wpp-ref="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001." data-cta="whatsapp_form" target="_blank" rel="noopener">Falar no WhatsApp</a></p>
             </form>
           </div>
         </div>
@@ -124,7 +125,7 @@
     </section>
 
     <!-- 2. Situações que levam à ISO 9001 -->
-    <section class="section" aria-labelledby="motivos-title">
+    <section class="section" id="motivos" aria-labelledby="motivos-title">
       <div class="wrap motives">
         <div class="motives__text">
         <h2 id="motivos-title" class="h2">O que está levando sua empresa a buscar a ISO 9001?</h2>
@@ -248,7 +249,7 @@
               <li>Uma pessoa da equipe responsável pelo projeto</li>
               <li>Documentos validados sem demora</li>
               <li>Auditoria agendada cedo com a certificadora</li>
-              <li>Templum OS, plataforma com agentes integrados que entendem o seu sistema de gestão</li>
+              <li>Templum OS, a plataforma que organiza o sistema de gestão</li>
             </ul>
           </div>
           <div class="pace__list pace__list--slow">
@@ -284,8 +285,7 @@
       <div class="wrap invest">
         <div class="invest__price">
           <h2 id="invest-title" class="h2">Quanto custa a ISO 9001 com a Templum</h2>
-          <p class="invest__value"><span>Planos a partir de</span> <strong>R$ 2.500/mês</strong></p>
-          <p class="invest__sub">Sem limite de horas de consultoria.</p>
+          <p class="invest__value"><a href="#proposta" data-cta="preco"><strong>R$ 99</strong></a></p>
           <h3>O valor final depende de</h3>
           <ul class="checks">
             <li>Tamanho da equipe</li>
@@ -299,7 +299,7 @@
           <ul class="checks">
             <li>Consultoria da conversa com um especialista até a auditoria</li>
             <li>Documentos elaborados pela Templum</li>
-            <li>Templum OS, plataforma com agentes de IA</li>
+            <li>Templum OS, a plataforma da implementação</li>
             <li>Auditoria interna</li>
             <li>Selo "Estamos Implementando"</li>
           </ul>
@@ -315,7 +315,7 @@
         <p class="guarantee__num" aria-hidden="true">200%</p>
         <div class="guarantee__text">
           <h2 id="garantia-title" class="guarantee__title">Certificação ou o dobro do dinheiro de volta.</h2>
-          <p>Se a sua empresa passar por todos os processos do método e ainda assim não certificar, devolvemos 200% do investimento. A garantia está registrada em contrato.</p>
+          <p>Se você cumprir as etapas do método e não certificar, devolvemos 200% do investimento. Condição no contrato.</p>
         </div>
         <a class="btn btn--dark" href="#proposta" data-cta="garantia" data-abre-form data-cta-pos="meio">Solicitar proposta ISO 9001</a>
       </div>
@@ -328,7 +328,7 @@
           <h2 id="dif-title" class="h2">Por que contar com a Templum?</h2>
           <ul class="diff__list">
             <li><img src="assets/img/icons/especialistas.webp" alt="" width="48" height="48" loading="lazy"><div><h3>Especialistas</h3><p>Consultor especialista no chat, com resposta média em cerca de 1 minuto, e chamados respondidos em até 4 horas úteis.</p></div></li>
-            <li><img src="assets/img/icons/plataforma.webp" alt="" width="48" height="48" loading="lazy"><div><h3>Templum OS</h3><p>Plataforma com agentes de IA que ajudam a criar, organizar e encontrar tudo da implementação, disponível 24 horas.</p></div></li>
+            <li><img src="assets/img/icons/plataforma.webp" alt="" width="48" height="48" loading="lazy"><div><h3>Templum OS</h3><p>Plataforma que ajuda a criar, organizar e encontrar tudo da implementação, disponível 24 horas.</p></div></li>
             <li class="diff__seal"><img src="assets/img/selo-estamos-implementando-160.webp" alt="Selo Estamos Implementando, da Templum" width="48" height="62" loading="lazy"><div><h3>Selo "Estamos Implementando"</h3><p>Ao iniciar a consultoria, sua empresa recebe o selo e um atestado para usar no site, em propostas e em licitações enquanto implementa.</p></div></li>
           </ul>
         </div>
@@ -443,7 +443,7 @@
             <tbody data-chart-rows></tbody>
           </table>
           <p class="chart__source">
-            Fonte: <a data-source-link href="#" target="_blank" rel="noopener">ISO Survey 2025, dados divulgados pela DQS</a>.
+            Fonte: <a data-source-link href="https://www.dqsglobal.com/es/acerca-de/sala-de-prensa/iso-survey-2025-las-certificaciones-iso-crecen-un-11-en-el-mundo-y-un-28-en-espana" target="_blank" rel="noopener">ISO Survey 2025, dados divulgados pela DQS</a>.
             Variações de cobertura podem afetar comparações. Certificados não equivalem a empresas únicas.
           </p>
         </figure>
@@ -511,11 +511,11 @@
       <img src="assets/img/logo-branco.png" alt="Templum" width="108" height="36" loading="lazy">
       <div class="footer__legal">
         <p>© <span data-year>2026</span> Templum Consultoria Digital LTDA. CNPJ 00.198.308/0001-93</p>
-        <p>Campinas/SP · <a href="tel:+5519993521270">(19) 99352-1270</a> · <a href="#" data-privacy>Política de Privacidade</a></p>
+        <p>Campinas/SP · <a href="tel:+5519993521270">(19) 99352-1270</a> · <a href="https://templum.com.br/politica-de-privacidade" data-privacy>Política de Privacidade</a></p>
       </div>
     </div>
   </footer>
 
-  <a class="wpp-fixo" href="#" data-whatsapp data-wpp-ref="1" data-wpp-fixo="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001.">Falar no WhatsApp</a>
+  <a class="wpp-fixo" href="https://wa.me/5519993521270?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Templum%20e%20quero%20saber%20sobre%20a%20ISO%209001." data-whatsapp data-wpp-ref="1" data-wpp-fixo="1" data-wpp-norma="ISO 9001" data-wpp-linha="Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001.">Falar no WhatsApp</a>
 </body>
 </html>

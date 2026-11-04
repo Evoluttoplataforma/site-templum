@@ -7,7 +7,7 @@
 
   // Eventos de analytics. Nunca enviar nome, e-mail, telefone ou empresa.
   function track(event, data) {
-    var payload = { event: event, experiment_id: cfg.experiment.id, variant_id: LP.variant };
+    var payload = { event: event, experiment_id: cfg.experiment.id, variant_id: LP.variant, intent_id: LP.intent || "geral" };
     for (var k in data) payload[k] = data[k];
     window.dataLayer.push(payload);
   }
@@ -300,7 +300,7 @@
         telefone: data.whatsapp || "",
         empresa: data.empresa || "",
         norma: "ISO 9001",
-        mensagem: "LP Google Ads ISO 9001. Variante " + LP.variant + ". Experimento " + cfg.experiment.id + ".",
+        mensagem: "LP Google Ads ISO 9001 v3. Variante " + LP.variant + ". Intencao " + (LP.intent || "geral") + ". Experimento " + cfg.experiment.id + ".",
         evento: "lead",
         pagina: location.pathname,
         landing: location.pathname,
@@ -352,7 +352,7 @@
           if (window.tplLeadFail) window.tplLeadFail(f, button);
           else showStatus("alert", "A verificação anti-robô falhou.", " Tente novamente em instantes.");
           button.disabled = false;
-          button.textContent = cfg.variants[LP.variant].cta;
+          button.textContent = "Solicitar proposta ISO 9001";
           return;
         }
         var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
@@ -384,13 +384,13 @@
         if (window.tplTurnstileRecusa && window.tplTurnstileRecusa(window.tplTurnstileStatus) && window.tplLeadFail) {
           window.tplLeadFail(f, button);
           button.disabled = false;
-          button.textContent = cfg.variants[LP.variant].cta;
+          button.textContent = "Solicitar proposta ISO 9001";
           return;
         }
         track("form_error", { error_fields: "submit" });
         showStatus("alert", "Não foi possível confirmar o recebimento.", " Tente novamente em instantes.");
         button.disabled = false;
-        button.textContent = cfg.variants[LP.variant].cta;
+        button.textContent = "Solicitar proposta ISO 9001";
       });
     });
   })();
