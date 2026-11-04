@@ -329,9 +329,9 @@
             </div>
           </div>
           <section class="tarefa" aria-labelledby="tarefa-titulo">
-            <p class="tarefa__quando">Para amanhã, 4 de novembro, às 16h</p>
+            <p class="tarefa__quando">Para amanhã, 5 de novembro, às 16h</p>
             <h2 id="tarefa-titulo">O que fazer antes do próximo encontro<span class="dot">.</span></h2>
-            <p class="sub">Finalize a parte de inteligência de mercado e alimente a base de conhecimento.</p>
+            <p class="sub">Revisar inteligência de mercado e planejamento estratégico. Quanto mais refinado, melhor serão os processos que veremos no dia seguinte.</p>
           </section>
         </div>
       </div>
@@ -384,7 +384,7 @@
       id: "imersao",
       aulas: [
         { capa: "Capa 1", arquivo: "capas/capa-1.webp", dia: "3/11", quando: "3 de novembro às 16h", titulo: "Primeiro dia da imersão", libera: "2026-11-03T20:00:00.000Z", video: "https://vimeo.com/1243006454" },
-        { capa: "Capa 2", arquivo: "capas/capa-2.webp", dia: "4/11", quando: "4 de novembro às 16h", titulo: "Segundo dia da imersão", libera: "2026-11-04T20:00:00.000Z", video: "" },
+        { capa: "Capa 2", arquivo: "capas/capa-2.webp", dia: "4/11", quando: "4 de novembro às 16h", titulo: "Segundo dia da imersão", libera: "2026-11-04T20:00:00.000Z", video: "https://vimeo.com/1243448535#t=842" },
         { capa: "Capa 3", arquivo: "capas/capa-3.webp", dia: "5/11", quando: "5 de novembro às 16h", titulo: "Terceiro dia da imersão", libera: "2026-11-05T20:00:00.000Z", video: "" }
       ]
     },
@@ -409,7 +409,10 @@
     if (!url) return null;
     var s = String(url);
     var vimeo = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-    if (vimeo) return { tipo: "vimeo", id: vimeo[1] };
+    if (vimeo) {
+      var inicio = s.match(/#t=(\d+)/);
+      return { tipo: "vimeo", id: vimeo[1], inicio: inicio ? inicio[1] : null };
+    }
     var youtube = s.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/);
     if (youtube) return { tipo: "youtube", id: youtube[1] };
     if (/^[\w-]{6,}$/.test(s)) return { tipo: "youtube", id: s };
@@ -443,7 +446,12 @@
     var base = video.tipo === "vimeo"
       ? "https://player.vimeo.com/video/" + video.id
       : "https://www.youtube-nocookie.com/embed/" + video.id;
-    frame.src = base + (autoplay ? "?autoplay=1" : "");
+    var qs = autoplay ? "?autoplay=1" : "";
+    if (video.tipo === "vimeo" && video.inicio) {
+      frame.src = base + qs + "#t=" + video.inicio + "s";
+    } else {
+      frame.src = base + qs;
+    }
     frame.title = aula.titulo;
     frame.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
     frame.allowFullscreen = true;
