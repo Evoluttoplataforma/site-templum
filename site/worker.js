@@ -1785,11 +1785,13 @@ async function saveToOrbit(lead, env, dest) {
   if (Object.keys(custom_fields).length) body.custom_fields = custom_fields;
 
   // Etiqueta canônica do INBOUND é ISO9001 (junto). "ISO 9001" abria uma etiqueta nova.
-  const orbitTags = comTagNaoVerificado(
+  let orbitTags = comTagNaoVerificado(
     withNormaTags(ORBIT_EVENTO_TAGS[lead.evento] || [], lead.pagina)
       .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag)),
     lead,
   );
+  const lpv2Bw = lpv2PilotoBwTag(lead);
+  if (lpv2Bw && !orbitTags.includes(lpv2Bw)) orbitTags = orbitTags.concat(lpv2Bw);
   if (orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
@@ -2123,6 +2125,28 @@ function lpPathFromLead(lead) {
 
 function isIso9001LpV2Piloto(lead) {
   return lpPathFromLead(lead) === LP_ISO9001_V2_PATH;
+}
+
+/** Segunda a sexta, 9h–18h (Brasília). 18:00 em diante = fora. */
+function isBrasiliaHorarioComercial(date = new Date()) {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "short",
+    hour: "numeric",
+    hour12: false,
+  });
+  const parts = Object.fromEntries(fmt.formatToParts(date).map((p) => [p.type, p.value]));
+  const dow = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[parts.weekday];
+  const hour = Number(parts.hour);
+  if (dow === 0 || dow === 6) return false;
+  if (hour < 9 || hour >= 18) return false;
+  return true;
+}
+
+/** Etiqueta do piloto LP v2 (boas-vindas SDR): Worker grava no cadastro; automação ramifica por tag. */
+function lpv2PilotoBwTag(lead) {
+  if (!isIso9001LpV2Piloto(lead)) return null;
+  return isBrasiliaHorarioComercial() ? "LPV2_BW_COMERCIAL" : "LPV2_BW_FORA";
 }
 
 function isFaturamentoInbound(lead) {
