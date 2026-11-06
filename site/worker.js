@@ -1593,7 +1593,7 @@ const ORBIT_LIVES_STAGE_NOVO_INSCRITO = "fa3c2273-29c8-4df4-bdb1-2f6a993c059f";
 const ORBIT_TESTE_IGOR_PIPELINE_ID = "81be2a19-2253-486a-8771-3ec19e499487";
 const ORBIT_TESTE_IGOR_STAGE_NOVO = "20a40448-b874-4f60-b5f6-00e400e08687";
 const LP_ISO9001_V2_PATH = "/consultoria/iso-9001-lp-v2/";
-/** Cadastro comercial: Worker grava LPV2_BW_* e o fluxo INBOUND dispara o WhatsApp da Norma. */
+/** Cadastro comercial: Worker grava SDR_HORARIO_COMERCIAL ou SDR_FORA_HORARIO; o fluxo INBOUND dispara o WhatsApp da Norma. */
 const SITE_SDR_BW_EXTRA = new Set([
   "/contato/",
   "/iso-9001-campinas/",
@@ -1886,8 +1886,8 @@ async function saveToOrbit(lead, env, dest) {
       .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag)),
     lead,
   );
-  const lpv2Bw = siteSdrBwTag(lead);
-  if (lpv2Bw && !orbitTags.includes(lpv2Bw)) orbitTags = orbitTags.concat(lpv2Bw);
+  const siteSdrTag = siteSdrBwTag(lead);
+  if (siteSdrTag && !orbitTags.includes(siteSdrTag)) orbitTags = orbitTags.concat(siteSdrTag);
   if (orbitTags.length) body.tags = orbitTags;
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
@@ -2245,10 +2245,10 @@ function isBrasiliaHorarioComercial(date = new Date()) {
   return true;
 }
 
-/** Etiqueta de boas-vindas SDR: Worker grava no cadastro; automação ramifica por tag. */
+/** Etiqueta de boas-vindas SDR do site: horário comercial (9h-18h, Brasília) ou fora. */
 function siteSdrBwTag(lead) {
   if (!isSiteSdrBwLead(lead)) return null;
-  return isBrasiliaHorarioComercial() ? "LPV2_BW_COMERCIAL" : "LPV2_BW_FORA";
+  return isBrasiliaHorarioComercial() ? "SDR_HORARIO_COMERCIAL" : "SDR_FORA_HORARIO";
 }
 
 function isFaturamentoInbound(lead) {
