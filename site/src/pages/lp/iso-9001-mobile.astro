@@ -107,7 +107,15 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { dataLayer.push(arguments); };
-    gtag("config", "AW-1065643610");
+    if (!window.__tplAdsContaAntiga) {
+      window.__tplAdsContaAntiga = true;
+      var adsAntiga = document.createElement("script");
+      adsAntiga.async = true;
+      adsAntiga.src = "https://www.googletagmanager.com/gtag/js?id=AW-1065643610";
+      document.head.appendChild(adsAntiga);
+      gtag("js", new Date());
+      gtag("config", "AW-1065643610");
+    }
   </script>
   <div class="ig">
     <header class="ig-top">
@@ -351,6 +359,16 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         try { if (typeof window.gtag === "function") window.gtag("event", nome, dados); } catch (_) {}
         try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: nome }, dados)); } catch (_) {}
       }
+      function conversaoContaAntiga(sendTo, transactionId) {
+        if (typeof window.gtag !== "function") return;
+        var conv = { send_to: sendTo };
+        if (transactionId) conv.transaction_id = transactionId;
+        try { window.gtag("event", "conversion", conv); } catch (_) {}
+      }
+      document.addEventListener("tpl:lead-saved", function (e) {
+        var id = e.detail && e.detail.eventId;
+        conversaoContaAntiga("AW-1065643610/SCgVCIfy4rMcENrckfwD", id || "");
+      });
       function clarityTag(chave, valor) {
         try { if (typeof window.clarity === "function") window.clarity("set", chave, String(valor)); } catch (_) {}
       }
@@ -560,7 +578,10 @@ const logos = Array.from({ length: 12 }, (_, i) => `/assets/clientes/cliente-${i
         if (ultimoFoco) try { ultimoFoco.focus({ preventScroll: true }); } catch (_) {}
       }
       root.querySelectorAll("[data-ig-lead]").forEach(function (btn) {
-        btn.addEventListener("click", function () { abrirSheet(btn); });
+        btn.addEventListener("click", function () {
+          conversaoContaAntiga("AW-1065643610/v-PXCPnH56sdENrckfwD");
+          abrirSheet(btn);
+        });
       });
       sheet.querySelectorAll("[data-ig-fechar]").forEach(function (el) {
         el.addEventListener("click", fecharSheet);

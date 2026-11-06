@@ -1,5 +1,4 @@
-// Botão de WhatsApp das LPs de anúncio (link abaixo do formulário e, no celular, botão fixo).
-// Número do atendimento comercial humano. O botão só aparece nas páginas
-// que passam whatsapp={true} no LeadForm.
-export const WHATSAPP_LP_NUMBER = "5519993521270";
+// WhatsApp comercial público: Norma SDR (não o número humano antigo).
+// LeadForm usa este número quando a página passa whatsapp={true}.
+export const WHATSAPP_LP_NUMBER = "551940402157";
 export const WHATSAPP_LP_ENABLED = true;

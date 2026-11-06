@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import { normas } from "../data/normas.js";
 
 const canais = [
-  { icon: "logos:whatsapp-icon", t: "WhatsApp Brasil", v: "55 19 99352-1270", href: "https://wa.me/5519993521270", cta: "Conversar agora" },
+  { icon: "logos:whatsapp-icon", t: "WhatsApp Brasil", v: "55 19 4040-2157", href: "https://wa.me/551940402157?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Templum.", cta: "Conversar agora" },
   { icon: "solar:phone-calling-bold", t: "Atendimento Portugal", v: "+351 925 654 875", href: "tel:+351925654875", cta: "Ligar" },
   { icon: "solar:map-point-bold", t: "Onde atuamos", v: "+800 cidades no Brasil, Portugal e África · atendimento 100% online", href: null, cta: null },
 ];
@@ -28,7 +28,16 @@ const canais = [
               <div class="ct-canal-body">
                 <strong>{c.t}</strong>
                 <span>{c.v}</span>
-                {c.href && <a href={c.href} target="_blank" rel="noopener" class="ct-canal-link">{c.cta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>}
+                {c.href && (
+                  <a
+                    href={c.href}
+                    target="_blank"
+                    rel="noopener"
+                    class="ct-canal-link"
+                    data-wpp-ref={c.href.includes("wa.me") ? "1" : undefined}
+                    data-wpp-linha={c.href.includes("wa.me") ? "Olá! Vim pelo site da Templum." : undefined}
+                  >{c.cta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+                )}
               </div>
             </div>
           ))}
@@ -49,11 +58,10 @@ const canais = [
             <label for="norma">Assunto / norma</label>
             <select class="select" id="norma" name="norma">
               <option value="">Selecione</option>
-              {normas.map((n) => <option value={n.slug}>{n.nome}</option>)}
-              <option value="auditoria">Auditoria</option>
-              <option value="treinamento">Treinamento</option>
-              <option value="franquia">Franquia</option>
-              <option value="outro">Outro assunto</option>
+              {normas.map((n) => <option value={n.nome}>{n.nome}</option>)}
+              <option value="Auditoria Interna">Auditoria</option>
+              <option value="Treinamento In Company">Treinamento</option>
+              <option value="Outros Serviços">Outro assunto</option>
             </select>
           </div>
           <div class="field"><label for="mensagem">Mensagem</label><textarea class="textarea" id="mensagem" name="mensagem" rows="3" placeholder="Como podemos ajudar?"></textarea></div>

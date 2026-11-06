@@ -19,8 +19,8 @@
 //                             LP /iso-9001-advocacia-v2/, /consultoria/pbqp-h-lp-v2/ e
 //                             /consultoria/iso-27001-lp-v2/: faixas acima de R$ 100 mil vão ao
 //                             INBOUND; até R$ 100 mil vai ao MQL.
-//                             /consultoria/iso-9001-lp-v2/ (piloto SDR): todo cadastro vai ao
-//                             funil Teste Igor (novo lead), independente do faturamento.
+//                             /consultoria/iso-9001-lp-v2/ segue o INBOUND (NOVO LEAD),
+//                             como as demais LPs comerciais (fim do piloto Teste Igor).
 //   POST /api/track         → envia eventos ao Meta Conversions API (CAPI), server-side
 //   POST   /api/saida       → pesquisa de saída das LPs de Ads (não vira lead no CRM)
 //   GET    /api/saida       → leitura da pesquisa (senha Templum@2026), p/ /saida-ads
@@ -1239,11 +1239,6 @@ export async function handleLead(request, env, ctx) {
     }
   } else if (diagCadastro) {
     // Card criado antes da resposta HTTP, para o sim achar o mesmo lead.
-  } else if (isIso9001LpV2Piloto(lead)) {
-    bgTasks.push(["orbit", saveToOrbit(lead, env, {
-      pipeline_id: ORBIT_TESTE_IGOR_PIPELINE_ID,
-      stage_id: ORBIT_TESTE_IGOR_STAGE_NOVO,
-    })]);
   } else if (isFaturamentoMql(lead)) {
     // Até R$ 100 mil nestas LPs não entra no INBOUND. Vai ao funil MQL.
     bgTasks.push(["mql", saveToMqlPorFaturamento(lead, env)]);
@@ -1598,6 +1593,21 @@ const ORBIT_LIVES_STAGE_NOVO_INSCRITO = "fa3c2273-29c8-4df4-bdb1-2f6a993c059f";
 const ORBIT_TESTE_IGOR_PIPELINE_ID = "81be2a19-2253-486a-8771-3ec19e499487";
 const ORBIT_TESTE_IGOR_STAGE_NOVO = "20a40448-b874-4f60-b5f6-00e400e08687";
 const LP_ISO9001_V2_PATH = "/consultoria/iso-9001-lp-v2/";
+/** Cadastro comercial: Worker grava LPV2_BW_* e o fluxo INBOUND dispara o WhatsApp da Norma. */
+const SITE_SDR_BW_EXTRA = new Set([
+  "/contato/",
+  "/iso-9001-campinas/",
+  "/iso-9001-advocacia/",
+  "/iso-9001-advocacia-v2/",
+  "/diagnostico-de-gestao/",
+  "/gestao-empresarial-lp/",
+  "/lp/templum-os/",
+  "/lp/financiamento-caixa/",
+  "/lp/iso-9001-mobile/",
+  "/consultoria/sassmaq-4-0/",
+  "/ferramentas/diagnostico-pbqp-h/",
+  "/ferramentas/diagnostico-iso-9001/",
+]);
 const REPLAY_NE_EVENT = "nova-era-certificacao-iso-replay";
 const REPLAY_NE_TAG = "L2010_REPLAY_CADASTRO";
 const REPLAY_NE_MATERIAL = "/assets/nova-era-iso/material-de-apoio-nova-era.html";
@@ -1747,17 +1757,103 @@ const ORBIT_FIELDS = {
   utm_content:  "cf_utm_content",
 };
 
+// SELECT de Produto (cf_produto) no CRM. Valor fora da lista faz o Orbit recusar o campo.
+const ORBIT_PRODUTO_OPCOES = new Set([
+  "ISO 9001",
+  "ISO 9+14",
+  "ISO 9+45",
+  "ISO 14+45",
+  "SGI",
+  "ISO 27001",
+  "ISO 27001 + ISO 27701",
+  "FSSC",
+  "HACCP",
+  "SASSMAQ",
+  "PBQP-H",
+  "Auditoria Interna",
+  "Outros Serviços",
+  "DPO as Service",
+  "Diagnóstico",
+  "Visita Presencial",
+  "Mini Orbit",
+  "ESG",
+  "Treinamento In Company",
+  "ISO 14001",
+  "ISO 27701",
+  "ISO 37001",
+  "ISO 45001",
+  "LGPD",
+  "PQTA",
+  "ISO 9001, ISO 27701",
+  "ISO 27001, ISO 9001, ISO 27701",
+  "ISO 9001, ISO 45001, ISO 14001",
+  "ISO 27001, ISO 27701",
+  "PBQP-H, Mini Orbit",
+]);
+
+const ORBIT_PRODUTO_ALIASES = {
+  "iso-9001": "ISO 9001",
+  "iso 9001": "ISO 9001",
+  "iso-14001": "ISO 14001",
+  "iso 14001": "ISO 14001",
+  "iso-27001": "ISO 27001",
+  "iso 27001": "ISO 27001",
+  "iso-27701": "ISO 27701",
+  "iso 27701": "ISO 27701",
+  "iso-37001": "ISO 37001",
+  "iso 37001": "ISO 37001",
+  "iso-45001": "ISO 45001",
+  "iso 45001": "ISO 45001",
+  "iso-42001": "Outros Serviços",
+  "iso 42001": "Outros Serviços",
+  "iso-22000": "FSSC",
+  "iso 22000": "FSSC",
+  "fssc 22000": "FSSC",
+  "fssc-22000": "FSSC",
+  "fssc22000": "FSSC",
+  "sassmaq 4.0": "SASSMAQ",
+  "sassmaq 4": "SASSMAQ",
+  "sassmaq-4-0": "SASSMAQ",
+  "diagnóstico de gestão": "Diagnóstico",
+  "diagnostico de gestao": "Diagnóstico",
+  "templum os": "Outros Serviços",
+  "geric": "Outros Serviços",
+  "gestão empresarial": "Outros Serviços",
+  "gestao empresarial": "Outros Serviços",
+  "financiamento caixa": "Outros Serviços",
+  "iso 9001 + iso 14001": "ISO 9+14",
+  "iso 9001+iso 14001": "ISO 9+14",
+  "auditoria": "Auditoria Interna",
+  "treinamento": "Treinamento In Company",
+};
+
+function orbitProdutoSelect(raw) {
+  const s = String(raw || "").replace(/\s+/g, " ").trim();
+  if (!s) return "";
+  if (ORBIT_PRODUTO_OPCOES.has(s)) return s;
+  const alias = ORBIT_PRODUTO_ALIASES[s.toLowerCase()];
+  if (alias && ORBIT_PRODUTO_OPCOES.has(alias)) return alias;
+  return "";
+}
+
+function orbitCustomFieldsFromLead(lead) {
+  const custom_fields = {};
+  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
+    let val = lead[field];
+    if (!val) continue;
+    if (field === "norma") val = orbitProdutoSelect(val);
+    if (val) custom_fields[key] = val;
+  }
+  return custom_fields;
+}
+
 async function saveToOrbit(lead, env, dest) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
 
   const title = [lead.empresa || lead.nome || lead.email, lead.norma].filter(Boolean).join(" - ");
 
-  const custom_fields = {};
-  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-    const val = lead[field];
-    if (val) custom_fields[key] = val;
-  }
+  const custom_fields = orbitCustomFieldsFromLead(lead);
 
   const body = {
     title,
@@ -1790,7 +1886,7 @@ async function saveToOrbit(lead, env, dest) {
       .map((tag) => (tag === "ISO 9001" ? "ISO9001" : tag)),
     lead,
   );
-  const lpv2Bw = lpv2PilotoBwTag(lead);
+  const lpv2Bw = siteSdrBwTag(lead);
   if (lpv2Bw && !orbitTags.includes(lpv2Bw)) orbitTags = orbitTags.concat(lpv2Bw);
   if (orbitTags.length) body.tags = orbitTags;
 
@@ -2123,8 +2219,14 @@ function lpPathFromLead(lead) {
   return "";
 }
 
-function isIso9001LpV2Piloto(lead) {
-  return lpPathFromLead(lead) === LP_ISO9001_V2_PATH;
+function isSiteSdrBwLead(lead) {
+  const path = lpPathFromLead(lead);
+  if (!path) return false;
+  if (path === LP_ISO9001_V2_PATH) return true;
+  if (SITE_SDR_BW_EXTRA.has(path)) return true;
+  if (/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return true;
+  if (/^\/consultoria\/[a-z0-9-]+\/$/.test(path)) return true;
+  return false;
 }
 
 /** Segunda a sexta, 9h–18h (Brasília). 18:00 em diante = fora. */
@@ -2143,9 +2245,9 @@ function isBrasiliaHorarioComercial(date = new Date()) {
   return true;
 }
 
-/** Etiqueta do piloto LP v2 (boas-vindas SDR): Worker grava no cadastro; automação ramifica por tag. */
-function lpv2PilotoBwTag(lead) {
-  if (!isIso9001LpV2Piloto(lead)) return null;
+/** Etiqueta de boas-vindas SDR: Worker grava no cadastro; automação ramifica por tag. */
+function siteSdrBwTag(lead) {
+  if (!isSiteSdrBwLead(lead)) return null;
   return isBrasiliaHorarioComercial() ? "LPV2_BW_COMERCIAL" : "LPV2_BW_FORA";
 }
 
@@ -2179,12 +2281,7 @@ function faturamentoMqlNote(lead) {
 }
 
 function faturamentoMqlCustomFields(lead) {
-  const custom_fields = {};
-  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-    const val = lead[field];
-    if (val) custom_fields[key] = val;
-  }
-  return custom_fields;
+  return orbitCustomFieldsFromLead(lead);
 }
 
 // Faixa até R$ 100 mil → funil MQL (não INBOUND). Dedup só no MQL.
@@ -2295,11 +2392,7 @@ async function saveToMqlIsca(lead, env) {
     }
 
     const title = [lead.empresa || lead.nome || lead.email, lead.norma || "Isca"].filter(Boolean).join(" - ");
-    const custom_fields = {};
-    for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-      const val = lead[field];
-      if (val) custom_fields[key] = val;
-    }
+    const custom_fields = orbitCustomFieldsFromLead(lead);
     const body = {
       title,
       pipeline_id: ORBIT_MQL_PIPELINE_ID,
@@ -2333,12 +2426,7 @@ function mqlInscricaoTitle(lead, cfg) {
 }
 
 function mqlInscricaoCustomFields(lead) {
-  const custom_fields = {};
-  for (const [field, key] of Object.entries(ORBIT_FIELDS)) {
-    const val = lead[field];
-    if (val) custom_fields[key] = val;
-  }
-  return custom_fields;
+  return orbitCustomFieldsFromLead(lead);
 }
 
 function buildMqlInscricaoPatch(lead, cfg, existingMql, tags) {
