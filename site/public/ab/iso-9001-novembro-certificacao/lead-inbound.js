@@ -1,9 +1,11 @@
-/* Modal + POST /api/lead (mesmo fluxo das LPs atuais → INBOUND). */
+/* Modal + POST /api/lead (INBOUND) + WhatsApp fixo. Clarity vai no HTML. */
 (function () {
   var OBRIGADO = "/consultoria/iso-9001-obrigado";
   var NORMA = "ISO 9001";
   var WPP_NUM = "551940402157";
   var WPP_LINHA = "Olá! Vim pelo site da Templum e quero saber sobre a ISO 9001.";
+  var EMPRESA_LABEL = "Empresa";
+  var EMPRESA_PH = "Nome da empresa";
 
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -17,9 +19,7 @@
     var parts = (pathname || location.pathname).split("/").filter(Boolean);
     return parts.length ? parts[parts.length - 1] : "home";
   };
-
   window.__tplUuid = window.__tplUuid || uuid;
-
   window.fireMetaLead = window.fireMetaLead || function (data, contentName, eventId) {
     if (!window.fbq) return;
     data = data || {};
@@ -61,11 +61,14 @@
     return out;
   }
 
+  function wppHref() {
+    return "https://wa.me/" + WPP_NUM + "?text=" + encodeURIComponent(WPP_LINHA);
+  }
+
   function ensureModal() {
     var existing = $("#tpl-lead-modal");
     if (existing) return existing;
 
-    var wppHref = "https://wa.me/" + WPP_NUM + "?text=" + encodeURIComponent(WPP_LINHA);
     var wrap = document.createElement("div");
     wrap.innerHTML = [
       '<dialog id="tpl-lead-modal" class="tpl-lead-modal" aria-labelledby="tpl-lead-title">',
@@ -81,7 +84,7 @@
       '        <div class="tpl-lead-field"><label for="tpl-tel">Telefone / WhatsApp</label><input id="tpl-tel" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>',
       '      </div>',
       '      <div class="tpl-lead-field"><label for="tpl-email">E-mail</label><input id="tpl-email" type="email" name="email" placeholder="voce@empresa.com" required /></div>',
-      '      <div class="tpl-lead-field"><label for="tpl-empresa">Empresa</label><input id="tpl-empresa" name="empresa" placeholder="Nome da empresa" /></div>',
+      '      <div class="tpl-lead-field"><label for="tpl-empresa">' + EMPRESA_LABEL + '</label><input id="tpl-empresa" name="empresa" placeholder="' + EMPRESA_PH + '" /></div>',
       '      <div class="tpl-lead-row">',
       '        <div class="tpl-lead-field"><label for="tpl-cargo">Seu cargo</label>',
       '          <select id="tpl-cargo" name="cargo"><option value="">Selecione</option>',
@@ -97,7 +100,7 @@
       '      </div>',
       '      <p class="tpl-lead-status" hidden></p>',
       '      <button type="submit" class="tpl-lead-submit" data-cta-pos="modal">Solicite uma proposta</button>',
-      '      <a class="tpl-lead-wpp" href="' + wppHref + '" target="_blank" rel="noopener" data-wpp-ref="1" data-wpp-norma="' + NORMA + '" data-wpp-linha="' + WPP_LINHA.replace(/"/g, "&quot;") + '">Prefere conversar pelo WhatsApp?</a>',
+      '      <a class="tpl-lead-wpp" href="' + wppHref() + '" target="_blank" rel="noopener" data-wpp-ref="1" data-wpp-norma="' + NORMA + '" data-wpp-linha="' + WPP_LINHA.replace(/"/g, "&quot;") + '">Prefere conversar pelo WhatsApp?</a>',
       '      <p class="tpl-lead-legal">Ao enviar, você concorda em ser contatado pela Templum. Seus dados estão protegidos conforme a LGPD.</p>',
       '    </form>',
       '  </div>',
@@ -110,10 +113,41 @@
     return dlg;
   }
 
+  function ensureWppFixo() {
+    if ($("[data-wpp-fixo]")) return;
+    var a = document.createElement("a");
+    a.className = "tpl-lead-wpp-fixo";
+    a.href = wppHref();
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.setAttribute("data-wpp-ref", "1");
+    a.setAttribute("data-wpp-fixo", "1");
+    a.setAttribute("data-wpp-norma", NORMA);
+    a.setAttribute("data-wpp-linha", WPP_LINHA);
+    a.innerHTML = '<span aria-hidden="true">💬</span> Falar no WhatsApp';
+    document.body.appendChild(a);
+    document.body.classList.add("tpl-wpp-on");
+
+    var mq = window.matchMedia("(max-width: 767px)");
+    function sync() {
+      var dlg = $("#tpl-lead-modal");
+      var cobre = dlg && dlg.open;
+      a.classList.toggle("is-clear", !!cobre || !mq.matches);
+      if (!mq.matches) a.setAttribute("aria-hidden", "true");
+      else if (cobre) a.setAttribute("aria-hidden", "true");
+      else a.removeAttribute("aria-hidden");
+    }
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else if (mq.addListener) mq.addListener(sync);
+    document.addEventListener("tpl:lead-modal", sync);
+    sync();
+  }
+
   function openModal(ctaPos) {
     var dlg = ensureModal();
     if (typeof dlg.showModal === "function" && !dlg.open) dlg.showModal();
     document.body.classList.add("tpl-lead-modal-on");
+    try { document.dispatchEvent(new CustomEvent("tpl:lead-modal", { detail: { open: true } })); } catch (_) {}
     if (window.tplFormEvento) {
       window.tplFormEvento({ evento: "form_visivel", norma: NORMA, cta_pos: ctaPos || "" });
     }
@@ -125,6 +159,7 @@
     var dlg = $("#tpl-lead-modal");
     if (dlg && dlg.open) dlg.close();
     document.body.classList.remove("tpl-lead-modal-on");
+    try { document.dispatchEvent(new CustomEvent("tpl:lead-modal", { detail: { open: false } })); } catch (_) {}
   }
 
   function showError(form, msg) {
@@ -242,6 +277,7 @@
   function bindUi() {
     var dlg = ensureModal();
     bindSubmit($("form", dlg));
+    ensureWppFixo();
 
     $$("[data-abre-form]").forEach(function (btn) {
       if (btn.dataset.boundAbre === "1") return;
@@ -257,6 +293,7 @@
     });
     dlg.addEventListener("close", function () {
       document.body.classList.remove("tpl-lead-modal-on");
+      try { document.dispatchEvent(new CustomEvent("tpl:lead-modal", { detail: { open: false } })); } catch (_) {}
     });
     dlg.addEventListener("click", function (e) {
       if (e.target === dlg) closeModal();

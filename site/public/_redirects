@@ -171,7 +171,6 @@
 /lp-antigas/iso-14001  /consultoria/iso-14001/  301
 
 # → /consultoria/iso-27001
-/ab-sn/iso-27001  /consultoria/iso-27001/  301
 /ab/27001  /consultoria/iso-27001/  301
 /ab/iso-27001-antiga  /consultoria/iso-27001/  301
 /ab/iso-27001-ia  /consultoria/iso-27001/  301
@@ -232,7 +231,6 @@
 /lp-antigas/lgpd  /consultoria/lgpd/  301
 
 # → /consultoria/pbqp-h
-/ab-sn/pbqp-h  /consultoria/pbqp-h/  301
 /ab/pbqp-h  /consultoria/pbqp-h/  301
 /ab/pbqp-h-antiga  /consultoria/pbqp-h/  301
 /ab/pbqp-h-educacional  /consultoria/pbqp-h/  301
