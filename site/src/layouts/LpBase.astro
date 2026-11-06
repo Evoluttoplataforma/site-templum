@@ -3,6 +3,7 @@ import "../styles/global.css";
 import TrackingKit from "../components/TrackingKit.astro";
 import MetaPixel from "../components/MetaPixel.astro";
 import OaiqPixel from "../components/OaiqPixel.astro";
+import DstrackPixel from "../components/DstrackPixel.astro";
 import ClarityDiag from "../components/ClarityDiag.astro";
 import { clientJs } from "../../h1-experimento.js";
 import { configCliente } from "../data/h1-experimentos.js";
@@ -63,6 +64,9 @@ const allSchemas = schemas;
 
     <!-- Pixel da OpenAI: base em todas as páginas, conversão só nas de obrigado. -->
     <OaiqPixel />
+
+    <!-- dstrack: bootloader de analytics em todas as páginas. -->
+    <DstrackPixel />
 
     <!-- Diagnóstico: dá nome ao dono do erro de JS que aparece no Clarity. -->
     <ClarityDiag />
