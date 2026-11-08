@@ -142,7 +142,12 @@
 
   var cached = null;
   var inflight = null;
+  var inflightMaxMs = 0;
   var TOKEN_MS = 240000;
+  var SUBMIT_MS = 4000;
+  var ANTECIPAR_MS = 15000;
+  var TECH_FAIL_TTL_MS = 60000;
+  var lastTechFail = null;
 
   function tokenPronto() {
     return cached && (Date.now() - cached.at) < TOKEN_MS ? cached : null;
@@ -157,39 +162,88 @@
     return ("erro_" + c.replace(/[^a-z0-9_]/gi, "_")).toLowerCase().slice(0, 40);
   }
 
-  function pedirToken() {
-    if (inflight) return inflight;
-    inflight = getOneToken().then(function (token) {
+  function marcarFalhaTecnica(status) {
+    if (!falhaTecnica(status)) return;
+    lastTechFail = { status: status, at: Date.now() };
+  }
+
+  function falhaTecnicaRecente() {
+    if (!lastTechFail || !falhaTecnica(lastTechFail.status)) return null;
+    if (Date.now() - lastTechFail.at > TECH_FAIL_TTL_MS) return null;
+    return lastTechFail;
+  }
+
+  function pedirToken(maxMs) {
+    var waitMs = Number(maxMs) > 0 ? Number(maxMs) : ANTECIPAR_MS;
+    // Reusa inflight só se a espera pedida não for mais curta que a em curso
+    // (senão o submit de 4s ficaria preso num antecipar de 15s).
+    if (inflight && inflightMaxMs > 0 && inflightMaxMs <= waitMs) return inflight;
+    if (inflight && inflightMaxMs > waitMs) {
+      return Promise.race([
+        inflight.catch(function () { return ""; }),
+        new Promise(function (resolve) {
+          setTimeout(function () {
+            var hit = tokenPronto();
+            if (hit) {
+              resolve(hit.token);
+              return;
+            }
+            if (!falhaTecnicaRecente()) {
+              window.tplTurnstileStatus = "timeout";
+              marcarFalhaTecnica("timeout");
+              avisarFalha("timeout");
+            }
+            resolve("");
+          }, waitMs);
+        }),
+      ]);
+    }
+    inflightMaxMs = waitMs;
+    inflight = getOneToken(waitMs).then(function (token) {
       inflight = null;
-      if (token) cached = { token: token, at: Date.now() };
+      inflightMaxMs = 0;
+      if (token) {
+        cached = { token: token, at: Date.now() };
+        lastTechFail = null;
+      }
       return token || "";
     }, function (err) {
       inflight = null;
+      inflightMaxMs = 0;
       throw err;
     });
     return inflight;
   }
 
   function antecipar() {
-    if (tokenPronto() || inflight) return;
-    pedirToken().catch(function (err) {
+    if (tokenPronto() || falhaTecnicaRecente()) return;
+    if (inflight) return;
+    pedirToken(ANTECIPAR_MS).catch(function (err) {
       if (err && err.code === "reset") setTimeout(antecipar, 80);
     });
   }
 
-  function entregarToken() {
+  function entregarToken(maxMs) {
+    var recente = falhaTecnicaRecente();
+    if (recente) {
+      window.tplTurnstileStatus = recente.status;
+      return Promise.resolve("");
+    }
     var hit = tokenPronto();
     if (hit) {
       var guardado = hit.token;
       cached = null;
+      lastTechFail = null;
       window.tplTurnstileReset();
       window.tplTurnstileStatus = "ok";
       setTimeout(antecipar, 0);
       return Promise.resolve(guardado);
     }
-    return pedirToken().then(function (token) {
+    return pedirToken(maxMs || SUBMIT_MS).then(function (token) {
       var status = token ? "ok" : (window.tplTurnstileStatus || "ausente");
       cached = null;
+      if (token) lastTechFail = null;
+      else marcarFalhaTecnica(status);
       window.tplTurnstileReset();
       window.tplTurnstileStatus = status;
       if (token) setTimeout(antecipar, 0);
@@ -215,7 +269,8 @@
     } catch (_) {}
   }
 
-  function getOneToken() {
+  function getOneToken(maxMs) {
+    var waitMs = Number(maxMs) > 0 ? Number(maxMs) : ANTECIPAR_MS;
     var gen = generation;
     return ensureWidget().then(function () {
       if (gen !== generation) {
@@ -230,7 +285,7 @@
           var err = new Error("turnstile_timeout");
           err.code = "timeout";
           done(false, err);
-        }, 15000);
+        }, waitMs);
         function done(ok, value) {
           if (settled) return;
           if (my !== attempt || gen !== generation) {
@@ -248,6 +303,7 @@
             var codigo = (value && value.code) || (value && value.message) || "turnstile";
             var status = statusTurnstile(codigo);
             window.tplTurnstileStatus = status;
+            marcarFalhaTecnica(status);
             avisarFalha(status);
             try { window.turnstile.reset(widgetId); } catch (_) {}
             if (recusaTurnstile(status)) {
@@ -260,6 +316,7 @@
             return;
           }
           window.tplTurnstileStatus = "ok";
+          lastTechFail = null;
           resolve(value);
         }
         pending = { id: my, done: done };
@@ -280,6 +337,7 @@
       if (err && err.message === "turnstile_timeout") codigo = "timeout";
       if (err && err.message === "turnstile_script") codigo = "script";
       window.tplTurnstileStatus = statusTurnstile(codigo);
+      marcarFalhaTecnica(window.tplTurnstileStatus);
       avisarFalha(window.tplTurnstileStatus);
       if (recusaTurnstile(window.tplTurnstileStatus)) {
         var block = new Error("turnstile_block");
@@ -296,8 +354,11 @@
     if (release) release();
   }
 
-  window.tplTurnstileToken = function () {
-    return entregarToken();
+  // Submit: 4s e, se já houve falha técnica recente, não espera de novo.
+  // Antecipação (pointer/keydown) continua com 15s via pedirToken(ANTECIPAR_MS).
+  window.tplTurnstileToken = function (opts) {
+    var maxMs = opts && Number(opts.timeoutMs) > 0 ? Number(opts.timeoutMs) : SUBMIT_MS;
+    return entregarToken(maxMs);
   };
 
   window.tplTurnstileReset = function () {
