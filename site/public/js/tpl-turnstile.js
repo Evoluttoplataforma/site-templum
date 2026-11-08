@@ -385,7 +385,36 @@
     forms.forEach(function (form) {
       if ((form.getAttribute("data-trk-event") || "") === "denuncia") return;
       if (form.dataset.leadSubmitted !== "1") return;
-      window.tplLeadFail(form, form.querySelector('[type="submit"]'));
+      // Não chamar tplLeadFail aqui: ele faz tplTurnstileReset e cancela o
+      // fail-open do Turnstile no meio do caminho (POST /api/lead nunca sai).
+      var btn = form.querySelector('[type="submit"]');
+      delete form.dataset.leadSubmitted;
+      if (btn) {
+        btn.disabled = false;
+        if (!btn.dataset.tplLabel) btn.dataset.tplLabel = btn.textContent || "";
+        btn.textContent = btn.dataset.tplLabel || "Solicite uma proposta";
+      }
+      var msg = errorNode(form);
+      if (!msg) return;
+      msg.textContent = "";
+      var texto = document.createElement("p");
+      texto.className = "tpl-lead-error-text";
+      var wpp = whatsLink(form);
+      texto.textContent = wpp
+        ? "O envio demorou. Tente de novo ou fale pelo WhatsApp."
+        : "O envio demorou. Tente de novo.";
+      msg.appendChild(texto);
+      var retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "tpl-lead-retry";
+      retry.textContent = "Tentar de novo";
+      retry.addEventListener("click", function () {
+        if (!form) return;
+        if (form.requestSubmit) form.requestSubmit();
+        else form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+      });
+      msg.appendChild(retry);
+      if (wpp) msg.appendChild(wpp);
     });
   });
 

@@ -219,8 +219,15 @@
 
   function vencerEspera(item) {
     if (!item || !item.aberta || espera !== item) return;
-    if (leadAberto > 0 && item.fase < 1) {
+    // Fase 0→1: dá mais 15s enquanto o Turnstile ainda não liberou o fetch
+    // (senão tpl:envio-sem-resposta reseta o widget e o POST nunca sai).
+    if (item.fase < 1 && (leadAberto > 0 || item.aguardandoTurnstile)) {
       item.fase = 1;
+      item.timer = setTimeout(function () { vencerEspera(item); }, 15000);
+      return;
+    }
+    if (leadAberto > 0 && item.fase < 2) {
+      item.fase = 2;
       item.timer = setTimeout(function () { vencerEspera(item); }, 15000);
       return;
     }
@@ -242,7 +249,13 @@
 
   function armarEspera(norma) {
     cancelarEspera();
-    var item = { norma: norma || "", aberta: true, fase: 0, saiu: false };
+    var item = {
+      norma: norma || "",
+      aberta: true,
+      fase: 0,
+      saiu: false,
+      aguardandoTurnstile: typeof window.tplTurnstileToken === "function",
+    };
     espera = item;
     item.timer = setTimeout(function () { vencerEspera(item); }, 15000);
   }

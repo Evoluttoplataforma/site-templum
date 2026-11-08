@@ -73,7 +73,7 @@
 //                          dessa lista recusa o envio (error turnstile), sem gravar.
 //                          TURNSTILE_ESTRITO=1 volta a recusar todo token ausente
 //                          ou inválido, sem novo deploy do critério. Honeypot
-//                          preenchido é descartado. No máximo 5 envios por IP
+//                          preenchido é descartado. No máximo 20 envios por IP
 //                          a cada hora. Se o siteverify estiver fora, o lead
 //                          segue verificado (não perde cadastro).
 //   ZOOM_ACCOUNT_ID        (SECRETO) conta Server-to-Server do Zoom
@@ -1063,7 +1063,9 @@ async function leadDentroDoLimite(request) {
   try {
     const hit = await cache.match(req);
     const count = hit ? Number(await hit.text()) || 0 : 0;
-    if (count >= 5) return false;
+    // 20/h por IP: Ads em NAT compartilhado estourava 5/h e o form ainda
+    // redirecionava (ok falso). Testes internos também batiam no teto.
+    if (count >= 20) return false;
     await cache.put(req, new Response(String(count + 1), {
       headers: { "cache-control": "public, max-age=3600" },
     }));
@@ -1243,8 +1245,10 @@ export async function handleLead(request, env, ctx) {
     // Até R$ 100 mil nestas LPs não entra no INBOUND. Vai ao funil MQL.
     bgTasks.push(["mql", saveToMqlPorFaturamento(lead, env)]);
   } else if (!isInscricaoEvento) {
-    // CRM comercial: Templum OS, funil INBOUND, etapa NOVO LEAD. Sem Pipedrive.
-    bgTasks.push(["orbit", saveToOrbit(lead, env)]);
+    // CRM comercial: funil INBOUND. Aguarda até 8s (como o diagnóstico MQL):
+    // só waitUntil deixava falha do Orbit invisível e card sumia (LPs /ab*).
+    const orbitP = saveToOrbit(lead, env);
+    bgTasks.push(["orbit", orbitP]);
   } else if (lead.evento.startsWith("webinar")) {
     bgTasks.push(["mql", saveToMqlWebinar(lead, env)]);
   } else if (ORBIT_MQL_INSCRICAO[lead.evento]) {
@@ -1264,6 +1268,27 @@ export async function handleLead(request, env, ctx) {
     if (crm && crm.ok === false) console.error("[lead:diag-mql]", JSON.stringify(crm));
   }
 
+  let orbitResult = null;
+  const orbitTask = bgTasks.find((t) => t[0] === "orbit");
+  if (orbitTask) {
+    orbitResult = await timed(orbitTask[1], 8000);
+    if (orbitResult && orbitResult.timeout) {
+      console.error("[lead:orbit] timeout; waitUntil segue tentando");
+      orbitResult = { ok: false, error: "timeout" };
+    } else if (orbitResult && orbitResult.ok === false) {
+      console.error("[lead:orbit]", JSON.stringify(orbitResult));
+    }
+  }
+  const mqlTask = bgTasks.find((t) => t[0] === "mql");
+  if (mqlTask) {
+    const mqlResult = await timed(mqlTask[1], 8000);
+    if (mqlResult && mqlResult.timeout) {
+      console.error("[lead:mql] timeout; waitUntil segue tentando");
+    } else if (mqlResult && mqlResult.ok === false) {
+      console.error("[lead:mql]", JSON.stringify(mqlResult));
+    }
+  }
+
   ctx.waitUntil(Promise.all(bgTasks.map(([name, task]) =>
     task
       .then((r) => { if (r && r.ok === false) console.error(`[lead:${name}]`, JSON.stringify(r)); })
@@ -1281,6 +1306,9 @@ export async function handleLead(request, env, ctx) {
   return corsJson({
     ok: true,
     supabase,
+    orbit: orbitResult
+      ? { ok: orbitResult.ok === true, lead_id: orbitResult.lead_id || null, error: orbitResult.error || orbitResult.reason || null }
+      : undefined,
     turnstile: lead.turnstile_nao_verificado ? "nao_verificado" : "ok",
   });
 }
@@ -1745,9 +1773,9 @@ const ORBIT_EVENTO_TAGS = {
 // Campos personalizados do CRM (field_key obtido em CRM → Campos Personalizados)
 const ORBIT_FIELDS = {
   norma:        "cf_produto",
-  cargo:        "cf_cargo_do_contato",
-  funcionarios: "cf_faixa_de_funcion_rios",
-  faturamento:  "cf_faixa_de_faturamento",
+  // Label ativo no CRM: "Seu cargo" (cf_seu_cargo). cf_cargo_do_contato era chave fantasma.
+  cargo:        "cf_seu_cargo",
+  funcionarios: "cf_n_de_funcionarios",
   desafio:      "cf_maior_desafio",
   pagina:       "cf_p_gina_de_convers_o",
   utm_source:   "cf_utm_source",
@@ -1756,6 +1784,16 @@ const ORBIT_FIELDS = {
   utm_term:     "cf_utm_term",
   utm_content:  "cf_utm_content",
 };
+
+/** Telefone no formato que o INBOUND já aceita bem: (11) 91234-5678 */
+function formatPhoneBrOrbit(raw) {
+  let d = String(raw || "").replace(/\D/g, "");
+  if (d.indexOf("55") === 0 && d.length >= 12) d = d.slice(2);
+  d = d.slice(0, 11);
+  if (d.length < 10) return String(raw || "").trim();
+  if (d.length === 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
+  return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+}
 
 // SELECT de Produto (cf_produto) no CRM. Valor fora da lista faz o Orbit recusar o campo.
 const ORBIT_PRODUTO_OPCOES = new Set([
@@ -1863,11 +1901,13 @@ async function saveToOrbit(lead, env, dest) {
     contact_email: lead.email,
     source: "site",
   };
-  if (lead.telefone) body.contact_phone = lead.telefone;
+  if (lead.telefone) body.contact_phone = formatPhoneBrOrbit(lead.telefone);
   if (lead.empresa) body.company_name = lead.empresa;
   const notes = [
     lead.mensagem,
     lead.desafio,
+    lead.cargo ? "Cargo: " + String(lead.cargo).trim() : "",
+    lead.faturamento ? "Faturamento mensal: " + String(lead.faturamento).trim() : "",
     lead.urgencia ? "Urgência: " + lead.urgencia : "",
     lead.pagina_submit && lead.pagina_submit !== lead.pagina
       ? "Formulário enviado em: " + lead.pagina_submit
@@ -1892,15 +1932,20 @@ async function saveToOrbit(lead, env, dest) {
 
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
 
-  try {
-    let r = await fetch(`${ORBIT_BASE}/leads`, {
-      method: "POST", headers, body: JSON.stringify(body),
+  async function postLead(payload) {
+    const r = await fetch(`${ORBIT_BASE}/leads`, {
+      method: "POST", headers, body: JSON.stringify(payload),
     }).catch(() => null);
-
     if (r && r.ok) {
       const d = await r.json().catch(() => ({}));
-      return { ok: true, lead_id: d.data?.id };
+      return { ok: true, lead_id: d.data?.id || d.id || null, response: r };
     }
+    return { ok: false, response: r };
+  }
+
+  try {
+    let attempt = await postLead(body);
+    if (attempt.ok) return { ok: true, lead_id: attempt.lead_id };
 
     // Fallback 1: cf_produto é o único campo que costuma ser recusado — é um SELECT
     // do CRM, e a LP pode mandar um valor que ainda não foi criado na lista de opções
@@ -1912,13 +1957,8 @@ async function saveToOrbit(lead, env, dest) {
       const cf = { ...body.custom_fields };
       delete cf[ORBIT_FIELDS.norma];
       if (Object.keys(cf).length) {
-        r = await fetch(`${ORBIT_BASE}/leads`, {
-          method: "POST", headers, body: JSON.stringify({ ...body, custom_fields: cf }),
-        }).catch(() => null);
-        if (r && r.ok) {
-          const d = await r.json().catch(() => ({}));
-          return { ok: true, lead_id: d.data?.id, produto_dropped: true };
-        }
+        attempt = await postLead({ ...body, custom_fields: cf });
+        if (attempt.ok) return { ok: true, lead_id: attempt.lead_id, produto_dropped: true };
       }
     }
 
@@ -1940,15 +1980,31 @@ async function saveToOrbit(lead, env, dest) {
     }
     if (Object.keys(trackingCf).length) basicBody.custom_fields = trackingCf;
     else delete basicBody.custom_fields;
-    r = await fetch(`${ORBIT_BASE}/leads`, {
-      method: "POST", headers, body: JSON.stringify(basicBody),
-    }).catch(() => null);
+    attempt = await postLead(basicBody);
+    if (attempt.ok) return { ok: true, lead_id: attempt.lead_id, fields_dropped: true };
 
-    if (r && r.ok) {
-      const d = await r.json().catch(() => ({}));
-      return { ok: true, lead_id: d.data?.id, fields_dropped: true };
-    }
-    const e = r ? await r.text().catch(() => "") : "fetch_failed";
+    // Fallback 3: sem custom fields (igual orbitPostLead / MQL).
+    const noCf = { ...body };
+    delete noCf.custom_fields;
+    attempt = await postLead(noCf);
+    if (attempt.ok) return { ok: true, lead_id: attempt.lead_id, all_fields_dropped: true };
+
+    // Fallback 4: card mínimo (sem tags). Tag inválida não pode barrar o INBOUND.
+    const bare = {
+      title: body.title,
+      pipeline_id: body.pipeline_id,
+      stage_id: body.stage_id,
+      contact_name: body.contact_name,
+      contact_email: body.contact_email,
+      source: "site",
+    };
+    if (body.contact_phone) bare.contact_phone = body.contact_phone;
+    if (body.company_name) bare.company_name = body.company_name;
+    if (body.notes) bare.notes = body.notes;
+    attempt = await postLead(bare);
+    if (attempt.ok) return { ok: true, lead_id: attempt.lead_id, tags_dropped: true };
+
+    const e = attempt.response ? await attempt.response.text().catch(() => "") : "fetch_failed";
     return { ok: false, error: String(e).slice(0, 140) };
   } catch (e) {
     return { ok: false, error: "fetch_failed" };
@@ -2226,6 +2282,9 @@ function isSiteSdrBwLead(lead) {
   if (SITE_SDR_BW_EXTRA.has(path)) return true;
   if (/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return true;
   if (/^\/consultoria\/[a-z0-9-]+\/$/.test(path)) return true;
+  // LPs resgatadas de campanha Ads (Framer → /ab, /ab-sn, /certificado)
+  if (/^\/ab(-sn)?\//.test(path)) return true;
+  if (/^\/certificado\//.test(path)) return true;
   return false;
 }
 
@@ -2809,7 +2868,7 @@ function diagQualificacaoFields(lead) {
   const cf = {};
   if (lead.cargo) cf[ORBIT_FIELDS.cargo] = String(lead.cargo).trim();
   if (lead.funcionarios) cf[ORBIT_FIELDS.funcionarios] = String(lead.funcionarios).trim();
-  if (lead.faturamento) cf[ORBIT_FIELDS.faturamento] = String(lead.faturamento).trim();
+  // Faturamento mensal não tem field_key ativo no CRM; fica nas notes.
   return cf;
 }
 
