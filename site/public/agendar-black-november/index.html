@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Escolher horário · Templum</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #222831;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+    }
+    p { margin: 0; font-size: 16px; line-height: 1.5; opacity: .9; }
+    a { color: #ff5925; }
+  </style>
+</head>
+<body>
+  <p>Abrindo a agenda…</p>
+  <script>
+    (function () {
+      var agendas = [
+        { nome: "Victor", url: "https://calendar.app.google/APyH3sXYneL63fP36" },
+        { nome: "Vinicius", url: "https://calendar.app.google/xvvr8g8heYixerpM7" },
+        { nome: "Diego", url: "https://calendar.app.google/jeGxpv46Gpdxw3fR6" }
+      ];
+      var escolhida = agendas[Math.floor(Math.random() * agendas.length)];
+      try {
+        sessionStorage.setItem("bn26_agenda", escolhida.nome);
+      } catch (e) {}
+      window.location.replace(escolhida.url);
+    })();
+  </script>
+  <noscript>
+    <p>Escolha um horário:
+      <a href="https://calendar.app.google/APyH3sXYneL63fP36">Victor</a> ·
+      <a href="https://calendar.app.google/xvvr8g8heYixerpM7">Vinicius</a> ·
+      <a href="https://calendar.app.google/jeGxpv46Gpdxw3fR6">Diego</a>
+    </p>
+  </noscript>
+</body>
+</html>
