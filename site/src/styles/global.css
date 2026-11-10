@@ -225,7 +225,7 @@ em.accent { font-style: italic; color: var(--orange); font-weight: 800; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) {
-  .container { padding-left: 18px; padding-right: 18px; }
+  .container { padding-left: 16px; padding-right: 16px; }
   .footer-grid { grid-template-columns: 1fr; }
 }
 

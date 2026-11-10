@@ -12,8 +12,8 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
     {nota && (
       <div class="tm-google">
         <img class="tm-google-mark" src="/assets/logo/google.svg" alt="" width="18" height="18" />
-        <span class="tm-stars"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></span>
-        <strong>{nota}</strong> de nota no Google
+        <span class="tm-stars" aria-label="5 de 5 estrelas">★★★★★</span>
+        <span class="tm-google-copy"><strong>4,9/5</strong> com base em +150 avaliações verificadas</span>
       </div>
     )}
   </div>
@@ -61,11 +61,10 @@ const { nota, ctaTexto = "Ver todos os depoimentos", ctaHref = "/case-de-sucesso
   .tm-head .tag-pill { margin: 0 auto 18px; }
   .tm-head h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; }
   .tm-head p { font-size: 16.5px; color: var(--text-mid); margin-top: 14px; }
-  .tm-google { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 14px; color: var(--text-2); box-shadow: var(--shadow-soft); }
-  .tm-google iconify-icon { font-size: 18px; }
+  .tm-google { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 14px; color: var(--text-2); box-shadow: var(--shadow-soft); flex-wrap: wrap; justify-content: center; }
   .tm-google-mark { width: 18px; height: 18px; display: block; flex-shrink: 0; }
-  .tm-google .tm-stars { display: inline-flex; color: #FBBF24; gap: 1px; }
-  .tm-google .tm-stars iconify-icon { font-size: 15px; }
+  .tm-google .tm-stars { display: inline-flex; color: #F5B400; letter-spacing: 1px; font-size: 15px; line-height: 1; }
+  .tm-google-copy { color: var(--text-2); }
   .tm-google strong { color: var(--text); font-weight: 800; }
 
   .tm-stage { position: relative; display: flex; align-items: center; }

@@ -5,14 +5,14 @@
 (function () {
   var params = new URLSearchParams(location.search);
   var adHeadlines = [
-    "Quanto custa a ISO 27001 da sua empresa? Veja o investimento no diagnóstico",
+    "Certifique a segurança da informação na ISO 27001 com garantia de 200%",
     "Consultoria ISO 27001 para responder à avaliação de segurança do cliente",
-    "Certificado ISO 27001 em média 6 meses, sem parar o time de tecnologia",
-    "ISO 27001 em média 6 meses. Veja o que falta para passar na auditoria",
-    "A avaliação de segurança do cliente chegou? Veja o que falta"
+    "Certifique a segurança da informação na ISO 27001 com garantia de 200%",
+    "ISO 27001 com garantia de 200%. Prepare sua empresa para a auditoria",
+    "A avaliação de segurança do cliente chegou? Prepare-se com a ISO 27001"
   ];
   var adRules = [
-    { n: 3, keys: ["sem parar", "tecnologia"] },
+    { n: 3, keys: ["sem parar", "tecnologia", "seguranca da informacao", "garantia"] },
     { n: 2, keys: ["consultoria", "responder"] },
     { n: 5, keys: ["avaliacao", "chegou"] },
     { n: 4, keys: ["auditoria"] },

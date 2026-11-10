@@ -222,3 +222,27 @@ header .btn,header .btn:hover,.closing .btn,.closing .btn:hover,.hero-form .btn,
 .need { box-shadow: none; }
 .need a { color: inherit; text-decoration: none; display: block; }
 .need:not(:has(a)) { cursor: default; }
+
+/* Hero compacto + bullets nao clicaveis + gancho de scroll (nov/2026) */
+.hero-bullets{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px;justify-content:start}
+.hero-bullets li{display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:600;line-height:1.35;color:#fff;cursor:default}
+.hero-bullets svg{width:18px;height:18px;flex:none;margin-top:2px;color:#9FE3E6}
+.hero-bullets .benefits__copy{display:block;max-width:42ch}
+.hero-micro{margin:10px 0 0;font-size:13px;color:#D4DADF}
+.cs-scroll-hint{display:inline-flex;align-items:center;justify-content:center;margin-top:14px;width:36px;height:36px;border-radius:999px;color:rgba(255,244,221,.75);text-decoration:none;animation:csBounce 1.6s ease-in-out infinite;font-size:18px;font-weight:800}
+@keyframes csBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){.cs-scroll-hint{animation:none}}
+.hero .hero-jump{display:inline-flex;margin-top:16px}
+.need .icon{pointer-events:none}
+.return-grid article,.diff-row,.proof-metrics>div{cursor:default}
+.return-grid img.icon,.diff-row img.icon{pointer-events:none}
+@media(max-width:760px){
+  .hero{padding-top:28px;padding-bottom:8px}
+  .hero h1{font-size:26px;line-height:1.12;max-width:18ch}
+  .hero .lead{font-size:15px;margin:12px 0;color:#F1F3F5}
+  .hero-bullets{gap:8px;margin-top:12px}
+  .hero-bullets li{font-size:13px;color:#f5f5f5}
+  .hero .hero-jump{width:100%;justify-content:center}
+  .cs-scroll-hint{display:flex;margin-left:auto;margin-right:auto}
+  .wrap{width:calc(100% - 32px)}
+}

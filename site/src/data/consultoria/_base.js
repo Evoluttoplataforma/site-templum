@@ -8,7 +8,7 @@ export const baseConsultoria = {
     { num: "+2.000", label: "clientes certificados" },
     { num: "+1,5 mi", label: "de interações com especialistas" },
     { num: "R$ 3,3 bi", label: "em ganhos gerados aos clientes" },
-    { num: "4,9", label: "de nota no Google" },
+    { num: "4,9/5", label: "com base em +150 avaliações verificadas" },
   ],
   passos: [
     { t: "Cronograma sob medida", d: "Calculamos seu cronograma conforme o diagnóstico da empresa e estruturamos o passo a passo para atender os requisitos." },

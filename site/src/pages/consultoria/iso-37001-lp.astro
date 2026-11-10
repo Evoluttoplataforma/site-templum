@@ -18,17 +18,19 @@ const slug = "iso-37001";
 const norma = normas.find((n) => n.slug === slug) || {};
 const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre a ISO 37001.";
 const c = norma.color || "var(--orange)";
-const heroChips = [
-  { t: "+2.000 empresas certificadas", href: "#resultados" },
-  { t: "30 anos de experiência", href: "#seguranca" },
-  { t: "Sem limite de horas", href: "#seguranca" },
-];
 const h1 = experimentoH1("iso37001");
 const passos = passosDaProposta(d.passos);
 const porques = porquesDaProposta(d.porques);
 const formTitulo = "Fale agora com um especialista ISO 37001";
-const formSub = "Preencha o formulário e um especialista entrará em contato.";
-const formCta = "Solicite uma proposta";
+const formSub = "Sem compromisso. Resposta em até 24h.";
+const formCta = "Solicitar proposta";
+const heroSub = "Reduza riscos de compliance e fortaleça a governança";
+const heroBullets = [
+  { icon: "solar:shield-check-bold", t: "Certificação garantida em contrato ou 2x o investimento de volta" },
+  { icon: "solar:laptop-bold", t: "Consultoria 100% online com Templum OS (plataforma própria com IA)" },
+  { icon: "solar:headphones-round-bold", t: "Suporte técnico ilimitado, sem cobrança de horas adicionais" },
+  { icon: "solar:star-bold", t: "+2.000 empresas certificadas, nota 4,9 no Google" },
+];
 const oQueE = "É a norma internacional do sistema de gestão antissuborno. Ela define controles para prevenir, detectar e tratar o suborno na empresa e na relação com parceiros, criando uma cultura de integridade.";
 const tempo = "Depende do escopo, do porte e da maturidade da empresa. O prazo realista sai na proposta.";
 const emite = "Um organismo certificador acreditado, depois da auditoria. A Templum conduz a empresa da proposta até a auditoria.";
@@ -72,7 +74,7 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
 ---
 
 <LpBase
-  title="Consultoria e Certificação ISO 37001 Antissuborno | Templum"
+  title="Implante a ISO 37001 (antissuborno) com garantia contratual de 200% | Templum"
   description="Consultoria para certificação ISO 37001 (sistema de gestão antissuborno) com garantia de 200% em contrato. Solicite uma proposta."
   formAnchor="#form"
   headerAnchorDesktop="#contato"
@@ -82,24 +84,21 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
 >
   <AdsPageview slot="head" />
   <div class="cs-page" style={`--accent:${c}`}>
-    <!-- HERO (escuro, foto da norma) -->
     <section class="cs-hero">
       <div class="cs-hero-bg" aria-hidden="true"></div>
       <div class="container xl cs-hero-grid">
         <div class="cs-hero-text">
-          <span class="tag-pill tag-pill--glow">Consultoria · {norma.categoria}</span>
+          <span class="tag-pill tag-pill--glow">Consultoria · ISO 37001</span>
           <H1Principal experimento={h1} />
-          <nav class="cs-atalhos" aria-label="Atalhos da página">
-            <a href="#o-que-e">O que é</a>
-            <a href="#como-conseguir">Como conseguir</a>
-            <a href="#quanto-custa">Quanto custa</a>
-            <a href="#garantia">Garantia de 200%</a>
-            <a href="#faq">Perguntas frequentes</a>
-          </nav>
-          <p class="cs-sub">{d.hero.sub}</p>
-          {d.hero.preco && <div class="cs-price"><iconify-icon icon="solar:tag-price-bold"></iconify-icon> {d.hero.preco}</div>}
-          <div class="cs-chips">{heroChips.map((ch) => <a class="cs-chip" href={ch.href}><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch.t}</a>)}</div>
-          <a href="#metodo" class="cs-ver-metodo">Ver o método <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+          <p class="cs-sub">{heroSub}</p>
+          <ul class="cs-hero-bullets">
+            {heroBullets.map((b) => (
+              <li><iconify-icon icon={b.icon} aria-hidden="true"></iconify-icon><span>{b.t}</span></li>
+            ))}
+          </ul>
+          <a href="#form" class="btn btn--primary cs-hero-cta" data-abre-form data-cta-pos="topo">{formCta} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <p class="cs-hero-micro">Sem compromisso. Resposta em até 24h.</p>
+          <a href="#o-que-e" class="cs-scroll-hint" aria-label="Role para ver mais"><iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
           <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/iso-37001-obrigado" simples={true} cargo={true} whatsapp={true} whatsappLinha={wppLinha} whatsappFixo={true} />
@@ -335,34 +334,32 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
   .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
   .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
 
-  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(28px, 4vw, 64px) 0 clamp(20px, 3vw, 40px); }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
-  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
   .cs-hero-text { max-width: 640px; }
-  .cs-hero .tag-pill { margin-bottom: 20px; }
-  :global(#tpl-h1.cs-title) { font-size: clamp(32px, 4.4vw, 54px); font-weight: 800; line-height: 1.07; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
-  .cs-atalhos { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
-  .cs-atalhos a { color: var(--accent-lt); font-size: 14.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-  .cs-atalhos a:hover { color: var(--cream); }
+  .cs-hero .tag-pill { margin-bottom: 14px; }
+  :global(#tpl-h1.cs-title) { font-size: clamp(26px, 3.4vw, 44px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
   .cs-page section[id] { scroll-margin-top: 88px; }
   .cs-page .tag-pill,
   .cs-page .step-card,
-  .cs-page .why-card { cursor: default; }
+  .cs-page .why-card,
+  .cs-page .cs-motivo,
+  .cs-page .number-card { cursor: default; }
   .cs-page .step-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
   .cs-page .why-card:hover { transform: none; box-shadow: none; background: rgba(255,255,255,0.04); border-color: rgba(255,244,221,0.12); }
   :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
-  .cs-sub { font-size: 17px; color: rgba(255,244,221,0.82); margin-top: 18px; max-width: 520px; }
-  .cs-price { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,244,221,0.18); font-weight: 700; font-size: 14.5px; color: var(--cream); }
-  .cs-price iconify-icon { color: var(--accent-lt); font-size: 19px; }
-  .cs-guarantee { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; font-size: 13.5px; color: rgba(255,244,221,0.62); max-width: 520px; line-height: 1.5; }
-  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
-  .cs-chips { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,244,221,0.14); }
-  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: rgba(255,244,221,0.82); text-decoration: none; }
-  a.cs-chip:hover { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; }
-  .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
+  .cs-sub { font-size: clamp(15px, 1.5vw, 18px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 12px; max-width: 520px; line-height: 1.4; }
+  .cs-hero-bullets { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+  .cs-hero-bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #fff; }
+  .cs-hero-bullets iconify-icon { color: var(--accent-lt); font-size: 18px; flex-shrink: 0; margin-top: 1px; }
   .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
-  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
-  .cs-ver-metodo:hover { color: var(--accent-lt); }
+  .cs-hero-cta { display: inline-flex; align-items: center; justify-content: center; margin-top: 18px; min-height: 48px; }
+  .cs-hero-micro { margin: 10px 0 0; font-size: 13px; color: rgba(255,244,221,0.72); }
+  .cs-scroll-hint { display: inline-flex; align-items: center; justify-content: center; margin-top: 16px; width: 36px; height: 36px; border-radius: 999px; color: rgba(255,244,221,0.7); text-decoration: none; animation: csBounce 1.6s ease-in-out infinite; }
+  .cs-scroll-hint iconify-icon { font-size: 22px; }
+  @keyframes csBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .cs-scroll-hint { animation: none; } }
 
   .cs-stats { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 980px) { .cs-stats { grid-template-columns: repeat(2, 1fr); } }
@@ -415,11 +412,17 @@ const custo = "O investimento depende do porte da empresa, do número de unidade
   @media (max-width: 880px) { .cs-form-grid { grid-template-columns: 1fr; } }
 
   @media (max-width: 900px) {
-    .cs-hero-grid { grid-template-columns: 1fr; }
+    .cs-hero { padding: 24px 0 8px; }
+    .cs-hero-grid { grid-template-columns: 1fr; gap: 20px; }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .cs-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
+    :global(#tpl-h1.cs-title) { font-size: 26px; max-width: 18ch; }
+    .cs-hero-bullets { gap: 8px; margin-top: 12px; }
+    .cs-hero-bullets li { font-size: 13px; color: #f5f5f5; }
+    .cs-hero-cta { width: 100%; }
+    .cs-scroll-hint { align-self: center; margin-top: 12px; }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
-    .cs-chips { gap: 12px; }
   }
 </style>

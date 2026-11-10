@@ -17,13 +17,19 @@ const slug = "sassmaq";
 const norma = normas.find((n) => n.slug === slug) || {};
 const c = norma.color || "var(--orange)";
 const heroGarantia = d.hero.garantia || d.garantiaPadrao;
-const heroChips = d.hero.chips || d.chipsPadrao || [];
 const h1 = experimentoH1("sassmaq40");
 const formTitulo = "Fale agora com um especialista SASSMAQ 4.0";
-const formSub = "Preencha o formulário e um especialista entrará em contato.";
-const formCta = "Solicite uma proposta";
+const formSub = "Sem compromisso. Resposta em até 24h.";
+const formCta = "Solicitar proposta";
 const wppLinha = "Olá! Vim pelo site da Templum e quero saber sobre o SASSMAQ 4.0.";
-const ctaCurto = "Solicite uma proposta";
+const ctaCurto = "Solicitar proposta";
+const heroSub = "Consultoria especializada em transporte de produtos químicos";
+const heroBullets = [
+  { icon: "solar:shield-check-bold", t: "Certificação garantida em contrato ou 2x o investimento de volta" },
+  { icon: "solar:laptop-bold", t: "Consultoria 100% online com Templum OS (plataforma própria com IA)" },
+  { icon: "solar:headphones-round-bold", t: "Suporte técnico ilimitado, sem cobrança de horas adicionais" },
+  { icon: "solar:star-bold", t: "+2.000 empresas certificadas, nota 4,9 no Google" },
+];
 const oferta = [
   "Entenda quais mudanças impactam sua operação",
   "Identifique os principais gaps",
@@ -88,8 +94,8 @@ const pageSchemas = [
 ---
 
 <LpBase
-  title="Sua transportadora está preparada para a certificação SASSMAQ 4.0?"
-  description="Consultoria para identificar os gaps, adequar a operação e chegar à auditoria. A transição da SASSMAQ 4.0 vai até 11 de março de 2027."
+  title="Certifique sua empresa na SASSMAQ 4ª edição com garantia de 200% | Templum"
+  description="Consultoria especializada em transporte de produtos químicos para a SASSMAQ 4.0, com garantia de 200% em contrato. Solicite uma proposta."
   noindex={false}
   formAnchor="#form"
   headerAnchorDesktop="#contato"
@@ -105,11 +111,15 @@ const pageSchemas = [
         <div class="cs-hero-text">
           <span class="tag-pill tag-pill--glow">SASSMAQ 4.0</span>
           <H1Principal experimento={h1} />
-          <p class="cs-sub">Consultoria para identificar os gaps, adequar a operação e chegar à auditoria com especialistas. A transição vai até 11 de março de 2027.</p>
-          <p class="cs-guarantee"><iconify-icon icon="solar:shield-check-bold"></iconify-icon> {heroGarantia}</p>
-          <div class="cs-chips">{heroChips.map((ch) => <span class="cs-chip"><iconify-icon icon="solar:check-circle-bold"></iconify-icon>{ch}</span>)}</div>
-          <a href="#form" class="btn btn--primary btn--block cs-hero-cta">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
-          <a href="#mudancas" class="cs-ver-metodo">Ver o que mudou <iconify-icon icon="solar:arrow-down-linear"></iconify-icon></a>
+          <p class="cs-sub">{heroSub}</p>
+          <ul class="cs-hero-bullets">
+            {heroBullets.map((b) => (
+              <li><iconify-icon icon={b.icon} aria-hidden="true"></iconify-icon><span>{b.t}</span></li>
+            ))}
+          </ul>
+          <a href="#form" class="btn btn--primary cs-hero-cta" data-abre-form data-cta-pos="topo">{ctaCurto} <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a>
+          <p class="cs-hero-micro">Sem compromisso. Resposta em até 24h.</p>
+          <a href="#prazo" class="cs-scroll-hint" aria-label="Role para ver mais"><iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon></a>
         </div>
         <div class="cs-hero-form" id="form">
           <LeadForm norma={norma.nome} titulo={formTitulo} sub={formSub} cta={formCta} obrigado="/consultoria/sassmaq-obrigado" whatsapp={true} whatsappNorma="SASSMAQ 4.0" whatsappLinha={wppLinha} whatsappFixo={true} />
@@ -302,24 +312,24 @@ const pageSchemas = [
   .cs-page .section:not(.section--navy) .faq-item[open] .faq-question .faq-arrow { color: var(--accent); }
   .cs-page .section:not(.section--navy) .cs-pq-item iconify-icon { color: var(--accent); }
 
-  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(48px, 6vw, 80px) 0; }
+  .cs-hero { position: relative; background: var(--navy); color: var(--cream); overflow: hidden; padding: clamp(28px, 4vw, 64px) 0 clamp(20px, 3vw, 40px); }
   .cs-hero-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(720px 460px at 12% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%), radial-gradient(560px 380px at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%); }
-  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .cs-hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
   .cs-hero-text { max-width: 640px; }
-  .cs-hero .tag-pill { margin-bottom: 20px; }
-  :global(#tpl-h1.cs-title) { font-size: clamp(30px, 3.8vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
+  .cs-hero .tag-pill { margin-bottom: 14px; }
+  :global(#tpl-h1.cs-title) { font-size: clamp(26px, 3.4vw, 44px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; color: var(--cream); text-wrap: balance; }
   :global(#tpl-h1 .cs-hl) { color: var(--accent-lt); }
-  .cs-sub { font-size: clamp(17px, 1.8vw, 20px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 18px; max-width: 560px; line-height: 1.45; }
-  .cs-hero-note { font-size: 15.5px; color: rgba(255,244,221,0.72); margin-top: 14px; max-width: 540px; line-height: 1.55; }
-  .cs-guarantee { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; font-size: 14.5px; font-weight: 600; color: rgba(255,244,221,0.92); max-width: 540px; line-height: 1.5; }
-  .cs-guarantee iconify-icon { color: var(--accent-lt); font-size: 19px; flex-shrink: 0; margin-top: 1px; }
-  .cs-chips { display: flex; gap: 18px 22px; flex-wrap: wrap; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,244,221,0.14); }
-  .cs-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 700; color: var(--cream); }
-  .cs-chip iconify-icon { color: var(--accent-lt); font-size: 18px; }
+  .cs-sub { font-size: clamp(15px, 1.5vw, 18px); font-weight: 500; color: rgba(255,244,221,0.92); margin-top: 12px; max-width: 520px; line-height: 1.4; }
+  .cs-hero-bullets { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+  .cs-hero-bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #fff; }
+  .cs-hero-bullets iconify-icon { color: var(--accent-lt); font-size: 18px; flex-shrink: 0; margin-top: 1px; }
   .cs-hero-form { align-self: start; scroll-margin-top: 80px; }
-  .cs-hero-cta { display: none; }
-  .cs-ver-metodo { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-size: 14px; font-weight: 600; color: rgba(255,244,221,0.55); text-decoration: none; transition: color .2s; }
-  .cs-ver-metodo:hover { color: var(--accent-lt); }
+  .cs-hero-cta { display: inline-flex; align-items: center; justify-content: center; margin-top: 18px; min-height: 48px; }
+  .cs-hero-micro { margin: 10px 0 0; font-size: 13px; color: rgba(255,244,221,0.72); }
+  .cs-scroll-hint { display: inline-flex; align-items: center; justify-content: center; margin-top: 16px; width: 36px; height: 36px; border-radius: 999px; color: rgba(255,244,221,0.7); text-decoration: none; animation: csBounce 1.6s ease-in-out infinite; }
+  .cs-scroll-hint iconify-icon { font-size: 22px; }
+  @keyframes csBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .cs-scroll-hint { animation: none; } }
 
   .cs-oferta { text-align: center; }
   .cs-oferta h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; text-wrap: balance; margin: 14px 0 16px; }
@@ -337,10 +347,13 @@ const pageSchemas = [
   #prazo .section-header { margin-bottom: 28px; }
 
   .cs-mudancas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: left; }
-  .cs-mudanca { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 22px 20px; }
-  .cs-mudanca-ico { width: 48px; height: 48px; border-radius: var(--r-12); display: grid; place-items: center; font-size: 24px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 14px; }
+  .cs-mudanca { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-20); padding: 22px 20px; cursor: default; box-shadow: none; transition: none; }
+  .cs-mudanca:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  .cs-mudanca-ico { width: 48px; height: 48px; border-radius: var(--r-12); display: grid; place-items: center; font-size: 24px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); margin-bottom: 14px; pointer-events: none; }
   .cs-mudanca h3 { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 6px; }
   .cs-mudanca p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+  .cs-page .number-card, .cs-page .split-img, .cs-page .cs-date { cursor: default; }
+  .cs-page .split-img img, .cs-page .cs-nova-img { pointer-events: none; }
   .cs-mudancas-close { max-width: 640px; margin: 28px auto 0; font-size: 18px; font-weight: 700; line-height: 1.45; text-wrap: balance; }
   #mudancas { text-align: center; scroll-margin-top: 88px; }
 
@@ -431,14 +444,18 @@ const pageSchemas = [
   @media (max-width: 880px) { .cs-form-grid { grid-template-columns: 1fr; } }
 
   @media (max-width: 900px) {
-    .cs-hero-grid { grid-template-columns: 1fr; }
+    .cs-hero { padding: 24px 0 8px; }
+    .cs-hero-grid { grid-template-columns: 1fr; gap: 20px; }
     .why-grid { grid-template-columns: repeat(2, 1fr); }
     .cs-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
-    .cs-hero-cta { order: 1; display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; margin-top: 18px; }
-    .cs-guarantee, .cs-chips, .cs-ver-metodo { order: 2; }
+    :global(#tpl-h1.cs-title) { font-size: 26px; max-width: 18ch; }
+    .cs-hero-bullets { gap: 8px; margin-top: 12px; }
+    .cs-hero-bullets li { font-size: 13px; color: #f5f5f5; }
+    .cs-hero-cta { width: 100%; }
+    .cs-hero-form { margin-top: 4px; }
+    .cs-scroll-hint { align-self: center; margin-top: 12px; }
   }
   @media (max-width: 600px) {
     .why-grid { grid-template-columns: 1fr; }
-    .cs-chips { gap: 12px; }
   }
 </style>

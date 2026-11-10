@@ -48,7 +48,7 @@ const mostraCargoPainel = (!simples || cargo) && !qualificaAntes;
 const faixasFuncionarios = ["1 a 10", "11 a 50", "51 a 100", "101 a 250", "251 a 500", "Mais de 500"];
 const faturamentos = ["Até R$ 50 mil", "R$ 50 mil a R$ 100 mil", "R$ 100 mil a R$ 300 mil", "R$ 300 mil a R$ 500 mil", "R$ 500 mil a R$ 1 milhão", "Acima de R$ 1 milhão"];
 const faixasFaturamentoMensal = ["Até R$ 100 mil", "De R$ 100 mil a R$ 500 mil", "De R$ 500 mil a R$ 1 milhão", "De R$ 1 milhão a R$ 5 milhões", "Acima de R$ 5 milhões"];
-const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labelEmpresa;
+const empresaPlaceholder = labelEmpresa === "Empresa" ? "Ex: Nome da sua empresa" : `Ex: ${labelEmpresa}`;
 ---
 
 <div class="lead-card" data-lead-colapsavel={colapsavel ? "1" : undefined}>
@@ -57,10 +57,10 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
   <form class="form" data-trk-event="lead" novalidate data-obrigado={obrigado || undefined}>
     {norma && <input type="hidden" name="norma" value={norma} />}
     <div class="form-row">
-      <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Seu nome" required /></div>
-      <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="(00) 00000-0000" required /></div>
+      <div class="field"><label>Nome</label><input class="input" name="nome" placeholder="Ex: Maria Silva" required /></div>
+      <div class="field"><label>Telefone / WhatsApp</label><input class="input" type="tel" inputmode="numeric" name="telefone" placeholder="Ex: (11) 91234-5678" required /></div>
     </div>
-    <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="voce@empresa.com" required /></div>
+    <div class="field"><label>E-mail</label><input class="input" type="email" name="email" placeholder="Ex: maria@empresa.com.br" required /></div>
 
     {qualificaAntes && (
       <div class="form-row">
@@ -73,8 +73,8 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
         </div>
         <div class="field">
           <label>Seu cargo</label>
-          <select class="select" name="cargo" aria-label="Seu cargo" required>
-            <option value="">Selecione</option>
+              <select class="select" name="cargo" aria-label="Seu cargo" required>
+            <option value="">Ex: Gerente da Qualidade</option>
             {cargos.map((c) => <option value={c}>{c}</option>)}
           </select>
         </div>
@@ -136,7 +136,7 @@ const empresaPlaceholder = labelEmpresa === "Empresa" ? "Nome da empresa" : labe
             <div class="field">
               <label>Seu cargo</label>
               <select class="select" name="cargo" aria-label="Seu cargo">
-                <option value="">Selecione</option>
+                <option value="">Ex: Gerente da Qualidade</option>
                 {cargos.map((c) => <option value={c}>{c}</option>)}
               </select>
             </div>
