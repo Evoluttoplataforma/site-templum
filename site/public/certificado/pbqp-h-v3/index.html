@@ -25,6 +25,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-WBRDT3ZC');</script>
 <!-- End Google Tag Manager -->
 
+<!-- Templum: shim anti TypeError do listener Tally órfão no GTM-WC3P2SNP -->
+<script>
+(function () {
+  if (window.__tplMsgIncludesShim) return;
+  window.__tplMsgIncludesShim = 1;
+  var proto = EventTarget.prototype;
+  var orig = proto.addEventListener;
+  proto.addEventListener = function (type, listener, options) {
+    if (type === "message" && typeof listener === "function") {
+      var wrapped = function (ev) {
+        try {
+          return listener.call(this, ev);
+        } catch (err) {
+          var m = err && err.message != null ? String(err.message) : String(err);
+          if (m.indexOf("includes is not a function") !== -1) return;
+          throw err;
+        }
+      };
+      return orig.call(this, type, wrapped, options);
+    }
+    return orig.call(this, type, listener, options);
+  };
+})();
+</script>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
