@@ -2323,11 +2323,24 @@ function isSiteSdrBwLead(lead) {
   if (!path) return false;
   if (path === LP_ISO9001_V2_PATH) return true;
   if (SITE_SDR_BW_EXTRA.has(path)) return true;
+  if (path === "/diagnostico-iso-9001-campanha/") return true;
   if (/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return true;
   if (/^\/consultoria\/[a-z0-9-]+\/$/.test(path)) return true;
   // LPs resgatadas de campanha Ads (Framer → /ab, /ab-sn, /certificado)
   if (/^\/ab(-sn)?\//.test(path)) return true;
   if (/^\/certificado\//.test(path)) return true;
+  // /form/ + Ads: pagina costuma ser montada a partir do utm_campaign
+  // (ex.: /RODRIGO-LEADS-DEFESA-DA-MARCA-…/), fora do allowlist de path.
+  const submit = normLpPath(pathOnly(lead && lead.pagina_submit)).toLowerCase();
+  const src = String((lead && lead.utm_source) || "").toLowerCase();
+  const med = String((lead && lead.utm_medium) || "").toLowerCase();
+  if (
+    (submit === "/form/" || submit === "/form") &&
+    (src === "google" || src === "bing") &&
+    (med === "cpc" || med === "ppc" || med === "paid" || med === "paidsearch")
+  ) {
+    return true;
+  }
   return false;
 }
 
