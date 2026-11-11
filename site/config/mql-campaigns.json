@@ -122,7 +122,7 @@
       "crmTags": ["diag 9001 campanha"],
       "crmSource": "Diagnóstico ISO 9001",
       "titleSuffix": "Diagnóstico ISO 9001",
-      "notes": "Diagnóstico ISO 9001, campanha. As respostas entram na observação.",
+      "notes": "",
       "customFields": true,
       "manychatTags": ["diag 9001 campanha"],
       "mailchimpTags": ["diag 9001 campanha"],

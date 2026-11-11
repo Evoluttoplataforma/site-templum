@@ -1783,7 +1783,50 @@ const ORBIT_FIELDS = {
   utm_campaign: "cf_utm_campaign",
   utm_term:     "cf_utm_term",
   utm_content:  "cf_utm_content",
+  diag_resultado_html: "cf_diag_resultado_html",
 };
+
+function escapeHtmlOrbit(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** HTML do resultado do diagnóstico para o e-mail dia 0 (sem travessão). */
+function diagResultadoEmailHtml(mensagem) {
+  const lines = String(mensagem || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => line !== "Diagnóstico ISO 9001, campanha.");
+  if (!lines.length) return "";
+  return lines.map((line, index) => {
+    const colon = line.indexOf(":");
+    if (colon > 0 && colon < 48) {
+      const label = escapeHtmlOrbit(line.slice(0, colon + 1));
+      const rest = escapeHtmlOrbit(line.slice(colon + 1).trim());
+      const isHighlight = index < 2;
+      return (
+        '<div style="margin:0 0 ' + (isHighlight ? "12" : "8") + "px;font-size:" +
+        (index === 0 ? "16" : "14") +
+        'px;line-height:22px;color:#222831">' +
+        "<strong" + (isHighlight ? ' style="color:#222831"' : "") + ">" + label + "</strong> " +
+        rest +
+        "</div>"
+      );
+    }
+    return (
+      '<div style="margin:0 0 8px;font-size:14px;line-height:22px;color:#222831">' +
+      escapeHtmlOrbit(line) +
+      "</div>"
+    );
+  }).join("");
+}
+
+/** Telefone no formato que o INBOUND já aceita bem: (11) 91234-5678 */
+
 
 /** Telefone no formato que o INBOUND já aceita bem: (11) 91234-5678 */
 function formatPhoneBrOrbit(raw) {
@@ -2485,7 +2528,12 @@ function mqlInscricaoTitle(lead, cfg) {
 }
 
 function mqlInscricaoCustomFields(lead) {
-  return orbitCustomFieldsFromLead(lead);
+  const cf = orbitCustomFieldsFromLead(lead);
+  if (lead.evento === DIAG_9001_CAMPANHA && lead.mensagem) {
+    const html = diagResultadoEmailHtml(lead.mensagem);
+    if (html) cf[ORBIT_FIELDS.diag_resultado_html] = html;
+  }
+  return cf;
 }
 
 function buildMqlInscricaoPatch(lead, cfg, existingMql, tags) {
@@ -2877,10 +2925,10 @@ function diagFaturamentoInbound(lead) {
 }
 
 // Diagnóstico de campanha: o cadastro nasce no MQL.
+// Sim grava pediu-contato (em qualquer faixa). Não grava diag-sem-contato.
 // Sim com faturamento acima de R$ 100 mil vai ao INBOUND.
 // Até R$ 100 mil, e o Não, permanecem no MQL.
-// A troca de funil vai num PATCH só com a etapa e o funil de destino.
-// No mesmo PATCH de notas e campos, a etapa de outro funil é ignorada.
+// Troca de funil: segundo PATCH só com stage_id do destino.
 async function routeDiagnosticoContato(lead, env, querContato) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, reason: "not_configured" };
@@ -2889,7 +2937,7 @@ async function routeDiagnosticoContato(lead, env, querContato) {
   const note = String(lead.mensagem || "").trim() || (querContato
     ? "Pediu contato para resolver o gargalo do diagnóstico."
     : "Viu o diagnóstico e não pediu contato.");
-  const tag = moverInbound ? "pediu-contato" : (querContato ? "" : "diag-sem-contato");
+  const tag = querContato ? "pediu-contato" : "diag-sem-contato";
 
   try {
     let inbound = null;
@@ -2940,13 +2988,11 @@ async function routeDiagnosticoContato(lead, env, querContato) {
         return { ok: false, error: e.slice(0, 180), lead_id: card.id };
       }
       if (movePipeline) {
+        // Troca de funil: só stage_id do destino. pipeline_id no PATCH é ignorado.
         const move = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
           method: "PATCH",
           headers,
-          body: JSON.stringify({
-            stage_id: ORBIT_STAGE_ID,
-            pipeline_id: ORBIT_PIPELINE_ID,
-          }),
+          body: JSON.stringify({ stage_id: ORBIT_STAGE_ID }),
         });
         if (!move.ok) {
           const e = await move.text().catch(() => "");
