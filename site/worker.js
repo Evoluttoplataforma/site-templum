@@ -1,5 +1,8 @@
 ﻿// Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Templum OS + ManyChat (em paralelo)
+//   POST /api/bn-interesse  → LP Black November: etiqueta BN26_LP_INTERESSE no card
+//                             aberto do funil BLACKNOVEMBER, sem mudar a etapa.
+//                             Quem não tem card nasce em Espera.
 //   POST /api/form-evento   → funil do formulário em site_form_eventos (sem dados pessoais)
 //   POST /api/whatsapp-ref  → código do clique de WhatsApp em site_whatsapp_refs (sem dados pessoais)
 //                             Lead comercial vai ao funil INBOUND (etapa NOVO LEAD). Não cria negócio no Pipedrive.
@@ -163,6 +166,20 @@ export default {
       if (request.method === "POST") return handleSaida(request, env);
       if (request.method === "GET") return handleSaidaRead(request, env);
       return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+    }
+    if (url.pathname === "/api/bn-interesse") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleBnInteresse(request, env);
     }
     if (url.pathname === "/api/lead") {
       if (request.method === "OPTIONS") {
@@ -406,6 +423,157 @@ function corsJson(data, status = 200) {
       "Access-Control-Allow-Methods": "POST, OPTIONS",
     },
   });
+}
+
+function bnEmailOk(raw) {
+  const value = normalizeEmail(raw).replace(/\s+/g, "");
+  if (!value || value.includes("*|") || value.length > 120) return "";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "";
+  return value;
+}
+
+function bnNomeOk(raw) {
+  const value = String(raw || "").replace(/[\u0000-\u001f<>]/g, "").trim();
+  if (!value || value.includes("*|") || value.includes("@") || value.length > 60) return "";
+  return value;
+}
+
+function bnQuando() {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date());
+}
+
+async function bnInteresseDentroDoLimite(email) {
+  const cache = globalThis.caches && caches.default;
+  if (!cache) return true;
+  const req = new Request("https://templum.com.br/api/bn-interesse-rate/" + encodeURIComponent(email));
+  try {
+    const hit = await cache.match(req);
+    const count = hit ? Number(await hit.text()) || 0 : 0;
+    if (count >= 8) return false;
+    await cache.put(req, new Response(String(count + 1), {
+      headers: { "cache-control": "public, max-age=3600" },
+    }));
+    return true;
+  } catch (_) {
+    return true;
+  }
+}
+
+async function bnBuscarNoFunil(token, email) {
+  const r = await fetch(
+    `${ORBIT_BASE}/leads/search?term=${encodeURIComponent(email)}&limit=50`,
+    { headers: { authorization: "Bearer " + token, accept: "application/json" } },
+  ).catch(() => null);
+  if (!r || !r.ok) return null;
+  const j = await r.json().catch(() => null);
+  if (!j) return null;
+  const rows = j.data || j.leads || [];
+  const mine = [];
+  for (const lead of rows.slice(0, 15)) {
+    if (!lead || !lead.id) continue;
+    let row = lead;
+    if (leadContactEmail(row) !== email || row.pipeline_id !== BN_PIPELINE_ID) {
+      const one = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+        headers: { authorization: "Bearer " + token, accept: "application/json" },
+      }).catch(() => null);
+      if (!one || !one.ok) continue;
+      const d = await one.json().catch(() => ({}));
+      row = d.data || d.lead || d;
+    }
+    if (row && row.id && leadContactEmail(row) === email && row.pipeline_id === BN_PIPELINE_ID) {
+      mine.push(row);
+    }
+  }
+  return mine;
+}
+
+function bnCardAberto(rows) {
+  const abertos = rows.filter((l) => l.stage_id !== BN_STAGE_GANHO && l.stage_id !== BN_STAGE_PERDIDO);
+  abertos.sort((a, b) => String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || "")));
+  return abertos[0] || null;
+}
+
+async function bnLerCard(token, id) {
+  const res = await fetch(`${ORBIT_BASE}/leads/${id}`, {
+    headers: { authorization: "Bearer " + token, accept: "application/json" },
+  }).catch(() => null);
+  if (!res || !res.ok) return null;
+  const payload = await res.json().catch(() => ({}));
+  return payload.data || payload.lead || payload;
+}
+
+async function handleBnInteresse(request, env) {
+  let body = {};
+  try { body = await request.json(); } catch (_) {
+    return corsJson({ ok: false, error: "invalid_json" }, 400);
+  }
+  const email = bnEmailOk(body.email);
+  if (!email) return corsJson({ ok: false, error: "email" }, 400);
+  if (!(await bnInteresseDentroDoLimite(email))) {
+    return corsJson({ ok: false, error: "rate_limit" }, 429);
+  }
+  const nome = bnNomeOk(body.nome);
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
+
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+  const rows = await bnBuscarNoFunil(token, email);
+  if (!rows) return corsJson({ ok: false, error: "crm" }, 502);
+
+  const aberto = bnCardAberto(rows);
+  if (!aberto && rows.some((l) => l.stage_id === BN_STAGE_GANHO)) {
+    return corsJson({ ok: true, action: "already" });
+  }
+
+  const nota = BN_NOTA_MARCA + " (" + bnQuando() + ").";
+  if (aberto) {
+    const fresco = (await bnLerCard(token, aberto.id)) || aberto;
+    const tinhaTag = leadTagList(fresco).includes(BN_TAG_INTERESSE.toLowerCase());
+    const tinhaNota = String(fresco.notes || fresco.note || "").includes(BN_NOTA_MARCA);
+    if (tinhaTag && tinhaNota) return corsJson({ ok: true, action: "already" });
+    const patch = {};
+    if (!tinhaTag) {
+      const tagged = appendCrmTag(fresco.tags, BN_TAG_INTERESSE);
+      if (tagged.added) patch.tags = tagged.tags;
+    }
+    if (!tinhaNota) patch.notes = mergeWebinarNotes(fresco.notes || fresco.note, nota);
+    if (!Object.keys(patch).length) return corsJson({ ok: true, action: "already" });
+    const res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(patch),
+    }).catch(() => null);
+    if (!res || !res.ok) return corsJson({ ok: false, error: "crm" }, 502);
+    return corsJson({ ok: true, action: "tagged" });
+  }
+
+  const criado = await fetch(`${ORBIT_BASE}/leads`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      title: (nome || email) + " - Black November",
+      pipeline_id: BN_PIPELINE_ID,
+      stage_id: BN_STAGE_ESPERA,
+      contact_name: nome || email,
+      contact_email: email,
+      source: "mailchimp",
+      tags: [BN_TAG_INTERESSE],
+      notes: nota + " Origem: e-mail da Black November.",
+    }),
+  }).catch(() => null);
+  if (!criado || !criado.ok) return corsJson({ ok: false, error: "crm" }, 502);
+  return corsJson({ ok: true, action: "created" });
 }
 
 function iscaSlugFrom(body) {
@@ -1624,6 +1792,12 @@ const ORBIT_BASE = "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/crm-ap
 const FLUXOS_WEBHOOK_INBOUND_BASE =
   "https://cvanwvoddchatcdstwry.supabase.co/functions/v1/fluxos-webhook-inbound";
 const ORBIT_PIPELINE_ID = "346d6495-1a81-4776-b3d4-bf86d0edf3b4";
+const BN_PIPELINE_ID = "a0a55cc5-0e35-4405-a7f3-526210849de9";
+const BN_STAGE_ESPERA = "4ad58c4e-9c1d-42e4-8230-e71a879b020e";
+const BN_STAGE_GANHO = "22ca3031-b1f7-4757-adfb-f5797b0aec3c";
+const BN_STAGE_PERDIDO = "497ac549-d8cb-4e0f-94ed-3c23c2791e44";
+const BN_TAG_INTERESSE = "BN26_LP_INTERESSE";
+const BN_NOTA_MARCA = "Interesse na LP Black November";
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const DIAG_9001_CAMPANHA = "diagnostico-iso-9001-campanha";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
