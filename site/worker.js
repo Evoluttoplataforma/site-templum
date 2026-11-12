@@ -1,4 +1,4 @@
-// Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
+﻿// Worker da Templum v3 — serve arquivos estáticos (dist) e expõe:
 //   POST /api/lead          → salva lead no Supabase + Mailchimp + Templum OS + ManyChat (em paralelo)
 //   POST /api/form-evento   → funil do formulário em site_form_eventos (sem dados pessoais)
 //   POST /api/whatsapp-ref  → código do clique de WhatsApp em site_whatsapp_refs (sem dados pessoais)
@@ -104,6 +104,17 @@ import {
 } from "./zoom-registrant.js";
 
 const META_API_VERSION = "v21.0";
+
+// Hosts antigos de campanha pontual (ex-Divia). Precisam de Workers Route no
+// site-templum; senão o Cloudflare responde 522. Destino = LP atual.
+const LEGACY_LP_HOST_REDIRECTS = {
+  "lpsassmaq.templum.com.br": "https://templum.com.br/consultoria/sassmaq-4-0/",
+  "lpiso9001.templum.com.br": "https://templum.com.br/consultoria/iso-9001-lp/",
+  "lpiso14001.templum.com.br": "https://templum.com.br/consultoria/iso-14001-lp/",
+  "lpiso27001.templum.com.br": "https://templum.com.br/consultoria/iso-27001-lp/",
+  "lpiso.templum.com.br": "https://templum.com.br/consultoria/",
+  "lppbqp.templum.com.br": "https://templum.com.br/consultoria/pbqp-h-lp/",
+};
 
 // Lead qualificado da LP /diagnostico-de-gestao: faixas de faturamento acima de
 // R$ 100 mil/mês. Precisa bater EXATAMENTE com a lista da LP (o pixel do
@@ -259,6 +270,10 @@ export default {
       if (request.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
       return handleTagDiagnosticoNovaEra(request, env);
     }
+
+    // LPs legadas (campanha pontual): host → página atual (301, path/query descartados).
+    const legacyLpDest = LEGACY_LP_HOST_REDIRECTS[url.hostname.toLowerCase()];
+    if (legacyLpDest) return Response.redirect(legacyLpDest, 301);
 
     // Canônico sem "www": www.templum.com.br/* → templum.com.br/* (301, preserva path+query).
     if (url.hostname.startsWith("www.")) {
