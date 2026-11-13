@@ -312,7 +312,8 @@
       color: var(--mudo);
     }
     .simulador .cta-wrap,
-    .simulador .aviso-form { grid-column: 1 / -1; margin: 4px 0 0; text-align: center; }
+    .simulador .aviso-form,
+    .simulador #quem { grid-column: 1 / -1; margin: 4px 0 0; text-align: center; }
     .campo {
       display: flex;
       flex-direction: column;
@@ -386,6 +387,14 @@
       color: var(--ouro-claro);
     }
     .aviso-form { margin: 12px 0 0; color: #ffb4a2; font-size: 14px; }
+    .quem-nota {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--mudo);
+      text-align: left;
+    }
+    #quem { max-width: 420px; margin-left: auto; margin-right: auto; text-align: left; }
     .rodape {
       margin: 0;
       padding: 8px 16px 28px;
@@ -483,6 +492,11 @@
           <p class="valor-espera">Escolha a faixa de colaboradores e o certificado para ver o preço.</p>
         </div>
       </div>
+      <div id="quem" hidden>
+        <p class="quem-nota">Informe seu nome e e-mail para o especialista te chamar.</p>
+        <label class="campo"><span>Nome</span><input id="nome-outro" name="nome" type="text" autocomplete="name" maxlength="60"></label>
+          <label class="campo"><span>E-mail</span><input id="email-outro" name="email" type="email" autocomplete="email" maxlength="120"></label>
+      </div>
       <p class="aviso-form" id="aviso" hidden></p>
       <p class="cta-wrap"><button type="submit" class="cta" id="pedir" disabled>Quero certificar minha empresa</button></p>
     </form>
@@ -563,6 +577,10 @@
       var estimado = document.getElementById("estimado");
       var aviso = document.getElementById("aviso");
       var pedir = document.getElementById("pedir");
+      var quem = document.getElementById("quem");
+      var nomeOutro = document.getElementById("nome-outro");
+      var emailOutro = document.getElementById("email-outro");
+      var pediuDados = false;
 
       function lerColab() {
         var n = Number(colabInput.value);
@@ -617,9 +635,23 @@
           aviso.hidden = false;
           return;
         }
+        if (!emailUrl && !pediuDados) {
+          pediuDados = true;
+          quem.hidden = false;
+          quem.scrollIntoView({ block: "center" });
+          nomeOutro.focus();
+          return;
+        }
+        if (!emailUrl) {
+          email = (emailOutro.value || "").trim();
+          nome = (nomeOutro.value || "").trim();
+          if (email.indexOf("*|") !== -1 || email.indexOf("@") < 1) email = "";
+          if (nome.indexOf("*|") !== -1 || nome.indexOf("@") !== -1) nome = "";
+        }
         if (!email) {
-          aviso.textContent = "Abra o link que chegou no seu e-mail para o especialista te chamar.";
+          aviso.textContent = "Informe seu e-mail para o especialista te chamar.";
           aviso.hidden = false;
+          emailOutro.focus();
           return;
         }
         pedir.disabled = true;
@@ -632,7 +664,8 @@
             nome: nome,
             certificado: cert,
             colaboradores: n,
-            faixa: faixas[String(n)]
+            faixa: faixas[String(n)],
+            encaminhado: !emailUrl
           })
         }).then(function (r) { return r.json(); }).then(function (d) {
           if (!d || !d.ok) throw new Error("crm");

@@ -621,7 +621,10 @@ async function handleBnInteresse(request, env) {
     return corsJson({ ok: true, action: "already" });
   }
 
-  const nota = BN_NOTA_PROPOSTA + " (" + bnQuando() + "). " + resumo + " Origem: e-mail da Black Friday.";
+  const origem = body.encaminhado === true
+    ? "Origem: formulário da Black Friday."
+    : "Origem: e-mail da Black Friday.";
+  const nota = BN_NOTA_PROPOSTA + " (" + bnQuando() + "). " + resumo + " " + origem;
   if (aberto) {
     const fresco = (await bnLerCard(token, aberto.id)) || aberto;
     const tinhaTag = leadTagList(fresco).includes(BN_TAG_PROPOSTA.toLowerCase());
