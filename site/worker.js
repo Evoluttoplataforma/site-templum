@@ -314,6 +314,11 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    if (url.pathname === "/black-november" || url.pathname === "/black-november/") {
+      url.pathname = "/black-friday/";
+      return Response.redirect(url.toString(), 301);
+    }
+
     const zoomShort = url.pathname.match(/^\/z\/([^/]+)\/?$/);
     if (zoomShort) return handleZoomShortLink(zoomShort[1], request.method, env, ctx);
 
@@ -438,6 +443,67 @@ function bnNomeOk(raw) {
   return value;
 }
 
+function bnColaboradoresOk(raw) {
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1 || n > 100000) return 0;
+  return n;
+}
+
+function bnCertOk(raw) {
+  const value = String(raw || "").replace(/[\u0000-\u001f<>]/g, "").trim();
+  if (BN_CERTIFICADOS.indexOf(value) === -1) return "";
+  return value;
+}
+
+function bnRound2(n) {
+  return Math.round(Number(n) * 100) / 100;
+}
+
+function bnBrl(n) {
+  return bnRound2(n).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function bnFaixa9001(n) {
+  if (n <= 20) return { label: "1 a 20", setup: 4000, parcela: 2546 };
+  if (n <= 50) return { label: "21 a 50", setup: 4000, parcela: 2800 };
+  if (n <= 80) return { label: "51 a 80", setup: 4500, parcela: 3200 };
+  if (n <= 100) return { label: "81 a 100", setup: 5000, parcela: 3500 };
+  return { label: "acima de 100", consulte: true };
+}
+
+function bnFaixaGrupo(n) {
+  if (n <= 10) return { label: "1 a 10", setup: 4500, parcela: 3700 };
+  if (n <= 20) return { label: "11 a 20", setup: 4900, parcela: 3800 };
+  if (n <= 49) return { label: "21 a 49", setup: 5200, parcela: 4500 };
+  if (n <= 100) return { label: "50 a 100", setup: 6000, parcela: 4700 };
+  return { label: "acima de 100", consulte: true };
+}
+
+function bnResumoProposta(certificado, colaboradores) {
+  const base = "Certificado: " + certificado + ". Colaboradores: " + colaboradores + ".";
+  if (BN_CERT_CONSULTA.indexOf(certificado) !== -1) {
+    return base + " Estimativa sob consulta.";
+  }
+  const faixa = certificado === "ISO 9001" ? bnFaixa9001(colaboradores) : bnFaixaGrupo(colaboradores);
+  const auditoria = certificado === "ISO 9001" ? "" : " Auditoria inclusa.";
+  if (faixa.consulte) {
+    return base + " Faixa: acima de 100. Estimativa sob consulta." + auditoria;
+  }
+  const setupBf = bnRound2(faixa.setup * 0.8);
+  const parcelaBf = bnRound2(faixa.parcela * 0.8);
+  const ano = bnRound2(faixa.parcela * 11);
+  const anoBf = bnRound2(parcelaBf * 11);
+  return base
+    + " Faixa: " + faixa.label + "."
+    + " Setup padrão " + bnBrl(faixa.setup) + "."
+    + " Setup Black Friday " + bnBrl(setupBf) + "."
+    + " 11x padrão " + bnBrl(faixa.parcela) + "."
+    + " 11x Black Friday " + bnBrl(parcelaBf) + "."
+    + " Ano padrão " + bnBrl(ano) + "."
+    + " Ano Black Friday " + bnBrl(anoBf) + "."
+    + auditoria;
+}
+
 function bnQuando() {
   return new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
@@ -514,12 +580,16 @@ async function handleBnInteresse(request, env) {
   try { body = await request.json(); } catch (_) {
     return corsJson({ ok: false, error: "invalid_json" }, 400);
   }
+  if (body.proposta !== true) return corsJson({ ok: false, error: "proposta" }, 400);
   const email = bnEmailOk(body.email);
-  if (!email) return corsJson({ ok: false, error: "email" }, 400);
+  const certificado = bnCertOk(body.certificado);
+  const colaboradores = bnColaboradoresOk(body.colaboradores);
+  if (!email || !certificado || !colaboradores) return corsJson({ ok: false, error: "proposta" }, 400);
   if (!(await bnInteresseDentroDoLimite(email))) {
     return corsJson({ ok: false, error: "rate_limit" }, 429);
   }
   const nome = bnNomeOk(body.nome);
+  const resumo = bnResumoProposta(certificado, colaboradores);
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
 
@@ -536,18 +606,17 @@ async function handleBnInteresse(request, env) {
     return corsJson({ ok: true, action: "already" });
   }
 
-  const nota = BN_NOTA_MARCA + " (" + bnQuando() + ").";
+  const nota = BN_NOTA_PROPOSTA + " (" + bnQuando() + "). " + resumo + " Origem: e-mail da Black Friday.";
   if (aberto) {
     const fresco = (await bnLerCard(token, aberto.id)) || aberto;
-    const tinhaTag = leadTagList(fresco).includes(BN_TAG_INTERESSE.toLowerCase());
-    const tinhaNota = String(fresco.notes || fresco.note || "").includes(BN_NOTA_MARCA);
-    if (tinhaTag && tinhaNota) return corsJson({ ok: true, action: "already" });
+    const tinhaTag = leadTagList(fresco).includes(BN_TAG_PROPOSTA.toLowerCase());
+    const tinhaResumo = String(fresco.notes || fresco.note || "").includes(resumo);
     const patch = {};
     if (!tinhaTag) {
-      const tagged = appendCrmTag(fresco.tags, BN_TAG_INTERESSE);
+      const tagged = appendCrmTag(fresco.tags, BN_TAG_PROPOSTA);
       if (tagged.added) patch.tags = tagged.tags;
     }
-    if (!tinhaNota) patch.notes = mergeWebinarNotes(fresco.notes || fresco.note, nota);
+    if (!tinhaResumo) patch.notes = mergeWebinarNotes(fresco.notes || fresco.note, nota);
     if (!Object.keys(patch).length) return corsJson({ ok: true, action: "already" });
     const res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
       method: "PATCH",
@@ -562,14 +631,14 @@ async function handleBnInteresse(request, env) {
     method: "POST",
     headers,
     body: JSON.stringify({
-      title: (nome || email) + " - Black November",
+      title: (nome || email) + " - Black Friday",
       pipeline_id: BN_PIPELINE_ID,
       stage_id: BN_STAGE_ESPERA,
       contact_name: nome || email,
       contact_email: email,
       source: "mailchimp",
-      tags: [BN_TAG_INTERESSE],
-      notes: nota + " Origem: e-mail da Black November.",
+      tags: [BN_TAG_PROPOSTA],
+      notes: nota,
     }),
   }).catch(() => null);
   if (!criado || !criado.ok) return corsJson({ ok: false, error: "crm" }, 502);
@@ -1798,6 +1867,10 @@ const BN_STAGE_GANHO = "22ca3031-b1f7-4757-adfb-f5797b0aec3c";
 const BN_STAGE_PERDIDO = "497ac549-d8cb-4e0f-94ed-3c23c2791e44";
 const BN_TAG_INTERESSE = "BN26_LP_INTERESSE";
 const BN_NOTA_MARCA = "Interesse na LP Black November";
+const BN_TAG_PROPOSTA = "BN26_PEDIU_PROPOSTA";
+const BN_NOTA_PROPOSTA = "Pediu proposta na LP Black Friday";
+const BN_CERT_CONSULTA = ["ISO 14001", "ISO 45001", "SASSMAQ", "Outro certificado"];
+const BN_CERTIFICADOS = ["ISO 9001", "ISO 27001", "ISO 37001", "ISO 42001", "FSSC 22000", "SGI"].concat(BN_CERT_CONSULTA);
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const DIAG_9001_CAMPANHA = "diagnostico-iso-9001-campanha";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
