@@ -377,19 +377,13 @@
       text-decoration: line-through;
     }
     .col-bf .linha strong { color: var(--tinta); }
+    .col-bf .linha .bf-ano { color: var(--ouro); }
     .bf-legenda {
       margin: 4px 0 0;
       font-size: 12px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--ouro-claro);
-    }
-    .bf-ano {
-      margin: 14px 0 0;
-      font-family: "Barlow Condensed", Impact, sans-serif;
-      font-size: clamp(32px, 9vw, 46px);
-      line-height: .9;
-      color: var(--ouro);
     }
     .aviso-form { margin: 12px 0 0; color: #ffb4a2; font-size: 14px; }
     .rodape {
@@ -406,7 +400,6 @@
       .num { font-size: 32px; }
       .caixa { min-width: 58px; }
       .lead { font-size: 16px; }
-      .bf-ano { font-size: 36px; }
       .simulador { grid-template-columns: 1fr; }
       .precos { grid-template-columns: 1fr 1fr; }
       .cta { width: 100%; }
@@ -602,8 +595,7 @@
             + "<p class=\"col-nome\">Black Friday</p>"
             + "<p class=\"linha\"><span>Setup</span><strong>" + brl(c.setupBf) + "</strong></p>"
             + "<p class=\"linha\"><span>11x</span><strong>" + brl(c.parcelaBf) + "</strong></p>"
-            + "<p class=\"bf-ano\">" + brl(c.anoBf) + "</p>"
-            + "<p class=\"bf-legenda\">no ano</p>"
+            + "<p class=\"linha\"><span>Ano</span><strong class=\"bf-ano\">" + brl(c.anoBf) + "</strong></p>"
             + "</div>"
             + "</div>"
             + (c.auditoria ? "<p>Auditoria inclusa.</p>" : "");
