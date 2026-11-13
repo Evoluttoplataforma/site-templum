@@ -465,10 +465,6 @@
             <option value="101">Acima de 100</option>
           </select>
         </label>
-        <div id="quem" hidden>
-          <label class="campo"><span>Nome</span><input id="nome" name="nome" type="text" autocomplete="name" maxlength="60"></label>
-          <label class="campo"><span>E-mail</span><input id="email" name="email" type="email" autocomplete="email" maxlength="120"></label>
-        </div>
         <label class="campo"><span>Qual certificado</span>
           <select id="certificado" name="certificado" required>
             <option value="">Escolha o certificado</option>
@@ -572,10 +568,6 @@
       var estimado = document.getElementById("estimado");
       var aviso = document.getElementById("aviso");
       var pedir = document.getElementById("pedir");
-      var quem = document.getElementById("quem");
-      var nomeInput = document.getElementById("nome");
-      var emailInput = document.getElementById("email");
-      if (!emailUrl) quem.hidden = false;
 
       function lerColab() {
         var n = Number(colabInput.value);
@@ -624,20 +616,16 @@
         ev.preventDefault();
         var cert = certInput.value;
         var n = lerColab();
-        var email = emailUrl || (emailInput.value || "").trim();
-        var nome = nomeUrl || (nomeInput.value || "").trim();
-        if (email.indexOf("*|") !== -1 || email.indexOf("@") < 1) email = "";
-        if (nome.indexOf("*|") !== -1 || nome.indexOf("@") !== -1) nome = "";
+        var email = emailUrl;
+        var nome = nomeUrl;
         if (!cert || !n) {
           aviso.textContent = "Escolha a faixa de colaboradores e o certificado.";
           aviso.hidden = false;
           return;
         }
         if (!email) {
-          quem.hidden = false;
-          aviso.textContent = "Informe seu e-mail para o especialista te chamar.";
+          aviso.textContent = "Abra o link que chegou no seu e-mail para o especialista te chamar.";
           aviso.hidden = false;
-          emailInput.focus();
           return;
         }
         pedir.disabled = true;
