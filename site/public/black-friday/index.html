@@ -109,9 +109,10 @@
       text-transform: uppercase;
     }
     .grade {
-      width: min(760px, calc(100% - 40px));
+      width: min(980px, calc(100% - 32px));
       margin: 36px auto 0;
     }
+    .oferta { max-width: 760px; }
     .oferta {
       margin: 0;
       text-align: left;
@@ -267,41 +268,33 @@
       from { transform: translateX(0); }
       to { transform: translateX(-50%); }
     }
-    dialog {
-      width: min(680px, calc(100vw - 24px));
-      max-width: calc(100vw - 24px);
-      max-height: calc(100vh - 32px);
-      margin: auto;
-      padding: 22px 22px 20px;
-      border: 1px solid rgba(240, 193, 75, .4);
+    .simulador {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.15fr);
+      gap: 16px 18px;
+      margin-top: 28px;
+      align-items: stretch;
+    }
+    .painel {
+      border: 1px solid rgba(240, 193, 75, .35);
       border-radius: 16px;
       background: #12110e;
-      color: var(--tinta);
+      padding: 18px 18px 8px;
     }
-    dialog::backdrop { background: rgba(0, 0, 0, .72); }
-    .popup-topo {
+    .painel-valor {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 18px;
     }
-    .popup-topo h2 {
+    .valor-espera {
       margin: 0;
-      font-family: "Barlow Condensed", Impact, sans-serif;
-      font-size: 32px;
-      line-height: .95;
-      letter-spacing: .03em;
-      text-transform: uppercase;
-    }
-    .fechar {
-      border: 0;
-      background: transparent;
+      font-size: 18px;
+      line-height: 1.45;
       color: var(--mudo);
-      font: inherit;
-      font-size: 22px;
-      line-height: 1;
-      cursor: pointer;
     }
+    .simulador .cta-wrap,
+    .simulador .aviso-form { grid-column: 1 / -1; margin: 4px 0 0; text-align: center; }
     .campo {
       display: flex;
       flex-direction: column;
@@ -381,7 +374,6 @@
       color: var(--ouro);
     }
     .aviso-form { margin: 12px 0 0; color: #ffb4a2; font-size: 14px; }
-    dialog .cta { width: 100%; margin-top: 16px; }
     .rodape {
       margin: 0;
       padding: 8px 16px 28px;
@@ -397,6 +389,7 @@
       .caixa { min-width: 58px; }
       .lead { font-size: 16px; }
       .bf-ano { font-size: 36px; }
+      .simulador { grid-template-columns: 1fr; }
       .precos { grid-template-columns: 1fr 1fr; }
       .cta { width: 100%; }
       .faixa-palco { height: 132px; }
@@ -444,41 +437,37 @@
       <p class="lead">Durante a Black Friday Templum, os certificados ISO 9001, ISO 27001, ISO 14001, ISO 45001, ISO 37001, ISO 42001, SASSMAQ, FSSC 22000, SGI e todos os outros certificados que a Templum atende estão com preços que você jamais verá novamente!</p>
     </section>
 
-    <div class="fechamento">
-      <p class="cta-wrap"><button type="button" class="cta" id="abrir">Quero conferir condições especiais</button></p>
-      <p class="prazo">Válidas para contratos assinados até 30 de novembro.</p>
-    </div>
+    <form id="form-proposta" class="simulador">
+      <div class="painel">
+        <label class="campo"><span>Quantos colaboradores</span><input id="colaboradores" name="colaboradores" type="number" inputmode="numeric" min="1" step="1" required></label>
+        <label class="campo"><span>Qual certificado</span>
+          <select id="certificado" name="certificado" required>
+            <option value="">Escolha o certificado</option>
+            <option>ISO 9001</option>
+            <option>ISO 14001</option>
+            <option>ISO 45001</option>
+            <option>ISO 27001</option>
+            <option>ISO 37001</option>
+            <option>ISO 42001</option>
+            <option>SASSMAQ</option>
+            <option>FSSC 22000</option>
+            <option>SGI</option>
+            <option>Outro certificado</option>
+          </select>
+        </label>
+      </div>
+      <div class="painel painel-valor">
+        <div class="estimado" id="estimado">
+          <p class="valor-espera">Informe os colaboradores e o certificado. O valor da Black Friday aparece aqui.</p>
+        </div>
+      </div>
+      <p class="aviso-form" id="aviso" hidden></p>
+      <p class="cta-wrap"><button type="submit" class="cta" id="pedir" disabled>Quero solicitar a certificação</button></p>
+    </form>
+    <p class="prazo">Válidas para contratos assinados até 30 de novembro.</p>
   </div>
 
   <p class="rodape">Templum Consultoria</p>
-
-  <dialog id="proposta" aria-labelledby="proposta-titulo">
-    <form id="form-proposta" method="dialog">
-      <div class="popup-topo">
-        <h2 id="proposta-titulo">Condições especiais</h2>
-        <button type="button" class="fechar" id="fechar" aria-label="Fechar">×</button>
-      </div>
-      <label class="campo"><span>Quantos colaboradores</span><input id="colaboradores" name="colaboradores" type="number" inputmode="numeric" min="1" step="1" required></label>
-      <label class="campo"><span>Qual certificado</span>
-        <select id="certificado" name="certificado" required>
-          <option value="">Escolha o certificado</option>
-          <option>ISO 9001</option>
-          <option>ISO 14001</option>
-          <option>ISO 45001</option>
-          <option>ISO 27001</option>
-          <option>ISO 37001</option>
-          <option>ISO 42001</option>
-          <option>SASSMAQ</option>
-          <option>FSSC 22000</option>
-          <option>SGI</option>
-          <option>Outro certificado</option>
-        </select>
-      </label>
-      <div class="estimado" id="estimado" hidden></div>
-      <p class="aviso-form" id="aviso" hidden></p>
-      <button type="submit" class="cta" id="pedir" disabled>Quero receber a proposta</button>
-    </form>
-  </dialog>
 
   <script>
     (function () {
@@ -546,7 +535,6 @@
       if (emailUrl.indexOf("*|") !== -1 || emailUrl.indexOf("@") < 1) emailUrl = "";
       if (nomeUrl.indexOf("*|") !== -1 || nomeUrl.indexOf("@") !== -1) nomeUrl = "";
 
-      var dialog = document.getElementById("proposta");
       var colabInput = document.getElementById("colaboradores");
       var certInput = document.getElementById("certificado");
       var estimado = document.getElementById("estimado");
@@ -563,8 +551,7 @@
         var cert = certInput.value;
         var n = lerColab();
         if (!cert || !n) {
-          estimado.hidden = true;
-          estimado.innerHTML = "";
+          estimado.innerHTML = "<p class=\"valor-espera\">Informe os colaboradores e o certificado. O valor da Black Friday aparece aqui.</p>";
           pedir.disabled = true;
           return null;
         }
@@ -590,21 +577,11 @@
             + "</div>"
             + (c.auditoria ? "<p>Auditoria inclusa.</p>" : "");
         }
-        estimado.hidden = false;
         pedir.disabled = false;
         return c;
       }
       colabInput.addEventListener("input", desenhar);
       certInput.addEventListener("change", desenhar);
-
-      document.getElementById("abrir").addEventListener("click", function () {
-        aviso.hidden = true;
-        if (typeof dialog.showModal === "function") dialog.showModal();
-        else dialog.setAttribute("open", "");
-      });
-      document.getElementById("fechar").addEventListener("click", function () {
-        dialog.close();
-      });
 
       document.getElementById("form-proposta").addEventListener("submit", function (ev) {
         ev.preventDefault();
@@ -631,7 +608,6 @@
         }).then(function (r) { return r.json(); }).then(function (d) {
           if (!d || !d.ok) throw new Error("crm");
           if (window.fbq) window.fbq("track", "Lead");
-          estimado.hidden = false;
           estimado.innerHTML = "<p class=\"bf-legenda\">Proposta registrada</p><p>O comercial da Templum entra em contato.</p>";
           pedir.hidden = true;
           aviso.hidden = true;
