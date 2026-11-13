@@ -449,6 +449,20 @@ function bnColaboradoresOk(raw) {
   return n;
 }
 
+const BN_FAIXA_N = {
+  "1 a 20": 20,
+  "21 a 50": 49,
+  "51 a 80": 80,
+  "81 a 100": 100,
+  "acima de 100": 101,
+};
+
+function bnFaixaOk(raw) {
+  const value = String(raw || "").replace(/[\u0000-\u001f<>]/g, "").trim();
+  if (!Object.prototype.hasOwnProperty.call(BN_FAIXA_N, value)) return "";
+  return value;
+}
+
 function bnCertOk(raw) {
   const value = String(raw || "").replace(/[\u0000-\u001f<>]/g, "").trim();
   if (BN_CERTIFICADOS.indexOf(value) === -1) return "";
@@ -479,22 +493,22 @@ function bnFaixaGrupo(n) {
   return { label: "acima de 100", consulte: true };
 }
 
-function bnResumoProposta(certificado, colaboradores) {
-  const base = "Certificado: " + certificado + ". Colaboradores: " + colaboradores + ".";
+function bnResumoProposta(certificado, colaboradores, faixaInformada) {
+  const base = "Certificado: " + certificado + ". " + (faixaInformada ? "Faixa: " + faixaInformada + "." : "Colaboradores: " + colaboradores + ".");
   if (BN_CERT_CONSULTA.indexOf(certificado) !== -1) {
     return base + " Estimativa sob consulta.";
   }
   const faixa = certificado === "ISO 9001" ? bnFaixa9001(colaboradores) : bnFaixaGrupo(colaboradores);
   const auditoria = certificado === "ISO 9001" ? "" : " Auditoria inclusa.";
   if (faixa.consulte) {
-    return base + " Faixa: acima de 100. Estimativa sob consulta." + auditoria;
+    return base + (faixaInformada ? "" : " Faixa: acima de 100.") + " Estimativa sob consulta." + auditoria;
   }
   const setupBf = bnRound2(faixa.setup * 0.8);
   const parcelaBf = bnRound2(faixa.parcela * 0.8);
   const ano = bnRound2(faixa.parcela * 11);
   const anoBf = bnRound2(parcelaBf * 11);
   return base
-    + " Faixa: " + faixa.label + "."
+    + (faixaInformada ? "" : " Faixa: " + faixa.label + ".")
     + " Setup padrão " + bnBrl(faixa.setup) + "."
     + " Setup Black Friday " + bnBrl(setupBf) + "."
     + " 11x padrão " + bnBrl(faixa.parcela) + "."
@@ -583,13 +597,14 @@ async function handleBnInteresse(request, env) {
   if (body.proposta !== true) return corsJson({ ok: false, error: "proposta" }, 400);
   const email = bnEmailOk(body.email);
   const certificado = bnCertOk(body.certificado);
-  const colaboradores = bnColaboradoresOk(body.colaboradores);
+  const faixa = bnFaixaOk(body.faixa);
+  const colaboradores = faixa ? BN_FAIXA_N[faixa] : bnColaboradoresOk(body.colaboradores);
   if (!email || !certificado || !colaboradores) return corsJson({ ok: false, error: "proposta" }, 400);
   if (!(await bnInteresseDentroDoLimite(email))) {
     return corsJson({ ok: false, error: "rate_limit" }, 429);
   }
   const nome = bnNomeOk(body.nome);
-  const resumo = bnResumoProposta(certificado, colaboradores);
+  const resumo = bnResumoProposta(certificado, colaboradores, faixa);
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
 
