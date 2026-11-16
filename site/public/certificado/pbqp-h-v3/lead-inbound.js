@@ -50,6 +50,16 @@
   }
 
   function attrib() {
+    if (window.tplAdsAttrib) {
+      var a = window.tplAdsAttrib();
+      var out = {};
+      ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+        "gclid", "gbraid", "wbraid", "fbclid", "gad_source", "gad_campaignid", "msclkid", "ttclid"
+      ].forEach(function (k) { if (a[k]) out[k] = a[k]; });
+      if (a.origem_clique) out.origem_clique = a.origem_clique;
+      if (a.modo_teste) out.modo_teste = true;
+      return out;
+    }
     var out = {};
     var urlP = new URLSearchParams(location.search);
     ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
@@ -210,7 +220,8 @@
         try {
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email, phone: d.telefone, name: d.nome, norma: NORMA,
-            event_id: leadEventId
+            event_id: leadEventId,
+            modo_teste: !!(window.tplAdsModoTeste && window.tplAdsModoTeste())
           }));
         } catch (_) {}
 

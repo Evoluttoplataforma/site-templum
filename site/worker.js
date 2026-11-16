@@ -1307,7 +1307,7 @@ function sanitizarTurnstileStatus(value) {
 
 function turnstileFalhaTecnica(status) {
   return status === "timeout" || status === "script" || status === "rede" || status === "ausente"
-    || status === "erro_110200" || status === "erro_200100";
+    || status === "erro_110200" || status === "erro_200100" || status === "falhou";
 }
 
 function turnstileRecusa(status) {
@@ -1432,6 +1432,12 @@ export async function handleLead(request, env, ctx) {
     lead_event_id: String(body.lead_event_id || body.meta_event_id || "").slice(0, 80),
   };
   Object.assign(lead, camposH1(body));
+  const origemClique = ["url", "guardado", "cookie_google"].includes(String(body.origem_clique || ""))
+    ? String(body.origem_clique)
+    : "";
+  if (origemClique) lead.origem_clique = origemClique;
+  const cliqueTeste = ["gclid", "gbraid", "wbraid"].some((k) => /teste|test/i.test(String(lead[k] || "")));
+  if (body.modo_teste === true || body.modo_teste === "true" || cliqueTeste) lead.modo_teste = true;
   if (lead.desafio_codigo && String(lead.mensagem || "").indexOf(lead.desafio_codigo) === -1) {
     lead.mensagem = (lead.mensagem ? lead.mensagem + " " : "") + "Código do desafio: " + lead.desafio_codigo + ".";
   }
@@ -1611,6 +1617,8 @@ async function saveToSupabase(lead, env) {
       gbraid: lead.gbraid, wbraid: lead.wbraid,
     };
     if (lead.lead_event_id) payload.lead_event_id = lead.lead_event_id;
+    if (lead.origem_clique) payload.origem_clique = lead.origem_clique;
+    if (lead.modo_teste) payload.modo_teste = true;
     if (lead.status_pagamento) payload.status_pagamento = lead.status_pagamento;
     if (lead.experimento_id) {
       payload.experimento_id = lead.experimento_id;
@@ -1949,6 +1957,8 @@ function applyConsultoriaLpCampaign(lead, body) {
   if (String(lead.evento || "") !== "lead") return;
   const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
   if (!/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return;
+  const origem = String((body && body.origem_clique) || "");
+  if (origem === "guardado" || origem === "cookie_google") return;
   const fromUrl = body && body.utm_from_url === true;
   const clickFromUrl = body && body.click_from_url === true;
   for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {

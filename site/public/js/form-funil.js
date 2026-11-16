@@ -31,11 +31,20 @@
     ddd: "ddd invalido",
   };
 
+  var WPP_REF_FILA = "tpl_wpp_ref_fila";
+  var WPP_REF_FILA_MAX = 20;
+
   function ler(chave) {
     try { return sessionStorage.getItem(chave) || ""; } catch (_) { return ""; }
   }
   function gravar(chave, valor) {
     try { sessionStorage.setItem(chave, valor); } catch (_) {}
+  }
+  function lerLocal(chave) {
+    try { return localStorage.getItem(chave) || ""; } catch (_) { return ""; }
+  }
+  function gravarLocal(chave, valor) {
+    try { localStorage.setItem(chave, valor); } catch (_) {}
   }
 
   function sessaoId() {
@@ -176,6 +185,16 @@
   }
 
   function adsDoClique() {
+    if (window.tplAdsAttrib) {
+      var a = window.tplAdsAttrib();
+      var daAds = {};
+      ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign", "utm_term"].forEach(function (k) {
+        if (a[k] && String(a[k]).indexOf("@") === -1) daAds[k] = String(a[k]).slice(0, 200);
+      });
+      if (a.origem_clique) daAds.origem_clique = a.origem_clique;
+      if (a.modo_teste) daAds.modo_teste = true;
+      return daAds;
+    }
     var p = new URLSearchParams(location.search);
     var stored = {};
     try { stored = JSON.parse(ler("tpl_wpp_ads") || "{}") || {}; } catch (_) { stored = {}; }
@@ -192,9 +211,78 @@
     return limpo;
   }
 
+  function filaWppRefLer() {
+    try {
+      var arr = JSON.parse(lerLocal(WPP_REF_FILA) || "[]");
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function filaWppRefGravar(arr) {
+    gravarLocal(WPP_REF_FILA, JSON.stringify((arr || []).slice(-WPP_REF_FILA_MAX)));
+  }
+
+  function enfileirarWppRef(payload) {
+    if (!payload || !payload.ref) return;
+    var fila = filaWppRefLer().filter(function (item) {
+      return item && item.ref && item.ref !== payload.ref;
+    });
+    fila.push(payload);
+    filaWppRefGravar(fila);
+  }
+
+  function removerWppRefFila(ref) {
+    if (!ref) return;
+    filaWppRefGravar(filaWppRefLer().filter(function (item) {
+      return item && item.ref && item.ref !== ref;
+    }));
+  }
+
+  /** Grava o ref com fetch keepalive; 409 = já existia (ok). Não bloqueia a abertura do WA. */
+  function postWhatsappRef(payload) {
+    return fetch("/api/whatsapp-ref", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).then(function (r) {
+      if (r && (r.ok || r.status === 409)) {
+        removerWppRefFila(payload.ref);
+        return true;
+      }
+      return false;
+    }).catch(function () {
+      return false;
+    });
+  }
+
+  function tentarBeaconWppRef(payload) {
+    try {
+      if (!navigator.sendBeacon) return false;
+      var blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+      return !!navigator.sendBeacon("/api/whatsapp-ref", blob);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function drenarFilaWppRef() {
+    var fila = filaWppRefLer();
+    if (!fila.length) return;
+    fila.forEach(function (payload) {
+      if (!payload || !payload.ref) return;
+      postWhatsappRef(payload).then(function (ok) {
+        if (ok) return;
+        tentarBeaconWppRef(payload);
+      });
+    });
+  }
+
   function enviarWhatsappRef(ref, normaWpp) {
     var ads = adsDoClique();
-    enviarBeacon("/api/whatsapp-ref", {
+    var payload = {
       ref: ref,
       pagina: location.pathname || "/",
       norma: normaWpp || "",
@@ -207,6 +295,14 @@
       utm_medium: ads.utm_medium || "",
       utm_campaign: ads.utm_campaign || "",
       utm_term: ads.utm_term || "",
+      origem_clique: ads.origem_clique || "",
+      modo_teste: ads.modo_teste === true,
+    };
+    // Enfileira antes do POST: se a aba cair, o próximo carregamento reenvia.
+    enfileirarWppRef(payload);
+    postWhatsappRef(payload).then(function (ok) {
+      if (ok) return;
+      tentarBeaconWppRef(payload);
     });
   }
 
@@ -659,6 +755,13 @@
 
   adsDoClique();
   contexto();
+  drenarFilaWppRef();
+  try {
+    window.addEventListener("online", drenarFilaWppRef);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") drenarFilaWppRef();
+    });
+  } catch (_) {}
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", observarFormularios);

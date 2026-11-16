@@ -8,6 +8,7 @@
 (function () {
   function falhaTecnica(status) {
     return status === "timeout" || status === "script" || status === "rede"
+      || status === "falhou"
       || status === "erro_110200" || status === "erro_200100";
   }
   function recusaTurnstile(status) {
@@ -358,7 +359,19 @@
   // Antecipação (pointer/keydown) continua com 15s via pedirToken(ANTECIPAR_MS).
   window.tplTurnstileToken = function (opts) {
     var maxMs = opts && Number(opts.timeoutMs) > 0 ? Number(opts.timeoutMs) : SUBMIT_MS;
-    return entregarToken(maxMs);
+    function umaVez() { return entregarToken(maxMs); }
+    function desistir() {
+      window.tplTurnstileStatus = "falhou";
+      return "";
+    }
+    return umaVez().then(function (token) {
+      if (token) return token;
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      return umaVez().then(function (token2) { return token2 || desistir(); });
+    }).catch(function () {
+      if (window.tplTurnstileReset) window.tplTurnstileReset();
+      return umaVez().then(function (token2) { return token2 || desistir(); }).catch(desistir);
+    });
   };
 
   window.tplTurnstileReset = function () {

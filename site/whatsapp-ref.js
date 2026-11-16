@@ -79,5 +79,11 @@ export function sanitizeWhatsappRef(input) {
     if (v) row[key] = v;
   }
 
+  if (["url", "guardado", "cookie_google"].includes(input.origem_clique)) {
+    row.origem_clique = input.origem_clique;
+  }
+  if (input.modo_teste === true || input.modo_teste === "true") row.modo_teste = true;
+  if (["gclid", "gbraid", "wbraid"].some((k) => /teste|test/i.test(row[k] || ""))) row.modo_teste = true;
+
   return row;
 }

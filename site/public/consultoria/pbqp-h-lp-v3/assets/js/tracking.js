@@ -216,7 +216,8 @@
           phone: data.phone || "",
           name: data.name || "",
           norma: "PBQP-H",
-          event_id: data.eventId || ""
+          event_id: data.eventId || "",
+          modo_teste: !!(data.modo_teste || (window.tplAdsModoTeste && window.tplAdsModoTeste()))
         }));
       } catch (e) {}
 

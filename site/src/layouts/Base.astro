@@ -1,4 +1,4 @@
----
+﻿---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -327,8 +327,9 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
       };
     </script>
 
-    <script is:inline src="/js/form-funil.js?v=20261103a"></script>
-    <script is:inline src="/js/tpl-turnstile.js?v=20261103b"></script>
+    <script is:inline src="/js/tpl-ads-attrib.js?v=20261116a"></script>
+    <script is:inline src="/js/form-funil.js?v=20261116a"></script>
+    <script is:inline src="/js/tpl-turnstile.js?v=20261116a"></script>
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
          Supabase + Mailchimp + Templum OS INBOUND/ManyChat), dispara o Lead do Meta Pixel
          SÓ depois de confirmar que o Supabase salvou o cadastro, e redireciona.
@@ -391,7 +392,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
             email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
             event_id: leadEventId,
-            modo_teste: !!(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste),
+            modo_teste: !!((window.tplAdsModoTeste && window.tplAdsModoTeste()) || (window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)),
           }));
         } catch (_) {}
         }
@@ -447,6 +448,15 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
             _attrib.utm_campaign = _adsCampaign;
             _attrib.utm_term = "";
             _attrib.utm_content = "";
+          }
+          if (window.tplAdsAttrib) {
+            var _ads = window.tplAdsAttrib();
+            ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach(function (k) {
+              if (_ads[k]) _attrib[k] = _ads[k];
+            });
+            if (_ads.origem_clique) _attrib.origem_clique = _ads.origem_clique;
+            if (_ads.modo_teste) _attrib.modo_teste = true;
+            if (_ads.origem_clique === "url") _attrib.click_from_url = true;
           }
           var _submitUrl = location.origin + location.pathname;
           var _landingPath = (_attrib.landing || location.pathname || "/").split("?")[0];

@@ -311,10 +311,14 @@
         variant_id: LP.variant,
         experiment_id: cfg.experiment.id
       };
-      utmKeys.forEach(function (k) { payload[k] = tracking[k] || ""; });
-      clickKeys.forEach(function (k) { payload[k] = tracking[k] || ""; });
-      payload.utm_from_url = utmKeys.some(function (k) { return !!payload[k]; });
-      payload.click_from_url = clickKeys.some(function (k) { return !!payload[k]; });
+      var ads = window.tplAdsAttrib ? window.tplAdsAttrib() : {};
+      utmKeys.forEach(function (k) { payload[k] = ads[k] || tracking[k] || ""; });
+      clickKeys.forEach(function (k) { payload[k] = ads[k] || tracking[k] || ""; });
+      if (ads.origem_clique) payload.origem_clique = ads.origem_clique;
+      if (ads.modo_teste || tracking.modo_teste) payload.modo_teste = true;
+      var urlAgora = new URLSearchParams(location.search);
+      payload.utm_from_url = utmKeys.some(function (k) { return !!urlAgora.get(k); });
+      payload.click_from_url = clickKeys.some(function (k) { return !!urlAgora.get(k); }) || ads.origem_clique === "url";
       try {
         var fbp = document.cookie.match(/(?:^|; )_fbp=([^;]*)/);
         var fbc = document.cookie.match(/(?:^|; )_fbc=([^;]*)/);

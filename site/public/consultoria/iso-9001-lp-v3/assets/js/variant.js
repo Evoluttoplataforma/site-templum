@@ -42,15 +42,18 @@
   }
   if (source === "stored" || source === "random") store("localStorage", cfg.experiment.storageKey, variant);
 
-  // Parâmetros de campanha: o primeiro toque da sessão é preservado.
+  // Clique pago: 90 dias em tpl_ads_attrib. A sessão antiga só entra se o módulo não carregou.
   var tracking = {};
+  var ads = window.tplAdsAttrib ? window.tplAdsAttrib() : {};
   cfg.trackingParams.forEach(function (key) {
-    var value = params.get(key) || read("sessionStorage", "tpl_" + key);
+    var value = ads[key] || params.get(key) || read("sessionStorage", "tpl_" + key);
     if (value) {
-      tracking[key] = value.slice(0, 200);
+      tracking[key] = String(value).slice(0, 200);
       store("sessionStorage", "tpl_" + key, tracking[key]);
     }
   });
+  if (ads.origem_clique) tracking.origem_clique = ads.origem_clique;
+  if (ads.modo_teste) tracking.modo_teste = true;
 
   function termHeadline(term, rules) {
     if (!term) return "";
