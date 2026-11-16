@@ -313,8 +313,7 @@
       color: var(--mudo);
     }
     .simulador .cta-wrap,
-    .simulador .aviso-form,
-    .simulador #quem { grid-column: 1 / -1; margin: 4px 0 0; text-align: center; }
+    .simulador .aviso-form { grid-column: 1 / -1; margin: 4px 0 0; text-align: center; }
     .campo {
       display: flex;
       flex-direction: column;
@@ -388,14 +387,47 @@
       color: var(--ouro-claro);
     }
     .aviso-form { margin: 12px 0 0; color: #ffb4a2; font-size: 14px; }
+    dialog#quem {
+      width: min(440px, calc(100vw - 24px));
+      margin: auto;
+      padding: 22px 22px 20px;
+      border: 1px solid rgba(240, 193, 75, .4);
+      border-radius: 16px;
+      background: #12110e;
+      color: var(--tinta);
+    }
+    dialog#quem::backdrop { background: rgba(0, 0, 0, .72); }
+    .popup-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .popup-topo h2 {
+      margin: 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 32px;
+      line-height: .95;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .fechar {
+      border: 0;
+      background: transparent;
+      color: var(--mudo);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
     .quem-nota {
-      margin: 8px 0 0;
-      font-size: 14px;
+      margin: 12px 0 0;
+      font-size: 15px;
       line-height: 1.45;
       color: var(--mudo);
       text-align: left;
     }
-    #quem { max-width: 420px; margin-left: auto; margin-right: auto; text-align: left; }
+    dialog#quem .cta { width: 100%; margin-top: 16px; }
     .rodape {
       margin: 0;
       padding: 8px 16px 28px;
@@ -493,13 +525,19 @@
           <p class="valor-espera">Escolha a faixa de colaboradores e o certificado para ver o preço.</p>
         </div>
       </div>
-      <div id="quem" hidden>
-        <p class="quem-nota">Informe seu nome e e-mail para o especialista te chamar.</p>
-        <label class="campo"><span>Nome</span><input id="nome-outro" name="nome" type="text" autocomplete="name" maxlength="60"></label>
-          <label class="campo"><span>E-mail</span><input id="email-outro" name="email" type="email" autocomplete="email" maxlength="120"></label>
-      </div>
       <p class="aviso-form" id="aviso" hidden></p>
       <p class="cta-wrap"><button type="submit" class="cta" id="pedir" disabled>Quero certificar minha empresa</button></p>
+      <dialog id="quem">
+        <div class="popup-topo">
+          <h2>Seus dados</h2>
+          <button type="button" class="fechar" id="fechar" aria-label="Fechar">×</button>
+        </div>
+        <p class="quem-nota">Informe seu nome e e-mail para o especialista te chamar.</p>
+        <label class="campo"><span>Nome</span><input id="nome-outro" name="nome" type="text" autocomplete="name" maxlength="60"></label>
+        <label class="campo"><span>E-mail</span><input id="email-outro" name="email" type="email" autocomplete="email" maxlength="120"></label>
+        <p class="aviso-form" id="aviso-popup" hidden></p>
+        <button type="submit" class="cta">Quero certificar minha empresa</button>
+      </dialog>
     </form>
     <p class="prazo">Válidas para contratos assinados até 30 de novembro.</p>
   </div>
@@ -581,7 +619,20 @@
       var quem = document.getElementById("quem");
       var nomeOutro = document.getElementById("nome-outro");
       var emailOutro = document.getElementById("email-outro");
+      var avisoPopup = document.getElementById("aviso-popup");
       var pediuDados = false;
+      function abrirQuem() {
+        pediuDados = true;
+        avisoPopup.hidden = true;
+        if (typeof quem.showModal === "function") quem.showModal();
+        else quem.setAttribute("open", "");
+        nomeOutro.focus();
+      }
+      function fecharQuem() {
+        if (typeof quem.close === "function") quem.close();
+        else quem.removeAttribute("open");
+      }
+      document.getElementById("fechar").addEventListener("click", fecharQuem);
 
       function lerColab() {
         var n = Number(colabInput.value);
@@ -636,11 +687,8 @@
           aviso.hidden = false;
           return;
         }
-        if (!emailUrl && !pediuDados) {
-          pediuDados = true;
-          quem.hidden = false;
-          quem.scrollIntoView({ block: "center" });
-          nomeOutro.focus();
+        if (!emailUrl && (!pediuDados || !quem.open)) {
+          abrirQuem();
           return;
         }
         if (!emailUrl) {
@@ -650,8 +698,9 @@
           if (nome.indexOf("*|") !== -1 || nome.indexOf("@") !== -1) nome = "";
         }
         if (!email) {
-          aviso.textContent = "Informe seu e-mail para o especialista te chamar.";
-          aviso.hidden = false;
+          avisoPopup.textContent = "Informe seu e-mail para o especialista te chamar.";
+          avisoPopup.hidden = false;
+          abrirQuem();
           emailOutro.focus();
           return;
         }
@@ -671,6 +720,7 @@
         }).then(function (r) { return r.json(); }).then(function (d) {
           if (!d || !d.ok) throw new Error("crm");
           if (window.fbq) window.fbq("track", "Lead");
+          fecharQuem();
           document.getElementById("valor-titulo").textContent = "Um especialista da Templum já vai te chamar.";
           document.getElementById("valor-apoio").textContent = "Seu pedido entrou na Black Friday. O especialista assume a certificação da sua empresa.";
           estimado.innerHTML = "";
@@ -678,8 +728,10 @@
           aviso.hidden = true;
         }).catch(function () {
           pedir.disabled = false;
-          aviso.textContent = "Não consegui registrar agora. Tente de novo.";
-          aviso.hidden = false;
+          var alvo = !emailUrl ? avisoPopup : aviso;
+          alvo.textContent = "Não consegui registrar agora. Tente de novo.";
+          alvo.hidden = false;
+          if (!emailUrl) abrirQuem();
         });
       });
     })();
