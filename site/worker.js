@@ -509,8 +509,8 @@ function bnResumoProposta(certificado, colaboradores, faixaInformada) {
   const anoBf = bnRound2(parcelaBf * 11);
   return base
     + (faixaInformada ? "" : " Faixa: " + faixa.label + ".")
-    + " Setup padrão " + bnBrl(faixa.setup) + "."
-    + " Setup Black Friday " + bnBrl(setupBf) + "."
+    + " Entrada padrão " + bnBrl(faixa.setup) + "."
+    + " Entrada Black Friday " + bnBrl(setupBf) + "."
     + " 11x padrão " + bnBrl(faixa.parcela) + "."
     + " 11x Black Friday " + bnBrl(parcelaBf) + "."
     + " Ano padrão " + bnBrl(ano) + "."
