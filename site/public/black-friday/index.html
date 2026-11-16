@@ -536,7 +536,7 @@
         <label class="campo"><span>Nome</span><input id="nome-outro" name="nome" type="text" autocomplete="name" maxlength="60"></label>
         <label class="campo"><span>E-mail</span><input id="email-outro" name="email" type="email" autocomplete="email" maxlength="120"></label>
         <p class="aviso-form" id="aviso-popup" hidden></p>
-        <button type="submit" class="cta">Quero certificar minha empresa</button>
+        <button type="submit" class="cta" id="pedir-popup">Quero certificar minha empresa</button>
       </dialog>
     </form>
     <p class="prazo">Válidas para contratos assinados até 30 de novembro.</p>
@@ -616,6 +616,7 @@
       var estimado = document.getElementById("estimado");
       var aviso = document.getElementById("aviso");
       var pedir = document.getElementById("pedir");
+      var pedirPopup = document.getElementById("pedir-popup");
       var quem = document.getElementById("quem");
       var nomeOutro = document.getElementById("nome-outro");
       var emailOutro = document.getElementById("email-outro");
@@ -623,6 +624,7 @@
       var pediuDados = false;
       function abrirQuem() {
         pediuDados = true;
+        if (quem.open) return;
         avisoPopup.hidden = true;
         if (typeof quem.showModal === "function") quem.showModal();
         else quem.setAttribute("open", "");
@@ -698,13 +700,14 @@
           if (nome.indexOf("*|") !== -1 || nome.indexOf("@") !== -1) nome = "";
         }
         if (!email) {
+          abrirQuem();
           avisoPopup.textContent = "Informe seu e-mail para o especialista te chamar.";
           avisoPopup.hidden = false;
-          abrirQuem();
           emailOutro.focus();
           return;
         }
         pedir.disabled = true;
+        pedirPopup.disabled = true;
         fetch("/api/bn-interesse", {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -728,10 +731,11 @@
           aviso.hidden = true;
         }).catch(function () {
           pedir.disabled = false;
+          pedirPopup.disabled = false;
+          if (!emailUrl) abrirQuem();
           var alvo = !emailUrl ? avisoPopup : aviso;
           alvo.textContent = "Não consegui registrar agora. Tente de novo.";
           alvo.hidden = false;
-          if (!emailUrl) abrirQuem();
         });
       });
     })();
