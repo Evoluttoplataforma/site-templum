@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="origin" />
+  <meta name="description" content="Black Friday Templum OS: centralize processos, equipes, indicadores e atividades em uma plataforma, com condição especial na assinatura." />
+  <title>Black Friday Templum OS | Templum</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1265191353683807');
+    fbq('init', '4177249519256900');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1265191353683807&ev=PageView&noscript=1" alt=""></noscript>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=4177249519256900&ev=PageView&noscript=1" alt=""></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="hero.jpg" />
+  <style>
+    :root {
+      --ouro: #f0c14b;
+      --ouro-claro: #fff1c4;
+      --tinta: #f6f1e6;
+      --mudo: #cbb98a;
+      --fundo: #070708;
+      --linha: rgba(240, 193, 75, .28);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; background: var(--fundo); color: var(--tinta); }
+    body {
+      min-height: 100vh;
+      font-family: Outfit, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(900px 420px at 100% 0%, rgba(232, 168, 42, .16), transparent 55%),
+        radial-gradient(700px 380px at 0% 30%, rgba(232, 168, 42, .08), transparent 50%),
+        var(--fundo);
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .cronometro {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      padding: 18px 16px 10px;
+    }
+    .cronometro p {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--ouro-claro);
+    }
+    .caixas { display: flex; gap: 8px; }
+    .caixa {
+      min-width: 68px;
+      padding: 6px 8px 8px;
+      text-align: center;
+      border: 1px solid rgba(240, 193, 75, .32);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .03);
+    }
+    .num {
+      display: block;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-weight: 700;
+      font-size: 40px;
+      line-height: .9;
+      letter-spacing: .02em;
+      background: linear-gradient(180deg, #fff6d4 10%, #f0c14b 52%, #a86b12 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .caixa span {
+      display: block;
+      margin-top: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--mudo);
+    }
+    .encerrada {
+      margin: 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 28px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ouro);
+    }
+    .hero-art {
+      display: block;
+      width: 100%;
+      border-block: 1px solid var(--linha);
+    }
+    .faixa-palco {
+      position: relative;
+      height: 118px;
+      overflow: hidden;
+    }
+    .faixa {
+      position: absolute;
+      left: -6%;
+      width: 112%;
+      overflow: hidden;
+    }
+    .faixa-a {
+      top: 14px;
+      transform: rotate(-3.5deg);
+      background: linear-gradient(90deg, #8a5e16, #ffe3a0 42%, #e0a82e 70%, #8a5e16);
+      color: #24180a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    }
+    .faixa-b {
+      top: 68px;
+      transform: rotate(2.6deg);
+      background: #0c0c0e;
+      color: #f6e7b2;
+      border-top: 1px solid rgba(240, 193, 75, .45);
+      border-bottom: 1px solid rgba(240, 193, 75, .45);
+    }
+    .trilho {
+      display: flex;
+      width: max-content;
+      animation: corre 28s linear infinite;
+    }
+    .faixa-b .trilho { animation-duration: 34s; animation-direction: reverse; }
+    .miolo {
+      padding: 9px 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    @keyframes corre {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ouro);
+    }
+    h1, h2 {
+      margin: 0 0 16px;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-weight: 700;
+      line-height: .95;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+    h1 { font-size: clamp(34px, 5.4vw, 56px); }
+    h2 { font-size: clamp(28px, 4.2vw, 42px); }
+    .lead, .texto, .apoio, details p {
+      margin: 0 0 14px;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--mudo);
+    }
+    .lead strong, .texto strong { color: var(--tinta); font-weight: 600; }
+    .secao { padding: 56px 0; }
+    .secao + .secao { border-top: 1px solid rgba(240, 193, 75, .12); }
+    .hero-copy { padding-top: 40px; padding-bottom: 28px; }
+    .hero-copy .lead { max-width: 46rem; }
+    .selo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 10px 14px;
+      border: 1px solid var(--linha);
+      border-radius: 999px;
+      color: var(--ouro-claro);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .selo::before {
+      content: "";
+      width: 3px;
+      height: 18px;
+      border-radius: 2px;
+      background: var(--ouro);
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 14px 28px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe7a8 0%, #f0c14b 46%, #c4841a 100%);
+      color: #1a1204;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 10px 32px rgba(240, 180, 40, .28);
+    }
+    .cta:hover { filter: brightness(1.06); }
+    .cta:focus-visible {
+      outline: 2px solid #fff6d4;
+      outline-offset: 3px;
+    }
+    .cta-wrap { margin: 22px 0 0; }
+    .nota {
+      margin: 12px 0 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--mudo);
+    }
+    .grade-modulos {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 28px 0 0;
+    }
+    .modulo {
+      padding: 18px 16px;
+      border: 1px solid var(--linha);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .03);
+    }
+    .modulo h3 {
+      margin: 0 0 8px;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 22px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ouro-claro);
+    }
+    .modulo p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--mudo);
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .painel {
+      border: 1px solid var(--linha);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #10100e;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
+    }
+    .painel img { width: 100%; }
+    .lista-oferta {
+      list-style: none;
+      margin: 22px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+    }
+    .lista-oferta li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--tinta);
+    }
+    .lista-oferta li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 7px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--ouro);
+      box-shadow: 0 0 0 4px rgba(240, 193, 75, .15);
+    }
+    .oferta-box {
+      margin-top: 8px;
+      padding: 28px 24px;
+      border: 1px solid var(--linha);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(240, 193, 75, .08), transparent 40%),
+        rgba(255, 255, 255, .02);
+    }
+    details {
+      border-top: 1px solid rgba(240, 193, 75, .14);
+      padding: 16px 0;
+    }
+    details:first-of-type { border-top: 0; }
+    summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--tinta);
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      float: right;
+      color: var(--ouro);
+      font-weight: 700;
+    }
+    details[open] summary::after { content: "-"; }
+    details p { margin: 12px 0 0; }
+    .fecho {
+      text-align: center;
+      padding: 64px 0 40px;
+    }
+    .fecho .lead { margin-left: auto; margin-right: auto; max-width: 40rem; }
+    .rodape {
+      margin: 0;
+      padding: 8px 16px 28px;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(203, 185, 138, .7);
+    }
+    @media (max-width: 860px) {
+      .grade-modulos, .split { grid-template-columns: 1fr; }
+      .secao { padding: 44px 0; }
+      .cta { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trilho { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cronometro">
+    <p id="rotulo">As condições encerram em</p>
+    <div class="caixas" id="caixas">
+      <div class="caixa"><strong class="num" id="dias">00</strong><span>dias</span></div>
+      <div class="caixa"><strong class="num" id="horas">00</strong><span>horas</span></div>
+      <div class="caixa"><strong class="num" id="min">00</strong><span>min</span></div>
+      <div class="caixa"><strong class="num" id="seg">00</strong><span>seg</span></div>
+    </div>
+  </div>
+
+  <img class="hero-art" src="hero.jpg" width="1600" height="900" alt="Black Friday Templum OS: Lu e Omar com o notebook da plataforma" />
+
+  <div class="faixa-palco" aria-hidden="true">
+    <div class="faixa faixa-a"><div class="trilho"><span class="miolo">Black Friday · Templum OS · Condições exclusivas · &nbsp;&nbsp;</span><span class="miolo">Black Friday · Templum OS · Condições exclusivas · &nbsp;&nbsp;</span></div></div>
+    <div class="faixa faixa-b"><div class="trilho"><span class="miolo">Gestão em um só lugar · Olívia e agentes de IA · &nbsp;&nbsp;</span><span class="miolo">Gestão em um só lugar · Olívia e agentes de IA · &nbsp;&nbsp;</span></div></div>
+  </div>
+
+  <section class="secao hero-copy" id="topo">
+    <div class="wrap">
+      <p class="eyebrow">Black Friday Templum OS</p>
+      <h1>Sua empresa precisa de gestão. Não de mais planilhas.</h1>
+      <p class="lead">Chegou a Black Friday do Templum OS! Centralize processos, equipes, indicadores e atividades em uma única plataforma, com desconto especial na assinatura.</p>
+      <p class="texto">Menos informações espalhadas. Mais controle para fazer sua empresa avançar.</p>
+      <p class="selo">Black Friday · condições exclusivas</p>
+      <p class="cta-wrap">
+        <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20o%20desconto%20da%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero meu desconto</a>
+      </p>
+      <p class="nota">Condição especial para contratação durante o período da campanha.</p>
+    </div>
+  </section>
+
+  <section class="secao" id="dor">
+    <div class="wrap">
+      <h2>Sua empresa cresceu. Mas a gestão continua espalhada?</h2>
+      <p class="texto">Planilhas para controlar tarefas. WhatsApp para cobrar entregas. Documentos em várias pastas. Informações que só algumas pessoas conhecem.</p>
+      <p class="texto">Quando tudo depende de ferramentas desconectadas, acompanhar a operação se torna mais difícil.</p>
+      <p class="texto"><strong>O problema não é a falta de esforço da equipe. É a falta de uma gestão conectada.</strong></p>
+      <p class="texto">Com o Templum OS, sua empresa pode organizar informações, definir responsabilidades e acompanhar a execução em um único ambiente.</p>
+    </div>
+  </section>
+
+  <section class="secao" id="solucao">
+    <div class="wrap">
+      <h2>Tudo o que sua empresa precisa para organizar a gestão. Em um só lugar.</h2>
+      <p class="lead">O Templum OS conecta áreas, pessoas e informações para que você tenha mais visibilidade sobre o que acontece na empresa.</p>
+      <div class="grade-modulos">
+        <article class="modulo"><h3>Processos</h3><p>Padronize atividades e responsabilidades.</p></article>
+        <article class="modulo"><h3>Tarefas e projetos</h3><p>Acompanhe entregas, prazos e responsáveis.</p></article>
+        <article class="modulo"><h3>Indicadores</h3><p>Monitore resultados e metas.</p></article>
+        <article class="modulo"><h3>Documentos</h3><p>Centralize arquivos e registros.</p></article>
+        <article class="modulo"><h3>CRM e equipes</h3><p>Conecte vendas e operação.</p></article>
+        <article class="modulo"><h3>Inteligência artificial</h3><p>Conte com Olívia e agentes de IA.</p></article>
+      </div>
+      <p class="texto" style="margin-top:22px">A plataforma também contempla recursos de financeiro, RH, treinamento, planejamento e outras áreas.</p>
+    </div>
+  </section>
+
+  <section class="secao" id="ia">
+    <div class="wrap split">
+      <div>
+        <h2>E se a inteligência artificial também ajudasse a organizar sua gestão?</h2>
+        <p class="texto">Com a Olívia e os agentes de IA do Templum OS, sua empresa pode dar os primeiros passos na estruturação de processos, indicadores, planejamento e instruções de trabalho a partir das informações da própria operação.</p>
+        <p class="texto">Você revisa, ajusta e mantém o controle das decisões.</p>
+        <p class="texto"><strong>A tecnologia apoia a execução. Sua equipe continua no comando.</strong></p>
+      </div>
+      <figure class="painel">
+        <img src="/assets/img/templum-os-notebook.webp" width="800" height="520" loading="lazy" alt="Templum OS no notebook, com visão de processos e indicadores" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="secao" id="oferta">
+    <div class="wrap oferta-box">
+      <p class="eyebrow">Black Friday Templum OS</p>
+      <h2>Sua gestão em outro nível. Sua assinatura com desconto especial.</h2>
+      <p class="lead">Aproveite a Black Friday para começar a organizar a gestão da sua empresa com o Templum OS.</p>
+      <ul class="lista-oferta">
+        <li>Desconto especial na assinatura</li>
+        <li>Todos os módulos de gestão incluídos</li>
+        <li>Olívia e agentes de IA inclusos</li>
+        <li>Planos conforme o tamanho da operação</li>
+      </ul>
+      <p class="cta-wrap">
+        <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20aproveitar%20a%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero aproveitar a Black Friday</a>
+      </p>
+      <p class="nota">Oferta sujeita às condições comerciais da campanha.</p>
+    </div>
+  </section>
+
+  <section class="secao" id="faq">
+    <div class="wrap">
+      <h2>Ainda tem dúvidas sobre o Templum OS?</h2>
+      <details>
+        <summary>Preciso estar buscando uma certificação ISO para contratar?</summary>
+        <p>Não. O Templum OS é uma plataforma de gestão empresarial e pode ser utilizada por empresas que desejam organizar processos e operações, independentemente de estarem buscando uma certificação.</p>
+      </details>
+      <details>
+        <summary>A inteligência artificial está incluída?</summary>
+        <p>Sim. A Olívia e os agentes de IA fazem parte dos planos apresentados pela Templum.</p>
+      </details>
+      <details>
+        <summary>O Templum OS é cobrado por usuário?</summary>
+        <p>Os planos são contratados por organização, com faixas de até 50, 100 ou 300 usuários. Não há cobrança individual por assento dentro da faixa contratada.</p>
+      </details>
+      <details>
+        <summary>Posso testar antes de contratar?</summary>
+        <p>Sim. É possível criar uma conta e experimentar a plataforma antes de escolher o plano.</p>
+      </details>
+      <details>
+        <summary>Como funciona o desconto da Black Friday?</summary>
+        <p>A condição especial será apresentada pela equipe comercial, conforme o plano e as regras da campanha.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="fecho wrap" id="conversao">
+    <h2>Sua empresa não precisa continuar gerenciando tudo de forma separada.</h2>
+    <p class="lead">Aproveite a Black Friday para conhecer as condições especiais do Templum OS e dar o próximo passo na organização da sua gestão.</p>
+    <p class="cta-wrap">
+      <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20o%20desconto%20da%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero meu desconto</a>
+    </p>
+  </section>
+
+  <p class="rodape">Templum Consultoria</p>
+
+  <script>
+    (function () {
+      var fim = Date.parse("2026-12-01T02:59:59.000Z");
+      var rotulo = document.getElementById("rotulo");
+      var caixas = document.getElementById("caixas");
+      function dois(n) { return (n < 10 ? "0" : "") + n; }
+      function tick() {
+        var resta = fim - Date.now();
+        if (resta <= 0) {
+          rotulo.textContent = "Condições encerradas";
+          caixas.innerHTML = '<p class="encerrada">30 de novembro</p>';
+          return;
+        }
+        var s = Math.floor(resta / 1000);
+        document.getElementById("dias").textContent = dois(Math.floor(s / 86400));
+        document.getElementById("horas").textContent = dois(Math.floor((s % 86400) / 3600));
+        document.getElementById("min").textContent = dois(Math.floor((s % 3600) / 60));
+        document.getElementById("seg").textContent = dois(s % 60);
+        window.setTimeout(tick, 1000 - (Date.now() % 1000));
+      }
+      tick();
+    })();
+  </script>
+</body>
+</html>
