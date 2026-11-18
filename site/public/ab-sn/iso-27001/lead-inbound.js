@@ -155,6 +155,8 @@
 
   function openModal(ctaPos) {
     var dlg = ensureModal();
+    var form = $("form", dlg);
+    if (form) bindSubmit(form);
     if (typeof dlg.showModal === "function" && !dlg.open) dlg.showModal();
     document.body.classList.add("tpl-lead-modal-on");
     try { document.dispatchEvent(new CustomEvent("tpl:lead-modal", { detail: { open: true } })); } catch (_) {}
@@ -164,6 +166,11 @@
     var first = dlg.querySelector('input:not([type="hidden"]):not(.tpl-lead-hp)');
     if (first) setTimeout(function () { first.focus(); }, 50);
   }
+
+  window.__tplOpenLeadModal = function (ctaPos) {
+    openModal(ctaPos || window.__tplLeadIntent || "api");
+    window.__tplLeadIntent = null;
+  };
 
   function closeModal() {
     var dlg = $("#tpl-lead-modal");
@@ -285,19 +292,162 @@
     });
   }
 
-  function bindUi() {
-    var dlg = ensureModal();
-    bindSubmit($("form", dlg));
-    ensureWppFixo();
+  function samePageHref(href) {
+    try {
+      var u = new URL(href, location.href);
+      if (u.origin !== location.origin) return false;
+      var a = (u.pathname || "/").replace(/\/+$/, "") || "/";
+      var b = (location.pathname || "/").replace(/\/+$/, "") || "/";
+      return a === b;
+    } catch (_) {
+      return String(href || "").charAt(0) === "#";
+    }
+  }
 
+  function ctaPosFrom(el) {
+    var pos = el && el.getAttribute("data-cta-pos");
+    if (pos) return pos;
+    var rect = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+    if (!rect) return "meio";
+    var y = rect.top + (window.scrollY || 0);
+    var h = Math.max(document.documentElement.scrollHeight || 0, 1);
+    if (y < h * 0.25) return "topo";
+    if (y > h * 0.7) return "final";
+    return "meio";
+  }
+
+  function isFramerCta(a) {
+    if (!a || a.tagName !== "A") return false;
+    var href = a.getAttribute("href") || "";
+    var txt = (a.textContent || "").replace(/\s+/g, " ").trim();
+    // Texto do CTA manda: Framer às vezes aponta para outra LP com tally-open.
+    if (/^(fale com um especialista|solicite uma proposta)$/i.test(txt)) return true;
+    if (a.hasAttribute("data-abre-form")) return true;
+    if (href.indexOf("tally-open") >= 0 || href.indexOf("tally.so") >= 0) return true;
+    if (!samePageHref(href)) return false;
+    return /^#proposta\b/i.test(href) || href.indexOf("#proposta") >= 0;
+  }
+
+  function patchFramerCtas() {
+    $$("a[href]").forEach(function (a) {
+      if (!isFramerCta(a)) return;
+      a.setAttribute("href", "#proposta");
+      a.setAttribute("data-abre-form", "");
+      if (!a.getAttribute("data-cta-pos")) a.setAttribute("data-cta-pos", ctaPosFrom(a));
+    });
+    bindAbre();
+  }
+
+  function bindAbre() {
     $$("[data-abre-form]").forEach(function (btn) {
       if (btn.dataset.boundAbre === "1") return;
       btn.dataset.boundAbre = "1";
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-        openModal(btn.getAttribute("data-cta-pos") || "");
+        e.stopPropagation();
+        openModal(btn.getAttribute("data-cta-pos") || ctaPosFrom(btn));
       });
     });
+  }
+
+  function openCtaFromEvent(e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return false;
+    if (typeof e.button === "number" && e.button !== 0) return false;
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a || !isFramerCta(a)) return false;
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+    patchFramerCtas();
+    openModal(a.getAttribute("data-cta-pos") || ctaPosFrom(a));
+    return true;
+  }
+
+  function bindCtaCapture() {
+    if (document.documentElement.dataset.tplCtaCapture === "1") return;
+    document.documentElement.dataset.tplCtaCapture = "1";
+    document.addEventListener("click", openCtaFromEvent, true);
+    document.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      openCtaFromEvent(e);
+    }, true);
+  }
+
+  function openFromIntent() {
+    var hash = String(location.hash || "");
+    var intent = window.__tplLeadIntent;
+    var fromHash = hash.indexOf("tally-open") >= 0 || /^#proposta\b/i.test(hash);
+    if (!intent && !fromHash) return;
+    openModal(intent || (hash.indexOf("tally-open") >= 0 ? "hash-tally" : "hash"));
+    window.__tplLeadIntent = null;
+    if (fromHash) {
+      try {
+        history.replaceState(null, "", location.pathname + location.search);
+      } catch (_) {}
+    }
+  }
+
+  function fromTemplate(id) {
+    var tpl = document.getElementById(id);
+    if (!tpl || !tpl.content || !tpl.content.firstElementChild) return null;
+    return tpl.content.firstElementChild.cloneNode(true);
+  }
+
+  function placeStaticBlocks() {
+    if (!document.querySelector(".tpl-passos")) {
+      var faq = document.querySelector('[data-framer-name="FAQ"]');
+      var block = fromTemplate("tpl-passos-keep");
+      if (faq && block && faq.parentNode) faq.parentNode.insertBefore(block, faq);
+    }
+    if (document.getElementById("tpl-selo-keep")) {
+      $$("h1").forEach(function (h) {
+        if (h.textContent.indexOf("Seja Certificado") === -1) return;
+        var prev = h.previousElementSibling;
+        if (prev && prev.classList && prev.classList.contains("tpl-selo")) return;
+        var badge = fromTemplate("tpl-selo-keep");
+        if (badge && h.parentNode) h.parentNode.insertBefore(badge, h);
+      });
+    }
+    patchFramerCtas();
+  }
+
+  function keepStaticBlocks() {
+    placeStaticBlocks();
+    var root = document.querySelector("[data-framer-root]") || document.body;
+    var scheduled = 0;
+    function schedule() {
+      if (scheduled) return;
+      scheduled = 1;
+      setTimeout(function () {
+        scheduled = 0;
+        placeStaticBlocks();
+      }, 50);
+    }
+    if (typeof MutationObserver === "function") {
+      var obs = new MutationObserver(schedule);
+      obs.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+    }
+    setInterval(function () {
+      patchFramerCtas();
+      placeStaticBlocks();
+    }, 1500);
+  }
+
+  function bindUi() {
+    var dlg = ensureModal();
+    if (!dlg.id) dlg.id = "tpl-lead-modal";
+    if (!document.getElementById("proposta")) {
+      var mark = document.createElement("span");
+      mark.id = "proposta";
+      mark.setAttribute("hidden", "");
+      document.body.insertBefore(mark, document.body.firstChild);
+    }
+    bindSubmit($("form", dlg));
+    ensureWppFixo();
+    bindCtaCapture();
+    patchFramerCtas();
+    keepStaticBlocks();
+    openFromIntent();
 
     $$("[data-fecha-form]", dlg).forEach(function (btn) {
       btn.addEventListener("click", closeModal);

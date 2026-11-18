@@ -1,0 +1,33 @@
+---
+description: CTAs das LPs Framer ab-sn/ab/certificado devem abrir o modal INBOUND; não desfazer
+globs: site/public/ab-sn/**/lead-inbound.js,site/public/ab/**/lead-inbound.js,site/public/certificado/**/lead-inbound.js,site/public/ab-sn/**/index.html,site/public/ab/**/index.html,site/public/certificado/**/index.html
+alwaysApply: false
+---
+
+# LP Framer: CTA abre modal INBOUND (não desfazer)
+
+Vale para LPs resgatadas do Framer com `lead-inbound.js` (ex.: `/ab-sn/iso-27001/`, `/ab-sn/pbqp-h/`, `/ab/…`, `/certificado/…`).
+
+## Obrigatório manter
+
+1. **Clique no CTA** (“Fale com um especialista”, “Solicite uma proposta”, `[data-abre-form]`, `#proposta`, resíduo `#tally-open`) **abre o modal nativo** e manda lead em `POST /api/lead`.
+2. Script precoce no HTML (`__tplCtaEarly`) + `window.__tplOpenLeadModal` + `openFromIntent()` no `lead-inbound.js`.
+3. Hash legado `#tally-open=…` ou `#proposta` **abre** o modal e só então limpa a URL.
+4. Captura em fase de captura (`click` e `pointerdown`) para o Framer não roubar o clique.
+5. Patch contínuo dos `href` do Framer para `#proposta` + `data-abre-form` (MutationObserver / interval).
+
+## Proibido
+
+- Trocar `openFromIntent` (ou equivalente) por um `cleanLegacyHash` / `replaceState` que **só apaga** `#proposta` / `#tally-open` **sem abrir** o modal.
+- Remover `__tplCtaEarly`, `__tplOpenLeadModal`, `openFromIntent`, `bindCtaCapture` ou o `pointerdown`.
+- Voltar embed/popup do Tally (`tally.so`, `tally-open` como form real).
+- Apontar CTA para outra LP ou para `wa.me` no lugar do modal (WhatsApp fica no link secundário / botão fixo).
+- “Corrigir auto-open” apagando o hash e deixando o clique cedo (antes do `defer`) sem efeito.
+
+## Se o Framer republicar o HTML
+
+Reaplicar o bloco `__tplCtaEarly` no `head` e a stack `lead-inbound.css` + `form-funil` + `tpl-turnstile` + `tpl-ads-attrib` + `lead-inbound.js` no fim do `body`. Não sobrescrever o `lead-inbound.js` com versão sem `openFromIntent`.
+
+## Regressão já vista
+
+Em 2026-11-17 o modal foi consertado e, no mesmo dia, o auto-open do hash foi removido com limpeza cega da URL. Resultado: clique em `#proposta` (sobretudo antes do JS defer) “não ia a lugar nenhum”. Não repetir.
