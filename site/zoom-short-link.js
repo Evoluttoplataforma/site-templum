@@ -4,7 +4,7 @@
 const LEAD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const ZOOM_JOIN_FIELD = "cf_evento_link_individual_do_zoom";
-export const ZOOM_REGISTER_FALLBACK = "https://us06web.zoom.us/webinar/register/WN_Z8uvnqr_Qyy58RRwtcngGQ";
+export const ZOOM_REGISTER_FALLBACK = "https://us06web.zoom.us/webinar/register/WN_z1HhrDyBS4y_4079b6tfmw";
 
 const MQ_VISIT_TAGS = {
   "2026-11-03": "MQ26_D1_ENTROU",

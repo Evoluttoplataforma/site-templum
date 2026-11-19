@@ -2,7 +2,8 @@
 // O link curto, o que vai no WhatsApp, aponta para /z/{id} no site.
 
 export const ZOOM_MEETING_ID = "89725798988";
-export const ZOOM_WEBINAR_ID = "88194389798";
+// Webinar das segundas (9, 16, 23 e 30/11). Imersão 3–5 usava 88194389798.
+export const ZOOM_WEBINAR_ID = "85466149265";
 export const ZOOM_MQ_EVENT = "mes-da-qualidade-2026";
 export const ZOOM_ERROR_TAG = "MQ26_ZOOM_ERRO";
 export const ZOOM_JOIN_FIELD = "cf_evento_link_individual_do_zoom";
@@ -24,6 +25,7 @@ export function splitZoomName(fullName) {
 }
 
 export function zoomLinkFields(leadId, joinUrl) {
+  // Join longo no card (presença). WhatsApp/Meta usam o curto /z/{id} → redireciona ao join.
   return {
     [ZOOM_JOIN_FIELD]: joinUrl,
     [ZOOM_SHORT_FIELD]: `https://templum.com.br/z/${leadId}`,

@@ -79,6 +79,11 @@ export function sanitizeWhatsappRef(input) {
     if (v) row[key] = v;
   }
 
+  // LP Black Friday sem UTM de ads: grava campanha da página para o CRM rotear ao funil certo.
+  if (!row.utm_campaign && row.pagina && /black-friday/i.test(row.pagina)) {
+    row.utm_campaign = "black-friday-lp";
+  }
+
   if (["url", "guardado", "cookie_google"].includes(input.origem_clique)) {
     row.origem_clique = input.origem_clique;
   }

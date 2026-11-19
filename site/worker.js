@@ -3,8 +3,20 @@
 //   POST /api/bn-interesse  → LP Black November: etiqueta BN26_LP_INTERESSE no card
 //                             aberto do funil BLACKNOVEMBER, sem mudar a etapa.
 //                             Quem não tem card nasce em Espera.
+//   POST /api/bn-sync-phone → Fluxos BLACKNOVEMBER: copia contact_phone de outro
+//                             card do mesmo e-mail (prioridade INBOUND) para o
+//                             card BN. Header X-Templum-Bn-Sync-Phone + secret
+//                             BN_SYNC_PHONE_SECRET. Não altera o card Inbound.
 //   POST /api/form-evento   → funil do formulário em site_form_eventos (sem dados pessoais)
 //   POST /api/whatsapp-ref  → código do clique de WhatsApp em site_whatsapp_refs (sem dados pessoais)
+//   POST /api/whatsapp-ref-apply → lê cf_ref_whatsapp no card Orbit, busca UTMs em
+//                             site_whatsapp_refs e grava cf_utm_* / página / produto / gclid
+//                             se estiverem vazios (header X-Templum-Ref-Apply + secret
+//                             WHATSAPP_REF_APPLY_SECRET). Usado pelas automações INBOUND.
+//   POST /api/meta-natives-apply → Lead Ads Meta: copia Full name / Phone number /
+//                             empresa (e e-mail custom se houver) para campos nativos,
+//                             formata telefone 55… e grava UTM a partir de __meta.
+//                             Mesmo header/secret do whatsapp-ref-apply.
 //                             Lead comercial vai ao funil INBOUND (etapa NOVO LEAD). Não cria negócio no Pipedrive.
 //                             Inscrição de evento NÃO vai ao INBOUND
 //                             (ver isInscricaoEvento). Webinar ISO 9001 cai no funil MQL
@@ -51,6 +63,8 @@
 //   MAILCHIMP_TAG          (opcional) default: site-templum
 //   PIPEDRIVE_API_TOKEN    (SECRETO) token da API do Pipedrive
 //   ORBIT_CRM_API_KEY      (SECRETO) chave da API do CRM Orbit (CRM → Chaves de API)
+//   BN_SYNC_PHONE_SECRET   (SECRETO) header X-Templum-Bn-Sync-Phone do fluxo
+//                          BN26 · Sync telefone · ao criar card
 //   INTERVALO_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook GF (path em fluxos.e0InboundPathKey)
 //   NOVA_ERA_E0_FLUXOS_SECRET (SECRETO) X-Fluxos-Secret do webhook E0 Nova Era (path nova-era-certificacao-iso-e0)
 //   MQL_E0_WEBHOOK_SECRETS (SECRETO, opcional) JSON { "<path_key>": "<secret>", ... } para várias campanhas E0
@@ -84,7 +98,7 @@
 //   ZOOM_CLIENT_SECRET     (SECRETO)
 //                          Inscrição do Mês da Qualidade (evento mes-da-qualidade-2026)
 //                          adiciona o inscrito no webinar e grava o link curto no card.
-//                          Vale até 05/11/2026, 23h59, horário de Brasília.
+//                          Vale até 30/11/2026, 23h59, horário de Brasília.
 //
 // GA4/Google Ads: tratados no navegador (gtag); server-side duplicaria eventos.
 // Campanhas LP → MQL: config/mql-campaigns.json (ver docs/campanhas-mql.md).
@@ -181,6 +195,20 @@ export default {
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       return handleBnInteresse(request, env);
     }
+    if (url.pathname === "/api/bn-sync-phone") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type, x-templum-bn-sync-phone",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleBnSyncPhone(request, env);
+    }
     if (url.pathname === "/api/lead") {
       if (request.method === "OPTIONS") {
         return new Response(null, {
@@ -222,6 +250,34 @@ export default {
       }
       if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
       return handleWhatsappRef(request, env);
+    }
+    if (url.pathname === "/api/whatsapp-ref-apply") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type, x-templum-ref-apply",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleWhatsappRefApply(request, env);
+    }
+    if (url.pathname === "/api/meta-natives-apply") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type, x-templum-ref-apply",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+          },
+        });
+      }
+      if (request.method !== "POST") return corsJson({ ok: false, error: "method_not_allowed" }, 405);
+      return handleMetaNativesApply(request, env);
     }
     if (url.pathname === "/api/crm-lead") {
       if (request.method === "OPTIONS") {
@@ -498,6 +554,17 @@ function bnResumoProposta(certificado, colaboradores, faixaInformada) {
   if (BN_CERT_CONSULTA.indexOf(certificado) !== -1) {
     return base + " Estimativa sob consulta.";
   }
+  if (certificado === "PBQP-H") {
+    const setupBf = bnRound2(5000 * 0.8);
+    const parcelaBf = bnRound2(bnRound2(25000 / 11) * 0.8);
+    const anoBf = bnRound2(25000 * 0.8);
+    return (
+      base +
+      " BF consultoria: entrada " + bnBrl(setupBf) +
+      " + 11x " + bnBrl(parcelaBf) +
+      " (ano " + bnBrl(anoBf) + ")."
+    );
+  }
   const faixa = certificado === "ISO 9001" ? bnFaixa9001(colaboradores) : bnFaixaGrupo(colaboradores);
   const auditoria = certificado === "ISO 9001" ? "" : " Auditoria inclusa.";
   if (faixa.consulte) {
@@ -589,24 +656,74 @@ async function bnLerCard(token, id) {
   return payload.data || payload.lead || payload;
 }
 
-async function handleBnInteresse(request, env) {
-  let body = {};
-  try { body = await request.json(); } catch (_) {
-    return corsJson({ ok: false, error: "invalid_json" }, 400);
+function bnTelefoneOk(raw) {
+  const digits = phoneDigits(raw);
+  if (digits.length < 10 || digits.length > 11) return "";
+  return formatPhoneBrOrbit(raw);
+}
+
+function bnEmpresaOk(raw) {
+  const s = String(raw || "").trim().replace(/\s+/g, " ");
+  if (s.length < 2 || s.length > 120) return "";
+  return s;
+}
+
+/** Empresa inválida: vazia, igual ao nome, ou espelho do título "Nome - Black Friday". */
+function bnEmpresaInvalida(empresa, nome, tituloSufixo) {
+  const e = String(empresa || "").trim();
+  if (e.length < 2) return true;
+  const n = String(nome || "").trim();
+  if (n && e.toLowerCase() === n.toLowerCase()) return true;
+  const suf = String(tituloSufixo || "Black Friday").trim();
+  if (n && e.toLowerCase() === (n + " - " + suf).toLowerCase()) return true;
+  if (/\s-\sblack friday(\stemplum os)?$/i.test(e)) return true;
+  return false;
+}
+
+/**
+ * Copia company_name de outro card do mesmo e-mail (prioridade INBOUND).
+ * Ignora espelho de título BF e cards do próprio BLACKNOVEMBER.
+ */
+function pickCompanyFromSiblingLeads(bnLeadId, rows, nome, tituloSufixo) {
+  const scored = [];
+  for (const row of rows || []) {
+    if (!row || !row.id || row.id === bnLeadId) continue;
+    if (row.pipeline_id === BN_PIPELINE_ID) continue;
+    const company = bnEmpresaOk(row.company_name);
+    if (!company || bnEmpresaInvalida(company, row.contact_name || nome, tituloSufixo)) continue;
+    scored.push({
+      company,
+      isInbound: row.pipeline_id === ORBIT_PIPELINE_ID,
+      updated: String(row.updated_at || row.created_at || ""),
+    });
   }
-  if (body.proposta !== true) return corsJson({ ok: false, error: "proposta" }, 400);
-  const email = bnEmailOk(body.email);
-  const certificado = bnCertOk(body.certificado);
-  const faixa = bnFaixaOk(body.faixa);
-  const colaboradores = faixa ? BN_FAIXA_N[faixa] : bnColaboradoresOk(body.colaboradores);
-  if (!email || !certificado || !colaboradores) return corsJson({ ok: false, error: "proposta" }, 400);
+  scored.sort((a, b) => {
+    if (a.isInbound !== b.isInbound) return a.isInbound ? -1 : 1;
+    return b.updated.localeCompare(a.updated);
+  });
+  return scored[0] ? scored[0].company : "";
+}
+
+async function bnEmpresaDoCrm(token, email, nome, tituloSufixo, excludeId) {
+  const found = await crmSearchLeadsByEmail(token, email);
+  return pickCompanyFromSiblingLeads(excludeId || "", found, nome, tituloSufixo);
+}
+
+async function bnGravarInteresse(env, {
+  email,
+  nome,
+  empresa,
+  telefone,
+  tituloSufixo,
+  resumo,
+  origem,
+  source,
+}) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
   if (!(await bnInteresseDentroDoLimite(email))) {
     return corsJson({ ok: false, error: "rate_limit" }, 429);
   }
-  const nome = bnNomeOk(body.nome);
-  const resumo = bnResumoProposta(certificado, colaboradores, faixa);
-  const token = env.ORBIT_CRM_API_KEY;
-  if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
 
   const headers = {
     "content-type": "application/json",
@@ -621,20 +738,27 @@ async function handleBnInteresse(request, env) {
     return corsJson({ ok: true, action: "already" });
   }
 
-  const origem = body.encaminhado === true
-    ? "Origem: formulário da Black Friday."
-    : "Origem: e-mail da Black Friday.";
+  let empresaOk = bnEmpresaOk(empresa);
+  if (!empresaOk || bnEmpresaInvalida(empresaOk, nome, tituloSufixo)) {
+    empresaOk = await bnEmpresaDoCrm(token, email, nome, tituloSufixo, aberto && aberto.id);
+  }
+
   const nota = BN_NOTA_PROPOSTA + " (" + bnQuando() + "). " + resumo + " " + origem;
   if (aberto) {
     const fresco = (await bnLerCard(token, aberto.id)) || aberto;
     const tinhaTag = leadTagList(fresco).includes(BN_TAG_PROPOSTA.toLowerCase());
     const tinhaResumo = String(fresco.notes || fresco.note || "").includes(resumo);
+    const companyAtual = String(fresco.company_name || "").trim();
+    const companyRuim = !companyAtual || bnEmpresaInvalida(companyAtual, fresco.contact_name || nome, tituloSufixo);
     const patch = {};
     if (!tinhaTag) {
       const tagged = appendCrmTag(fresco.tags, BN_TAG_PROPOSTA);
       if (tagged.added) patch.tags = tagged.tags;
     }
     if (!tinhaResumo) patch.notes = mergeWebinarNotes(fresco.notes || fresco.note, nota);
+    if (telefone && !bnLeadPhoneRaw(fresco)) patch.contact_phone = telefone;
+    if (nome && !String(fresco.contact_name || "").trim()) patch.contact_name = nome;
+    if (empresaOk && companyRuim) patch.company_name = empresaOk;
     if (!Object.keys(patch).length) return corsJson({ ok: true, action: "already" });
     const res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
       method: "PATCH",
@@ -645,22 +769,256 @@ async function handleBnInteresse(request, env) {
     return corsJson({ ok: true, action: "tagged" });
   }
 
+  const payload = {
+    title: (empresaOk || nome || email) + " - " + tituloSufixo,
+    pipeline_id: BN_PIPELINE_ID,
+    stage_id: BN_STAGE_ESPERA,
+    contact_name: nome || email,
+    contact_email: email,
+    source: source || "mailchimp",
+    tags: [BN_TAG_PROPOSTA],
+    notes: nota,
+  };
+  if (empresaOk) payload.company_name = empresaOk;
+  if (telefone) payload.contact_phone = telefone;
+
   const criado = await fetch(`${ORBIT_BASE}/leads`, {
     method: "POST",
     headers,
-    body: JSON.stringify({
-      title: (nome || email) + " - Black Friday",
-      pipeline_id: BN_PIPELINE_ID,
-      stage_id: BN_STAGE_ESPERA,
-      contact_name: nome || email,
-      contact_email: email,
-      source: "mailchimp",
-      tags: [BN_TAG_PROPOSTA],
-      notes: nota,
-    }),
+    body: JSON.stringify(payload),
   }).catch(() => null);
   if (!criado || !criado.ok) return corsJson({ ok: false, error: "crm" }, 502);
   return corsJson({ ok: true, action: "created" });
+}
+
+async function handleBnInteresse(request, env) {
+  let body = {};
+  try { body = await request.json(); } catch (_) {
+    return corsJson({ ok: false, error: "invalid_json" }, 400);
+  }
+  if (body.proposta !== true) return corsJson({ ok: false, error: "proposta" }, 400);
+
+  const email = bnEmailOk(body.email);
+  const nome = bnNomeOk(body.nome);
+
+  const empresa = bnEmpresaOk(body.empresa || body.company_name || body.company);
+
+  if (body.produto === "templum-os") {
+    const telefone = bnTelefoneOk(body.telefone || body.phone || body.contact_phone);
+    if (!email || !nome || !telefone) return corsJson({ ok: false, error: "proposta" }, 400);
+    const planoOs = String(body.plano || "").trim().slice(0, 40);
+    const planoTxt = planoOs ? (" Plano: " + planoOs + ".") : "";
+    return bnGravarInteresse(env, {
+      email,
+      nome,
+      empresa,
+      telefone,
+      tituloSufixo: "Black Friday Templum OS",
+      resumo: "Produto: Templum OS." + planoTxt + " Pediu contato comercial na LP Black Friday Templum OS.",
+      origem: "Origem: formulário da Black Friday Templum OS.",
+      source: "site",
+    });
+  }
+
+  const certificado = bnCertOk(body.certificado);
+  const faixa = bnFaixaOk(body.faixa);
+  const colaboradores = faixa ? BN_FAIXA_N[faixa] : bnColaboradoresOk(body.colaboradores);
+  if (!email || !certificado || !colaboradores) return corsJson({ ok: false, error: "proposta" }, 400);
+  const telefone = bnTelefoneOk(body.telefone || body.phone || body.contact_phone);
+  const resumo = bnResumoProposta(certificado, colaboradores, faixa);
+  const origem = body.encaminhado === true
+    ? "Origem: formulário da Black Friday."
+    : "Origem: e-mail da Black Friday.";
+  return bnGravarInteresse(env, {
+    email,
+    nome,
+    empresa,
+    telefone,
+    tituloSufixo: "Black Friday",
+    resumo,
+    origem,
+    source: body.encaminhado === true ? "site" : "mailchimp",
+  });
+}
+
+function bnLeadPhoneRaw(lead) {
+  return String((lead && (lead.contact_phone || lead.phone)) || "").trim();
+}
+
+function pickPhoneFromSiblingLeads(bnLeadId, rows) {
+  const scored = [];
+  for (const row of rows || []) {
+    if (!row || !row.id || row.id === bnLeadId) continue;
+    // Não copiar telefone de outro card do próprio BLACKNOVEMBER.
+    if (row.pipeline_id === BN_PIPELINE_ID) continue;
+    const raw = bnLeadPhoneRaw(row);
+    const digits = phoneDigits(raw);
+    if (digits.length < 10) continue;
+    scored.push({
+      row,
+      raw,
+      digits,
+      isInbound: row.pipeline_id === ORBIT_PIPELINE_ID,
+      updated: String(row.updated_at || row.created_at || ""),
+    });
+  }
+  scored.sort((a, b) => {
+    if (a.isInbound !== b.isInbound) return a.isInbound ? -1 : 1;
+    return b.updated.localeCompare(a.updated);
+  });
+  return scored[0] || null;
+}
+
+async function crmHydrateLead(token, lead) {
+  if (!lead || !lead.id) return lead;
+  // Se já tem telefone e funil, basta. Sem telefone, busca o card completo.
+  if (lead.pipeline_id && phoneDigits(bnLeadPhoneRaw(lead)).length >= 10) return lead;
+  const one = await fetch(`${ORBIT_BASE}/leads/${lead.id}`, {
+    headers: { authorization: "Bearer " + token, accept: "application/json" },
+  }).catch(() => null);
+  if (!one || !one.ok) return lead;
+  const d = await one.json().catch(() => ({}));
+  return d.data || d.lead || d || lead;
+}
+
+/**
+ * Copia contact_phone de outro card do mesmo e-mail (prioridade INBOUND)
+ * para o card BLACKNOVEMBER. Não altera o card fonte.
+ */
+async function syncBnLeadPhone(env, leadId, opts) {
+  const dryRun = !!(opts && opts.dryRun);
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, error: "not_configured" };
+  if (!leadId) return { ok: false, error: "lead_id" };
+
+  const card = await bnLerCard(token, leadId);
+  if (!card || !card.id) return { ok: false, error: "lead_not_found" };
+  if (card.pipeline_id !== BN_PIPELINE_ID) {
+    return { ok: false, error: "wrong_pipeline", pipeline_id: card.pipeline_id };
+  }
+
+  const existing = bnLeadPhoneRaw(card);
+  if (phoneDigits(existing).length >= 10) {
+    return {
+      ok: true,
+      action: "already",
+      lead_id: card.id,
+      contact_phone: formatPhoneBrOrbit(existing),
+    };
+  }
+
+  const email = leadContactEmail(card);
+  if (!email || email.indexOf("@") === -1) {
+    return { ok: true, action: "not_found", lead_id: card.id, reason: "no_email" };
+  }
+
+  const found = await crmSearchLeadsByEmail(token, email);
+  const hydrated = [];
+  for (const row of found.slice(0, 20)) {
+    hydrated.push(await crmHydrateLead(token, row));
+  }
+  const picked = pickPhoneFromSiblingLeads(card.id, hydrated);
+  if (!picked) {
+    return { ok: true, action: "not_found", lead_id: card.id, reason: "no_sibling_phone" };
+  }
+
+  const contact_phone = formatPhoneBrOrbit(picked.raw);
+  const source = {
+    lead_id: picked.row.id,
+    pipeline_id: picked.row.pipeline_id || null,
+    pipeline_name: picked.row.pipeline_name || null,
+    is_inbound: picked.isInbound,
+  };
+
+  if (dryRun) {
+    return {
+      ok: true,
+      action: "would_update",
+      lead_id: card.id,
+      contact_phone,
+      source,
+    };
+  }
+
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+  const res = await fetch(`${ORBIT_BASE}/leads/${card.id}`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ contact_phone }),
+  }).catch(() => null);
+  if (!res || !res.ok) {
+    const detail = res ? await res.text().catch(() => "") : "";
+    return { ok: false, error: "crm", detail: String(detail).slice(0, 300) };
+  }
+  return {
+    ok: true,
+    action: "updated",
+    lead_id: card.id,
+    contact_phone,
+    source,
+  };
+}
+
+async function resolveBnSyncLeadId(env, body) {
+  const direct = extractLeadIdFromWebhook(body);
+  if (direct) return { leadId: direct };
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { error: "not_configured" };
+  const email = normalizeEmail(
+    body && (body.contact_email || body.email || body.email_alt || (body.lead && body.lead.contact_email)),
+  );
+  if (!email || email.indexOf("@") === -1) return { error: "lead_id" };
+  const found = await crmSearchLeadsByEmail(token, email);
+  const bnOpen = (found || []).filter(
+    (l) => l && l.pipeline_id === BN_PIPELINE_ID && l.stage_id !== BN_STAGE_GANHO && l.stage_id !== BN_STAGE_PERDIDO,
+  );
+  bnOpen.sort((a, b) => String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || "")));
+  if (!bnOpen[0] || !bnOpen[0].id) return { error: "lead_id", reason: "bn_not_found", email };
+  return { leadId: bnOpen[0].id, via: "email" };
+}
+
+async function handleBnSyncPhone(request, env) {
+  const expected = String(env.BN_SYNC_PHONE_SECRET || "").trim();
+  const got = String(request.headers.get("X-Templum-Bn-Sync-Phone") || "").trim();
+  if (!expected || got !== expected) return corsJson({ ok: false, error: "unauthorized" }, 401);
+
+  let body = {};
+  try {
+    const raw = await request.text();
+    if (raw) {
+      try { body = JSON.parse(raw); } catch (_) { body = {}; }
+      // Alguns Fluxos mandam o body já como string JSON dentro de um campo.
+      if (typeof body === "string") {
+        try { body = JSON.parse(body); } catch (_) { body = {}; }
+      }
+    }
+  } catch (_) { body = {}; }
+  console.log("[bn-sync-phone] body_keys", Object.keys(body || {}), "sample", JSON.stringify(body).slice(0, 500));
+
+  const resolved = await resolveBnSyncLeadId(env, body);
+  if (!resolved.leadId) {
+    return corsJson({ ok: false, error: resolved.error || "lead_id", reason: resolved.reason || null }, 400);
+  }
+
+  const url = new URL(request.url);
+  const dryRun = url.searchParams.get("dry_run") === "1";
+
+  try {
+    const result = await syncBnLeadPhone(env, resolved.leadId, { dryRun });
+    if (resolved.via) result.resolved_via = resolved.via;
+    if (!result.ok) {
+      const status = result.error === "lead_not_found" || result.error === "wrong_pipeline" ? 400 : 502;
+      return corsJson(result, status);
+    }
+    return corsJson(result);
+  } catch (e) {
+    console.error("[bn-sync-phone]", e && e.message);
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
+  }
 }
 
 function iscaSlugFrom(body) {
@@ -1289,13 +1647,353 @@ async function handleWhatsappRef(request, env) {
       },
       body: JSON.stringify(row),
     });
-    if (r.ok) return corsJson({ ok: true });
+    // 409 = ref já gravado (retry da fila no browser); conta como sucesso.
+    if (r.ok || r.status === 409) return corsJson({ ok: true });
     const err = await r.text().catch(() => "");
     console.error("[whatsapp-ref]", r.status, err.slice(0, 180));
     return corsJson({ ok: false }, 502);
   } catch (e) {
     console.error("[whatsapp-ref] fetch", e && e.message);
     return corsJson({ ok: false }, 502);
+  }
+}
+
+const WHATSAPP_REF_CODE = /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/;
+
+function extractLeadIdFromWebhook(body) {
+  if (!body || typeof body !== "object") return "";
+  const candidates = [
+    body.lead_id,
+    body.leadId,
+    body.id,
+    body.lead && body.lead.id,
+    body.data && body.data.id,
+    body.data && body.data.lead && body.data.lead.id,
+    body.payload && body.payload.id,
+    body.payload && body.payload.lead_id,
+  ];
+  for (const c of candidates) {
+    const id = String(c || "").trim();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+      return id.toLowerCase();
+    }
+  }
+  return "";
+}
+
+function cfEmpty(value) {
+  return !String(value == null ? "" : value).trim();
+}
+
+function normalizeWhatsappRefPagina(pagina) {
+  const raw = String(pagina || "").trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw.slice(0, 500);
+  if (raw.startsWith("/")) return ("https://templum.com.br" + raw).slice(0, 500);
+  return raw.slice(0, 500);
+}
+
+async function lookupWhatsappRefRow(env, ref) {
+  const sbUrl = env.SUPABASE_URL || "https://yfpdrckyuxltvznqfqgh.supabase.co";
+  const sbKey = env.SUPABASE_SERVICE_KEY || env.SUPABASE_ANON_KEY;
+  if (!sbKey) return null;
+  const url =
+    `${sbUrl}/rest/v1/site_whatsapp_refs?ref=eq.${encodeURIComponent(ref)}` +
+    `&select=ref,pagina,norma,utm_source,utm_medium,utm_campaign,utm_term,gclid,gbraid,wbraid&limit=1`;
+  const r = await fetch(url, {
+    headers: { apikey: sbKey, authorization: "Bearer " + sbKey },
+  }).catch(() => null);
+  if (!r || !r.ok) return null;
+  const rows = await r.json().catch(() => null);
+  if (!Array.isArray(rows) || !rows[0]) return null;
+  return rows[0];
+}
+
+function buildWhatsappRefPatch(prevCf, row) {
+  const patch = {};
+  if (row.utm_source && cfEmpty(prevCf[ORBIT_FIELDS.utm_source])) {
+    patch[ORBIT_FIELDS.utm_source] = String(row.utm_source);
+  }
+  if (row.utm_medium && cfEmpty(prevCf[ORBIT_FIELDS.utm_medium])) {
+    patch[ORBIT_FIELDS.utm_medium] = String(row.utm_medium);
+  }
+  if (row.utm_campaign && cfEmpty(prevCf[ORBIT_FIELDS.utm_campaign])) {
+    patch[ORBIT_FIELDS.utm_campaign] = String(row.utm_campaign);
+  }
+  if (row.utm_term && cfEmpty(prevCf[ORBIT_FIELDS.utm_term])) {
+    patch[ORBIT_FIELDS.utm_term] = String(row.utm_term);
+  }
+  const pagina = normalizeWhatsappRefPagina(row.pagina);
+  if (pagina && cfEmpty(prevCf[ORBIT_FIELDS.pagina])) {
+    patch[ORBIT_FIELDS.pagina] = pagina;
+  }
+  if (row.gclid && cfEmpty(prevCf.cf_gclid)) patch.cf_gclid = String(row.gclid);
+  if (row.gbraid && cfEmpty(prevCf.cf_gbraid)) patch.cf_gbraid = String(row.gbraid);
+  if (row.wbraid && cfEmpty(prevCf.cf_wbraid)) patch.cf_wbraid = String(row.wbraid);
+  const produto = orbitProdutoSelect(row.norma);
+  if (produto && cfEmpty(prevCf[ORBIT_FIELDS.norma])) {
+    patch[ORBIT_FIELDS.norma] = produto;
+  }
+  return patch;
+}
+
+/** Tag de horário da Norma: comercial (9h-18h Brasília, seg-sex) ou fora. Usa created_at do card. */
+function sdrHorarioTagFromInstant(isoOrDate) {
+  const d = isoOrDate ? new Date(isoOrDate) : new Date();
+  const when = Number.isNaN(d.getTime()) ? new Date() : d;
+  return isBrasiliaHorarioComercial(when) ? "SDR_HORARIO_COMERCIAL" : "SDR_FORA_HORARIO";
+}
+
+function leadHasSdrHorarioTag(tags) {
+  const names = (tags || []).map(tagName).filter(Boolean);
+  return names.some(
+    (n) => n === "SDR_HORARIO_COMERCIAL" || n === "SDR_FORA_HORARIO",
+  );
+}
+
+function isBlackFridayLandingHint(pagina, campaign) {
+  const p = String(pagina || "").toLowerCase();
+  const c = String(campaign || "").toLowerCase();
+  return /black-friday/.test(p) || /black-friday/.test(c) || /black.?friday/.test(c);
+}
+
+/**
+ * Ponte WhatsApp → CRM: (1) grava SDR_HORARIO_* se faltar; (2) copia UTM/página/produto
+ * do ref em site_whatsapp_refs; (3) se a origem for Black Friday e o card ainda estiver
+ * no INBOUND, move para BLACKNOVEMBER/Demonstrou interesse (Norma cria no INBOUND).
+ * Sem ref ainda grava a tag (todo lead que a Norma atende).
+ */
+async function applyWhatsappRefToLead(env, leadId) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, error: "not_configured" };
+  const headers = { "content-type": "application/json", authorization: "Bearer " + token };
+
+  const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers }).catch(() => null);
+  if (!get || !get.ok) return { ok: false, error: "lead_not_found" };
+  const payload = await get.json().catch(() => ({}));
+  const card = payload.data || payload.lead || payload;
+  const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
+  const ref = String(prev.cf_ref_whatsapp || "").trim().toUpperCase();
+
+  const result = { ok: true, ref: WHATSAPP_REF_CODE.test(ref) ? ref : undefined };
+  const body = {};
+  let refRow = null;
+
+  if (!leadHasSdrHorarioTag(card.tags)) {
+    const tag = sdrHorarioTagFromInstant(card.created_at);
+    body.tags = mergeLeadTags(card.tags, [tag]);
+    result.sdr_tag = tag;
+  } else {
+    result.sdr_tag_skipped = "already_tagged";
+  }
+
+  if (WHATSAPP_REF_CODE.test(ref)) {
+    refRow = await lookupWhatsappRefRow(env, ref);
+    if (!refRow) {
+      result.utm_skipped = "ref_not_found";
+    } else {
+      const patch = buildWhatsappRefPatch(prev, refRow);
+      if (Object.keys(patch).length) {
+        body.custom_fields = { ...prev, ...patch };
+        result.applied = Object.keys(patch);
+      } else {
+        result.utm_skipped = "already_filled";
+      }
+    }
+  } else {
+    result.utm_skipped = "no_ref";
+  }
+
+  const cfAfter = body.custom_fields || prev;
+  const paginaHint =
+    (refRow && refRow.pagina) ||
+    cfAfter[ORBIT_FIELDS.pagina] ||
+    prev[ORBIT_FIELDS.pagina] ||
+    "";
+  const campaignHint =
+    (refRow && refRow.utm_campaign) ||
+    cfAfter[ORBIT_FIELDS.utm_campaign] ||
+    prev[ORBIT_FIELDS.utm_campaign] ||
+    "";
+  const routeBf =
+    card.pipeline_id === ORBIT_PIPELINE_ID &&
+    isBlackFridayLandingHint(paginaHint, campaignHint);
+
+  if (routeBf) {
+    body.tags = mergeLeadTags(body.tags || card.tags, ["BLACKNOVEMBER"]);
+    result.bn_tag = "BLACKNOVEMBER";
+  }
+
+  if (!body.tags && !body.custom_fields) {
+    if (!routeBf) return { ...result, skipped: "nothing_to_apply" };
+  } else {
+    const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(body),
+    }).catch(() => null);
+    if (!res || !res.ok) {
+      const err = res ? await res.text().catch(() => "") : "fetch_failed";
+      return { ok: false, error: String(err).slice(0, 180), ref: result.ref };
+    }
+  }
+
+  // Troca de funil: só stage_id do destino (pipeline_id no PATCH é ignorado).
+  if (routeBf) {
+    const move = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ stage_id: BN_STAGE_ESPERA }),
+    }).catch(() => null);
+    if (!move || !move.ok) {
+      const err = move ? await move.text().catch(() => "") : "fetch_failed";
+      result.bn_move_error = String(err).slice(0, 180);
+    } else {
+      result.bn_moved = true;
+      result.bn_stage_id = BN_STAGE_ESPERA;
+    }
+  }
+
+  return result;
+}
+
+async function handleWhatsappRefApply(request, env) {
+  const expected = String(env.WHATSAPP_REF_APPLY_SECRET || "").trim();
+  const got = String(request.headers.get("X-Templum-Ref-Apply") || "").trim();
+  if (!expected || got !== expected) return corsJson({ ok: false, error: "unauthorized" }, 401);
+
+  let body = {};
+  try { body = await request.json(); } catch (_) { body = {}; }
+  const leadId = extractLeadIdFromWebhook(body);
+  if (!leadId) return corsJson({ ok: false, error: "lead_id" }, 400);
+
+  try {
+    const result = await applyWhatsappRefToLead(env, leadId);
+    if (!result.ok) return corsJson(result, 502);
+    return corsJson(result);
+  } catch (e) {
+    console.error("[whatsapp-ref-apply]", e && e.message);
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
+  }
+}
+
+function metaCfGet(cf, keys) {
+  for (const key of keys) {
+    const v = cf && cf[key];
+    if (!cfEmpty(v)) return String(v).trim();
+  }
+  return "";
+}
+
+/**
+ * Lead Ads Meta: Full name / Phone number / empresa → nativos;
+ * UTM a partir de __meta; telefone no formato 55DD9XXXXXXXX.
+ */
+async function applyMetaNativesToLead(env, leadId) {
+  const token = env.ORBIT_CRM_API_KEY;
+  if (!token) return { ok: false, error: "not_configured" };
+  const headers = {
+    "content-type": "application/json",
+    authorization: "Bearer " + token,
+    accept: "application/json",
+  };
+
+  const get = await fetch(`${ORBIT_BASE}/leads/${leadId}`, { headers }).catch(() => null);
+  if (!get || !get.ok) return { ok: false, error: "lead_not_found" };
+  const payload = await get.json().catch(() => ({}));
+  const card = payload.data || payload.lead || payload;
+  const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
+  const meta = prev.__meta && typeof prev.__meta === "object" ? prev.__meta : {};
+
+  const fullName = metaCfGet(prev, ["Full name", "full_name", "full name"]);
+  const phoneRaw = metaCfGet(prev, ["Phone number", "phone_number", "phone number", "phone"]);
+  const company = metaCfGet(prev, [
+    "Qual nome da sua empresa?",
+    "company_name",
+    "Company name",
+    "empresa",
+  ]);
+  const emailCustom = metaCfGet(prev, ["email", "Email", "Work email", "e-mail"]);
+
+  const body = {};
+  const applied = [];
+
+  if (fullName && cfEmpty(card.contact_name)) {
+    body.contact_name = fullName.slice(0, 200);
+    applied.push("contact_name");
+  }
+  if (phoneRaw && phoneDigits(card.contact_phone || "").length < 10) {
+    body.contact_phone = formatPhoneBrOrbit(phoneRaw);
+    applied.push("contact_phone");
+  }
+  if (company && cfEmpty(card.company_name)) {
+    body.company_name = company.slice(0, 200);
+    applied.push("company_name");
+  }
+  if (emailCustom && cfEmpty(card.contact_email)) {
+    body.contact_email = emailCustom.slice(0, 200);
+    applied.push("contact_email");
+  }
+
+  const cfPatch = {};
+  if (cfEmpty(prev[ORBIT_FIELDS.utm_source])) {
+    cfPatch[ORBIT_FIELDS.utm_source] = "facebook";
+    applied.push("cf_utm_source");
+  }
+  if (cfEmpty(prev[ORBIT_FIELDS.utm_medium])) {
+    cfPatch[ORBIT_FIELDS.utm_medium] = "paid_social";
+    applied.push("cf_utm_medium");
+  }
+  if (cfEmpty(prev[ORBIT_FIELDS.utm_campaign])) {
+    const campaign =
+      String(meta.campaign_name || meta.form_name || card.title || "").trim() || "meta_lead_ads";
+    cfPatch[ORBIT_FIELDS.utm_campaign] = campaign.slice(0, 500);
+    applied.push("cf_utm_campaign");
+  }
+  if (cfEmpty(prev[ORBIT_FIELDS.norma])) {
+    const formHint = String(meta.form_name || card.title || "").toLowerCase();
+    if (formHint.indexOf("9001") !== -1) {
+      cfPatch[ORBIT_FIELDS.norma] = "ISO 9001";
+      applied.push("cf_produto");
+    }
+  }
+  if (Object.keys(cfPatch).length) {
+    body.custom_fields = { ...prev, ...cfPatch };
+  }
+
+  if (!applied.length) {
+    return { ok: true, skipped: "nothing_to_apply", lead_id: leadId };
+  }
+
+  const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+  }).catch(() => null);
+  if (!res || !res.ok) {
+    const err = res ? await res.text().catch(() => "") : "fetch_failed";
+    return { ok: false, error: String(err).slice(0, 180), applied };
+  }
+  return { ok: true, lead_id: leadId, applied, contact_phone: body.contact_phone || undefined };
+}
+
+async function handleMetaNativesApply(request, env) {
+  const expected = String(env.WHATSAPP_REF_APPLY_SECRET || "").trim();
+  const got = String(request.headers.get("X-Templum-Ref-Apply") || "").trim();
+  if (!expected || got !== expected) return corsJson({ ok: false, error: "unauthorized" }, 401);
+
+  let body = {};
+  try { body = await request.json(); } catch (_) { body = {}; }
+  const leadId = extractLeadIdFromWebhook(body);
+  if (!leadId) return corsJson({ ok: false, error: "lead_id" }, 400);
+
+  try {
+    const result = await applyMetaNativesToLead(env, leadId);
+    if (!result.ok) return corsJson(result, 502);
+    return corsJson(result);
+  } catch (e) {
+    console.error("[meta-natives-apply]", e && e.message);
+    return corsJson({ ok: false, error: "fetch_failed" }, 502);
   }
 }
 
@@ -1307,7 +2005,8 @@ function sanitizarTurnstileStatus(value) {
 
 function turnstileFalhaTecnica(status) {
   return status === "timeout" || status === "script" || status === "rede" || status === "ausente"
-    || status === "erro_110200" || status === "erro_200100" || status === "falhou";
+    || status === "falhou"
+    || status === "erro_110200" || status === "erro_200100";
 }
 
 function turnstileRecusa(status) {
@@ -1435,9 +2134,9 @@ export async function handleLead(request, env, ctx) {
   const origemClique = ["url", "guardado", "cookie_google"].includes(String(body.origem_clique || ""))
     ? String(body.origem_clique)
     : "";
-  if (origemClique) lead.origem_clique = origemClique;
-  const cliqueTeste = ["gclid", "gbraid", "wbraid"].some((k) => /teste|test/i.test(String(lead[k] || "")));
-  if (body.modo_teste === true || body.modo_teste === "true" || cliqueTeste) lead.modo_teste = true;
+  lead.origem_clique = origemClique;
+  const cliqueTeste = [lead.gclid, lead.gbraid, lead.wbraid].some((v) => /teste|test/i.test(String(v || "")));
+  lead.modo_teste = body.modo_teste === true || body.modo_teste === "true" || cliqueTeste;
   if (lead.desafio_codigo && String(lead.mensagem || "").indexOf(lead.desafio_codigo) === -1) {
     lead.mensagem = (lead.mensagem ? lead.mensagem + " " : "") + "Código do desafio: " + lead.desafio_codigo + ".";
   }
@@ -1896,7 +2595,7 @@ const BN_NOTA_MARCA = "Interesse na LP Black November";
 const BN_TAG_PROPOSTA = "BN26_PEDIU_PROPOSTA";
 const BN_NOTA_PROPOSTA = "Pediu proposta na LP Black Friday";
 const BN_CERT_CONSULTA = ["Outro certificado"];
-const BN_CERTIFICADOS = ["ISO 9001", "ISO 27001", "ISO 14001", "ISO 45001", "ISO 37001", "ISO 42001", "SASSMAQ", "FSSC 22000", "SGI"].concat(BN_CERT_CONSULTA);
+const BN_CERTIFICADOS = ["ISO 9001", "ISO 27001", "ISO 14001", "ISO 45001", "ISO 37001", "ISO 42001", "SASSMAQ", "FSSC 22000", "SGI", "PBQP-H"].concat(BN_CERT_CONSULTA);
 const ORBIT_STAGE_ID = "8d480f12-283d-4d2b-b839-2934b73adf4a";
 const DIAG_9001_CAMPANHA = "diagnostico-iso-9001-campanha";
 const ORBIT_ATIVACAO_PIPELINE_ID = "39587fe2-8d8a-4c54-b505-fb67d9f04b10";
@@ -1958,7 +2657,8 @@ function applyConsultoriaLpCampaign(lead, body) {
   const path = normLpPath(pathOnly(lead.pagina)).toLowerCase();
   if (!/^\/consultoria\/[^/]+-lp(-v\d+)?\/$/.test(path)) return;
   const origem = String((body && body.origem_clique) || "");
-  if (origem === "guardado" || origem === "cookie_google") return;
+  const cliqueGuardado = origem === "guardado" || origem === "cookie_google";
+  if (cliqueGuardado) return;
   const fromUrl = body && body.utm_from_url === true;
   const clickFromUrl = body && body.click_from_url === true;
   for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
@@ -2124,8 +2824,9 @@ function formatPhoneBrOrbit(raw) {
   if (d.indexOf("55") === 0 && d.length >= 12) d = d.slice(2);
   d = d.slice(0, 11);
   if (d.length < 10) return String(raw || "").trim();
-  if (d.length === 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
-  return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+  // Mesmo formato que o inbound da Norma (olivia_sdr_whatsapp).
+  // Máscara "(DD) 9XXXX-XXXX" não casa com "55DD9XXXXXXXX" no Orbit e duplica o card.
+  return "55" + d;
 }
 
 // SELECT de Produto (cf_produto) no CRM. Valor fora da lista faz o Orbit recusar o campo.
@@ -2978,8 +3679,8 @@ async function keepZoomFieldsOnPatch(headers, leadId, patch) {
   return { ...patch, custom_fields: { ...keep, ...(patch.custom_fields || {}) } };
 }
 
-// 05/11/2026 23:59 em Brasília. Depois disso este webinar não recebe inscrição nova.
-const ZOOM_MQ_REGISTER_UNTIL_MS = Date.parse("2026-11-06T02:59:59.000Z");
+// 30/11/2026 23:59 em Brasília (último encontro das segundas). Depois disso, sem inscrição nova.
+const ZOOM_MQ_REGISTER_UNTIL_MS = Date.parse("2026-12-01T02:59:59.000Z");
 
 function zoomSignupEmail(email) {
   const value = String(email || "").trim().toLowerCase();

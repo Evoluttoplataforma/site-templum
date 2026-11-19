@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="hero.jpg?v=os-bf" />
+  <link rel="preload" as="image" href="hero.jpg?v=os-bf3" />
   <style>
     :root {
       --ouro: #f0c14b;
@@ -214,13 +214,112 @@
       text-transform: uppercase;
       text-decoration: none;
       box-shadow: 0 10px 32px rgba(240, 180, 40, .28);
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
-    .cta:hover { filter: brightness(1.06); }
+    .cta:hover {
+      background: #ffe566;
+      color: #1a1204;
+      border-color: #ffe566;
+      box-shadow: 0 10px 28px rgba(255, 229, 102, .4);
+    }
     .cta:focus-visible {
       outline: 2px solid #fff6d4;
       outline-offset: 3px;
     }
     .cta-wrap { margin: 22px 0 0; }
+    .cta[disabled] { opacity: .65; cursor: wait; }
+    .aviso-form { margin: 12px 0 0; color: #ffb4a2; font-size: 14px; }
+    dialog#quem {
+      width: min(440px, calc(100vw - 24px));
+      margin: auto;
+      padding: 22px 22px 20px;
+      border: 1px solid rgba(240, 193, 75, .4);
+      border-radius: 16px;
+      background: #12110e;
+      color: var(--tinta);
+    }
+    dialog#quem::backdrop { background: rgba(0, 0, 0, .72); }
+    .popup-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .popup-topo h2 {
+      margin: 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 32px;
+      line-height: .95;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .fechar {
+      border: 0;
+      background: transparent;
+      color: var(--mudo);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .quem-nota {
+      margin: 12px 0 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--mudo);
+      text-align: left;
+    }
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 14px;
+      text-align: left;
+    }
+    .campo span {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--mudo);
+    }
+    .campo input {
+      font: inherit;
+      color: var(--tinta);
+      background: #1b1914;
+      border: 1px solid rgba(240, 193, 75, .35);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .campo input:focus {
+      outline: 2px solid rgba(240, 193, 75, .45);
+      outline-offset: 1px;
+    }
+    dialog#quem .cta { width: 100%; margin-top: 16px; }
+    .sucesso-box {
+      margin: 8px 0 0;
+      text-align: left;
+    }
+    .sucesso-box h2 {
+      margin: 0 0 12px;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 32px;
+      line-height: .95;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--ouro-claro);
+    }
+    .sucesso-box p {
+      margin: 0 0 10px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--mudo);
+    }
+    .sucesso-box p strong {
+      color: var(--tinta);
+      font-weight: 600;
+    }
     .secao {
       margin-top: 48px;
       padding-top: 36px;
@@ -245,6 +344,18 @@
       width: 100%;
       height: auto;
     }
+    .ilustra-larga {
+      margin: 22px 0 0;
+      border: 1px solid rgba(240, 193, 75, .28);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #12110e;
+    }
+    .ilustra-larga img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
     .grade-modulos {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -252,10 +363,30 @@
       margin: 22px 0 0;
     }
     .modulo {
-      padding: 16px 14px;
+      padding: 18px 16px 16px;
       border: 1px solid rgba(240, 193, 75, .28);
       border-radius: 14px;
       background: #12110e;
+    }
+    .modulo-ico {
+      width: 44px;
+      height: 44px;
+      margin: 0 0 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      border: 1px solid rgba(240, 193, 75, .45);
+      background: rgba(240, 193, 75, .1);
+      color: var(--ouro);
+    }
+    .modulo-ico svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     .modulo h3 {
       margin: 0 0 8px;
@@ -303,6 +434,198 @@
       border-radius: 16px;
       background: rgba(240, 193, 75, .08);
     }
+    .planos-nota {
+      margin: 10px 0 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--ouro-claro);
+      font-weight: 600;
+    }
+    .grade-planos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px 0 0;
+      align-items: stretch;
+    }
+    .plano {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 22px 16px 18px;
+      border: 1px solid rgba(240, 193, 75, .28);
+      border-radius: 16px;
+      background: #12110e;
+      min-height: 100%;
+    }
+    .plano-destaque {
+      background: rgba(240, 193, 75, .1);
+      border-color: rgba(240, 193, 75, .55);
+    }
+    .plano-selo {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--ouro);
+      color: #24180a;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .plano h3 {
+      margin: 4px 0 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 28px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ouro-claro);
+    }
+    .plano-desc {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--mudo);
+      min-height: 4.2em;
+    }
+    .plano-de {
+      margin: 8px 0 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #e8c97a;
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      opacity: .95;
+    }
+    .bloco-planos {
+      margin: 28px 0 0;
+      padding: 22px 20px 20px;
+      border: 1px solid rgba(240, 193, 75, .42);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(240, 193, 75, .07), rgba(255,255,255,.02));
+      box-shadow: inset 0 0 0 1px rgba(255, 229, 102, .08);
+    }
+    .bloco-planos-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.15fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+    .seletor-usuarios {
+      margin: 0;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .seletor-usuarios > span {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ouro-claro);
+    }
+    .seletor-ajuda {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--mudo);
+    }
+    .seletor-opcoes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .seletor-opcoes label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 48px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(240, 193, 75, .4);
+      background: rgba(255,255,255,.03);
+      color: var(--mudo);
+      font-size: 15px;
+      font-weight: 650;
+      cursor: pointer;
+      text-align: left;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .seletor-opcoes input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .seletor-opcoes label:has(input:checked),
+    .seletor-opcoes label.is-on {
+      background: #ffe566;
+      border-color: #ffe566;
+      color: #1a1204;
+    }
+    .grade-planos.plano-unico {
+      margin: 0;
+      grid-template-columns: 1fr;
+      justify-content: stretch;
+      height: 100%;
+    }
+    .plano-unico .plano-desc { min-height: 0; }
+    .plano-unico .plano {
+      width: 100%;
+      min-height: 100%;
+      padding: 24px 20px 20px;
+      justify-content: space-between;
+    }
+    .plano-unico .plano-por { font-size: 42px; }
+    .plano-por {
+      margin: 0;
+      font-family: "Barlow Condensed", Impact, sans-serif;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: .02em;
+      color: var(--tinta);
+    }
+    .plano-por small {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: var(--mudo);
+    }
+    .plano-mes {
+      margin: 0;
+      font-size: 13px;
+      color: var(--mudo);
+    }
+    .plano-users {
+      margin: 2px 0 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ouro-claro);
+    }
+    .plano .cta {
+      margin-top: auto;
+      width: 100%;
+      min-height: 44px;
+      font-size: 13px;
+    }
+    .plano-outline {
+      background: transparent;
+      color: var(--ouro-claro);
+      border: 1px solid rgba(240, 193, 75, .55);
+      box-shadow: none;
+    }
+    .plano-outline:hover {
+      background: #ffe566;
+      color: #1a1204;
+      border-color: #ffe566;
+      box-shadow: 0 10px 28px rgba(255, 229, 102, .4);
+    }
     details {
       border-top: 1px solid rgba(240, 193, 75, .14);
       padding: 14px 0;
@@ -340,8 +663,14 @@
       text-transform: uppercase;
       color: rgba(203, 185, 138, .7);
     }
+    @media (max-width: 1100px) {
+      .grade-planos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grade-planos.plano-unico { grid-template-columns: 1fr; }
+    }
     @media (max-width: 860px) {
       .split, .split-invert, .grade-modulos { grid-template-columns: 1fr; }
+      .bloco-planos-grid { grid-template-columns: 1fr; gap: 16px; }
+      .seletor-opcoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .cta { width: 100%; }
     }
     @media (max-width: 640px) {
@@ -352,6 +681,15 @@
       .faixa-palco { height: 132px; }
       .miolo { font-size: 14px; letter-spacing: .14em; }
       .hero { width: min(100%, calc(100% - 24px)); }
+      .bloco-planos { padding: 16px 14px 14px; }
+      .grade-planos { grid-template-columns: 1fr; }
+      .grade-planos.plano-unico { grid-template-columns: 1fr; }
+      .seletor-opcoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .seletor-opcoes label { justify-content: center; text-align: center; min-height: 44px; }
+      .plano-desc { min-height: 0; }
+      .plano-unico .plano-por,
+      .plano-por { font-size: 32px; }
+      .plano-de { font-size: 16px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .trilho { animation: none; }
@@ -371,7 +709,7 @@
   </header>
 
   <figure class="hero">
-    <img src="hero.jpg?v=os-bf" alt="Black Friday Templum OS. Condições especiais para organizar a gestão em uma plataforma." width="1600" height="900" />
+    <img src="hero.jpg?v=os-bf3" alt="Black Friday Templum OS. Traga seu Sistema de Gestão para dentro do Templum OS." width="1600" height="900" />
   </figure>
 
   <div class="faixa-palco" aria-hidden="true">
@@ -397,9 +735,8 @@
       <p class="lead">Centralize processos, equipes, indicadores e atividades em uma única plataforma, com desconto especial na assinatura.</p>
       <p class="texto">Menos informações espalhadas. Mais controle para fazer sua empresa avançar.</p>
       <p class="cta-wrap">
-        <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20o%20desconto%20da%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero meu desconto</a>
+        <button type="button" class="cta js-abrir-contato">Quero meu desconto</button>
       </p>
-      <p class="nota">Condição especial para contratação durante o período da campanha.</p>
     </section>
 
     <section class="secao" id="dor">
@@ -412,7 +749,7 @@
           <p class="texto">Com o Templum OS, sua empresa pode organizar informações, definir responsabilidades e acompanhar a execução em um único ambiente.</p>
         </div>
         <figure class="ilustra">
-          <img src="equipe.jpg" width="1200" height="675" loading="lazy" alt="Equipe organizada com o Templum OS aberto no notebook" />
+          <img src="consolidacao.jpg" width="1200" height="675" loading="lazy" alt="Planilhas, pastas e documentos entrando no Templum OS em um só lugar" />
         </figure>
       </div>
     </section>
@@ -420,13 +757,40 @@
     <section class="secao" id="solucao">
       <h2>Tudo o que sua empresa precisa para organizar a gestão. Em um só lugar.</h2>
       <p class="lead">O Templum OS conecta áreas, pessoas e informações para que você tenha mais visibilidade sobre o que acontece na empresa.</p>
+      <figure class="ilustra-larga">
+        <img src="equipe.jpg" width="1200" height="675" loading="lazy" alt="Equipe acompanhando a gestão no Templum OS" />
+      </figure>
       <div class="grade-modulos">
-        <article class="modulo"><h3>Processos</h3><p>Padronize atividades e responsabilidades.</p></article>
-        <article class="modulo"><h3>Tarefas e projetos</h3><p>Acompanhe entregas, prazos e responsáveis.</p></article>
-        <article class="modulo"><h3>Indicadores</h3><p>Monitore resultados e metas.</p></article>
-        <article class="modulo"><h3>Documentos</h3><p>Centralize arquivos e registros.</p></article>
-        <article class="modulo"><h3>CRM e equipes</h3><p>Conecte vendas e operação.</p></article>
-        <article class="modulo"><h3>Inteligência artificial</h3><p>Conte com Olívia e agentes de IA.</p></article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h4v4H6zM14 7h4v4h-4zM6 13h4v4H6zM14 13h4v4h-4z"/><path d="M10 9h4M10 15h4M8 11v2M16 11v2"/></svg></div>
+          <h3>Processos</h3>
+          <p>Padronize atividades e responsabilidades.</p>
+        </article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6h11M8 12h11M8 18h11"/><path d="M5 6h.01M5 12h.01M5 18h.01"/></svg></div>
+          <h3>Tarefas e projetos</h3>
+          <p>Acompanhe entregas, prazos e responsáveis.</p>
+        </article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/><path d="M4 9l6-4 6 7"/></svg></div>
+          <h3>Indicadores</h3>
+          <p>Monitore resultados e metas.</p>
+        </article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div>
+          <h3>Documentos</h3>
+          <p>Centralize arquivos e registros.</p>
+        </article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zM8 12a3 3 0 1 0-3-3 3 3 0 0 0 3 3z"/><path d="M2.5 20a5.5 5.5 0 0 1 11 0M10.5 20a5.5 5.5 0 0 1 11 0"/></svg></div>
+          <h3>CRM e equipes</h3>
+          <p>Conecte vendas e operação.</p>
+        </article>
+        <article class="modulo">
+          <div class="modulo-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5c0 3-5 8-5 8s-5-5-5-8a5 5 0 0 1 5-5z"/><circle cx="12" cy="8" r="1.5"/><path d="M5 20h14"/></svg></div>
+          <h3>Inteligência artificial</h3>
+          <p>Conte com Olívia e agentes de IA.</p>
+        </article>
       </div>
       <p class="texto" style="margin-top:18px">A plataforma também contempla recursos de financeiro, RH, treinamento, planejamento e outras áreas.</p>
     </section>
@@ -434,7 +798,7 @@
     <section class="secao" id="ia">
       <div class="split split-invert">
         <figure class="ilustra">
-          <img src="modulos.jpg" width="1200" height="675" loading="lazy" alt="Templum OS reunindo processos, equipes, documentos e indicadores em uma plataforma" />
+          <img src="modulos.jpg" width="1200" height="675" loading="lazy" alt="Templum OS com módulos de gestão e inteligência artificial" />
         </figure>
         <div>
           <h2>E se a inteligência artificial também ajudasse a organizar sua gestão?</h2>
@@ -448,18 +812,42 @@
     <section class="secao" id="oferta-bf">
       <div class="oferta-box">
         <p class="eyebrow">Black Friday Templum OS</p>
-        <h2>Sua gestão em outro nível. Sua assinatura com desconto especial.</h2>
+        <h2>Sua gestão em outro nível. Sua assinatura com 50% off.</h2>
         <p class="lead">Aproveite a Black Friday para começar a organizar a gestão da sua empresa com o Templum OS.</p>
+        <p class="planos-nota">Oferta Black Friday: 50% off. Sem consultoria.</p>
         <ul class="lista-oferta">
-          <li>Desconto especial na assinatura</li>
+          <li>50% de desconto na assinatura anual</li>
+          <li>Oferta sem consultoria</li>
           <li>Todos os módulos de gestão incluídos</li>
           <li>Olívia e agentes de IA inclusos</li>
-          <li>Planos conforme o tamanho da operação</li>
         </ul>
-        <p class="cta-wrap">
-          <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20aproveitar%20a%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero aproveitar a Black Friday</a>
-        </p>
-        <p class="nota">Oferta sujeita às condições comerciais da campanha.</p>
+      </div>
+
+      <div class="bloco-planos">
+        <div class="bloco-planos-grid">
+          <div class="seletor-usuarios" aria-label="Selecione a quantidade de usuários">
+            <span>Quantos usuários a sua empresa precisa?</span>
+            <p class="seletor-ajuda">Escolha a faixa e veja o plano com o preço da Black Friday.</p>
+            <div class="seletor-opcoes" id="seletor-usuarios">
+              <label class="is-on"><input type="radio" name="usuarios-plano" value="20" checked> Até 20 usuários</label>
+              <label><input type="radio" name="usuarios-plano" value="50"> Até 50 usuários</label>
+              <label><input type="radio" name="usuarios-plano" value="80"> Até 80 usuários</label>
+              <label><input type="radio" name="usuarios-plano" value="100"> Até 100 usuários</label>
+            </div>
+          </div>
+
+          <div class="grade-planos plano-unico" aria-live="polite">
+            <article class="plano plano-destaque" id="plano-card">
+              <h3 id="plano-nome">Light</h3>
+              <p class="plano-desc" id="plano-desc">Ideal para pequenas empresas que querem dar o primeiro passo na organização de processos e gestão.</p>
+              <p class="plano-de" id="plano-de">R$ 32.040/ano</p>
+              <p class="plano-por" id="plano-por">R$ 16.020<small>/ano</small></p>
+              <p class="plano-mes" id="plano-mes">Equivalente a R$ 1.335/mês</p>
+              <p class="plano-users" id="plano-users" hidden></p>
+              <button type="button" class="cta js-abrir-contato" id="plano-cta" data-plano="Light">Comece agora</button>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -475,7 +863,7 @@
       </details>
       <details>
         <summary>O Templum OS é cobrado por usuário?</summary>
-        <p>Os planos são contratados por organização, com faixas de até 50, 100 ou 300 usuários. Não há cobrança individual por assento dentro da faixa contratada.</p>
+        <p>Os planos são contratados por organização, com faixas de até 20, 50, 80 ou 100 usuários. Não há cobrança individual por assento dentro da faixa contratada.</p>
       </details>
       <details>
         <summary>Posso testar antes de contratar?</summary>
@@ -483,7 +871,7 @@
       </details>
       <details>
         <summary>Como funciona o desconto da Black Friday?</summary>
-        <p>A condição especial será apresentada pela equipe comercial, conforme o plano e as regras da campanha.</p>
+        <p>Na Black Friday, a assinatura do Templum OS sai com 50% off. A oferta é sem consultoria. O comercial confirma o plano ideal para a sua operação.</p>
       </details>
     </section>
 
@@ -491,10 +879,37 @@
       <h2>Sua empresa não precisa continuar gerenciando tudo de forma separada.</h2>
       <p class="lead">Aproveite a Black Friday para conhecer as condições especiais do Templum OS e dar o próximo passo na organização da sua gestão.</p>
       <p class="cta-wrap">
-        <a class="cta" href="https://wa.me/551940402157?text=Ol%C3%A1%21%20Quero%20o%20desconto%20da%20Black%20Friday%20do%20Templum%20OS." rel="noopener noreferrer">Quero meu desconto</a>
+        <button type="button" class="cta js-abrir-contato">Quero meu desconto</button>
       </p>
+      <p class="aviso-form" id="aviso-ok" hidden style="color:#b7e4c7"></p>
     </section>
   </div>
+
+  <dialog id="quem">
+    <div id="popup-form">
+      <form id="form-contato" method="dialog">
+        <div class="popup-topo">
+          <h2>Seus dados</h2>
+          <button type="button" class="fechar" id="fechar" aria-label="Fechar">×</button>
+        </div>
+        <p class="quem-nota">Informe nome, e-mail e telefone para o comercial entrar em contato com as condições da Black Friday.</p>
+        <label class="campo"><span>Nome</span><input id="nome" name="nome" type="text" autocomplete="name" maxlength="60" required></label>
+        <label class="campo"><span>E-mail</span><input id="email" name="email" type="email" autocomplete="email" maxlength="120" required></label>
+        <label class="campo"><span>Telefone</span><input id="telefone" name="telefone" type="tel" autocomplete="tel" maxlength="15" inputmode="numeric" placeholder="(11) 99999-9999" required></label>
+        <p class="aviso-form" id="aviso-popup" hidden></p>
+        <button type="submit" class="cta" id="enviar">Quero meu desconto</button>
+      </form>
+    </div>
+    <div id="popup-sucesso" class="sucesso-box" hidden>
+      <div class="popup-topo">
+        <h2>Recebemos seus dados</h2>
+        <button type="button" class="fechar" id="fechar-ok" aria-label="Fechar">×</button>
+      </div>
+      <p><strong>Uma pessoa do nosso time vai entrar em contato com você</strong> para apresentar as condições da Black Friday do Templum OS.</p>
+      <p>Fique de olho no WhatsApp e no e-mail informados.</p>
+      <button type="button" class="cta" id="fechar-ok-cta">Entendi</button>
+    </div>
+  </dialog>
 
   <p class="rodape">Templum Consultoria</p>
 
@@ -519,6 +934,235 @@
         window.setTimeout(tick, 1000 - (Date.now() % 1000));
       }
       tick();
+
+      var PLANOS = {
+        "20": {
+          nome: "Light",
+          desc: "Ideal para pequenas empresas que querem dar o primeiro passo na organização de processos e gestão.",
+          de: "R$ 32.040/ano",
+          por: "R$ 16.020",
+          mes: "Equivalente a R$ 1.335/mês",
+          users: ""
+        },
+        "50": {
+          nome: "Smart",
+          desc: "Ideal para empresas que querem estruturar processos e criar uma cultura de gestão baseada em dados.",
+          de: "R$ 34.800/ano",
+          por: "R$ 17.400",
+          mes: "Equivalente a R$ 1.450/mês",
+          users: ""
+        },
+        "80": {
+          nome: "Pro",
+          desc: "Pensado para médias empresas que buscam alta performance.",
+          de: "R$ 39.720/ano",
+          por: "R$ 19.860",
+          mes: "Equivalente a R$ 1.655/mês",
+          users: ""
+        },
+        "100": {
+          nome: "Ultra",
+          desc: "Feito para empresas que precisam de mais robustez na gestão.",
+          de: "R$ 43.560/ano",
+          por: "R$ 21.780",
+          mes: "Equivalente a R$ 1.815/mês",
+          users: ""
+        }
+      };
+
+      function aplicarPlano(users) {
+        var p = PLANOS[String(users)] || PLANOS["20"];
+        var nomeEl = document.getElementById("plano-nome");
+        var descEl = document.getElementById("plano-desc");
+        var deEl = document.getElementById("plano-de");
+        var porEl = document.getElementById("plano-por");
+        var mesEl = document.getElementById("plano-mes");
+        var usersEl = document.getElementById("plano-users");
+        var ctaEl = document.getElementById("plano-cta");
+        if (!nomeEl || !ctaEl) return;
+        nomeEl.textContent = p.nome;
+        if (descEl) descEl.textContent = p.desc;
+        if (deEl) deEl.textContent = p.de;
+        if (porEl) porEl.innerHTML = p.por + "<small>/ano</small>";
+        if (mesEl) mesEl.textContent = p.mes;
+        if (usersEl) {
+          usersEl.textContent = p.users || "";
+          usersEl.hidden = !p.users;
+        }
+        ctaEl.setAttribute("data-plano", p.nome);
+      }
+
+      var seletor = document.getElementById("seletor-usuarios");
+      if (seletor) {
+        Array.prototype.forEach.call(seletor.querySelectorAll("label"), function (lab) {
+          lab.addEventListener("click", function () {
+            Array.prototype.forEach.call(seletor.querySelectorAll("label"), function (l) {
+              l.classList.remove("is-on");
+            });
+            lab.classList.add("is-on");
+            var inp = lab.querySelector("input");
+            if (inp) {
+              inp.checked = true;
+              aplicarPlano(inp.value);
+            }
+          });
+        });
+        var checked = seletor.querySelector('input[name="usuarios-plano"]:checked');
+        aplicarPlano(checked ? checked.value : "20");
+      }
+
+      var quem = document.getElementById("quem");
+      var form = document.getElementById("form-contato");
+      var formBox = document.getElementById("popup-form");
+      var okBox = document.getElementById("popup-sucesso");
+      var nomeEl = document.getElementById("nome");
+      var emailEl = document.getElementById("email");
+      var telEl = document.getElementById("telefone");
+      var aviso = document.getElementById("aviso-popup");
+      var enviar = document.getElementById("enviar");
+      var avisoOk = document.getElementById("aviso-ok");
+      var enviando = false;
+      var enviado = false;
+      var planoSel = "";
+      var quemNota = document.querySelector("#popup-form .quem-nota");
+      var quemNotaBase = quemNota ? quemNota.textContent : "";
+
+      function abrir(ev) {
+        var btn = ev && ev.currentTarget;
+        planoSel = (btn && btn.getAttribute("data-plano")) || "";
+        if (quemNota) {
+          quemNota.textContent = planoSel
+            ? ("Interesse no plano " + planoSel + " (50% off, sem consultoria). Informe nome, e-mail e telefone para o comercial entrar em contato.")
+            : quemNotaBase;
+        }
+        if (enviado) {
+          formBox.hidden = true;
+          okBox.hidden = false;
+        } else {
+          formBox.hidden = false;
+          okBox.hidden = true;
+          aviso.hidden = true;
+        }
+        if (typeof quem.showModal === "function") quem.showModal();
+        else quem.setAttribute("open", "");
+        if (!enviado) nomeEl.focus();
+      }
+      function fechar() {
+        if (typeof quem.close === "function") quem.close();
+        else quem.removeAttribute("open");
+      }
+      function mostrarSucesso() {
+        enviado = true;
+        formBox.hidden = true;
+        okBox.hidden = false;
+        avisoOk.textContent = "Uma pessoa do nosso time vai entrar em contato com você.";
+        avisoOk.hidden = false;
+        Array.prototype.forEach.call(document.querySelectorAll(".js-abrir-contato"), function (btn) {
+          btn.textContent = "Dados enviados";
+        });
+      }
+      document.getElementById("fechar").addEventListener("click", fechar);
+      document.getElementById("fechar-ok").addEventListener("click", fechar);
+      document.getElementById("fechar-ok-cta").addEventListener("click", fechar);
+      quem.addEventListener("click", function (ev) {
+        if (ev.target === quem) fechar();
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".js-abrir-contato"), function (btn) {
+        btn.addEventListener("click", abrir);
+      });
+
+      function emailOk(v) {
+        v = String(v || "").trim();
+        if (!v || v.indexOf("*|") !== -1 || v.indexOf("@") < 1) return "";
+        return v;
+      }
+      function nomeOk(v) {
+        v = String(v || "").trim();
+        if (!v || v.indexOf("*|") !== -1 || v.indexOf("@") !== -1) return "";
+        return v;
+      }
+      function soDigitos(v) {
+        var d = String(v || "").replace(/\D/g, "");
+        if (d.indexOf("55") === 0 && d.length >= 12) d = d.slice(2);
+        return d.slice(0, 11);
+      }
+      function mascaraTel(d) {
+        d = soDigitos(d);
+        if (d.length <= 2) return d.length ? "(" + d : "";
+        if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+        if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
+        return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7, 11);
+      }
+      function telefoneOk(v) {
+        var d = soDigitos(v);
+        if (d.length < 10 || d.length > 11) return "";
+        if (d.charAt(0) === "0") return "";
+        if (d.length === 11 && d.charAt(2) !== "9") return "";
+        return d;
+      }
+      telEl.addEventListener("input", function () {
+        var pos = telEl.selectionStart;
+        var antes = telEl.value.length;
+        telEl.value = mascaraTel(telEl.value);
+        var depois = telEl.value.length;
+        if (typeof pos === "number") {
+          telEl.setSelectionRange(Math.max(0, pos + (depois - antes)), Math.max(0, pos + (depois - antes)));
+        }
+      });
+      telEl.addEventListener("blur", function () {
+        if (telEl.value) telEl.value = mascaraTel(telEl.value);
+      });
+
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        if (enviando) return;
+        var nome = nomeOk(nomeEl.value);
+        var email = emailOk(emailEl.value);
+        var telefone = telefoneOk(telEl.value);
+        telEl.value = mascaraTel(telEl.value);
+        if (!nome) {
+          aviso.textContent = "Informe seu nome.";
+          aviso.hidden = false;
+          nomeEl.focus();
+          return;
+        }
+        if (!email) {
+          aviso.textContent = "Informe um e-mail válido.";
+          aviso.hidden = false;
+          emailEl.focus();
+          return;
+        }
+        if (!telefone) {
+          aviso.textContent = "Informe um telefone válido com DDD, no formato (11) 99999-9999.";
+          aviso.hidden = false;
+          telEl.focus();
+          return;
+        }
+        enviando = true;
+        enviar.disabled = true;
+        fetch("/api/bn-interesse", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            proposta: true,
+            produto: "templum-os",
+            plano: planoSel || "",
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            encaminhado: true
+          })
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          if (!d || !d.ok) throw new Error("crm");
+          if (window.fbq) window.fbq("track", "Lead");
+          mostrarSucesso();
+        }).catch(function () {
+          enviando = false;
+          enviar.disabled = false;
+          aviso.textContent = "Não consegui registrar agora. Tente de novo.";
+          aviso.hidden = false;
+        });
+      });
     })();
   </script>
 </body>
