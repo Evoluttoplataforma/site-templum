@@ -329,7 +329,7 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
 
     <script is:inline src="/js/tpl-ads-attrib.js?v=20261116a"></script>
     <script is:inline src="/js/form-funil.js?v=20261116a"></script>
-    <script is:inline src="/js/tpl-turnstile.js?v=20261116a"></script>
+    <script is:inline src="/js/tpl-turnstile.js?v=20261119b"></script>
     <!-- Handler único de formulários: valida, envia o lead (POST /api/lead →
          Supabase + Mailchimp + Templum OS INBOUND/ManyChat), dispara o Lead do Meta Pixel
          SÓ depois de confirmar que o Supabase salvou o cadastro, e redireciona.
@@ -374,6 +374,12 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
           if (window.tplLeadFail) window.tplLeadFail(form, btn);
           else { delete form.dataset.leadSubmitted; if (btn) btn.disabled = false; }
         }
+        function _failEnvio() {
+          try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
+          if (window.tplLeadEnvioFail) window.tplLeadEnvioFail(form, btn);
+          else if (window.tplLeadFail) window.tplLeadFail(form, btn, { envio: true });
+          else { delete form.dataset.leadSubmitted; if (btn) btn.disabled = false; }
+        }
         var contentName = window.__tplContentName(location.pathname);
         // MESMO id para o Lead do navegador (fbq eventID) e do CAPI (worker) —
         // é o que permite o Meta deduplicar em vez de contar 2 leads.
@@ -387,16 +393,9 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
         var turnstileStatus = token ? (window.tplTurnstileStatus || "ok") : (window.tplTurnstileStatus || "script");
         // GA4/Ads/TikTok (via trk.lead) continuam disparando na /obrigado.
         // Lead sem token verificado não arma a conversão.
-        if (token) {
-        try {
-          sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
-            email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
-            event_id: leadEventId,
-            modo_teste: !!((window.tplAdsModoTeste && window.tplAdsModoTeste()) || (window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)),
-          }));
-        } catch (_) {}
-        }
-        var _t = setTimeout(_go, 5000);
+        // tpl_lead_pending só depois do /api/lead confirmar gravação (ver abaixo).
+        // Sem redirect por timeout: evita conversão na obrigado sem lead salvo.
+        var _t = setTimeout(function () { _failEnvio(); }, 15000);
         try {
           // UTMs: localStorage (via __tplAttrib) + fallback direto da URL atual.
           // Clique desta visita (gclid/gbraid/wbraid) não herda campanha de outra página.
@@ -514,22 +513,38 @@ const allSchemas = [orgSchema, websiteSchema, ...schemas];
               return;
             }
             clearTimeout(_t);
-            if (saved && !(window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)) {
+            if (!saved) {
+              _failEnvio();
+              return;
+            }
+            var _modoTeste = !!((window.tplAdsModoTeste && window.tplAdsModoTeste())
+              || (window.tplH1ParaLead && window.tplH1ParaLead().modo_teste)
+              || /@templum\.com\.br$/i.test(String(d.email || "").trim()));
+            if (token) {
+              try {
+                sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+                  email: d.email || "", phone: d.telefone || "", name: d.nome || "", norma: d.norma || "",
+                  event_id: leadEventId,
+                  modo_teste: _modoTeste,
+                }));
+              } catch (_) {}
+            }
+            if (!_modoTeste) {
               window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
-              // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
-              // forma assíncrona e o navegador CANCELA requisição em andamento na
-              // navegação — redirecionar no mesmo tick fazia o evento se perder.
-              setTimeout(_go, 400);
-            } else { _go(); }
+            }
+            // Folga de 400ms ANTES de navegar: o fbevents.js envia o Lead de
+            // forma assíncrona e o navegador CANCELA requisição em andamento na
+            // navegação. Redirecionar no mesmo tick fazia o evento se perder.
+            setTimeout(_go, 400);
           }).catch(function() {
             clearTimeout(_t);
             if (window.tplTurnstileReset) window.tplTurnstileReset();
-            _go();
+            _failEnvio();
           });
         } catch (_) {
           clearTimeout(_t);
           if (window.tplTurnstileReset) window.tplTurnstileReset();
-          _go();
+          _failEnvio();
         }
         }).catch(function () { if (tentativaAtual()) _failTurnstile(); });
       });

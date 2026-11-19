@@ -3,8 +3,9 @@
 // Se houver tpl_lead_pending, carrega o tracking-kit na hora e espera
 // window.trk.lead por até 20s. O item só sai do sessionStorage depois
 // que trk.lead() devolve o id do evento.
-// extraSendTo: segunda conta do Google Ads. Só entra na página que passar
-// o valor. O send_to da Conta 2026, dentro do tracking-kit, continua.
+// extraSendTo: rótulo da conta antiga (AW-1065643610). Documenta o esperado
+// na página; o disparo real escolhe o rótulo pela norma em tpl_lead_pending
+// (campo do formulário / LP), não pela URL da obrigado.
 interface Props {
   contentName?: string;
   contentCategory?: string;
@@ -12,9 +13,42 @@ interface Props {
 }
 const { contentName = "", contentCategory = "", extraSendTo = "" } = Astro.props;
 ---
-<script is:inline define:vars={{ contentName, contentCategory, extraSendTo }}>
+{extraSendTo ? (
+  <>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1065643610"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+      try {
+        window.gtag("js", new Date());
+        window.gtag("config", "AW-1065643610", { allow_enhanced_conversions: true });
+      } catch (_) {}
+    </script>
+  </>
+) : null}
+<script is:inline define:vars={{ contentName, contentCategory }}>
   (function () {
     var PRODUCT = { content_name: contentName || "", content_category: contentCategory || "" };
+    var ANTIGA = {
+      "ISO 9001": "AW-1065643610/NqqgCIvkkKkZENrckfwD",
+      "ISO 14001": "AW-1065643610/XCBuCIm-lKkZENrckfwD",
+      "ISO 45001": "AW-1065643610/S3ukCN2ClKkZENrckfwD"
+    };
+    function normaKey(n) {
+      var s = String(n || "").toUpperCase().replace(/\s+/g, " ").trim();
+      if (/9001/.test(s)) return "ISO 9001";
+      if (/14001/.test(s)) return "ISO 14001";
+      if (/45001/.test(s)) return "ISO 45001";
+      return "";
+    }
+    function emailTemplum(email) {
+      return /@templum\.com\.br$/i.test(String(email || "").trim());
+    }
+    function sendToAntiga(norma) {
+      var key = normaKey(norma);
+      if (key && ANTIGA[key]) return ANTIGA[key];
+      return "";
+    }
     var raw = null;
     try { raw = sessionStorage.getItem("tpl_lead_pending"); } catch (_) {}
     if (!raw) return;
@@ -23,7 +57,8 @@ const { contentName = "", contentCategory = "", extraSendTo = "" } = Astro.props
     }
     var d = {};
     try { d = JSON.parse(raw) || {}; } catch (_) {}
-    if (d.modo_teste) {
+    var skipAds = !!(d.modo_teste || emailTemplum(d.email) || (window.tplAdsModoTeste && window.tplAdsModoTeste()));
+    if (skipAds) {
       try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
       return;
     }
@@ -48,8 +83,14 @@ const { contentName = "", contentCategory = "", extraSendTo = "" } = Astro.props
           props
         );
         if (!fired) return;
-        if (extraSendTo && typeof window.gtag === "function") {
-          var extra = { send_to: extraSendTo };
+        // Conta antiga: só pela norma do lead (pending). extraSendTo na página
+        // documenta o rótulo; não substitui norma ausente (evita deduzir pela URL).
+        var sendExtra = sendToAntiga(d.norma);
+        if (sendExtra && typeof window.gtag === "function") {
+          try {
+            window.gtag("config", "AW-1065643610", { allow_enhanced_conversions: true });
+          } catch (_) {}
+          var extra = { send_to: sendExtra };
           if (d.event_id) extra.transaction_id = d.event_id;
           try { window.gtag("event", "conversion", extra); } catch (_) {}
         }

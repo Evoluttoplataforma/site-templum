@@ -399,16 +399,24 @@
     return msg;
   }
 
-  function whatsLink(form) {
+  function whatsLink(form, label) {
     var src = (form && form.querySelector("a.lead-wpp[href], a[data-wpp-ref][href]"))
       || document.querySelector("a.lead-wpp[href], a[data-wpp-ref][href], a.whatsapp-float[href], a.wpp-fixo[href]");
-    if (!src) return null;
+    if (!src) {
+      var a0 = document.createElement("a");
+      a0.href = "https://wa.me/551940402157?text=" + encodeURIComponent("Olá! Vim pelo site da Templum e quero falar com um especialista.");
+      a0.target = "_blank";
+      a0.rel = "noopener noreferrer";
+      a0.className = "tpl-lead-wpp";
+      a0.textContent = label || "Se preferir, fale com a gente pelo WhatsApp";
+      return a0;
+    }
     var a = document.createElement("a");
     a.href = src.getAttribute("href") || src.href;
     a.target = "_blank";
-    a.rel = "noopener";
+    a.rel = "noopener noreferrer";
     a.className = "tpl-lead-wpp";
-    a.textContent = "Prefere falar pelo WhatsApp?";
+    a.textContent = label || "Se preferir, fale com a gente pelo WhatsApp";
     ["data-wpp-ref", "data-wpp-norma", "data-wpp-linha"].forEach(function (k) {
       var v = src.getAttribute(k);
       if (v) a.setAttribute(k, v);
@@ -422,19 +430,21 @@
     if (msg) msg.textContent = "";
   };
 
-  window.tplLeadFail = function (form, btn) {
+  window.tplLeadFail = function (form, btn, opts) {
+    opts = opts || {};
     if (form) delete form.dataset.leadSubmitted;
     if (btn) btn.disabled = false;
-    window.tplTurnstileReset();
+    if (opts.resetTurnstile !== false) window.tplTurnstileReset();
     var msg = errorNode(form);
     if (!msg) return;
     msg.textContent = "";
     var texto = document.createElement("p");
     texto.className = "tpl-lead-error-text";
-    var wpp = whatsLink(form);
-    texto.textContent = wpp
-      ? "A verificação anti-robô falhou. Tente de novo ou fale pelo WhatsApp."
-      : "A verificação anti-robô falhou. Tente de novo.";
+    var wpp = whatsLink(form, "Se preferir, fale com a gente pelo WhatsApp");
+    texto.textContent = opts.message
+      || (opts.envio
+        ? "Não foi possível enviar agora. Tente de novo."
+        : "A verificação anti-robô falhou. Tente de novo.");
     msg.appendChild(texto);
     var retry = document.createElement("button");
     retry.type = "button";
@@ -452,6 +462,11 @@
       if (ativo && ativo.blur && form.contains(ativo)) ativo.blur();
     } catch (_) {}
     try { msg.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (_) {}
+  };
+
+  // Falha de /api/lead (timeout, rede, supabase.ok falso): mesma UI, texto de envio.
+  window.tplLeadEnvioFail = function (form, btn) {
+    window.tplLeadFail(form, btn, { envio: true, resetTurnstile: true });
   };
 
   document.addEventListener("tpl:envio-sem-resposta", function () {
@@ -474,9 +489,7 @@
       var texto = document.createElement("p");
       texto.className = "tpl-lead-error-text";
       var wpp = whatsLink(form);
-      texto.textContent = wpp
-        ? "O envio demorou. Tente de novo ou fale pelo WhatsApp."
-        : "O envio demorou. Tente de novo.";
+      texto.textContent = "Não foi possível enviar agora. Tente de novo.";
       msg.appendChild(texto);
       var retry = document.createElement("button");
       retry.type = "button";

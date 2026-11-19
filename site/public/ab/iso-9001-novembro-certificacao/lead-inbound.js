@@ -172,11 +172,23 @@
     try { document.dispatchEvent(new CustomEvent("tpl:lead-modal", { detail: { open: false } })); } catch (_) {}
   }
 
-  function showError(form, msg) {
+  function showError(form, msg, withWpp) {
     var el = $(".tpl-lead-status", form);
     if (!el) return;
     el.hidden = !msg;
-    el.textContent = msg || "";
+    el.textContent = "";
+    if (!msg) return;
+    var p = document.createElement("p");
+    p.textContent = msg;
+    el.appendChild(p);
+    if (withWpp) {
+      var a = document.createElement("a");
+      a.href = wppHref();
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "Se preferir, fale com a gente pelo WhatsApp";
+      el.appendChild(a);
+    }
   }
 
   function bindSubmit(form) {
@@ -209,7 +221,7 @@
         try { sessionStorage.removeItem("tpl_lead_pending"); } catch (_) {}
         delete form.dataset.leadSubmitted;
         if (btn) { btn.disabled = false; btn.textContent = "Solicite uma proposta"; }
-        showError(form, "Não foi possível enviar agora. Tente de novo.");
+        showError(form, "Não foi possível enviar agora. Tente de novo.", true);
       }
 
       var tokenPromise = window.tplTurnstileToken
@@ -217,14 +229,6 @@
         : (window.tplTurnstileStatus = "script", Promise.resolve(""));
 
       tokenPromise.then(function (token) {
-        try {
-          sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
-            email: d.email, phone: d.telefone, name: d.nome, norma: NORMA,
-            event_id: leadEventId,
-            modo_teste: !!(window.tplAdsModoTeste && window.tplAdsModoTeste())
-          }));
-        } catch (_) {}
-
         var payload = Object.assign({
           nome: d.nome,
           email: d.email,
@@ -244,7 +248,8 @@
           website: d.website || ""
         }, attrib());
 
-        var t = setTimeout(go, 5000);
+        // Sem redirect por timeout/erro: conversão na obrigado só com lead gravado.
+        var t = setTimeout(fail, 15000);
         return fetch("/api/lead", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -265,21 +270,27 @@
           }
           var saved = res.httpOk && res.body && res.body.ok === true && res.body.supabase && res.body.supabase.ok === true;
           clearTimeout(t);
-          if (saved) {
-            window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
-            try {
-              document.dispatchEvent(new CustomEvent("tpl:lead-saved", {
-                detail: { data: d, contentName: contentName, eventId: leadEventId }
-              }));
-            } catch (_) {}
-            setTimeout(go, 400);
-          } else {
-            go();
-          }
+          if (!saved) { fail(); return; }
+          var modoTeste = !!(window.tplAdsModoTeste && window.tplAdsModoTeste())
+            || /@templum\.com\.br$/i.test(String(d.email || "").trim());
+          try {
+            sessionStorage.setItem("tpl_lead_pending", JSON.stringify({
+              email: d.email, phone: d.telefone, name: d.nome, norma: NORMA,
+              event_id: leadEventId,
+              modo_teste: modoTeste
+            }));
+          } catch (_) {}
+          window.fireMetaLead({ email: d.email, phone: d.telefone }, contentName, leadEventId);
+          try {
+            document.dispatchEvent(new CustomEvent("tpl:lead-saved", {
+              detail: { data: d, contentName: contentName, eventId: leadEventId }
+            }));
+          } catch (_) {}
+          setTimeout(go, 400);
         }).catch(function () {
           clearTimeout(t);
           if (window.tplTurnstileReset) window.tplTurnstileReset();
-          go();
+          fail();
         });
       }).catch(fail);
     });
