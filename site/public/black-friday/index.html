@@ -9,6 +9,7 @@
   <title>Black November da Templum</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
+  <script src="/js/tpl-ads-attrib.js?v=20261124a"></script>
   <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -724,18 +725,31 @@
         }
         pedir.disabled = true;
         pedirPopup.disabled = true;
+        var ads = window.tplAdsAttrib ? window.tplAdsAttrib() : {};
+        var payload = {
+          proposta: true,
+          email: email,
+          nome: nome,
+          certificado: cert,
+          colaboradores: n,
+          faixa: faixas[String(n)],
+          encaminhado: !emailUrl,
+          pagina: "/black-friday/",
+          gclid: ads.gclid || "",
+          gbraid: ads.gbraid || "",
+          wbraid: ads.wbraid || "",
+          utm_source: ads.utm_source || "",
+          utm_medium: ads.utm_medium || "",
+          utm_campaign: ads.utm_campaign || "",
+          utm_term: ads.utm_term || "",
+          utm_content: ads.utm_content || "",
+          origem_clique: ads.origem_clique || ""
+        };
+        if (ads.modo_teste) payload.modo_teste = true;
         fetch("/api/bn-interesse", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            proposta: true,
-            email: email,
-            nome: nome,
-            certificado: cert,
-            colaboradores: n,
-            faixa: faixas[String(n)],
-            encaminhado: !emailUrl
-          })
+          body: JSON.stringify(payload)
         }).then(function (r) { return r.json(); }).then(function (d) {
           if (!d || !d.ok) throw new Error("crm");
           if (window.fbq) window.fbq("track", "Lead");

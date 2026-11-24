@@ -9,6 +9,7 @@
   <title>Black Friday Templum OS | Templum</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
+  <script src="/js/tpl-ads-attrib.js?v=20261124a"></script>
   <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -1140,18 +1141,31 @@
         }
         enviando = true;
         enviar.disabled = true;
+        var ads = window.tplAdsAttrib ? window.tplAdsAttrib() : {};
+        var payload = {
+          proposta: true,
+          produto: "templum-os",
+          plano: planoSel || "",
+          nome: nome,
+          email: email,
+          telefone: telefone,
+          encaminhado: true,
+          pagina: "/black-friday-templum-os/",
+          gclid: ads.gclid || "",
+          gbraid: ads.gbraid || "",
+          wbraid: ads.wbraid || "",
+          utm_source: ads.utm_source || "",
+          utm_medium: ads.utm_medium || "",
+          utm_campaign: ads.utm_campaign || "",
+          utm_term: ads.utm_term || "",
+          utm_content: ads.utm_content || "",
+          origem_clique: ads.origem_clique || ""
+        };
+        if (ads.modo_teste) payload.modo_teste = true;
         fetch("/api/bn-interesse", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            proposta: true,
-            produto: "templum-os",
-            plano: planoSel || "",
-            nome: nome,
-            email: email,
-            telefone: telefone,
-            encaminhado: true
-          })
+          body: JSON.stringify(payload)
         }).then(function (r) { return r.json(); }).then(function (d) {
           if (!d || !d.ok) throw new Error("crm");
           if (window.fbq) window.fbq("track", "Lead");

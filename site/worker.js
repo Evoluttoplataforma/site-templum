@@ -709,6 +709,94 @@ async function bnEmpresaDoCrm(token, email, nome, tituloSufixo, excludeId) {
   return pickCompanyFromSiblingLeads(excludeId || "", found, nome, tituloSufixo);
 }
 
+function bnClipAtrib(raw, max) {
+  return String(raw || "").replace(/[\u0000-\u001f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max || 200);
+}
+
+/** UTM padrão da página quando a URL/cookie não trouxe campanha. */
+const BN_PAGINA_UTM_DEFAULTS = {
+  "/black-friday-lp/": {
+    utm_source: "site",
+    utm_medium: "lp",
+    utm_campaign: "black-friday-lp",
+  },
+  "/black-friday/": {
+    utm_source: "mailchimp",
+    utm_medium: "email",
+    utm_campaign: "black-friday",
+  },
+  "/black-friday-templum-os/": {
+    utm_source: "site",
+    utm_medium: "lp",
+    utm_campaign: "black-friday-templum-os",
+  },
+};
+
+function bnPaginaPadrao(src, certificado) {
+  const fromBody = normalizeWhatsappRefPagina(bnClipAtrib(src && src.pagina, 480));
+  if (fromBody) return fromBody;
+  const prod = String(certificado || (src && (src.certificado || src.norma || src.produto)) || "")
+    .trim()
+    .toLowerCase();
+  if (prod === "templum-os" || prod === "templum os") return "/black-friday-templum-os/";
+  // /black-friday-lp/ sempre manda pagina no body; sem pagina = calculadora/e-mail.
+  return "/black-friday/";
+}
+
+/** Campos de rastreio (gclid/UTM/página/produto), no mesmo formato do INBOUND. */
+function bnAtribCustomFields(body, certificado) {
+  const src = body && typeof body === "object" ? body : {};
+  const cf = {};
+  const gclid = bnClipAtrib(src.gclid, 200);
+  const gbraid = bnClipAtrib(src.gbraid, 200);
+  const wbraid = bnClipAtrib(src.wbraid, 200);
+  if (gclid) cf.cf_gclid = gclid;
+  if (gbraid) cf.cf_gbraid = gbraid;
+  if (wbraid) cf.cf_wbraid = wbraid;
+  for (const [field, key] of [
+    ["utm_source", ORBIT_FIELDS.utm_source],
+    ["utm_medium", ORBIT_FIELDS.utm_medium],
+    ["utm_campaign", ORBIT_FIELDS.utm_campaign],
+    ["utm_term", ORBIT_FIELDS.utm_term],
+    ["utm_content", ORBIT_FIELDS.utm_content],
+  ]) {
+    const v = bnClipAtrib(src[field], 180);
+    if (v) cf[key] = v;
+  }
+  const pagina = bnPaginaPadrao(src, certificado);
+  if (pagina) cf[ORBIT_FIELDS.pagina] = pagina;
+  // pagina no CRM é URL absoluta; defaults indexam por path (/black-friday-lp/).
+  const paginaPath = normLpPath(pathOnly(pagina));
+  const defaults = BN_PAGINA_UTM_DEFAULTS[paginaPath];
+  if (defaults) {
+    for (const [field, key] of [
+      ["utm_source", ORBIT_FIELDS.utm_source],
+      ["utm_medium", ORBIT_FIELDS.utm_medium],
+      ["utm_campaign", ORBIT_FIELDS.utm_campaign],
+    ]) {
+      if (!cf[key] && defaults[field]) cf[key] = defaults[field];
+    }
+  }
+  const produto = orbitProdutoSelect(certificado || src.certificado || src.norma || "");
+  if (produto) cf[ORBIT_FIELDS.norma] = produto;
+  return cf;
+}
+
+function bnMergeCustomFields(prevCf, nextCf) {
+  const prev = prevCf && typeof prevCf === "object" ? prevCf : {};
+  const next = nextCf && typeof nextCf === "object" ? nextCf : {};
+  const merged = { ...prev };
+  let changed = false;
+  for (const [k, v] of Object.entries(next)) {
+    if (cfEmpty(v)) continue;
+    if (cfEmpty(prev[k])) {
+      merged[k] = v;
+      changed = true;
+    }
+  }
+  return changed ? merged : null;
+}
+
 async function bnGravarInteresse(env, {
   email,
   nome,
@@ -718,6 +806,7 @@ async function bnGravarInteresse(env, {
   resumo,
   origem,
   source,
+  custom_fields,
 }) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return corsJson({ ok: false, error: "not_configured" }, 503);
@@ -744,6 +833,26 @@ async function bnGravarInteresse(env, {
   }
 
   const nota = BN_NOTA_PROPOSTA + " (" + bnQuando() + "). " + resumo + " " + origem;
+  const trackingKeys = [
+    ORBIT_FIELDS.pagina,
+    ORBIT_FIELDS.utm_source,
+    ORBIT_FIELDS.utm_medium,
+    ORBIT_FIELDS.utm_campaign,
+    ORBIT_FIELDS.utm_term,
+    ORBIT_FIELDS.utm_content,
+    "cf_gclid",
+    "cf_gbraid",
+    "cf_wbraid",
+  ];
+  function bnTrackingOnly(cf) {
+    const out = {};
+    if (!cf || typeof cf !== "object") return out;
+    for (const k of trackingKeys) {
+      if (!cfEmpty(cf[k])) out[k] = cf[k];
+    }
+    return out;
+  }
+
   if (aberto) {
     const fresco = (await bnLerCard(token, aberto.id)) || aberto;
     const tinhaTag = leadTagList(fresco).includes(BN_TAG_PROPOSTA.toLowerCase());
@@ -759,14 +868,30 @@ async function bnGravarInteresse(env, {
     if (telefone && !bnLeadPhoneRaw(fresco)) patch.contact_phone = telefone;
     if (nome && !String(fresco.contact_name || "").trim()) patch.contact_name = nome;
     if (empresaOk && companyRuim) patch.company_name = empresaOk;
-    if (!Object.keys(patch).length) return corsJson({ ok: true, action: "already" });
-    const res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
+    const cfMerged = bnMergeCustomFields(fresco.custom_fields, custom_fields);
+    if (cfMerged) patch.custom_fields = cfMerged;
+    if (!Object.keys(patch).length) {
+      return corsJson({ ok: true, action: "already", lead_id: fresco.id || aberto.id });
+    }
+    let res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify(patch),
     }).catch(() => null);
+    // Se cf_produto (ou outro campo) barrar o PATCH, reenvia só o rastreio.
+    if ((!res || !res.ok) && patch.custom_fields) {
+      const onlyTrack = bnTrackingOnly(patch.custom_fields);
+      const retryPatch = { ...patch };
+      if (Object.keys(onlyTrack).length) retryPatch.custom_fields = onlyTrack;
+      else delete retryPatch.custom_fields;
+      res = await fetch(`${ORBIT_BASE}/leads/${aberto.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(retryPatch),
+      }).catch(() => null);
+    }
     if (!res || !res.ok) return corsJson({ ok: false, error: "crm" }, 502);
-    return corsJson({ ok: true, action: "tagged" });
+    return corsJson({ ok: true, action: "tagged", lead_id: aberto.id });
   }
 
   const payload = {
@@ -781,14 +906,46 @@ async function bnGravarInteresse(env, {
   };
   if (empresaOk) payload.company_name = empresaOk;
   if (telefone) payload.contact_phone = telefone;
+  if (custom_fields && Object.keys(custom_fields).length) {
+    payload.custom_fields = custom_fields;
+  }
 
-  const criado = await fetch(`${ORBIT_BASE}/leads`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(payload),
-  }).catch(() => null);
-  if (!criado || !criado.ok) return corsJson({ ok: false, error: "crm" }, 502);
-  return corsJson({ ok: true, action: "created" });
+  async function bnPostLead(body) {
+    const criado = await fetch(`${ORBIT_BASE}/leads`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    }).catch(() => null);
+    if (!criado || !criado.ok) return { ok: false };
+    const criadoJson = await criado.json().catch(() => ({}));
+    const leadId = (criadoJson && (criadoJson.data && criadoJson.data.id || criadoJson.lead && criadoJson.lead.id || criadoJson.id)) || "";
+    return { ok: true, lead_id: leadId || undefined };
+  }
+
+  let created = await bnPostLead(payload);
+  // Fallback 1: tira cf_produto (SELECT) e mantém UTM/página/gclid.
+  if (!created.ok && payload.custom_fields && payload.custom_fields[ORBIT_FIELDS.norma]) {
+    const cf = { ...payload.custom_fields };
+    delete cf[ORBIT_FIELDS.norma];
+    if (Object.keys(cf).length) {
+      created = await bnPostLead({ ...payload, custom_fields: cf });
+    }
+  }
+  // Fallback 2: só rastreio.
+  if (!created.ok && payload.custom_fields) {
+    const onlyTrack = bnTrackingOnly(payload.custom_fields);
+    if (Object.keys(onlyTrack).length) {
+      created = await bnPostLead({ ...payload, custom_fields: onlyTrack });
+    }
+  }
+  // Fallback 3: cria o card mesmo sem custom fields (não perde o lead).
+  if (!created.ok && payload.custom_fields) {
+    const bare = { ...payload };
+    delete bare.custom_fields;
+    created = await bnPostLead(bare);
+  }
+  if (!created.ok) return corsJson({ ok: false, error: "crm" }, 502);
+  return corsJson({ ok: true, action: "created", lead_id: created.lead_id });
 }
 
 async function handleBnInteresse(request, env) {
@@ -817,6 +974,7 @@ async function handleBnInteresse(request, env) {
       resumo: "Produto: Templum OS." + planoTxt + " Pediu contato comercial na LP Black Friday Templum OS.",
       origem: "Origem: formulário da Black Friday Templum OS.",
       source: "site",
+      custom_fields: bnAtribCustomFields(body, "Templum OS"),
     });
   }
 
@@ -838,6 +996,7 @@ async function handleBnInteresse(request, env) {
     resumo,
     origem,
     source: body.encaminhado === true ? "site" : "mailchimp",
+    custom_fields: bnAtribCustomFields(body, certificado),
   });
 }
 
@@ -1338,6 +1497,42 @@ function contentSlugForCampaign(pagina) {
   return path.slice(0, 80);
 }
 
+/** Clique Google (gclid/gbraid/wbraid) com UTM direct/none: força google/cpc.
+ *  Não inventa utm_campaign (campanha real só vem da URL ou da LP). */
+function applyPaidClickUtm(lead) {
+  if (!(lead.gclid || lead.gbraid || lead.wbraid)) return;
+  const src = String(lead.utm_source || "").trim().toLowerCase();
+  const med = String(lead.utm_medium || "").trim().toLowerCase();
+  const srcVazio = utmSourceMissing(lead.utm_source);
+  const medVazio = utmMediumMissing(lead.utm_medium);
+  if (srcVazio || (src === "direct" && medVazio)) {
+    lead.utm_source = "google";
+    lead.utm_medium = "cpc";
+  } else if (!srcVazio && medVazio && (src === "google" || src === "googleads")) {
+    lead.utm_medium = "cpc";
+  } else if (med === "cpc" || med === "ppc" || med === "paid") {
+    // já pago; só corrige source genérico
+    if (srcVazio || src === "direct") lead.utm_source = "google";
+  }
+}
+
+/** Impede gravar título/nome/empresa no lugar da campanha (poluição Meta/Ads). */
+function scrubLeadCampaignTitlePollution(lead, title) {
+  const camp = String(lead.utm_campaign || "").trim();
+  if (!camp) return;
+  const tit = String(title || "").trim();
+  const nome = String(lead.nome || "").trim();
+  const empresa = String(lead.empresa || "").trim();
+  if (
+    (tit && camp === tit) ||
+    (nome && camp === nome) ||
+    (empresa && camp === empresa) ||
+    (empresa && lead.norma && camp === `${empresa} - ${lead.norma}`)
+  ) {
+    lead.utm_campaign = "";
+  }
+}
+
 function applyOrganicLeadAttribution(lead, body) {
   if (lead.evento === "blog-consultoria") return;
   if (leadIsPaidClick(lead)) return;
@@ -1409,11 +1604,86 @@ function normaTagsFromPagina(pagina) {
   if (s.includes("gestao-financeira")) add("gestão financeira");
   if (s.includes("gestao-ia-pratica")) add("Parceria LSC One");
   if (s.includes("mapeamento-sgi") || s.includes("/sgi")) add("SGI");
+  // LP /auditoria/: na prática entra como ISO 9001 no INBOUND.
+  if (s.includes("/auditoria") || s.includes("auditoria-interna")) add("ISO 9001");
+  return tags;
+}
+
+/** Catálogo Orbit: ISO9001 / ISO27001 sem espaço (evita etiqueta duplicada). */
+function canonicalOrbitNormaTag(tag) {
+  const t = String(tag || "").trim();
+  if (!t) return "";
+  if (t === "ISO 9001" || /^iso\s*9001$/i.test(t)) return "ISO9001";
+  if (t === "ISO 27001" || /^iso\s*27001$/i.test(t)) return "ISO27001";
+  return t;
+}
+
+function normaTagsFromProduto(produto) {
+  const s = String(produto || "").toLowerCase();
+  if (!s) return [];
+  const tags = [];
+  if (/27001/.test(s)) tags.push("ISO 27001");
+  else if (/9001/.test(s)) tags.push("ISO 9001");
+  else if (/14001/.test(s)) tags.push("ISO 14001");
+  else if (/45001/.test(s)) tags.push("ISO 45001");
+  else if (/42001/.test(s)) tags.push("ISO 42001");
+  else if (/37001/.test(s)) tags.push("ISO 37001");
+  else if (/pbqp/.test(s)) tags.push("PBQP-H");
+  else if (/sassmaq/.test(s)) tags.push("SASSMAQ");
+  else if (/fssc|22000/.test(s)) tags.push("FSSC 22000");
+  else if (/\blgpd\b/.test(s)) tags.push("LGPD");
+  else if (/\besg\b/.test(s)) tags.push("ESG");
   return tags;
 }
 
 function withNormaTags(tags, pagina) {
   return [...new Set([...(tags || []).filter(Boolean), ...normaTagsFromPagina(pagina)])];
+}
+
+/** Etiquetas de norma para o card WhatsApp (página + produto do ref/CRM). */
+function inboundNormaTagsFromHints(pagina, produto) {
+  return [
+    ...normaTagsFromPagina(pagina),
+    ...normaTagsFromProduto(produto),
+  ]
+    .map(canonicalOrbitNormaTag)
+    .filter(Boolean);
+}
+
+/** Extrai código ref de texto do lead: (ref XXXXXX) ou Código de atendimento: XXXXXX. */
+function extractWhatsappRefFromText(text) {
+  const s = String(text || "");
+  if (!s.trim()) return "";
+  const m =
+    s.match(/\(\s*ref\s+([ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6})\s*\)/i) ||
+    s.match(/C[oó]digo\s+de\s+atendimento\s*:\s*([ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6})/i) ||
+    s.match(/\bref\s*[:=]?\s*([ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6})\b/i);
+  if (!m) return "";
+  const ref = String(m[1] || "").trim().toUpperCase();
+  return WHATSAPP_REF_CODE.test(ref) ? ref : "";
+}
+
+function extractWhatsappRefFromWebhookBody(body) {
+  if (!body || typeof body !== "object") return "";
+  const direct = String(body.ref || body.cf_ref_whatsapp || "").trim().toUpperCase();
+  if (WHATSAPP_REF_CODE.test(direct)) return direct;
+  const chunks = [
+    body.message,
+    body.content,
+    body.text,
+    body.whatsapp_message,
+    body.last_message,
+    body.inbound_message,
+    body.msg,
+    body.data && body.data.message,
+    body.data && body.data.content,
+    body.payload && body.payload.message,
+  ];
+  for (const chunk of chunks) {
+    const ref = extractWhatsappRefFromText(chunk);
+    if (ref) return ref;
+  }
+  return "";
 }
 
 function comTagNaoVerificado(tags, lead) {
@@ -1711,13 +1981,24 @@ async function lookupWhatsappRefRow(env, ref) {
 
 function buildWhatsappRefPatch(prevCf, row) {
   const patch = {};
-  if (row.utm_source && cfEmpty(prevCf[ORBIT_FIELDS.utm_source])) {
+  // Sobrescreve placeholder (meta_lead_ads / direct) deixado pelo meta-natives
+  // quando o boas-vindas rodou antes do ref WhatsApp.
+  if (row.utm_source && isPlaceholderUtm(prevCf[ORBIT_FIELDS.utm_source])) {
     patch[ORBIT_FIELDS.utm_source] = String(row.utm_source);
   }
-  if (row.utm_medium && cfEmpty(prevCf[ORBIT_FIELDS.utm_medium])) {
+  if (row.utm_medium && isPlaceholderUtm(prevCf[ORBIT_FIELDS.utm_medium])) {
     patch[ORBIT_FIELDS.utm_medium] = String(row.utm_medium);
   }
-  if (row.utm_campaign && cfEmpty(prevCf[ORBIT_FIELDS.utm_campaign])) {
+  // facebook/paid_social inventado sem __meta também cede lugar ao ref real.
+  if (
+    row.utm_source &&
+    String(prevCf[ORBIT_FIELDS.utm_source] || "").toLowerCase() === "facebook" &&
+    isPlaceholderUtm(prevCf[ORBIT_FIELDS.utm_campaign])
+  ) {
+    patch[ORBIT_FIELDS.utm_source] = String(row.utm_source);
+    if (row.utm_medium) patch[ORBIT_FIELDS.utm_medium] = String(row.utm_medium);
+  }
+  if (row.utm_campaign && isPlaceholderUtm(prevCf[ORBIT_FIELDS.utm_campaign])) {
     patch[ORBIT_FIELDS.utm_campaign] = String(row.utm_campaign);
   }
   if (row.utm_term && cfEmpty(prevCf[ORBIT_FIELDS.utm_term])) {
@@ -1754,16 +2035,38 @@ function leadHasSdrHorarioTag(tags) {
 function isBlackFridayLandingHint(pagina, campaign) {
   const p = String(pagina || "").toLowerCase();
   const c = String(campaign || "").toLowerCase();
-  return /black-friday/.test(p) || /black-friday/.test(c) || /black.?friday/.test(c);
+  // LP /black-friday/, UTM black-friday-lp, campanhas Meta "CAMPANHA [LEAD] [LP] [BLACK FRIDAY]".
+  return (
+    /black-friday/.test(p) ||
+    /black.?friday/.test(p) ||
+    /black-friday/.test(c) ||
+    /black.?friday/.test(c) ||
+    /black.?november/.test(c) ||
+    /\bbn26\b/.test(c)
+  );
+}
+
+/** UTM inventada pelo meta-natives em lead sem __meta (ex.: WhatsApp do site). */
+function isPlaceholderUtm(value) {
+  const v = String(value || "").trim().toLowerCase();
+  return (
+    !v ||
+    v === "none" ||
+    v === "direct" ||
+    v === "(direct)" ||
+    v === "meta_lead_ads" ||
+    v === "form" ||
+    v === "site"
+  );
 }
 
 /**
- * Ponte WhatsApp → CRM: (1) grava SDR_HORARIO_* se faltar; (2) copia UTM/página/produto
- * do ref em site_whatsapp_refs; (3) se a origem for Black Friday e o card ainda estiver
- * no INBOUND, move para BLACKNOVEMBER/Demonstrou interesse (Norma cria no INBOUND).
- * Sem ref ainda grava a tag (todo lead que a Norma atende).
+ * Ponte WhatsApp → CRM: (1) grava SDR_HORARIO_* se faltar; (2) resolve ref
+ * (campo, webhook da msg ou notes) e copia UTM/página/produto; (3) etiqueta da
+ * norma pela página/produto; (4) Black Friday → BLACKNOVEMBER se ainda no INBOUND.
+ * Sem ref ainda grava a tag de horário (todo lead que a Norma atende).
  */
-async function applyWhatsappRefToLead(env, leadId) {
+async function applyWhatsappRefToLead(env, leadId, opts) {
   const token = env.ORBIT_CRM_API_KEY;
   if (!token) return { ok: false, error: "not_configured" };
   const headers = { "content-type": "application/json", authorization: "Bearer " + token };
@@ -1773,9 +2076,22 @@ async function applyWhatsappRefToLead(env, leadId) {
   const payload = await get.json().catch(() => ({}));
   const card = payload.data || payload.lead || payload;
   const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
-  const ref = String(prev.cf_ref_whatsapp || "").trim().toUpperCase();
+  let ref = String(prev.cf_ref_whatsapp || "").trim().toUpperCase();
+  let refSource = WHATSAPP_REF_CODE.test(ref) ? "cf_ref_whatsapp" : "";
 
-  const result = { ok: true, ref: WHATSAPP_REF_CODE.test(ref) ? ref : undefined };
+  if (!WHATSAPP_REF_CODE.test(ref)) {
+    const fromHint = extractWhatsappRefFromText(opts && opts.messageHint);
+    const fromNotes = extractWhatsappRefFromText(card.notes);
+    ref = fromHint || fromNotes || "";
+    if (fromHint) refSource = "webhook_message";
+    else if (fromNotes) refSource = "notes";
+  }
+
+  const result = {
+    ok: true,
+    ref: WHATSAPP_REF_CODE.test(ref) ? ref : undefined,
+    ref_source: refSource || undefined,
+  };
   const body = {};
   let refRow = null;
 
@@ -1788,13 +2104,18 @@ async function applyWhatsappRefToLead(env, leadId) {
   }
 
   if (WHATSAPP_REF_CODE.test(ref)) {
+    if (cfEmpty(prev.cf_ref_whatsapp)) {
+      body.custom_fields = { ...(body.custom_fields || prev), cf_ref_whatsapp: ref };
+      result.ref_written = true;
+    }
     refRow = await lookupWhatsappRefRow(env, ref);
     if (!refRow) {
       result.utm_skipped = "ref_not_found";
     } else {
-      const patch = buildWhatsappRefPatch(prev, refRow);
+      const baseCf = body.custom_fields || prev;
+      const patch = buildWhatsappRefPatch(baseCf, refRow);
       if (Object.keys(patch).length) {
-        body.custom_fields = { ...prev, ...patch };
+        body.custom_fields = { ...baseCf, ...patch };
         result.applied = Object.keys(patch);
       } else {
         result.utm_skipped = "already_filled";
@@ -1810,6 +2131,11 @@ async function applyWhatsappRefToLead(env, leadId) {
     cfAfter[ORBIT_FIELDS.pagina] ||
     prev[ORBIT_FIELDS.pagina] ||
     "";
+  const produtoHint =
+    (refRow && refRow.norma) ||
+    cfAfter[ORBIT_FIELDS.norma] ||
+    prev[ORBIT_FIELDS.norma] ||
+    "";
   const campaignHint =
     (refRow && refRow.utm_campaign) ||
     cfAfter[ORBIT_FIELDS.utm_campaign] ||
@@ -1818,6 +2144,12 @@ async function applyWhatsappRefToLead(env, leadId) {
   const routeBf =
     card.pipeline_id === ORBIT_PIPELINE_ID &&
     isBlackFridayLandingHint(paginaHint, campaignHint);
+
+  const normaTags = inboundNormaTagsFromHints(paginaHint, produtoHint);
+  if (normaTags.length) {
+    body.tags = mergeLeadTags(body.tags || card.tags, normaTags);
+    result.norma_tags = normaTags;
+  }
 
   if (routeBf) {
     body.tags = mergeLeadTags(body.tags || card.tags, ["BLACKNOVEMBER"]);
@@ -1868,7 +2200,21 @@ async function handleWhatsappRefApply(request, env) {
   if (!leadId) return corsJson({ ok: false, error: "lead_id" }, 400);
 
   try {
-    const result = await applyWhatsappRefToLead(env, leadId);
+    const refFromBody = extractWhatsappRefFromWebhookBody(body);
+    const textBits = [
+      body.message,
+      body.content,
+      body.text,
+      body.whatsapp_message,
+      body.last_message,
+      body.inbound_message,
+    ]
+      .filter((v) => typeof v === "string" && v.trim() && !/^\{[a-z_]+\}$/i.test(v.trim()))
+      .join("\n");
+    const messageHint = refFromBody
+      ? `Código de atendimento: ${refFromBody}\n${textBits}`
+      : textBits;
+    const result = await applyWhatsappRefToLead(env, leadId, { messageHint });
     if (!result.ok) return corsJson(result, 502);
     return corsJson(result);
   } catch (e) {
@@ -1904,6 +2250,12 @@ async function applyMetaNativesToLead(env, leadId) {
   const card = payload.data || payload.lead || payload;
   const prev = card.custom_fields && typeof card.custom_fields === "object" ? card.custom_fields : {};
   const meta = prev.__meta && typeof prev.__meta === "object" ? prev.__meta : {};
+  const isMetaLeadForm = !!(
+    meta.campaign_name ||
+    meta.form_id ||
+    meta.leadgen_id ||
+    meta.ad_id
+  );
 
   const fullName = metaCfGet(prev, ["Full name", "full_name", "full name"]);
   const phoneRaw = metaCfGet(prev, ["Phone number", "phone_number", "phone number", "phone"]);
@@ -1936,19 +2288,24 @@ async function applyMetaNativesToLead(env, leadId) {
   }
 
   const cfPatch = {};
-  if (cfEmpty(prev[ORBIT_FIELDS.utm_source])) {
-    cfPatch[ORBIT_FIELDS.utm_source] = "facebook";
-    applied.push("cf_utm_source");
-  }
-  if (cfEmpty(prev[ORBIT_FIELDS.utm_medium])) {
-    cfPatch[ORBIT_FIELDS.utm_medium] = "paid_social";
-    applied.push("cf_utm_medium");
-  }
-  if (cfEmpty(prev[ORBIT_FIELDS.utm_campaign])) {
-    const campaign =
-      String(meta.campaign_name || meta.form_name || card.title || "").trim() || "meta_lead_ads";
-    cfPatch[ORBIT_FIELDS.utm_campaign] = campaign.slice(0, 500);
-    applied.push("cf_utm_campaign");
+  // UTM só em Lead Ads real (__meta). Sem isso o boas-vindas poluía WhatsApp do site
+  // com facebook/meta_lead_ads e bloqueava o ref da LP Black Friday.
+  const metaCampaign = String(meta.campaign_name || meta.form_name || "").trim();
+  if (isMetaLeadForm) {
+    if (cfEmpty(prev[ORBIT_FIELDS.utm_source])) {
+      cfPatch[ORBIT_FIELDS.utm_source] = "facebook";
+      applied.push("cf_utm_source");
+    }
+    if (cfEmpty(prev[ORBIT_FIELDS.utm_medium])) {
+      cfPatch[ORBIT_FIELDS.utm_medium] = "paid_social";
+      applied.push("cf_utm_medium");
+    }
+    if (cfEmpty(prev[ORBIT_FIELDS.utm_campaign]) || isPlaceholderUtm(prev[ORBIT_FIELDS.utm_campaign])) {
+      // Nunca usar card.title / nome da pessoa.
+      const campaign = metaCampaign || "meta_lead_ads";
+      cfPatch[ORBIT_FIELDS.utm_campaign] = campaign.slice(0, 500);
+      applied.push("cf_utm_campaign");
+    }
   }
   if (cfEmpty(prev[ORBIT_FIELDS.norma])) {
     const formHint = String(meta.form_name || card.title || "").toLowerCase();
@@ -1961,20 +2318,62 @@ async function applyMetaNativesToLead(env, leadId) {
     body.custom_fields = { ...prev, ...cfPatch };
   }
 
-  if (!applied.length) {
-    return { ok: true, skipped: "nothing_to_apply", lead_id: leadId };
+  const campaignAfter =
+    (body.custom_fields && body.custom_fields[ORBIT_FIELDS.utm_campaign]) ||
+    prev[ORBIT_FIELDS.utm_campaign] ||
+    metaCampaign ||
+    "";
+  const routeBf =
+    isMetaLeadForm &&
+    card.pipeline_id === ORBIT_PIPELINE_ID &&
+    isBlackFridayLandingHint("", campaignAfter);
+
+  if (routeBf) {
+    body.tags = mergeLeadTags(body.tags || card.tags, ["BLACKNOVEMBER"]);
+    applied.push("tag_BLACKNOVEMBER");
   }
 
-  const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify(body),
-  }).catch(() => null);
-  if (!res || !res.ok) {
-    const err = res ? await res.text().catch(() => "") : "fetch_failed";
-    return { ok: false, error: String(err).slice(0, 180), applied };
+  if (!applied.length && !routeBf) {
+    return { ok: true, skipped: isMetaLeadForm ? "nothing_to_apply" : "not_meta_lead_form", lead_id: leadId };
   }
-  return { ok: true, lead_id: leadId, applied, contact_phone: body.contact_phone || undefined };
+
+  if (applied.length || body.tags || body.custom_fields) {
+    const res = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(body),
+    }).catch(() => null);
+    if (!res || !res.ok) {
+      const err = res ? await res.text().catch(() => "") : "fetch_failed";
+      return { ok: false, error: String(err).slice(0, 180), applied };
+    }
+  }
+
+  const result = {
+    ok: true,
+    lead_id: leadId,
+    applied,
+    contact_phone: body.contact_phone || undefined,
+    is_meta_lead_form: isMetaLeadForm,
+  };
+
+  if (routeBf) {
+    const move = await fetch(`${ORBIT_BASE}/leads/${leadId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ stage_id: BN_STAGE_ESPERA }),
+    }).catch(() => null);
+    if (!move || !move.ok) {
+      const err = move ? await move.text().catch(() => "") : "fetch_failed";
+      result.bn_move_error = String(err).slice(0, 180);
+    } else {
+      result.bn_moved = true;
+      result.bn_stage_id = BN_STAGE_ESPERA;
+      result.bn_tag = "BLACKNOVEMBER";
+    }
+  }
+
+  return result;
 }
 
 async function handleMetaNativesApply(request, env) {
@@ -2156,6 +2555,7 @@ export async function handleLead(request, env, ctx) {
   // Tira UTM herdada de outra página antes de preencher a campanha desta LP.
   applyConsultoriaLpCampaign(lead, body);
   applyAdsLandingUtm(lead, body);
+  applyPaidClickUtm(lead);
   applyOrganicLeadAttribution(lead, body);
   if (naoVerificado) marcarLeadNaoVerificado(lead, turnstileStatus);
 
@@ -2924,6 +3324,7 @@ async function saveToOrbit(lead, env, dest) {
   if (!token) return { ok: false, reason: "not_configured" };
 
   const title = [lead.empresa || lead.nome || lead.email, lead.norma].filter(Boolean).join(" - ");
+  scrubLeadCampaignTitlePollution(lead, title);
 
   const custom_fields = orbitCustomFieldsFromLead(lead);
 
